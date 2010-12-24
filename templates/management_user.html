@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{%  load my_filters %}
+{% block title %}Управление персоналом{% endblock %}
+{% block content %}
+<h1>Управление персоналом</h1>
+    <h3>Персонал можно создавать, редактировать и удалять</h3>
+    <div id="forms">
+        <form action="" method="post">
+            <table>
+                {{ form.as_table }}
+                <tfoot>
+                    <tr><td align="right" colspan="2"><input type="submit" value="Создать"></td></tr>
+                    <tr><td align="right" colspan="2"><input type="reset" value="Очистить"></td></tr>
+                </tfoot>
+            </table>
+        </form>
+    </div>
+    {% if users %}
+        <br>
+        <table width="100%">
+            <thead>
+                <td width="15%">Фамилия</td>
+                <td width="15%">Имя</td>
+                <td width="15%">Отчество</td>
+                <td width="45%">Роль</td>
+                <td width="10%" align="center">Опции</td>
+            </thead>
+            {% for u in users %}
+                <tr>
+                    <td width="20%">{{ u.person.last_name }}</td>
+                    <td width="20%">{{ u.person.first_name }}</td>
+                    <td width="20%">{{ u.person.patronymic }}</td>
+                    <td width="20%">{{ u.role.organization }}: {{ u.role.name }}</td>
+                    <td width="20%" align="center">
+                        <button title="Редактировать" onclick="top.location.href='/management/user/edit/{{ u.person.uuid }}/';"><img src="/media/edit.png"></button>
+                        &nbsp;
+                        <!--|&nbsp;-->
+                        <!--<button title="Удалить" onclick="if (confirm('Удалить исполнителя?')){top.location.href='/management/user/delete/{{ u.person.uuid }}/';}"><img src="/media/delete.png"></button>-->
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

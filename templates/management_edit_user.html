@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{%  load my_filters %}
+{% block title %}Редактирование исполнителя{% endblock %}
+{% block content %}
+<h1>Редактирование исполнителя</h1>
+    <h3>Измените поля и нажмите 'Сохранить'</h3>
+    <div id="forms">
+        <form action="" method="post">
+            <table>
+                {{ form.as_table }}
+                <tfoot>
+                    <tr><td align="right" colspan="2"><input type="submit" value="Сохранить"></td></tr>
+                    <tr><td align="right" colspan="2"><input type="reset" value="Очистить"></td></tr>
+                </tfoot>
+            </table>
+        </form>
+    </div>
+    <a href="/management/user/">Вернуться к списку исполнителей</a>
+{% endblock %}

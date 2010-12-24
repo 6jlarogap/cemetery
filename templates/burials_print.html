@@ -1,0 +1,100 @@
+<html>
+    <head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Печать</title>
+    </head>
+    <body>
+        <table width="100%" border="1">
+            <thead>
+                <td>
+                    Фамилия
+                </td>
+                <td>
+                    Имя
+                </td>
+                <td>
+                    Отч
+                </td>
+                <td>
+                    Дата захор
+                </td>
+                <td>
+                    N в кн
+                </td>
+                <td>
+                    Уч
+                </td>
+                <td>
+                    Ряд
+                </td>
+                <td>
+                    Мог
+                </td>
+                <td>
+                    Кладб
+                </td>
+                <td>
+                    Заказчик
+                </td>
+                <td>
+                    Услуга
+                </td>
+                <td>
+                    Комментарий
+                </td>
+                <td>
+                    Опции
+                </td>
+            </thead>
+            {% for b in object_list %}
+            <tr>
+                <td>
+                    {{ b.person.last_name }}
+                </td>
+                <td>
+                    {{ b.person.first_name }}
+                </td>
+                <td>
+                    {{ b.person.patronymic }}
+                </td>
+                <td>
+                    {{ b.bur_date|date:"d.m.Y" }}
+                </td>
+                <td>
+                    {{ b.account_book_n }}
+                </td>
+                <td>
+                    {{ b.place.area }}
+                </td>
+                <td>
+                    {{ b.place.row }}
+                </td>
+                <td>
+                    {{ b.place.seat }}
+                </td>
+                <td>
+                    {{ b.place.cemetery.name }}
+                </td>
+                {% if b.order_position.order.customer.person.last_name %}
+                <td>
+                    {{ b.order_position.order.customer.person.last_name }}
+                </td>
+                {% else %}
+                <td>
+                    &nbsp;
+                </td>
+                {% endif %}
+                <td>
+                    {{ b.order_position.operation.op_type }}
+                </td>
+                <td>
+                    {{ b.all_comments }}
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

@@ -1,0 +1,60 @@
+{% load my_filters %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="Keywords" content="" />
+        <meta name="Description" content="" />
+        <link rel="stylesheet" type="text/css" href="/media/css/base.css">
+        <link rel="stylesheet" type="text/css" href="/media/css/paginator.css">
+        <style type="text/css">
+            ul.errorlist {
+                margin: 0;
+                padding: 0;
+            }
+            .errorlist li {
+                color: blue;
+                font-size: 14px;
+            }
+        </style>
+
+{% block scripts %}{% endblock %}
+    </head>
+    <body>
+        <div id="container">
+            <div id="header">
+                <div id="branding">
+                    <div id="header_menu_main">
+                        {% if user.is_authenticated %}
+                            <a href="/">Поиск</a>&nbsp;&nbsp;|&nbsp;
+                            {% if user|in_group:"journal" %}
+                                <a href="/journal/">Журнал</a>
+                            {% endif %}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    </div>
+                    <div id="header_menu_system">
+                        {% if user.is_authenticated %}
+                            <a href="/profile/">{{ user.last_name }} {{ user.first_name }} {{ user.userprofile.soul.person.patronymic }} ({{ user.username }})</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                            {% if user.is_superuser %}
+                                <a href="/init/">[Инициализация]</a>&nbsp;&nbsp;|&nbsp;
+                            {% endif %}
+                            {% if user|in_group:"management" %}
+                                <a href="/management/">[Управление]</a>&nbsp;&nbsp;|&nbsp;
+                            {% endif %}
+                            {% if user|in_group:"profile" %}
+                                <a href="/profile/">[Настройки]</a>&nbsp;&nbsp;|&nbsp;
+                            {% endif %}
+                            <a href="/logout/">[Выход]</a>
+                        {% else %}
+                            <a href="/login/">[Вход]</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block content %}{% endblock %}
+    </body>
+</html>

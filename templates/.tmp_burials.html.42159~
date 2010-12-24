@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load adminmedia %}
+{% block scripts %}
+<script type="text/javascript">
+    window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";
+</script>
+<script type="text/javascript" src="/media/js/jquery-1.4.3.min.js"></script>
+<script type="text/javascript" src="/media/js/jquery.query-2.1.7.js"></script>
+<script type="text/javascript">
+	var submit_form = function()
+	{
+		$("#mainform").submit();
+	}
+</script>
+{{ form.media }}
+{% endblock %}
+{% block title %}Поиск{% endblock %}
+{% block navigation %}
+	<a href="/"><font color="#FFFFFF">ПОИСК</font></a>&nbsp;&nbsp;|
+	&nbsp;
+	<a href="/journal/">Журнал</a>
+{% endblock %}
+{% block content %}
+<form id="mainform" method="get" action="/">
+<table width="100%" cols="4">
+                <tr>
+                    <td width="25%" id="free_form">{{ form.last_name.label_tag }}</td>
+                    <td width="25%" id="free_form">{{ form.first_name.label_tag }}</td>
+                    <td width="25%" id="free_form">{{ form.patronymic.label_tag }}</td>
+                    <td width="25%" id="free_form">{{ form.cemetery.label_tag }}</td>
+                </tr>
+                <tr>
+                    <td width="25%">{{ form.last_name }}</td>
+                    <td width="25%">{{ form.first_name }}</td>
+                    <td width="25%">{{ form.patronymic }}</td>
+                    <td width="25%">{{ form.cemetery }}</td>
+                </tr>
+                <tr>
+                    <td width="25%" id="free_form">{{ form.birth_date_from.label_tag }}</td>
+                    <td width="25%">{{ form.birth_date_from }}</td>
+                    <td width="25%" id="free_form">{{ form.birth_date_to.label_tag }}</td>
+                    <td width="25%">{{ form.birth_date_to }}</td>
+                </tr>
+                <tr>
+                    <td width="25%" id="free_form">{{ form.death_date_from.label_tag }}</td>
+                    <td width="25%">{{ form.death_date_from }}</td>
+                    <td width="25%" id="free_form">{{ form.death_date_to.label_tag }}</td>
+                    <td width="25%">{{ form.death_date_to }}</td>
+                </tr>
+                <tr>
+                    <td width="25%" id="free_form">{{ form.burial_date_from.label_tag }}</td>
+                    <td width="25%">{{ form.burial_date_from }}</td>
+                    <td width="25%" id="free_form">{{ form.burial_date_to.label_tag }}</td>
+                    <td width="25%">{{ form.burial_date_to }}</td>
+                </tr>
+                <tr>
+                    <td width="25%" id="free_form">{{ form.death_certificate.label_tag }}</td>
+                    <td width="25%">{{ form.death_certificate }}</td>
+                    <td width="25%" id="free_form">{{ form.account_book_n.label_tag }}</td>
+                    <td width="25%">{{ form.account_book_n }}</td>
+                </tr>
+                <tr>
+                    <td width="25%" id="free_form">{{ form.customer.label_tag }}</td>
+                    <td width="25%">{{ form.customer }}</td>
+                    <td width="25%" id="free_form">{{ form.owner.label_tag }}</td>
+                    <td width="25%">{{ form.owner }}</td>
+                </tr>
+                <tr>
+                    <td width="25%" id="free_form">{{ form.comment.label_tag }}</td>
+                    <td width="25%">{{ form.comment }}</td>
+                    <td width="25%" id="free_form"></td>
+                    <td width="25%"></td>
+                </tr>
+            </table>
+			<table width="100%" cols="6">
+                <tr>
+                    <td width="16%" id="free_form">{{ form.area.label_tag }}</td>
+                    <td width="16%">{{ form.area }}</td>
+                    <td width="16%" id="free_form">{{ form.row.label_tag }}</td>
+                    <td width="16%">{{ form.row }}</td>
+                    <td width="16%" id="free_form">{{ form.seat.label_tag }}</td>
+                    <td width="16%">{{ form.seat }}</td>
+                </tr>
+                <tr>
+                    <td width="16%" id="free_form">{{ form.gps_x.label_tag }}</td>
+                    <td width="16%">{{ form.gps_x }}</td>
+                    <td width="16%" id="free_form">{{ form.gps_y.label_tag }}</td>
+                    <td width="16%">{{ form.gps_y }}</td>
+                    <td width="16%" id="free_form">{{ form.gps_z.label_tag }}</td>
+                    <td width="16%">{{ form.gps_z }}</td>
+                </tr>
+            </table>
+    <input type="submit" value="Искать" />&nbsp;&nbsp;<input type="button" value="Сброс" onClick="parent.location='/'" />
+<table width="100%" border="1">
+	<caption style="background:#2D992D;"><font color="#FFD700">&nbsp;{{ obj_nr }}</font> записей&nbsp;&nbsp;|&nbsp;&nbsp;по {{ form.per_page }} записей на странице&nbsp;&nbsp;|&nbsp;&nbsp;сортировка по {{ form.records_order_by }}&nbsp;&nbsp;|<input type="button" value="Печать" onClick="window.open($.query.set('print', 1).REMOVE('per_page').toString(),'_blank');" /></caption>
+	<thead>
+                        <td>Фамилия</td>
+                        <td>Имя</td>
+                        <td>Отч</td>
+                        <td>Дата захор</td>
+                        <td>N в кн</td>
+                        <td>Уч</td>
+                        <td>Ряд</td>
+                        <td>Мог</td>
+                        <td>Кладб</td>
+                        <td>Заказчик</td>
+                        <td>Услуга</td>
+                        <td>Комментарий</td>
+                        <td>Опции</td>
+                    </thead>
+	{% for b in object_list %}
+	    <tr>
+	        <td>
+	            {{ b.person.last_name }}
+	        </td>
+	        <td>
+	            {{ b.person.first_name }}
+	        </td>
+	        <td>
+	            {{ b.person.patronymic }}
+	        </td>
+	        <td>
+	            {{ b.bur_date|date:"d.m.Y" }}
+	        </td>
+	        <td>
+	            {{ b.account_book_n }}
+	        </td>
+	        <td>
+	            {{ b.place.area }}
+	        </td>
+	        <td>
+	            {{ b.place.row }}
+	        </td>
+	        <td>
+	            {{ b.place.seat }}
+	        </td>
+	        <td>
+	            {{ b.place.cemetery.name }}
+	        </td>
+	        {% if b.order_position.order.customer.person.last_name %}
+		        <td>
+		            {{ b.order_position.order.customer.person.last_name }}
+		        </td>
+	        {% else %}
+	        <td>
+	            &nbsp;
+	        </td>
+	        {% endif %}
+	        <td>
+	            {{ b.order_position.operation.op_type }}
+	        </td>
+	        <td>
+	            {{ b.all_comments }}
+	        </td>
+	        <td>
+	            &nbsp;
+	        </td>
+	    </tr>
+	{% endfor %}
+</table>
+<div>
+    {% include "paginator_digg.html" %}
+</div>
+</form>
+{% endblock %}

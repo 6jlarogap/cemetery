@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{%  load my_filters %}
+{% block title %}Управление кладбищами{% endblock %}
+{% block content %}<h1>Управление кладбищами</h1>
+<h3>Кладбища можно создавать, редактировать и удалять</h3>
+<div id="forms">
+    <form action="" method="post">
+        <a href="/admin/common/organization/" target="_blank">Управление организациями(админка)</a>
+        <table>
+            {{ form.as_table }}
+            <tfoot>
+                <tr>
+                    <td align="right" colspan="2">
+                        <input type="submit" value="Создать" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" colspan="2">
+                        <input type="reset" value="Очистить" />
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+{% if cemeteries %}
+<br>
+<table width="100%">
+    <thead>
+        <td width="40%">
+            Наименование
+        </td>
+        <td width="30%">
+            Адрес
+        </td>
+        <td width="30%" align="center">
+            Опции
+        </td>
+    </thead>
+    {% for cemetery in cemeteries %}
+    <tr>
+        <td width="40%">
+            {{ cemetery.name }}
+        </td>
+        <td width="30%">
+            {{ cemetery.location.street.city.country.name }}, {{ cemetery.location.street.city.region.name }}, {{ cemetery.location.street.city.name }}, {{ cemetery.location.street.name }}, {{ cemetery.location.house }}
+        </td>
+        <td width="30%" align="center">
+
+                        <button title="Редактировать" onclick="top.location.href='/management/cemetery/edit/{{ cemetery.uuid }}/';"><img src="/media/edit.png"></button>
+                        &nbsp;
+                        <!--|&nbsp;-->
+                        <!--<button title="Удалить" onclick="if (confirm('Удалить кладбище?')){top.location.href='/management/cemetery/delete/{{ cemetery.uuid }}/';}"><img src="/media/delete.png"></button>-->
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endblock %}

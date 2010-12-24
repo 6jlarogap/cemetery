@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Профиль пользователя{% endblock %}
+{% block navigation %}<a href="/">Поиск</a>&nbsp;&nbsp;|
+&nbsp;<a href="/journal/">Журнал</a>
+{% endblock %}
+{% block content %}
+	<h1>Профиль пользователя</h1>
+	<h3>Выбирите значения по умолчанию</h3>
+	<div id="forms">
+	    <form action="" method="post">
+	        <table>
+	            {{ form.as_table }}
+	            <tfoot>
+	                <tr>
+	                    <td align="right" colspan="2">
+	                        <input type="submit" value="Сохранить">
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td align="right" colspan="2">
+	                        <input type="reset" value="Очистить">
+	                    </td>
+	                </tr>
+	            </tfoot>
+	        </table>
+	    </form>
+	</div>
+{% endblock %}
