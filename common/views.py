@@ -1028,7 +1028,7 @@ def get_oper(request):
             pass
         else:
             orgsoul=cemetery.organization.soul_ptr
-            choices = SoulProducttypeOperation.objects.filter(soul=orgsoul, p_type=settings.BURIAL_PRODUCTTYPE_ID).values_list("operation__id", "operation__op_type")
+            choices = SoulProducttypeOperation.objects.filter(soul=orgsoul, p_type=settings.PLACE_PRODUCTTYPE_ID).values_list("operation__id", "operation__op_type")
             print repr(choices)
             for c in choices:
                 rez.append({"optionValue": c[0], "optionDisplay": c[1]})

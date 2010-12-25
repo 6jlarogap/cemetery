@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-#from django.conf import settings
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from common.models import Organization, Location, GeoCountry, GeoRegion
-from common.models import GeoCity, Street, Cemetery, Person, PersonRole
-from common.models import Phone, Role, UserProfile
+from common.models import GeoCity, Street, Cemetery, Person, PersonRole, Operation
+from common.models import Phone, Role, UserProfile, SoulProducttypeOperation
 
 @transaction.commit_on_success
 def main():
@@ -18,6 +18,17 @@ def main():
     organization.save()
     print "Организация создана."
 
+    # SoulProducttypeOperation
+    operations = Operation.objects.all()
+    p_type = settings.PLACE_PRODUCTTYPE_ID
+    for op in operations:
+        spo = SoulProducttypeOperation()
+        spo.soul = organization.soul_ptr
+        spo.p_type = p_type
+        spo.operation = op
+        spo.save()
+
+    # Location.
     org_location = Location()
     # Страна.
     org_location_country = raw_input("Введите страну:")
