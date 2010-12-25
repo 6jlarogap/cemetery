@@ -325,7 +325,7 @@ class UserProfileForm(forms.Form):
         if operation:
             try:
                 spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
-                                                           p_type=settings.BURIAL_PRODUCTTYPE_ID)
+                                                           p_type=settings.PLACE_PRODUCTTYPE_ID)
             except:
                 print "x3"
                 raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
@@ -416,7 +416,7 @@ class EditOrderForm(forms.Form):
         cemetery = cd["cemetery"]
         try:
             spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
-                                                       p_type=settings.BURIAL_PRODUCTTYPE_ID)
+                                                       p_type=settings.PLACE_PRODUCTTYPE_ID)
         except:
             print "x3"
             raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
@@ -603,7 +603,7 @@ class JournalForm(forms.Form):
         cemetery = cd["cemetery"]
         try:
             spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
-                                                       p_type=settings.BURIAL_PRODUCTTYPE_ID)
+                                                       p_type=settings.PLACE_PRODUCTTYPE_ID)
         except:
             print "x3"
             raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
@@ -713,12 +713,12 @@ class InitalForm(forms.Form):
     country = forms.CharField(required=False, max_length=24, label="Страна",
                               widget=forms.TextInput(attrs={"tabindex": "17"}))
     new_country = forms.BooleanField(required=False, label="Новая страна")
-    customer_house = forms.CharField(required=False, max_length=16, label="Дом",
+    house = forms.CharField(required=False, max_length=16, label="Дом",
                                      widget=forms.TextInput(attrs={"tabindex": "18"}))
-    customer_block = forms.CharField(required=False, max_length=16, label="Корпус",
+    block = forms.CharField(required=False, max_length=16, label="Корпус",
                                      widget=forms.TextInput(attrs={"tabindex": "19"}))
-    customer_building = forms.CharField(required=False, max_length=16, label="Строение")
-    customer_flat = forms.CharField(required=False, max_length=16, label="Квартира",
+    building = forms.CharField(required=False, max_length=16, label="Строение")
+    flat = forms.CharField(required=False, max_length=16, label="Квартира",
                                     widget=forms.TextInput(attrs={"tabindex": "20"}))
     # Обязательное.
     cemetery = forms.CharField(label="Название кладбища", max_length=99)
@@ -736,26 +736,30 @@ class InitalForm(forms.Form):
     cem_country = forms.CharField(required=False, max_length=24, label="Страна",
                               widget=forms.TextInput(attrs={"tabindex": "17"}))
     cem_new_country = forms.BooleanField(required=False, label="Новая страна")
-    cem_customer_house = forms.CharField(required=False, max_length=16, label="Дом",
+    cem_house = forms.CharField(required=False, max_length=16, label="Дом",
                                      widget=forms.TextInput(attrs={"tabindex": "18"}))
-    cem_customer_block = forms.CharField(required=False, max_length=16, label="Корпус",
+    cem_block = forms.CharField(required=False, max_length=16, label="Корпус",
                                      widget=forms.TextInput(attrs={"tabindex": "19"}))
-    cem_customer_building = forms.CharField(required=False, max_length=16, label="Строение")
-    cem_customer_flat = forms.CharField(required=False, max_length=16, label="Квартира",
-                                    widget=forms.TextInput(attrs={"tabindex": "20"}))
+    cem_building = forms.CharField(required=False, max_length=16, label="Строение")
+#    cem_customer_flat = forms.CharField(required=False, max_length=16, label="Квартира",
+#                                    widget=forms.TextInput(attrs={"tabindex": "20"}))
     username = forms.CharField(label="Логин", max_length=30,
                                help_text="Допускаются только латинские буквы, цифры и знаки @ . + - _")
     # ФИО - все 2 поля необязательные. Фамилия - обязательна.
-    last_name = forms.CharField(max_length=30, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}))
-    first_name = forms.CharField(required=False, max_length=30, label="Имя",
+    last_name = forms.CharField(max_length=30, label="Фамилия директора*", widget=forms.TextInput(attrs={"tabindex": "3"}))
+    first_name = forms.CharField(required=False, max_length=30, label="Имя директора",
                                  widget=forms.TextInput(attrs={"tabindex": "4"}))
-    patronymic = forms.CharField(required=False, max_length=30, label="Отчество",
+    patronymic = forms.CharField(required=False, max_length=30, label="Отчество директора",
                                  widget=forms.TextInput(attrs={"tabindex": "5"}))
+    #!!!!! Пароль директора - 2 поля
     # Телефон - тоже не обязательное.
-    phone = forms.CharField(required=False, max_length=15, label="Телефон",
+    phone = forms.CharField(required=False, max_length=15, label="Телефон директора",
                                      widget=forms.TextInput(attrs={"tabindex": "13"}))
 
 
-class ImportForm(forms.Form): # Форма импорта
+class ImportForm(forms.Form):
+    """
+    Форма импорта csv-файла.
+    """""
     csv_file = forms.FileField(label="CSV файл")
     cemetery = forms.ModelChoiceField(queryset = Cemetery.objects.all(), label = "Кладбище")

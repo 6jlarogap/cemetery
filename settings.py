@@ -115,3 +115,10 @@ PAGINATION_USER_PER_PAGE_ALLOWED = True
 
 PLACE_PRODUCTTYPE_ID = 2
 #BURIAL_PRODUCTTYPE_ID = 1
+
+
+# Операции.
+OPER_1 = 5  # Подзахоронение урны.
+OPER_2 = 4  # Подзахоронение.
+OPER_3 = 6  # Захоронение в существующую могилу.
+OPER_4 = 7  # Захоронение.
