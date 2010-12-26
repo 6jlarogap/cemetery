@@ -1100,176 +1100,200 @@ def import_csv(request):
         if form.is_valid():
             cd = form.cleaned_data
             r = csv.reader(cd["csv_file"], "4mysql")
+            bad_file = None
             for l in r:
                 if l:
-                    (n,
-                     ln, fn, ptrc, initials,
-                     bur_date, area, row, seat,
-                     cust_ln, cust_fn, cust_ptrc, cust_initials,
-                     city, street, house, block, flat,
-                     comment) = l
-                    # Номер в книге учета.
-                    n = n.decode("utf8").strip().lower()
-                    # Фамилия захороненного.
-                    if ln == "N":
-                        ln = u""
-                    else:
-                        ln = ln.decode("utf8").strip().capitalize()
-                    # Имя захороненного.
-                    if fn == "N":
-                        fn = u""
-                    else:
-                        fn = fn.decode("utf8").strip().capitalize()
-                    # Отчество захороненного.
-                    if ptrc == "N":
-                        ptrc = u""
-                    else:
-                        ptrc = ptrc.decode("utf8").strip().capitalize()
-                    # Инициалы захороненного.
-                    if initials == "N":
-                        initials = u""
-                    else:
-                        initials = initials.decode("utf8").strip().upper()
-                    # Участок/ряд/место.
-                    area = area.decode("utf8").strip()
-                    row = row.decode("utf8").strip()
-                    seat = seat.decode("utf8").strip()
-                    # Фамилия заказчика.
-                    if cust_ln == "N":
-                        cust_ln = u""
-                    else:
-                        cust_ln = cust_ln.decode("utf8").strip().capitalize()
-                    # Имя заказчика.
-                    if cust_fn == "N":
-                        cust_fn = u""
-                    else:
-                        cust_fn = cust_fn.decode("utf8").strip().capitalize()
-                    # Отчество заказчика.
-                    if cust_ptrc == "N":
-                        cust_ptrc = u""
-                    else:
-                        cust_ptrc = cust_ptrc.decode("utf8").strip().capitalize()
-                    # Инициалы заказчика.
-                    if cust_initials == "N":
-                        cust_initials = u""
-                    else:
-                        cust_initials = cust_initials.decode("utf8").strip().upper()
-                    if city == "N":
-                        city = u""
-                    else:
-                        city = city.decode("utf8").strip().capitalize()
-                    if street == "N":
-                        street = u""
-                    else:
-                        street = street.decode("utf8").strip().capitalize()
-                    if house == "N":
-                        house = u""
-                    else:
-                        house = house.decode("utf8").strip().lower()
-                    if block == "N":
-                        block = ""
-                    if flat == "N":
-                        flat = ""
-                    if comment == "N":
-                        comment = u""
-                    else:
-                        comment = comment.decode("utf8").strip()
-
-                    # Захороненный.
-                    deadman = Person(creator=request.user)
-                    deadman.last_name = ln
-                    if fn:
-                        deadman.first_name = fn
-                        if ptrc:
-                            deadman.patronymic = ptrc
-                    else:
-                        initials = re.sub(r"[\.\,]", " ", initials.strip()).split()
-                        if initials:
-                            deadman.first_name = initials[0]
-                            if len(initials) > 1:
-                                deadman.patronymic = initials[1]
-                    deadman.save()
-
-                    # Заказчик.
-                    customer = Person(creator=request.user)
-                    customer.last_name = cust_ln
-                    if cust_fn:
-                        customer.first_name = cust_fn
-                        if cust_ptrc:
-                            customer.patronymic = cust_ptrc
-                    else:
-                        cust_initials = re.sub(r"[\.\,]", " ", cust_initials).split()
-                        if cust_initials:
-                            customer.first_name = cust_initials[0]
-                            if len(cust_initials) > 1:
-                                customer.patronymic = cust_initials[1]
-
-                    # Адрес заказчика.
-                    location = Location()
-                    if street:
-                        # Присутствуют город и улица - будем создавать Location.
-#                        cities = GeoCity.objects.filter(name__iexact=city.strip()).order_by("country__id")
-                        cities = GeoCity.objects.filter(name__iexact=city)
-                        if cities:
-                            cust_city = cities[0]
-                        else:
-                            cust_city = GeoCity.objects.get(name__iexact="НЕИЗВЕСТЕН")
-                        try:
-                            cust_street = Street.objects.get(city=cust_city, name__iexact=street)
-                        except ObjectDoesNotExist:
-                            cust_street = Street(city=cust_city, name=street)
-                            cust_street.save()
-                        location.street = cust_street
-                        if house:
-                            location.house = house
-                            if block:
-                                location.block = block
-                            if flat:
-                                location.flat = flat
-                    location.save()
-                    customer.location = location  # Проверить, работает ли!!!
-                    customer.save()
-
-                    # Место.
-                    cemetery = cd["cemetery"]
                     try:
-                        place = Place.objects.get(cemetery=cemetery, area__iexact=area, row__iexact=row,
-                                                  seat__iexact=seat)
-                    except ObjectDoesNotExist:
-                        place = Place(creator=request.user)
-                        place.cemetery = cemetery
-                        place.area = area
-                        place.row = row
-                        place.seat = seat
-                        place.soul = cemetery.organization.soul_ptr  # To check!
-                        place.name = u"Место захоронения"
-                        place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
-                        place.save()
+                        (n,
+                         ln, fn, ptrc, initials,
+                         bur_date, area, row, seat,
+                         cust_ln, cust_fn, cust_ptrc, cust_initials,
+                         city, street, house, block, flat,
+                         comment) = l
+                        # Номер в книге учета.
+                        n = n.decode(settings.CSV_ENCODING).strip().lower()
+                        # Фамилия захороненного.
+                        if ln == "N":
+                            ln = u""
+                        else:
+                            ln = ln.decode(settings.CSV_ENCODING).strip().capitalize()
+                        # Имя захороненного.
+                        if fn == "N":
+                            fn = u""
+                        else:
+                            fn = fn.decode(settings.CSV_ENCODING).strip().capitalize()
+                        # Отчество захороненного.
+                        if ptrc == "N":
+                            ptrc = u""
+                        else:
+                            ptrc = ptrc.decode(settings.CSV_ENCODING).strip().capitalize()
+                        # Инициалы захороненного.
+                        if initials == "N":
+                            initials = u""
+                        else:
+                            initials = initials.decode(settings.CSV_ENCODING).strip().upper()
+                        # Участок/ряд/место.
+                        area = area.decode(settings.CSV_ENCODING).strip()
+                        row = row.decode(settings.CSV_ENCODING).strip()
+                        seat = seat.decode(settings.CSV_ENCODING).strip()
+                        # Фамилия заказчика.
+                        if cust_ln == "N":
+                            cust_ln = u""
+                        else:
+                            cust_ln = cust_ln.decode(settings.CSV_ENCODING).strip().capitalize()
+                        # Имя заказчика.
+                        if cust_fn == "N":
+                            cust_fn = u""
+                        else:
+                            cust_fn = cust_fn.decode(settings.CSV_ENCODING).strip().capitalize()
+                        # Отчество заказчика.
+                        if cust_ptrc == "N":
+                            cust_ptrc = u""
+                        else:
+                            cust_ptrc = cust_ptrc.decode(settings.CSV_ENCODING).strip().capitalize()
+                        # Инициалы заказчика.
+                        if cust_initials == "N":
+                            cust_initials = u""
+                        else:
+                            cust_initials = cust_initials.decode(settings.CSV_ENCODING).strip().upper()
+                        if city == "N":
+                            city = u""
+                        else:
+                            city = city.decode(settings.CSV_ENCODING).strip().capitalize()
+                        if street == "N":
+                            street = u""
+                        else:
+                            street = street.decode(settings.CSV_ENCODING).strip().capitalize()
+                        if house == "N":
+                            house = u""
+                        else:
+                            house = house.decode(settings.CSV_ENCODING).strip().lower()
+                        if block == "N":
+                            block = ""
+                        if flat == "N":
+                            flat = ""
+                        if comment == "N":
+                            comment = u""
+                        else:
+                            comment = comment.decode(settings.CSV_ENCODING).strip()
 
-                    # Захоронение.
-                    burial = Burial(creator=request.user)
-                    burial.person = deadman
-                    burial.account_book_n = n
-                    burial.responsible = place.cemetery.organization.soul_ptr
-                    burial.customer = customer
-                    burial.doer = request.user.userprofile.soul
-                    burial.date_fact = datetime.datetime.strptime(bur_date, "%Y-%m-%d  %H:%M:%S")
-                    burial.product = place.product_ptr
-                    if "урн" in comment.lower():
-                        operation = Operation.objects.get(id=5)
-                    elif "подзахоронение" in comment.lower():
-                        operation = Operation.objects.get(id=4)
-                    elif "захоронение в " in comment.lower():
-                        operation = Operation.objects.get(id=6)
+                        # Захороненный.
+                        deadman = Person(creator=request.user)
+                        deadman.last_name = ln
+                        if fn:
+                            deadman.first_name = fn
+                            if ptrc:
+                                deadman.patronymic = ptrc
+                        else:
+                            initials = re.sub(r"[\.\,]", " ", initials.strip()).split()
+                            if initials:
+                                deadman.first_name = initials[0]
+                                if len(initials) > 1:
+                                    deadman.patronymic = initials[1]
+                        deadman.save()
+
+                        # Заказчик.
+                        customer = Person(creator=request.user)
+                        customer.last_name = cust_ln
+                        if cust_fn:
+                            customer.first_name = cust_fn
+                            if cust_ptrc:
+                                customer.patronymic = cust_ptrc
+                        else:
+                            cust_initials = re.sub(r"[\.\,]", " ", cust_initials).split()
+                            if cust_initials:
+                                customer.first_name = cust_initials[0]
+                                if len(cust_initials) > 1:
+                                    customer.patronymic = cust_initials[1]
+
+                        # Адрес заказчика.
+                        location = Location()
+                        if street:
+                            # Присутствуют город и улица - будем создавать Location.
+    #                        cities = GeoCity.objects.filter(name__iexact=city.strip()).order_by("country__id")
+                            cities = GeoCity.objects.filter(name__iexact=city)
+                            if cities:
+                                cust_city = cities[0]
+                            else:
+                                cust_city = GeoCity.objects.get(name__iexact="НЕИЗВЕСТЕН")
+                            try:
+                                cust_street = Street.objects.get(city=cust_city, name__iexact=street)
+                            except ObjectDoesNotExist:
+                                cust_street = Street(city=cust_city, name=street)
+                                cust_street.save()
+                            location.street = cust_street
+                            if house:
+                                location.house = house
+                                if block:
+                                    location.block = block
+                                if flat:
+                                    location.flat = flat
+                        location.save()
+                        customer.location = location  # Проверить, работает ли!!!
+                        customer.save()
+
+                        # Место.
+                        cemetery = cd["cemetery"]
+                        ###
+                        response = HttpResponse(mimetype='text/csv')
+                        file_name = "_".join(cemetery.name.split())
+                        response['Content-Disposition'] = 'attachment; filename=bad_%s.csv' % file_name
+                        writer = csv.writer(response, "4mysql")
+                        str_written = 0
+                        ###
+                        try:
+                            place = Place.objects.get(cemetery=cemetery, area__iexact=area, row__iexact=row,
+                                                      seat__iexact=seat)
+                        except ObjectDoesNotExist:
+                            place = Place(creator=request.user)
+                            place.cemetery = cemetery
+                            place.area = area
+                            place.row = row
+                            place.seat = seat
+                            place.soul = cemetery.organization.soul_ptr  # To check!
+                            place.name = u"Место захоронения"
+                            place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
+                            place.save()
+
+                        # Захоронение.
+                        burial = Burial(creator=request.user)
+                        burial.person = deadman
+                        burial.account_book_n = n
+                        burial.responsible = place.cemetery.organization.soul_ptr
+                        burial.customer = customer
+                        burial.doer = request.user.userprofile.soul
+                        burial.date_fact = datetime.datetime.strptime(bur_date, "%Y-%m-%d  %H:%M:%S")
+                        burial.product = place.product_ptr
+                        if "урн" in comment.lower():
+                            operation = Operation.objects.get(id=5)
+                        elif "подзахоронение" in comment.lower():
+                            operation = Operation.objects.get(id=4)
+                        elif "захоронение в " in comment.lower():
+                            operation = Operation.objects.get(id=6)
+                        else:
+                            operation = Operation.objects.get(id=7)
+                        burial.operation = operation
+                        burial.save()
+                        burial.add_comment(comment, request.user)
+                    except Exception, err_descr:
+                        # Откатываем транзакцию.
+                        transaction.rollback()
+                        # Пишем в выходной csv файл.
+                        writer.writerow([n, ln, fn, ptrc, initials, bur_date, area, row, seat, cust_ln, cust_fn, cust_ptrc, cust_initials, city, street, house, block, flat, comment])
+                        str_written += 1
+                        # Сохраняем описание ошибки.
+                        if bad_file is None:
+                            bad_file = open("/tmp/bad_file.csv", "w")
+                            bad_file.write("%s\n" % err_descr)
                     else:
-                        operation = Operation.objects.get(id=7)
-                    burial.operation = operation
-                    burial.save()
-                    burial.add_comment(comment, request.user)
-                    # Коммитим все.
-                    transaction.commit()
-
-            return redirect("/management/import/")
+                        # Коммитим все.
+                        transaction.commit()
+            if bad_file is not None:
+                bad_file.close()
+            if str_written > 0:
+                return response
+            else:
+                return redirect("/management/import/")
     else:
         form = ImportForm()
     return direct_to_template(request, "import.html", {"form": form,})
