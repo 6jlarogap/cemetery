@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from common.models import Organization, Location, GeoCountry, GeoRegion
@@ -143,6 +143,12 @@ def main():
     user.first_name = dir_first_name.capitalize()
     profile = UserProfile(user=user, soul=person.soul_ptr)
     profile.save()
+
+    # Добавление пользователя во все существующие django-группы.
+    dgroups = Group.objects.all()
+    for dgr in dgroups:
+        user.groups.add(dgr)
+        
     ##############
     #if hasattr(cd['role'], "djgroups") and cd['role'].djgroups.all():
         #if cd.get("is_staff", False):
