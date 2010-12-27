@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Инициализация{% endblock %}
+{% block content %}
+    <h1>Инициализация</h1>
+    <h3>Создание стартовой конфигурации</h3>
+    <div id="forms">
+        <form action="" method="post">
+            <table>
+                {{ form.as_table }}
+            </table>
+            <input type="submit" value="Сохранить" />
+            <input type="reset" value="Очистить" />
+        </form>
+    </div>
+{% endblock %}
