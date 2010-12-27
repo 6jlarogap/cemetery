@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     (r'^admin/jsi18n/', 'django.views.i18n.javascript_catalog'),
 
     (r'^$', 'common.views.main_page'),
+    (r'^init/$', 'common.views.init'),
     (r'^login/$', 'common.views.ulogin'),
     (r'^logout/$', 'common.views.ulogout'),
     (r'^profile/$', 'common.views.profile'),

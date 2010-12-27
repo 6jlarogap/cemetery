@@ -82,7 +82,7 @@ class GeoCountry(models.Model):
     uuid = UUIDField(primary_key=True)
     name = models.CharField("Название", max_length=24, db_index=True, unique=True)
     def __unicode__(self):
-        return self.name[:24]
+        return self.name[:16]
     class Meta:
         #managed = False
         #db_table = "common_country"

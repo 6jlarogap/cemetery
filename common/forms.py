@@ -13,6 +13,7 @@ from annoying.decorators import autostrip
 from stdimage.forms import StdImageFormField
 
 import re
+import string
 import models
 
 
@@ -26,6 +27,7 @@ PER_PAGE_VALUES = (
     (500, '500'),
 )
 
+GOOD_CHARS = string.ascii_letters + string.digits + "@.+-_"
 
 ORDER_BY_VALUES = (
     ('person__last_name', '+фамилии'),
@@ -68,7 +70,7 @@ class CalendarWidget(forms.TextInput):
 
     def __init__(self, attrs={}):
         attrs.update({'class': 'vDateField', 'size': '10'})
-        print type(attrs), "++", attrs, "++"
+#        print type(attrs), "++", attrs, "++"
         super(CalendarWidget, self).__init__(attrs=attrs)
 
 #@autostrip
@@ -327,7 +329,7 @@ class UserProfileForm(forms.Form):
                 spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
                                                            p_type=settings.PLACE_PRODUCTTYPE_ID)
             except:
-                print "x3"
+#                print "x3"
                 raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
         return cd
 #    def clean(self):
@@ -418,14 +420,14 @@ class EditOrderForm(forms.Form):
             spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
                                                        p_type=settings.PLACE_PRODUCTTYPE_ID)
         except:
-            print "x3"
+#            print "x3"
             raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
         # Коммент и файлы.
         comment = cd.get("comment", "")
         file1 = cd.get("file1", None)
         file1_comment = cd.get("file1_comment", "")
         if file1_comment and not file1:
-            print "x1"
+#            print "x1"
             raise forms.ValidationError("Не выбран файл.")
 #        if not comment and not file1:
 #            raise forms.ValidationError("Ничего нового не добавлено.")
@@ -441,7 +443,7 @@ class EditOrderForm(forms.Form):
                 country_object = GeoCountry.objects.get(name__iexact=country)
             except ObjectDoesNotExist:
                 if not cd.get("new_country", False):
-                    print "x4"
+#                    print "x4"
                     raise forms.ValidationError("Страна не найдена.")
                 else:
                     new_country = True
@@ -449,17 +451,17 @@ class EditOrderForm(forms.Form):
                 if not cd.get("new_country", False):
                     new_country = False
                 else:
-                    print "x5"
+#                    print "x5"
                     raise forms.ValidationError("Страна с таким именем уже существует.")
             # Регион.
             if new_country and not cd.get("new_region", False):
-                print "x6"
+#                print "x6"
                 raise forms.ValidationError("У новой страны регион должен быть тоже новым.")
             try:
                 region_object = GeoRegion.objects.get(country__name__iexact=country, name__iexact=region)
             except ObjectDoesNotExist:
                 if not cd.get("new_region", False):
-                    print "x7"
+#                    print "x7"
                     raise forms.ValidationError("Регион не найден.")
                 else:
                     new_region = True
@@ -467,17 +469,17 @@ class EditOrderForm(forms.Form):
                 if not cd.get("new_region", False):
                     new_region = False
                 else:
-                    print "x8"
+#                    print "x8"
                     raise forms.ValidationError("Регион с таким именем уже существует в выбранной стране.")
             # Нас. пункт.
             if new_region and not cd.get("new_city", False):
-                print "x9"
+#                print "x9"
                 raise forms.ValidationError("У нового региона нас. пункт должен быть тоже новым.")
             try:
                 city_object = GeoCity.objects.get(region__name__iexact=region, name__iexact=city)
             except ObjectDoesNotExist:
                 if not cd.get("new_city", False):
-                    print "x10"
+#                    print "x10"
                     raise forms.ValidationError("Нас. пункт не найден.")
                 else:
                     new_city = True
@@ -485,21 +487,21 @@ class EditOrderForm(forms.Form):
                 if not cd.get("new_city", False):
                     new_city = False
                 else:
-                    print "x11"
+#                    print "x11"
                     raise forms.ValidationError("Нас. пункт с таким именем уже существует в выбранном регионе.")
             # Улица.
             if new_city and not cd.get("new_street", False):
-                print "x12"
+#                print "x12"
                 raise forms.ValidationError("У нового нас. пункта улица должна быть тоже новой.")
             try:
                 street_object = Street.objects.get(city__name__iexact=city, name__iexact=street)
             except ObjectDoesNotExist:
                 if not cd.get("new_street", False):
-                    print "x13"
+#                    print "x13"
                     raise forms.ValidationError("Улица не найдена.")
             else:
                 if cd.get("new_street", False):
-                    print "x14"
+#                    print "x14"
                     raise forms.ValidationError("Улица с таким именем уже существует в выбранном нас. пункте.")
             ######
         else:
@@ -605,7 +607,7 @@ class JournalForm(forms.Form):
             spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
                                                        p_type=settings.PLACE_PRODUCTTYPE_ID)
         except:
-            print "x3"
+#            print "x3"
             raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
         # Валидация полей Location (страна, регион, нас. пункт, улица).
         country = cd.get("country", "")
@@ -623,7 +625,7 @@ class JournalForm(forms.Form):
                 country_object = GeoCountry.objects.get(name__iexact=country)
             except ObjectDoesNotExist:
                 if not cd.get("new_country", False):
-                    print "x4"
+#                    print "x4"
                     raise forms.ValidationError("Страна не найдена.")
                 else:
                     new_country = True
@@ -631,17 +633,17 @@ class JournalForm(forms.Form):
                 if not cd.get("new_country", False):
                     new_country = False
                 else:
-                    print "x5"
+#                    print "x5"
                     raise forms.ValidationError("Страна с таким именем уже существует.")
             # Регион.
             if new_country and not cd.get("new_region", False):
-                print "x6"
+#                print "x6"
                 raise forms.ValidationError("У новой страны регион должен быть тоже новым.")
             try:
                 region_object = GeoRegion.objects.get(country__name__iexact=country, name__iexact=region)
             except ObjectDoesNotExist:
                 if not cd.get("new_region", False):
-                    print "x7"
+#                    print "x7"
                     raise forms.ValidationError("Регион не найден.")
                 else:
                     new_region = True
@@ -649,17 +651,17 @@ class JournalForm(forms.Form):
                 if not cd.get("new_region", False):
                     new_region = False
                 else:
-                    print "x8"
+#                    print "x8"
                     raise forms.ValidationError("Регион с таким именем уже существует в выбранной стране.")
             # Нас. пункт.
             if new_region and not cd.get("new_city", False):
-                print "x9"
+#                print "x9"
                 raise forms.ValidationError("У нового региона нас. пункт должен быть тоже новым.")
             try:
                 city_object = GeoCity.objects.get(region__name__iexact=region, name__iexact=city)
             except ObjectDoesNotExist:
                 if not cd.get("new_city", False):
-                    print "x10"
+#                    print "x10"
                     raise forms.ValidationError("Нас. пункт не найден.")
                 else:
                     new_city = True
@@ -667,21 +669,21 @@ class JournalForm(forms.Form):
                 if not cd.get("new_city", False):
                     new_city = False
                 else:
-                    print "x11"
+#                    print "x11"
                     raise forms.ValidationError("Нас. пункт с таким именем уже существует в выбранном регионе.")
             # Улица.
             if new_city and not cd.get("new_street", False):
-                print "x12"
+#                print "x12"
                 raise forms.ValidationError("У нового нас. пункта улица должна быть тоже новой.")
             try:
                 street_object = Street.objects.get(city__name__iexact=city, name__iexact=street)
             except ObjectDoesNotExist:
                 if not cd.get("new_street", False):
-                    print "x13"
+#                    print "x13"
                     raise forms.ValidationError("Улица не найдена.")
             else:
                 if cd.get("new_street", False):
-                    print "x14"
+#                    print "x14"
                     raise forms.ValidationError("Улица с таким именем уже существует в выбранном нас. пункте.")
             if block or building or flat:
                 if not house:
@@ -697,10 +699,9 @@ class JournalForm(forms.Form):
 @autostrip
 class InitalForm(forms.Form):
     """
-    Форма ввода данных для инициализации.
+    Форма ввода данных для инициализации системы.
     """
-    ogr_name = forms.CharField(label="Название организации", max_length=99)
-    # Весь Location - необязательный. Все поля.
+    org_name = forms.CharField(label="*Название организации", max_length=99)
     street = forms.CharField(required=False, max_length=99, label="Улица",
                              widget=forms.TextInput(attrs={"tabindex": "14"}))
     new_street = forms.BooleanField(required=False, label="Новая улица")
@@ -720,10 +721,7 @@ class InitalForm(forms.Form):
     building = forms.CharField(required=False, max_length=16, label="Строение")
     flat = forms.CharField(required=False, max_length=16, label="Квартира",
                                     widget=forms.TextInput(attrs={"tabindex": "20"}))
-    # Обязательное.
-    cemetery = forms.CharField(label="Название кладбища", max_length=99)
-    ###
-    # Тоже все, относящееся к Location - необязательно.
+    cemetery = forms.CharField(label="*Название кладбища", max_length=99)
     cem_street = forms.CharField(required=False, max_length=99, label="Улица",
                              widget=forms.TextInput(attrs={"tabindex": "14"}))
     cem_new_street = forms.BooleanField(required=False, label="Новая улица")
@@ -743,18 +741,32 @@ class InitalForm(forms.Form):
     cem_building = forms.CharField(required=False, max_length=16, label="Строение")
 #    cem_customer_flat = forms.CharField(required=False, max_length=16, label="Квартира",
 #                                    widget=forms.TextInput(attrs={"tabindex": "20"}))
-    username = forms.CharField(label="Логин", max_length=30,
+    username = forms.CharField(label="*Логин", max_length=30,
                                help_text="Допускаются только латинские буквы, цифры и знаки @ . + - _")
-    # ФИО - все 2 поля необязательные. Фамилия - обязательна.
-    last_name = forms.CharField(max_length=30, label="Фамилия директора*", widget=forms.TextInput(attrs={"tabindex": "3"}))
+    last_name = forms.CharField(max_length=30, label="*Фамилия директора", widget=forms.TextInput(attrs={"tabindex": "3"}))
     first_name = forms.CharField(required=False, max_length=30, label="Имя директора",
                                  widget=forms.TextInput(attrs={"tabindex": "4"}))
     patronymic = forms.CharField(required=False, max_length=30, label="Отчество директора",
                                  widget=forms.TextInput(attrs={"tabindex": "5"}))
-    #!!!!! Пароль директора - 2 поля
-    # Телефон - тоже не обязательное.
+    password1 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="*Пароль")
+    password2 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="*Пароль(еще раз)")
     phone = forms.CharField(required=False, max_length=15, label="Телефон директора",
                                      widget=forms.TextInput(attrs={"tabindex": "13"}))
+    def clean_username(self):
+        """
+        Проверка логина на отсутствие недопустимых символов.
+        """
+        un = self.cleaned_data["username"]
+        for ch in un:
+            if ch not in GOOD_CHARS:
+                raise forms.ValidationError("Введены недопустимые символы.")
+        return un
+    def clean(self):
+        cd = self.cleaned_data
+        if cd.get("password1", "") == cd.get("password2", ""):
+            return cd
+        else:
+            raise forms.ValidationError("Пароли не совпадают.")
 
 
 class ImportForm(forms.Form):
