@@ -703,55 +703,55 @@ class InitalForm(forms.Form):
     """
     org_name = forms.CharField(label="*Название организации", max_length=99)
     street = forms.CharField(required=False, max_length=99, label="Улица",
-                             widget=forms.TextInput(attrs={"tabindex": "14"}))
+                             widget=forms.TextInput())
     new_street = forms.BooleanField(required=False, label="Новая улица")
     city = forms.CharField(required=False, max_length=36, label="Нас. пункт",
-                           widget=forms.TextInput(attrs={"tabindex": "15"}))
+                           widget=forms.TextInput())
     new_city = forms.BooleanField(required=False, label="Новый нас. пункт")
     region = forms.CharField(required=False, max_length=36, label="Регион",
-                             widget=forms.TextInput(attrs={"tabindex": "16"}))
+                             widget=forms.TextInput())
     new_region = forms.BooleanField(required=False, label="Новый регион")
     country = forms.CharField(required=False, max_length=24, label="Страна",
-                              widget=forms.TextInput(attrs={"tabindex": "17"}))
+                              widget=forms.TextInput())
     new_country = forms.BooleanField(required=False, label="Новая страна")
     house = forms.CharField(required=False, max_length=16, label="Дом",
-                                     widget=forms.TextInput(attrs={"tabindex": "18"}))
+                                     widget=forms.TextInput())
     block = forms.CharField(required=False, max_length=16, label="Корпус",
-                                     widget=forms.TextInput(attrs={"tabindex": "19"}))
+                                     widget=forms.TextInput())
     building = forms.CharField(required=False, max_length=16, label="Строение")
     flat = forms.CharField(required=False, max_length=16, label="Квартира",
-                                    widget=forms.TextInput(attrs={"tabindex": "20"}))
+                                    widget=forms.TextInput())
     cemetery = forms.CharField(label="*Название кладбища", max_length=99)
     cem_street = forms.CharField(required=False, max_length=99, label="Улица",
-                             widget=forms.TextInput(attrs={"tabindex": "14"}))
+                             widget=forms.TextInput())
     cem_new_street = forms.BooleanField(required=False, label="Новая улица")
     cem_city = forms.CharField(required=False, max_length=36, label="Нас. пункт",
-                           widget=forms.TextInput(attrs={"tabindex": "15"}))
+                           widget=forms.TextInput())
     cem_new_city = forms.BooleanField(required=False, label="Новый нас. пункт")
     cem_region = forms.CharField(required=False, max_length=36, label="Регион",
-                             widget=forms.TextInput(attrs={"tabindex": "16"}))
+                             widget=forms.TextInput())
     cem_new_region = forms.BooleanField(required=False, label="Новый регион")
     cem_country = forms.CharField(required=False, max_length=24, label="Страна",
-                              widget=forms.TextInput(attrs={"tabindex": "17"}))
+                              widget=forms.TextInput())
     cem_new_country = forms.BooleanField(required=False, label="Новая страна")
     cem_house = forms.CharField(required=False, max_length=16, label="Дом",
-                                     widget=forms.TextInput(attrs={"tabindex": "18"}))
+                                     widget=forms.TextInput())
     cem_block = forms.CharField(required=False, max_length=16, label="Корпус",
-                                     widget=forms.TextInput(attrs={"tabindex": "19"}))
+                                     widget=forms.TextInput())
     cem_building = forms.CharField(required=False, max_length=16, label="Строение")
 #    cem_customer_flat = forms.CharField(required=False, max_length=16, label="Квартира",
-#                                    widget=forms.TextInput(attrs={"tabindex": "20"}))
+#                                    widget=forms.TextInput())
     username = forms.CharField(label="*Логин", max_length=30,
                                help_text="Допускаются только латинские буквы, цифры и знаки @ . + - _")
-    last_name = forms.CharField(max_length=30, label="*Фамилия директора", widget=forms.TextInput(attrs={"tabindex": "3"}))
+    last_name = forms.CharField(max_length=30, label="*Фамилия директора", widget=forms.TextInput())
     first_name = forms.CharField(required=False, max_length=30, label="Имя директора",
-                                 widget=forms.TextInput(attrs={"tabindex": "4"}))
+                                 widget=forms.TextInput())
     patronymic = forms.CharField(required=False, max_length=30, label="Отчество директора",
-                                 widget=forms.TextInput(attrs={"tabindex": "5"}))
+                                 widget=forms.TextInput())
     password1 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="*Пароль")
     password2 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="*Пароль(еще раз)")
     phone = forms.CharField(required=False, max_length=15, label="Телефон директора",
-                                     widget=forms.TextInput(attrs={"tabindex": "13"}))
+                                     widget=forms.TextInput())
     def clean_username(self):
         """
         Проверка логина на отсутствие недопустимых символов.
