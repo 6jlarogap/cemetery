@@ -1100,16 +1100,24 @@ def import_csv(request):
         if form.is_valid():
             cd = form.cleaned_data
             r = csv.reader(cd["csv_file"], "4mysql")
-            bad_file = None
+            response = HttpResponse(mimetype='text/csv')
+#            file_name = u"_".join(cd["cemetery"].name.split())
+            response['Content-Disposition'] = 'attachment; filename=bad_records.csv'
+            writer = csv.writer(response, "4mysql")
+            err_descrs = []
+            iduuids = []
             for l in r:
                 if l:
                     try:
-                        (n,
-                         ln, fn, ptrc, initials,
-                         bur_date, area, row, seat,
-                         cust_ln, cust_fn, cust_ptrc, cust_initials,
-                         city, street, house, block, flat,
-                         comment) = l
+                        (str_id,
+                        n,
+                        ln, fn, ptrc, initials,
+                        bur_date, area, row, seat,
+                        cust_ln, cust_fn, cust_ptrc, cust_initials,
+                        city, street, house, block, flat,
+                        comment) = l
+                        # ID записи в табилице MySQL.
+                        str_id = int(str_id)
                         # Номер в книге учета.
                         n = n.decode(settings.CSV_ENCODING).strip().lower()
                         # Фамилия захороненного.
@@ -1234,13 +1242,6 @@ def import_csv(request):
 
                         # Место.
                         cemetery = cd["cemetery"]
-                        ###
-                        response = HttpResponse(mimetype='text/csv')
-                        file_name = "_".join(cemetery.name.split())
-                        response['Content-Disposition'] = 'attachment; filename=bad_%s.csv' % file_name
-                        writer = csv.writer(response, "4mysql")
-                        str_written = 0
-                        ###
                         try:
                             place = Place.objects.get(cemetery=cemetery, area__iexact=area, row__iexact=row,
                                                       seat__iexact=seat)
@@ -1264,36 +1265,42 @@ def import_csv(request):
                         burial.doer = request.user.userprofile.soul
                         burial.date_fact = datetime.datetime.strptime(bur_date, "%Y-%m-%d  %H:%M:%S")
                         burial.product = place.product_ptr
-                        if "урн" in comment.lower():
-                            operation = Operation.objects.get(id=5)
-                        elif "подзахоронение" in comment.lower():
-                            operation = Operation.objects.get(id=4)
-                        elif "захоронение в " in comment.lower():
-                            operation = Operation.objects.get(id=6)
+                        if u"урн" in comment.lower():
+                            operation = Operation.objects.get(id=settings.OPER_1)
+                        elif u"подзахоронение" in comment.lower():
+                            operation = Operation.objects.get(id=settings.OPER_2)
+                        elif u"захоронение в " in comment.lower():
+                            operation = Operation.objects.get(id=settings.OPER_3)
                         else:
-                            operation = Operation.objects.get(id=7)
+                            operation = Operation.objects.get(id=settings.OPER_4)
                         burial.operation = operation
                         burial.save()
                         burial.add_comment(comment, request.user)
+                        iduuids.append((str_id, burial.uuid))
                     except Exception, err_descr:
+                        print "ERROR:", err_descr
                         # Откатываем транзакцию.
                         transaction.rollback()
-                        # Пишем в выходной csv файл.
-                        writer.writerow([n, ln, fn, ptrc, initials, bur_date, area, row, seat, cust_ln, cust_fn, cust_ptrc, cust_initials, city, street, house, block, flat, comment])
-                        str_written += 1
                         # Сохраняем описание ошибки.
-                        if bad_file is None:
-                            bad_file = open("/tmp/bad_file.csv", "w")
-                            bad_file.write("%s\n" % err_descr)
+                        err_descrs.append(err_descr)
+#                        # Пишем в выходной csv файл.
+                        writer.writerow([str_id, n, ln, fn, ptrc, initials, bur_date, area, row, seat, cust_ln, cust_fn,
+                                         cust_ptrc, cust_initials, city, street, house, block, flat, comment])
                     else:
                         # Коммитим все.
                         transaction.commit()
-            if bad_file is not None:
-                bad_file.close()
-            if str_written > 0:
-                return response
-            else:
-                return redirect("/management/import/")
+#            if str_written > 0:
+            myseporator = u'=== ОШИБКИ ИМПОРТА ==='
+            writer.writerow([myseporator.encode('utf8')])
+            for err in err_descrs:
+                writer.writerow(err)
+            myseporator = u'=== ID-UUID ==='
+            writer.writerow([myseporator.encode('utf8')])
+            for u in iduuids:
+                writer.writerow(u)
+            return response
+#            else:
+#                return redirect("/management/import/")
     else:
         form = ImportForm()
     return direct_to_template(request, "import.html", {"form": form,})
@@ -1319,7 +1326,7 @@ def init(request):
             organization.save()
             # Создаем объекты SoulProducttypeOperation.
             operations = Operation.objects.all()
-            p_type = settings.PLACE_PRODUCTTYPE_ID
+            p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
             for op in operations:
                 spo = SoulProducttypeOperation()
                 spo.soul = organization.soul_ptr
@@ -1451,8 +1458,9 @@ def init(request):
             person_role.save()
 
             # Системный пользователь django.
-            user = User.objects.create_user(username=cd["username"], email="", password=cd["password1"],
-                                            last_name=cd["last_name"].capitalize())
+            user = User.objects.create_user(username=cd["username"], email="", password=cd["password1"])
+            user.is_staff = True
+            user.last_name = cd["last_name"].capitalize()
             if first_name:
                 user.first_name = first_name.capitalize()
             user.save()
@@ -1464,6 +1472,7 @@ def init(request):
             dgroups = Group.objects.all()
             for dgr in dgroups:
                 user.groups.add(dgr)
+            return HttpResponse("OK. Выйдите и залогиньтесь под директором.")
     else:
         form = InitalForm()
     return direct_to_template(request, "init.html", {"form": form,})

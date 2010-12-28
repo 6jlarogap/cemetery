@@ -151,7 +151,7 @@ $(function(){
         <table width="800">
              <tr>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         <a href="/admin/common/burial/{{ burial.uuid }}/" target="_blank" tabindex="1">Номер в книге учета</a>
                     {% else %}
                         Номер в книге учета
@@ -166,7 +166,7 @@ $(function(){
              <tr>
                 <td width="33%">{{ burial.account_book_n }}</td>
                 <td width="33%">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.burial_date }}
                     {% else %}
                         {{ burial.date_fact|date:"d.m.Y" }}
@@ -176,21 +176,21 @@ $(function(){
             </tr>
             <tr>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         <a href="/admin/common/person/{{ burial.person.uuid }}/" target="_blank" tabindex="3">Фамилия</a>
                     {% else %}
                         Фамилия
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         <a href="/admin/common/person/{{ burial.person.uuid }}/" target="_blank" tabindex="4">Имя</a>
                     {% else %}
                         Имя
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         <a href="/admin/common/person/{{ burial.person.uuid }}/" target="_blank" tabindex="5">Отчество</a>
                     {% else %}
                         Отчество
@@ -204,7 +204,7 @@ $(function(){
             </tr>
              <tr>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.cemetery }}
                     {% else %}
                         {{ burial.product.place.cemetery.name }}
@@ -213,7 +213,7 @@ $(function(){
                 </td>
                 <td width="33%" id="free_form">
 
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.operation }}{{ form.hoperation }}
                     {% else %}
                         {{ burial.operation.op_type }}
@@ -234,21 +234,21 @@ $(function(){
             </tr>
             <tr>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.area }}
                     {% else %}
                         {{ burial.product.place.area }}
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.row }}
                     {% else %}
                         {{ burial.product.place.row }}
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.seat }}
                     {% else %}
                         {{ burial.product.place.seat }}
@@ -257,21 +257,21 @@ $(function(){
             </tr>
             <tr>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         <a href="/admin/common/person/{{ burial.customer.person.uuid }}/" target="_blank" tabindex="10">Фамилия заказчика</a>
                     {% else %}
                         Фамилия заказчика
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         <a href="/admin/common/person/{{ burial.customer.person.uuid }}/" target="_blank" tabindex="11">Имя заказчика</a>
                     {% else %}
                         Имя заказчика
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         <a href="/admin/common/person/{{ burial.customer.person.uuid }}/" target="_blank" tabindex="12">Отчество заказчика</a>
                     {% else %}
                         Отчество заказчика
@@ -299,28 +299,28 @@ $(function(){
             </tr>
              <tr>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.street }}
                     {% else %}
                         {{ burial.customer.location.street.name }}
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.city }}
                     {% else %}
                         {{ burial.customer.location.street.city.name }}
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.region }}
                     {% else %}
                         {{ burial.customer.location.street.city.region.name }}
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.country }}
                     {% else %}
                         {{ burial.customer.location.street.city.region.country.name }}
@@ -343,22 +343,22 @@ $(function(){
             </tr>
             <tr>
                 <td id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.new_street }}
                     {% endif %}
                 </td>
                 <td id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.new_city }}
                     {% endif %}
                 </td>
                 <td id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.new_region }}
                     {% endif %}
                 </td>
                 <td>
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.new_country }}
                     {% endif %}
                 </td>
@@ -380,28 +380,28 @@ $(function(){
 
             <tr>
                 <td id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         <a href="/admin/common/location/{{ burial.customer.location.uuid }}/" target="_blank" tabindex="18">Дом</a>
                     {% else %}
                         Дом
                     {% endif %}
                 </td>
                 <td id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         <a href="/admin/common/location/{{ burial.customer.location.uuid }}/" target="_blank" tabindex="19">Корпус</a>
                     {% else %}
                         Корпус
                     {% endif %}
                 </td>
                 <td id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         <a href="/admin/common/location/{{ burial.customer.location.uuid }}/" target="_blank">Строение</a>
                     {% else %}
                         Строение
                     {% endif %}
                 </td>
                 <td id="free_form">
-                    {% if user|in_group:"edtit_bur_in_adm" %}
+                    {% if user|in_group:"edit_bur_in_adm" %}
                         <a href="/admin/common/location/{{ burial.customer.location.uuid }}/" target="_blank" tabindex="20">Квартира</a>
                     {% else %}
                         Квартира
