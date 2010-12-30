@@ -28,4 +28,7 @@ chown root:root /etc/init.d/django
 chmod 751 /etc/init.d/django
 update-rc.d django defaults
 #Restore postgres dump
-cat configs/youmemory.sql | psql -U postgres youmemory
+cat youmemory.sql | psql -U postgres youmemory
+#Start django daemon
+/etc/init.d/django restart
+
