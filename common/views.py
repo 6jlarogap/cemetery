@@ -1472,7 +1472,8 @@ def init(request):
             dgroups = Group.objects.all()
             for dgr in dgroups:
                 user.groups.add(dgr)
-            return HttpResponse("OK. Выйдите и залогиньтесь под директором.")
+#            return HttpResponse("OK. Выйдите и залогиньтесь под директором.")
+            return redirect("/logout/")
     else:
         form = InitalForm()
     return direct_to_template(request, "init.html", {"form": form,})
