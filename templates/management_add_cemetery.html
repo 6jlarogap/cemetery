@@ -43,7 +43,9 @@
             {{ cemetery.name }}
         </td>
         <td width="30%">
-            {{ cemetery.location.street.city.country.name }}, {{ cemetery.location.street.city.region.name }}, {{ cemetery.location.street.city.name }}, {{ cemetery.location.street.name }}, {{ cemetery.location.house }}
+            {% if cemetery.location.street %}
+                {{ cemetery.location.street.city.country.name }}, {{ cemetery.location.street.city.region.name }}, {{ cemetery.location.street.city.name }}, {{ cemetery.location.street.name }}, {{ cemetery.location.house }}
+            {% endif %}
         </td>
         <td width="30%" align="center">
 

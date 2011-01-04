@@ -237,14 +237,23 @@ class CemeteryForm(forms.Form):
     organization = forms.ModelChoiceField(queryset=Organization.objects.all(),
                                           label="Организация", empty_label=None)
     name = forms.CharField(max_length=99, label="Название")
-    country = forms.ModelChoiceField(queryset=GeoCountry.objects.all(),
-                                     label="Страна")
-    city = forms.CharField(max_length=64, label="Город")
-    street = forms.CharField(max_length=99, label="Улица")
-    house = forms.CharField(required=False, max_length=16, label="Дом")
-    block = forms.CharField(required=False, max_length=16, label="Корпус")
-    building = forms.CharField(required=False, max_length=16,
-                               label="Строение")
+    street = forms.CharField(required=False, max_length=99, label="Улица",
+                             widget=forms.TextInput())
+    new_street = forms.BooleanField(required=False, label="Новая улица")
+    city = forms.CharField(required=False, max_length=36, label="Нас. пункт",
+                           widget=forms.TextInput())
+    new_city = forms.BooleanField(required=False, label="Новый нас. пункт")
+    region = forms.CharField(required=False, max_length=36, label="Регион",
+                             widget=forms.TextInput())
+    new_region = forms.BooleanField(required=False, label="Новый регион")
+    country = forms.CharField(required=False, max_length=24, label="Страна",
+                              widget=forms.TextInput())
+    new_country = forms.BooleanField(required=False, label="Новая страна")
+    house = forms.CharField(required=False, max_length=16, label="Дом",
+                                     widget=forms.TextInput())
+    block = forms.CharField(required=False, max_length=16, label="Корпус",
+                                     widget=forms.TextInput())
+    building = forms.CharField(required=False, max_length=16, label="Строение")
 #    def __init__(self, *args, **kwargs):
 #        #self.user = kwargs.pop('user')
 #        super(CemeteryForm, self).__init__(*args, **kwargs)

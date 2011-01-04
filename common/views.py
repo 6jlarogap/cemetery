@@ -550,30 +550,62 @@ def management_cemetery(request):
         form = CemeteryForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            city = GeoCity(country=cd["country"], name=cd["city"])
-            city.save()
-            #if cd.get("street", ""):
-            street = Street(city=city, name=cd["street"])
-            street.save()
-            location = Location(street=street)
-            if cd.get("house", ""):
-                location.house = cd["house"]
-            if cd.get("block", ""):
-                location.block = cd["block"]
-            if cd.get("building", ""):
-                location.building = cd["building"]
+            location = Location()
             location.save()
             cemetery = Cemetery()
-            cemetery.organization = request.user.userprofile.soul.person.roles.all()[0].organization  # To fix!!!
+            cemetery.organization = cd["organization"]
             cemetery.location = location
             cemetery.name = cd["name"]
             cemetery.creator = request.user
             cemetery.save()
+            location_street = cd.get("street", "")
+            location_city = cd.get("city", "")
+            location_region = cd.get("region", "")
+            location_country = cd.get("country", "")
+            location_house = cd.get("house", "")
+            location_block = cd.get("block", "")
+            location_building = cd.get("building", "")
+            if location_street and location_city and location_region and location_country:
+                # Есть все для создания непустого Location.
+                # Страна.
+                try:
+                    country = GeoCountry.objects.get(name__iexact=location_country)
+                except ObjectDoesNotExist:
+                    country = GeoCountry(name=location_country.capitalize())
+                    country.save()
+                # Регион.
+                try:
+                    region = GeoRegion.objects.get(name__iexact=location_region,
+                                                   country=country)
+                except ObjectDoesNotExist:
+                    region = GeoRegion(name=location_region.capitalize(), country=country)
+                    region.save()
+                # Нас. пункт.
+                try:
+                    city = GeoCity.objects.get(name__iexact=location_city, region=region)
+                except ObjectDoesNotExist:
+                    city = GeoCity(name=location_city.capitalize(), country=country,
+                                   region=region)
+                    city.save()
+                # Улица.
+                try:
+                    street = Street.objects.get(name__iexact=location_street, city=city)
+                except ObjectDoesNotExist:
+                    street = Street(name=location_street.capitalize(), city=city)
+                    street.save()
+                # Продолжаем с Location.
+                location.street = street
+                if location_house:
+                    location.house = location_house
+                    if location_block:
+                        location.block = location_block
+                    if location_building:
+                        location.building = location_building
+                location.save()
             return redirect("/management/cemetery/")
     else:
         form = CemeteryForm()
     cemeteries = Cemetery.objects.all()
-#    print cemeteries
     return direct_to_template(request, 'management_add_cemetery.html',
                               {'form': form,
                                "cemeteries": cemeteries})
