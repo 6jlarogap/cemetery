@@ -354,18 +354,18 @@ $(function(){
                     <td>{{ burial.person.last_name }}</td>
                     <td>{{ burial.person.first_name }}</td>
                     <td>{{ burial.person.patronymic }}</td>
-                    <td>{{ burial.bur_date|date:"d.m.Y" }}</td>
+                    <td>{{ burial.date_fact|date:"d.m.Y" }}</td>
                     <td>{{ burial.account_book_n }}</td>
-                    <td>{{ burial.place.area }}</td>
-                    <td>{{ burial.place.row }}</td>
-                    <td>{{ burial.place.seat }}</td>
-                    <td>{{ burial.place.cemetery.name }}</td>
-                    {% if burial.order_position.order.customer.person.last_name %}
-                        <td>{{ burial.order_position.order.customer.person.last_name }} {{ burial.order_position.order.customer.person.first_name|first|add:"." }} {{ burial.order_position.order.customer.person.patronymic|first|add:"." }}</td>
+                    <td>{{ burial.product.place.area }}</td>
+                    <td>{{ burial.product.place.row }}</td>
+                    <td>{{ burial.product.place.seat }}</td>
+                    <td>{{ burial.product.place.cemetery.name }}</td>
+                    {% if burial.customer.person.last_name %}
+                        <td>{{ burial.customer.person.last_name }} {{ burial.customer.person.first_name|first|add:"." }} {{ burial.customer.person.patronymic|first|add:"." }}</td>
                     {% else %}
                         <td>&nbsp;</td>
                     {% endif %}
-                    <td>{{ burial.order_position.operation.op_type|truncatewords:2 }}</td>
+                    <td>{{ burial.operation.op_type|truncatewords:2 }}</td>
                     <td>{{ burial.all_comments }}</td>
                     <td><button title="Редактировать" onclick="top.location.href='/burial/{{ burial.uuid }}/';"><img src="/media/edit.png"></button></td>
                 </tr>
