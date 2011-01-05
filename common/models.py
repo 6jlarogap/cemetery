@@ -26,11 +26,6 @@ rules = [
 ]
 add_introspection_rules(rules, ["^stdimage\.fields",])
 
-
-#def get_file_path(instance, filename):
-    #filename = re.sub(r'\s', r'_', filename)
-    #return os.path.join('attach/', instance.person.soul.uuid, filename)
-
 PER_PAGE_VALUES = (
     (5, '5'),
     (10, '10'),
@@ -64,16 +59,6 @@ ORDER_BY_VALUES = (
     #('-comment', '-комментарию'),
 )
 
-#class Country_old(models.Model):
-    #"""
-    #Страна.
-    #"""
-    #uuid = UUIDField(primary_key=True)
-    #name = models.CharField(max_length=30)  # Название.
-    #class Meta:
-        #ordering = ['uuid']
-    #def __unicode__(self):
-        #return self.name
 
 class GeoCountry(models.Model):
     """
@@ -223,8 +208,7 @@ class Person(Soul):
     patronymic = models.CharField("Отчество", max_length=30, blank=True)  # Отчество.
     #death_certificate = models.CharField("Свидетельство о смерти",
                                          #max_length=30, blank=True)  # Номер свидетельства о смерти.
-    roles = models.ManyToManyField("Role", through="PersonRole",
-                                   verbose_name="Роли")
+    roles = models.ManyToManyField("Role", through="PersonRole", verbose_name="Роли")
     def __unicode__(self):
         if self.last_name:
             result = self.last_name
@@ -262,7 +246,6 @@ class Organization(Soul):
     ogrn = models.CharField("ОГРН", max_length=15, blank=True)  # ОГРН.
     inn = models.CharField("ИНН", max_length=15, blank=True)  # ИНН.
     name = models.CharField("Название организации", max_length=99) #  Название.
-#    main = models.BooleanField("Наша собственная организация", default=False)
     def __unicode__(self):
         return self.name[:24]
     class Meta:
@@ -300,7 +283,6 @@ class RoleTree(models.Model):
     slave = models.ForeignKey(Role, related_name='rltree_slave') # Подчиненный.
 
 
-# Checked.
 class PersonRole(models.Model):
     """
     Роль персоны. Фактически, это сотрудники, которым есть доступ в систему.
@@ -318,7 +300,6 @@ class PersonRole(models.Model):
         unique_together = (("person", "role"),)
 
 
-# Checked.
 class Cemetery(models.Model):
     """
     Кладбище.
@@ -337,7 +318,6 @@ class Cemetery(models.Model):
         return "%s(%s)" % (self.name[:24], self.organization.name[:24])
 
 
-# Checked.
 class ProductType(models.Model):
     """
     Тип продукта.
@@ -350,7 +330,6 @@ class ProductType(models.Model):
         verbose_name_plural = ('типы продуктов')
 
 
-# Checked.
 class Product(models.Model):
     """
     Продукт.
@@ -398,17 +377,6 @@ class ProductComments(models.Model):
         ordering = ['date_of_creation']
 
 
-# OK.
-#class SoulProduct(models.Model):
-    #"""
-    #To add description.
-    #"""
-    #uuid = UUIDField(primary_key=True)
-    #soul = models.OneToOneField(Soul)
-    #product = models.OneToOneField(Product)
-
-
-# Checked.
 class Place(Product):
     """
     Место.
@@ -437,9 +405,7 @@ class Place(Product):
         unique_together = (("cemetery", "area", "row", "seat"),)
 
 
-
 class Place1(Product): # Места
-    #product_ptr = models.ForeignKey(Product)
     cemetery = models.ForeignKey(Cemetery)  # Связь с кладбищем.
     area = models.CharField(max_length=9)  # Участок.
     row = models.CharField(max_length=9)  # Ряд.
@@ -527,32 +493,12 @@ class OrderComments(models.Model):
         ordering = ['date_of_creation']
 
 
-#class OrderPosition(models.Model):
-#    """
-#    Позиция в заказе.
-#    """
-#    uuid = UUIDField(primary_key=True)
-#    order = models.ForeignKey(Order)
-#    product = models.ForeignKey(Product, related_name="xxx")  # To change!
-#    operation = models.ForeignKey(Operation)
-#    creator = models.ForeignKey(User)  # Создатель записи.
-#    date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
-
-
-# Checked.
 class Burial(Order):
     """
     Захоронение.
     """
     person = models.ForeignKey(Person, verbose_name="Похороненный", related_name='buried')  # Похороненный.
-#    place = models.ForeignKey(Place)
-    #order_position = models.ForeignKey(OrderPosition, blank=True, null=True)  # TEMP! To remove blank/null!
-#    bur_date = models.DateField()  # Дата захоронения.
-#    account_book_n = models.CharField("Номер в книге учета", max_length=9, unique=True)  # Номер записи к книге учета.
     account_book_n = models.CharField("Номер в книге учета", max_length=9)  # Номер записи к книге учета.
-#    is_trash = models.BooleanField(default=False)
-#    creator = models.ForeignKey(User)  # Создатель записи.
-#    date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     class Meta:
         verbose_name = ('захоронение')
         verbose_name_plural = ('захоронения')
@@ -562,15 +508,8 @@ class Burial(Order):
 
 
 class Burial1(Order): # Захоронения
-    #product_ptr = models.ForeignKey(Product)
     person = models.ForeignKey(Person)  # Похороненный.
-#    place = models.ForeignKey(Place1)
-    #order_position = models.ForeignKey(OrderPosition, blank=True, null=True)  # TEMP! To remove blank/null!
-#    bur_date = models.DateField()  # Дата захоронения.
     account_book_n = models.CharField(max_length=9, unique=True)  # Номер записи к книге учета.
-#    is_trash = models.BooleanField(default=False)
-#    creator = models.ForeignKey(User)  # Создатель записи.
-#    date_of_creation = models.DateTimeField()  # Дата создания записи.
     s1 = models.TextField(blank=True, null=True)
     s2 = models.FloatField(blank=True, null=True)
     s3 = models.TextField(blank=True, null=True)
@@ -578,7 +517,6 @@ class Burial1(Order): # Захоронения
         managed = False
 
 
-# OK.
 class UserProfile(models.Model):
     """
     Профиль пользователя.
@@ -599,23 +537,10 @@ class UserProfile(models.Model):
                                                     choices=PER_PAGE_VALUES)
     records_order_by = models.CharField("Сортировка по", max_length=50,
                                         blank=True, choices=ORDER_BY_VALUES)
-
-    def is_management(self):
-        """
-        Проверка, входил ли пользователь в группу `управление`.
-        """
-        try:
-            g = self.user.groups.get(name='руководство')
-        except ObjectDoesNotExist:
-            return False
-        else:
-            return True
-
     def __unicode__(self):
         return self.user.username
 
 
-# Checked.
 class SoulProducttypeOperation(models.Model):
     """
     Таблица для связи трех моделей.
@@ -627,7 +552,6 @@ class SoulProducttypeOperation(models.Model):
     def __unicode__(self):
         return u"%s  -  %s  -  %s" % (self.soul.__unicode__(), self.p_type.name,
                              self.operation.op_type[:24])
-#        return self.operation.op_type[:36]
     class Meta:
         verbose_name = ('связь типа продукта с операцией')
         verbose_name_plural = ('связи типов продуктов с операциями')

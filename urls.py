@@ -30,18 +30,14 @@ urlpatterns = patterns('',
     (r'^management/import/$', 'common.views.import_csv'),
     (r'^management/user/$', 'common.views.management_user'),
     (r'^management/user/edit/(.{36})/$', 'common.views.management_edit_user'),
-    #(r'^management/user/delete/(.{36})/$',
-     #'common.views.management_delete_user'),
     (r'^management/cemetery/$', 'common.views.management_cemetery'),
-    #(r'^management/cemetery/delete/(.{36})/$',
-     #'common.views.management_delete_cemetery'),
     (r'^management/cemetery/edit/(.{36})/$',
      'common.views.management_edit_cemetery'),
     # ajax.
     (r'^getcountries/$', 'common.views.get_countries'),
     (r'^getregions/$', 'common.views.get_regions'),
     (r'^getcities/$', 'common.views.get_cities'),
-    #(r'^get_streets/$', 'common.views.get_streets'),
+    (r'^getstreets/$', 'common.views.get_street'),
     # Уникальный список фамилий заказчиков.
     (r'^getpersonunln/$', 'common.views.get_customer_ln'),
     # Уникальный список фамилий захороненных.
@@ -52,7 +48,6 @@ urlpatterns = patterns('',
     (r'^orderfile/delete/(.{36})/(.{36})/$',
      'common.views.delete_orderfile'),
     #TEMP
-    (r'^getstreets/$', 'common.views.get_street'),
     (r'^media/(?P<path>.*)$', 'django.views.static.serve',
      {'document_root': settings.MEDIA_ROOT}),
 )

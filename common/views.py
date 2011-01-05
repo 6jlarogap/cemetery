@@ -14,7 +14,7 @@ from django.conf import settings
 from django.utils.simplejson.encoder import JSONEncoder
 from forms import SearchForm, NewUserForm, EditUserForm, ImportForm
 from forms import CemeteryForm, JournalForm, EditOrderForm, InitalForm
-from django.forms.models import modelformset_factory, formset_factory, inlineformset_factory
+from django.forms.models import modelformset_factory
 from models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization
 from models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation
 from models import OrderFiles, Phone, Place, ProductType, SoulProducttypeOperation, Role
@@ -28,7 +28,6 @@ import csv
 from common.forms import UserProfileForm
 
 
-#MAIN_ORGANIZATION = Organization.objects.get(main=True)
 csv.register_dialect("4mysql", escapechar="\\", quoting=csv.QUOTE_NONE)
 
 def is_in_group(group_name):
@@ -59,7 +58,6 @@ def main_page(request):
     burials = Burial1.objects.filter(is_trash=False).order_by("person__last_name",
                                                               "person__first_name",
                                                               "person__patronymic")
-    #if request.method == "GET":
     pp = None
     if form.is_valid():
         cd = form.cleaned_data
@@ -321,13 +319,6 @@ def profile(request):
     return direct_to_template(request, 'profile2.html', {"form": form})
 
 
-#@login_required
-#@is_in_group("руководство")
-#def show_all_users(request):
-#    persons = Person.objects.all()
-#    return direct_to_template(request, 'show_all_users.html', {"persons": persons})
-
-
 def ulogin(request):
     """
     Страница логина.
@@ -357,9 +348,6 @@ def ulogout(request):
     return redirect(next_url)
 
 
-
-
-
 @login_required
 #@permission_required('common.change_burial')
 @is_in_group("management")
@@ -369,7 +357,7 @@ def management(request):
     """
     return direct_to_template(request, 'management.html')
 
-#_ok
+
 @login_required
 #@permission_required('common.change_burial')
 @is_in_group("management_user")
@@ -408,13 +396,6 @@ def management_user(request):
                     user.is_staff = True
                 for djgr in cd['role'].djgroups.all():
                     user.groups.add(djgr)  # Добавляем человека в django-группу, связанную с его ролью.
-            #if cd['role'].name == u'Руководство':
-                #user.is_staff = True
-                #user.save()
-                #g = Group.objects.get(name=u'руководство')
-                #user.groups.add(g)  # Добавляем человека в группу `руководство`.
-                #can_change_burial = Permission.objects.get(codename='change_burial')  # To remove.
-                #user.user_permissions.add(can_change_burial)
             user.save()
             return redirect("/management/user/")
     else:
@@ -424,22 +405,6 @@ def management_user(request):
                               {'form': form, "users": users})
 
 
-#@login_required
-#@permission_required('common.change_burial')
-#@transaction.commit_on_success
-#def management_delete_user(request, uuid):
-    #"""
-    #Удаление исполнителя.
-    #"""
-    #try:
-        #PersonRole.objects.get(person__uuid=uuid).delete()
-        #Person.objects.get(uuid=uuid).delete()
-    #except ObjectDoesNotExist:
-        #raise Http404
-    #else:
-        #return redirect('/management/user/')
-
-#_ok
 @login_required
 @is_in_group("management_edit_user")
 @transaction.commit_on_success
@@ -611,24 +576,6 @@ def management_cemetery(request):
                                "cemeteries": cemeteries})
 
 
-#@login_required
-#@permission_required('common.change_burial')
-#@transaction.commit_on_success
-#def management_delete_cemetery(request, uuid):
-    #"""
-    #Удаление кладбища.
-    #"""
-    #try:
-        #cemetery = Cemetery.objects.get(uuid=uuid)
-    #except ObjectDoesNotExist:
-        #raise Http404
-    #else:
-        #location = cemetery.location
-        #cemetery.delete()
-        #location.delete()
-        #return redirect('/management/cemetery/')
-
-
 @login_required
 #@permission_required('common.change_burial')
 @is_in_group("management_edit_cemetery")
@@ -721,24 +668,6 @@ def management_edit_cemetery(request, uuid):
                               {'form': form,})
 
 
-
-#def get_streets(request):
-    #"""
-    #Получение списка улиц для нас. пункта.
-    #"""
-    #streets = []
-    #try:
-        #city = request.GET.get('city')
-        #q = request.GET.get('q')
-        #city_obj = City.objects.get(name__iexact=region)
-    #except Country.DoesNotExist:
-        #pass
-    #else:
-        #cursor = City.objects.filter(region=region_obj).filter(name__istartswith=q).order_by("name")[:24]
-        #streets = [item.name for item in cursor]
-    #return direct_to_template(request, 'ajax.html', {'objects': streets,})
-
-
 @login_required
 @is_in_group("journal")
 @transaction.commit_on_success
@@ -823,11 +752,9 @@ def journal(request):
                 # Улица.
                 try:
                     street = Street.objects.get(city=city, name__iexact=cd["street"])
-#                    print "a1"
                 except ObjectDoesNotExist:
                     street = Street(city=city, name=cd["street"].capitalize())
                     street.save()
-#                    print "a2"
                 # Сохраняем Location.
                 new_location.street = street
                 if cd.get("customer_house", ""):
@@ -839,12 +766,8 @@ def journal(request):
                 if cd.get("customer_flat", ""):
                     new_location.flat = cd["customer_flat"]
             new_location.save()
-#            customer.soul_ptr.location = new_location
-#            customer.soul_ptr.save()
             customer.location = new_location
             customer.save()
-
-            #АДРЕС customer'а!!! идет в customer.soul_ptr.location
 
             # Create new Burial.
             new_burial = Burial(creator=request.user)
@@ -898,9 +821,9 @@ def journal(request):
         form = JournalForm(initial)
     today = datetime.date.today()
     burials = Burial.objects.filter(is_trash=False, creator=request.user,
-                            date_of_creation__gte=datetime.datetime(year=today.year, month=today.month, day=today.day)).order_by('-date_of_creation', 'person__last_name')
-    return direct_to_template(request, 'journal.html', {'form': form,
-                                                        'burials': burials})
+                            date_of_creation__gte=datetime.datetime(year=today.year,
+                                month=today.month, day=today.day)).order_by('-date_of_creation', 'person__last_name')
+    return direct_to_template(request, 'journal.html', {'form': form, 'burials': burials})
 
 
 @login_required
@@ -914,31 +837,19 @@ def edit_burial(request, uuid):
         burial = Burial.objects.get(uuid=uuid)
     except ObjectDoesNotExist:
         raise Http404
-#    CommentFormSet = modelformset_factory(OrderComments, OrderCommentsForm, can_delete=False, extra=1)
-#    formset = CommentFormSet(queryset=OrderComments.objects.filter(order=burial.order_ptr))
     PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=1)
-#    OrderFormSet = formset_factory(CustomerPhoneForm, extra=2)
-#    OrderFormSet = modelformset_factory(Phone)
-#    MyFormSet = inlineformset_factory(Soul, Phone, extra=1, form=CustomerPhoneForm)
-#    soul = burial.customer.person.soul_ptr
-#    formset = MyFormSet(instance=soul)
     if request.method == "POST":
         formset = PhoneFormSet(request.POST, request.FILES,
                                queryset=Phone.objects.filter(soul=burial.customer.person.soul_ptr))
-#        form = EditOrderForm(request.POST, request.FILES, orgsoul=burial.product.place.cemetery.organization.soul_ptr)
         form = EditOrderForm(request.POST, request.FILES)
         if formset.is_valid() and form.is_valid():
-#            print "form is valid"
             for phone in formset.save(commit=False):
                 phone.soul = burial.customer.person.soul_ptr
                 phone.save()
             cd = form.cleaned_data
-#            print repr(cd["street"])
             burial.date_fact = cd["burial_date"]
-#            operation = Operation.objects.get(id=cd["operation"])
             operation = cd["operation"]
             burial.operation = operation
-#            print operation
             burial.save()
             try:
                 place = Place.objects.get(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"])
@@ -949,11 +860,6 @@ def edit_burial(request, uuid):
                 place.name = u"Место захоронения"
                 place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
                 place.save()
-#            burial.product.place = place
-#            burial.product.place.area = cd["area"]
-#            burial.product.place.row = cd["row"]
-#            burial.product.place.seat = cd["seat"]
-#            burial.product.save()
             burial.product = place.product_ptr
             burial.save()
             # Обработка Location заказчика.
@@ -963,13 +869,10 @@ def edit_burial(request, uuid):
                 location.save()
                 burial.customer.location = location
                 burial.customer.save()
-#                print location.uuid
             else:
-#                print "ee"
                 location = burial.customer.location
             # Поля модели Location.
             if cd.get("country", ""):
-#                print "xx"
                 # Страна.
                 try:
                     country = GeoCountry.objects.get(name__iexact=cd["country"])
@@ -991,15 +894,12 @@ def edit_burial(request, uuid):
                 # Улица.
                 try:
                     street = Street.objects.get(city=city, name__iexact=cd["street"])
-#                    print "a1"
                 except ObjectDoesNotExist:
                     street = Street(city=city, name=cd["street"].capitalize())
                     street.save()
-#                    print "a2"
                 # Сохраняем Location.
                 location.street = street
                 location.save()
-#                print "Location saved!"
             if cd.get("comment", ""):
                 burial.add_comment(cd["comment"], request.user)
             if "file1" in request.FILES:
@@ -1023,17 +923,12 @@ def edit_burial(request, uuid):
             "seat": burial.product.place.seat,
             "operation": burial.operation,
             "hoperation": burial.operation.id,
-#            "street": burial.customer.location.street.name,
-#            "city": burial.customer.location.street.city.name,
-#            "region": burial.customer.location.street.city.region.name,
-#            "country": burial.customer.location.street.city.region.country.name
         }
         if burial.customer.location and hasattr(burial.customer.location, "street") and burial.customer.location.street:
             initial_data["street"] = burial.customer.location.street.name
             initial_data["city"] = burial.customer.location.street.city.name
             initial_data["region"] = burial.customer.location.street.city.region.name
             initial_data["country"] = burial.customer.location.street.city.region.country.name
-#        form = EditOrderForm(initial=initial_data, orgsoul=burial.product.place.cemetery.organization.soul_ptr)
         form = EditOrderForm(initial=initial_data)
     return direct_to_template(request, 'burial.html', {'burial': burial, 'form': form, 'formset': formset})
 
@@ -1052,18 +947,6 @@ def delete_orderfile(request, ouuid, fuuid):
     return redirect("/burial/%s/" % ouuid)
 
 
-#def get_all_person_ln_old(request):
-#    """
-#    Получение уникального списка фамилий всех персон.
-#    """
-#    person_lns = []
-#    q = request.GET.get('q', None)
-#    if q is not None:
-#        rezult = Person.objects.filter(last_name__istartswith=q).values("last_name").order_by("last_name").distinct()[:16]
-#        person_lns = [item["last_name"] for item in rezult]
-#    return direct_to_template(request, 'ajax.html', {'objects': person_lns,})
-
-
 def get_customer_ln(request):
     """
     Получение уникального списка фамилий всех заказчиков.
@@ -1071,7 +954,8 @@ def get_customer_ln(request):
     person_lns = []
     q = request.GET.get('q', None)
     if q is not None:
-        rezult = Person.objects.filter(ordr_customer__isnull=False, last_name__istartswith=q).values("last_name").order_by("last_name").distinct()[:16]
+        rezult = Person.objects.filter(ordr_customer__isnull=False,
+                                   last_name__istartswith=q).values("last_name").order_by("last_name").distinct()[:16]
         person_lns = [item["last_name"] for item in rezult]
     return direct_to_template(request, 'ajax.html', {'objects': person_lns,})
 
@@ -1083,7 +967,8 @@ def get_deadman(request):
     persons = []
     q = request.GET.get('q', None)
     if q is not None:
-        rezult = Person.objects.filter(buried__isnull=False, last_name__istartswith=q).values("last_name", "first_name", "patronymic").order_by("last_name", "first_name", "patronymic").distinct()[:16]
+        rezult = Person.objects.filter(buried__isnull=False, last_name__istartswith=q).values("last_name",
+                          "first_name", "patronymic").order_by("last_name", "first_name", "patronymic").distinct()[:16]
         persons = ["%s %s %s" % (item["last_name"], item["first_name"], item["patronymic"]) for item in rezult]
     return direct_to_template(request, 'ajax.html', {'objects': persons,})
 
@@ -1100,8 +985,8 @@ def get_oper(request):
             pass
         else:
             orgsoul=cemetery.organization.soul_ptr
-            choices = SoulProducttypeOperation.objects.filter(soul=orgsoul, p_type=settings.PLACE_PRODUCTTYPE_ID).values_list("operation__id", "operation__op_type")
-#            print repr(choices)
+            choices = SoulProducttypeOperation.objects.filter(soul=orgsoul,
+                              p_type=settings.PLACE_PRODUCTTYPE_ID).values_list("operation__id", "operation__op_type")
             for c in choices:
                 rez.append({"optionValue": c[0], "optionDisplay": c[1]})
             rez.insert(0, {"optionValue": 0, "optionDisplay": u'---------'})
@@ -1115,7 +1000,8 @@ def get_street(request):
     streets = []
     q = request.GET.get('term', None)
     if q is not None:
-        rezult = Street.objects.filter(name__istartswith=q).order_by("name", "city__name", "city__region__name", "city__region__country__name")[:24]
+        rezult = Street.objects.filter(name__istartswith=q).order_by("name", "city__name", "city__region__name",
+                                                                     "city__region__country__name")[:24]
         for s in rezult:
             streets.append(u"%s/%s/%s/%s" % (s.name, s.city.name, s.city.region.name, s.city.region.country.name))
     return HttpResponse(JSONEncoder().encode(streets))
@@ -1141,7 +1027,8 @@ def get_cities(request):
     cities = []
     q = request.GET.get('term', None)
     if q is not None:
-        rezult = GeoCity.objects.filter(name__istartswith=q).order_by("name", "region__name", "region__country__name")[:24]
+        rezult = GeoCity.objects.filter(name__istartswith=q).order_by("name", "region__name",
+                                                                      "region__country__name")[:24]
         for s in rezult:
             cities.append(u"%s/%s/%s" % (s.name, s.region.name, s.region.country.name))
     return HttpResponse(JSONEncoder().encode(cities))
@@ -1173,7 +1060,6 @@ def import_csv(request):
             cd = form.cleaned_data
             r = csv.reader(cd["csv_file"], "4mysql")
             response = HttpResponse(mimetype='text/csv')
-#            file_name = u"_".join(cd["cemetery"].name.split())
             response['Content-Disposition'] = 'attachment; filename=bad_records.csv'
             writer = csv.writer(response, "4mysql")
             err_descrs = []
@@ -1290,7 +1176,6 @@ def import_csv(request):
                         location = Location()
                         if street:
                             # Присутствуют город и улица - будем создавать Location.
-    #                        cities = GeoCity.objects.filter(name__iexact=city.strip()).order_by("country__id")
                             cities = GeoCity.objects.filter(name__iexact=city)
                             if cities:
                                 cust_city = cities[0]
@@ -1309,7 +1194,7 @@ def import_csv(request):
                                 if flat:
                                     location.flat = flat
                         location.save()
-                        customer.location = location  # Проверить, работает ли!!!
+                        customer.location = location
                         customer.save()
 
                         # Место.
@@ -1323,7 +1208,7 @@ def import_csv(request):
                             place.area = area
                             place.row = row
                             place.seat = seat
-                            place.soul = cemetery.organization.soul_ptr  # To check!
+                            place.soul = cemetery.organization.soul_ptr
                             place.name = u"Место захоронения"
                             place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
                             place.save()
@@ -1361,12 +1246,11 @@ def import_csv(request):
                     else:
                         # Коммитим все.
                         transaction.commit()
-#            if str_written > 0:
-            myseporator = u'=== ОШИБКИ ИМПОРТА ==='
+            myseporator = u'\n=== ОШИБКИ ИМПОРТА ==='
             writer.writerow([myseporator.encode('utf8')])
             for err in err_descrs:
                 writer.writerow(err)
-            myseporator = u'=== ID-UUID ==='
+            myseporator = u'\n=== ID-UUID ==='
             writer.writerow([myseporator.encode('utf8')])
             for u in iduuids:
                 writer.writerow(u)
@@ -1544,7 +1428,6 @@ def init(request):
             dgroups = Group.objects.all()
             for dgr in dgroups:
                 user.groups.add(dgr)
-#            return HttpResponse("OK. Выйдите и залогиньтесь под директором.")
             return redirect("/logout/")
     else:
         form = InitalForm()
