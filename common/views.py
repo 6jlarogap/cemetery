@@ -26,6 +26,7 @@ import re
 import datetime
 import csv
 from common.forms import UserProfileForm
+from cStringIO import StringIO
 
 
 csv.register_dialect("4mysql", escapechar="\\", quoting=csv.QUOTE_NONE)
@@ -1060,10 +1061,14 @@ def import_csv(request):
             cd = form.cleaned_data
             r = csv.reader(cd["csv_file"], "4mysql")
             response = HttpResponse(mimetype='text/csv')
-            response['Content-Disposition'] = 'attachment; filename=bad_records.csv'
-            writer = csv.writer(response, "4mysql")
+            response['Content-Disposition'] = 'attachment; filename=import_result.csv'
+            temp_file = StringIO()
+#            writer = csv.writer(response, "4mysql")
+            writer = csv.writer(temp_file, "4mysql")
             err_descrs = []
             iduuids = []
+            good_nr = 0
+            bad_nr = 0
             for l in r:
                 if l:
                     try:
@@ -1235,25 +1240,28 @@ def import_csv(request):
                         burial.add_comment(comment, request.user)
                         iduuids.append((str_id, burial.uuid))
                     except Exception, err_descr:
-                        print "ERROR:", err_descr
                         # Откатываем транзакцию.
                         transaction.rollback()
                         # Сохраняем описание ошибки.
                         err_descrs.append(err_descr)
 #                        # Пишем в выходной csv файл.
-                        writer.writerow([str_id, n, ln, fn, ptrc, initials, bur_date, area, row, seat, cust_ln, cust_fn,
-                                         cust_ptrc, cust_initials, city, street, house, block, flat, comment])
+                        writer.writerow(l)
+                        bad_nr += 1
                     else:
                         # Коммитим все.
                         transaction.commit()
-            myseporator = u'\n=== ОШИБКИ ИМПОРТА ==='
-            writer.writerow([myseporator.encode('utf8')])
+                        good_nr += 1
+            myseparator = u'=== ОПИСАНИЕ ОШИБОК ==='
+            writer.writerow([myseparator.encode('utf8')])
             for err in err_descrs:
-                writer.writerow(err)
-            myseporator = u'\n=== ID-UUID ==='
-            writer.writerow([myseporator.encode('utf8')])
+                writer.writerow((err,))
+            myseparator = u'=== ID-UUID ==='
+            writer.writerow([myseparator.encode('utf8')])
             for u in iduuids:
                 writer.writerow(u)
+            response.write("Всего/Удачно/Ошибок: %d/%d/%d\n" % (good_nr+bad_nr, good_nr, bad_nr))
+            response.write("=== СТРОКИ С ОШИБКАМИ ===\n")
+            response.write(temp_file.getvalue())
             return response
 #            else:
 #                return redirect("/management/import/")
