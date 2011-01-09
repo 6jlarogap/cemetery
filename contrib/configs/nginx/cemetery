@@ -17,15 +17,15 @@ server {
     }
 
     # статическое содержимое проекта
-    ##location /media/ {
-    ##    alias /home/django/projects/youmemory/media/;
-    ##    expires 30d;
-    ##}
+    location /media/ {
+        alias /home/django/projects/youmemory/media/;
+        expires 30d;
+    }
 
     # статическое содержимое админки    
-    ##location /admin_media/ {
-    ##    alias /home/django/projects/youmemory/django/contrib/admin/media/;
-    ##    expires 30d;
-    ##}
+    location /admin_media/ {
+        alias /home/django/projects/youmemory/django/contrib/admin/media/;
+        expires 30d;
+    }
 }
 
