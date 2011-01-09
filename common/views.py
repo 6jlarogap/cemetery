@@ -1069,6 +1069,7 @@ def import_csv(request):
             iduuids = []
             good_nr = 0
             bad_nr = 0
+            s_time = datetime.datetime.now()
             for l in r:
                 if l:
                     try:
@@ -1259,6 +1260,7 @@ def import_csv(request):
             writer.writerow([myseparator.encode('utf8')])
             for u in iduuids:
                 writer.writerow(u)
+            response.write("Начало/Конец: %s/%s\n" % (s_time, datetime.datetime.now()))
             response.write("Всего/Удачно/Ошибок: %d/%d/%d\n" % (good_nr+bad_nr, good_nr, bad_nr))
             response.write("=== СТРОКИ С ОШИБКАМИ ===\n")
             response.write(temp_file.getvalue())
