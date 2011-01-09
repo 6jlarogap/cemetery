@@ -125,3 +125,7 @@ OPER_4 = 1  # Захоронение.
 
 # Кодировка для файлов обмена.
 CSV_ENCODING = "utf8"
+
+# Настройки пэйджинации.
+PAGINATION_USER_PER_PAGE_MAX = 500
+PAGINATION_PER_PAGE = 5
