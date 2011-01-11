@@ -127,5 +127,5 @@ OPER_4 = 1  # Захоронение.
 CSV_ENCODING = "utf8"
 
 # Настройки пэйджинации.
-PAGINATION_USER_PER_PAGE_MAX = 500
+PAGINATION_USER_PER_PAGE_MAX = 50
 PAGINATION_PER_PAGE = 5

@@ -21,8 +21,6 @@ PER_PAGE_VALUES = (
     (15, '15'),
     (25, '25'),
     (50, '50'),
-    (100, '100'),
-    (500, '500'),
 )
 
 GOOD_CHARS = string.ascii_letters + string.digits + "@.+-_"
