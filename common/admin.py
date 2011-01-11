@@ -7,7 +7,12 @@ from models import UserProfile, ProductFiles, Product, GeoCity, DeathCertificate
 
 class PersonAdmin(admin.ModelAdmin):
 #    exclude = ("creator", "location")
-    exclude = ("location",)
+    def get_form(self, request, obj=None, **kwargs):
+        if request.user.is_superuser:
+            self.exclude = ()
+        else:
+            self.exclude = ('location',)
+        return super(PersonAdmin, self).get_form(request, obj=None, **kwargs)
 
 
 class BurialAdmin(admin.ModelAdmin):
