@@ -37,6 +37,11 @@ update-rc.d django defaults
 #Restore postgres dump
 createdb -U postgres youmemory
 cat youmemory.sql | psql -U postgres youmemory
+#Database dumps directory
+mkdir /var/dumps
+#Database dump cron script
+chmod a+x /home/django/projects/youmemory/contrib/dumpdb.py
+echo "5 0 * * *   /home/django/projects/youmemory/contrib/dumpdb.py" >> /etc/crontab
 #Start django daemon
 /etc/init.d/django start
 /etc/init.d/nginx restart
