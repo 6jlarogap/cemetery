@@ -690,8 +690,8 @@ def journal(request):
                 place.area = cd["area"]
                 place.row = cd["row"]
                 place.seat = cd["seat"]
-                place.soul = cd["cemetery"].organization.soul_ptr  # писать ту орг-ию, что у Cemetery!!!
-                place.name = u"Место захоронения"
+                place.soul = cd["cemetery"].organization.soul_ptr
+                place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
                 place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
                 place.save()
             # Create new Person for dead man.
@@ -858,7 +858,7 @@ def edit_burial(request, uuid):
                 place = Place(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"],
                               creator=request.user)
                 place.soul = cd["cemetery"].organization.soul_ptr  # писать ту орг-ию, что у Cemetery!!!
-                place.name = u"Место захоронения"
+                place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
                 place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
                 place.save()
             burial.product = place.product_ptr
@@ -1215,7 +1215,7 @@ def import_csv(request):
                             place.row = row
                             place.seat = seat
                             place.soul = cemetery.organization.soul_ptr
-                            place.name = u"Место захоронения"
+                            place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
                             place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
                             place.save()
 

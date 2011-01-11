@@ -350,10 +350,11 @@ class Product(models.Model):
             self.all_comments = txt
         self.save()
     def __unicode__(self):
-        if hasattr(self, "place"):
-            return u"уч%sряд%sместо%s" % (self.place.area, self.place.row, self.place.seat)
-        else:
-            return self.name
+#        if hasattr(self, "place"):
+#            return u"уч%sряд%sместо%s" % (self.place.area, self.place.row, self.place.seat)
+#        else:
+#            return self.name
+        return self.name
 
 
 class ProductFiles(models.Model):
