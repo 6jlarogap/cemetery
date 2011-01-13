@@ -11,21 +11,45 @@ class PersonAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             self.exclude = ()
         else:
-            self.exclude = ('location',)
+            self.exclude = ("creator", "location",)
         return super(PersonAdmin, self).get_form(request, obj=None, **kwargs)
 
 
 class BurialAdmin(admin.ModelAdmin):
-#    list_display = ('soul', 'p_type', 'operation',)
-    fields = ("account_book_n",)
+#    fields = ("account_book_n",)
+    def get_form(self, request, obj=None, **kwargs):
+        if request.user.is_superuser:
+            self.exclude = ()
+        else:
+            self.exclude = ("person", "responsible", "customer",  "doer",  "date_plan", "date_fact", "product",
+                            "operation", "is_trash", "creator", "date_of_creation", "all_comments")
+        return super(BurialAdmin, self).get_form(request, obj=None, **kwargs)
+
+
+class OFAdmin(admin.ModelAdmin):
+#    exclude = ("order",)
+    def get_form(self, request, obj=None, **kwargs):
+        if request.user.is_superuser:
+            self.exclude = ()
+        else:
+            self.exclude = ("order",)
+        return super(OFAdmin, self).get_form(request, obj=None, **kwargs)
+
+
+class OCAdmin(admin.ModelAdmin):
+#    exclude = ("order",)
+    def get_form(self, request, obj=None, **kwargs):
+        if request.user.is_superuser:
+            self.exclude = ()
+        else:
+            self.exclude = ("order",)
+        return super(OCAdmin, self).get_form(request, obj=None, **kwargs)
 
 
 admin.site.register(Organization)
 admin.site.register(Role)
 admin.site.register(Soul)
-admin.site.register(Person, PersonAdmin)
 admin.site.register(PersonRole)
-admin.site.register(Burial, BurialAdmin)
 admin.site.register(ProductType)
 admin.site.register(Place)
 admin.site.register(Cemetery)
@@ -45,10 +69,8 @@ admin.site.register(Product)
 admin.site.register(GeoRegion)
 admin.site.register(DeathCertificate)
 
-class OFAdmin(admin.ModelAdmin):
-    exclude = ("order",)
-class OCAdmin(admin.ModelAdmin):
-    exclude = ("order",)
+admin.site.register(Person, PersonAdmin)
+admin.site.register(Burial, BurialAdmin)
 admin.site.register(OrderFiles, OFAdmin)
 admin.site.register(OrderComments, OCAdmin)
 
