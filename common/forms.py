@@ -117,7 +117,7 @@ class EditUserForm(forms.Form):
     role = forms.ModelMultipleChoiceField(queryset=Role.objects.all(), label="Роль")
     is_staff = forms.BooleanField(required=False, label="Доступ в админку")
     default_rights = forms.BooleanField(required=False, label="Поставить права по умолчанию")
-    phone = forms.CharField(max_length=15, label="Телефон", required=False)
+#    phone = forms.CharField(max_length=15, label="Телефон", required=False)
     password1 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
                                 label="Пароль")
     password2 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
@@ -129,12 +129,12 @@ class EditUserForm(forms.Form):
         rest = re.sub(r"[a-zA-Z0-9\@\.\+\-\_]", "", username)
         if rest:
             raise forms.ValidationError("Недопустимые символы в имени пользователя.")
-        try:
-            user = User.objects.get(username=username)
-        except ObjectDoesNotExist:
-            pass
-        else:
-            raise forms.ValidationError("Имя пользователя уже зарегистрировано за другим сотрудником.")
+#        try:
+#            user = User.objects.get(username=username)
+#        except ObjectDoesNotExist:
+#            pass
+#        else:
+#            raise forms.ValidationError("Имя пользователя уже зарегистрировано за другим сотрудником.")
         if cd.get("password1", "") == cd.get("password2", ""):
             return cd
         else:

@@ -418,9 +418,11 @@ def management_edit_user(request, uuid):
     except ObjectDoesNotExist:
         raise Http404
     user = person.userprofile.user
+    PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=1)
     if request.method == "POST":
+        formset = PhoneFormSet(request.POST, request.FILES, queryset=Phone.objects.filter(soul=person.soul_ptr))
         form = EditUserForm(request.POST)
-        if form.is_valid():
+        if formset.is_valid() and form.is_valid():
             cd = form.cleaned_data
             person.last_name = cd["last_name"].capitalize()
             if cd.get("first_name", ""):
@@ -429,12 +431,15 @@ def management_edit_user(request, uuid):
                 person.patronymic = cd['patronymic'].capitalize()
             person.save()
             user.username = cd["username"]
-            if cd.get("phone", ""):
-                try:
-                    phone = Phone.objects.filter(soul=person.soul_ptr)[0]
-                except KeyError:
-                    phone = Phone(soul=person.soul_ptr)
-                phone.f_number = cd["phone"]
+#            if cd.get("phone", ""):
+#                try:
+#                    phone = Phone.objects.filter(soul=person.soul_ptr)[0]
+#                except KeyError:
+#                    phone = Phone(soul=person.soul_ptr)
+#                phone.f_number = cd["phone"]
+#                phone.save()
+            for phone in formset.save(commit=False):
+                phone.soul = person.soul_ptr
                 phone.save()
             if cd.get("password1", ""):
                 user.set_password(cd['password1'])
@@ -482,13 +487,14 @@ def management_edit_user(request, uuid):
             user.save()
             return redirect('/management/user/')
     else:
+        formset = PhoneFormSet(queryset=Phone.objects.filter(soul=person.soul_ptr))
         initial_data = {"last_name": person.last_name,
                         "username": user.username,
                         "is_staff": user.is_staff,
                         }
-        phones = Phone.objects.filter(soul=person.soul_ptr)
-        if phones:
-            initial_data["phone"] = phones[0]
+#        phones = Phone.objects.filter(soul=person.soul_ptr)
+#        if phones:
+#            initial_data["phone"] = phones[0]
         if person.personrole_set.all():
             prs = PersonRole.objects.filter(person=person)
             roles = []
@@ -500,8 +506,7 @@ def management_edit_user(request, uuid):
         if person.patronymic:
             initial_data["patronymic"] = person.patronymic
         form = EditUserForm(initial=initial_data)
-    return direct_to_template(request, 'management_edit_user.html',
-                              {'form': form,})
+    return direct_to_template(request, 'management_edit_user.html', {'form': form, 'formset': formset})
 
 
 @login_required
