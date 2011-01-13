@@ -159,6 +159,66 @@ class CemeteryForm(forms.Form):
     house = forms.CharField(required=False, max_length=16, label="Дом", widget=forms.TextInput())
     block = forms.CharField(required=False, max_length=16, label="Корпус", widget=forms.TextInput())
     building = forms.CharField(required=False, max_length=16, label="Строение")
+    def clean(self):
+        cd = self.cleaned_data
+        country = cd.get("country", "")
+        region = cd.get("region", "")
+        city = cd.get("city", "")
+        street = cd.get("street", "")
+        house = cd.get("house", "")
+        block = cd.get("block", "")
+        building = cd.get("building", "")
+        new_country = cd.get("new_country", False)
+        new_region = cd.get("new_region", False)
+        new_city = cd.get("new_city", False)
+        new_street = cd.get("new_street", False)
+        if country or region or city or street:
+            if not street:
+                raise forms.ValidationError("Отсутствует улица.")
+            if not city:
+                raise forms.ValidationError("Отсутствует нас. пункт.")
+            if not region:
+                raise forms.ValidationError("Отсутствует регион.")
+            if not country:
+                raise forms.ValidationError("Отсутствует страна.")
+        if (block or building) and not house:
+            raise forms.ValidationError("Отсутствует номер дома.")
+        if (house or block or building) and not street:
+            raise forms.ValidationError("Отсутствует улица.")
+        if country:
+            try:
+                country_obj = GeoCountry.objects.get(name=country)
+            except ObjectDoesNotExist:
+                if not new_country:
+                    raise forms.ValidationError("Указанная страна не существует.")
+            if new_country:
+                if not new_region:
+                    raise forms.ValidationError("Указанный регион не существует.")
+            else:
+                try:
+                    region_obj = GeoRegion.objects.get(country=country_obj, name=region)
+                except ObjectDoesNotExist:
+                    if not new_region:
+                        raise forms.ValidationError("Указанный регион не существует.")
+            if new_region:
+                if not new_city:
+                    raise forms.ValidationError("Указанный нас. пункт не существует.")
+            else:
+                try:
+                    city_obj = GeoCity.objects.get(country=country_obj, region=region_obj, name=city)
+                except ObjectDoesNotExist:
+                    if not new_city:
+                        raise forms.ValidationError("Указанный нас. пункт не существует.")
+            if new_city:
+                if not new_street:
+                    raise forms.ValidationError("Указанная улица не существует.")
+            else:
+                try:
+                    street_obj = Street.objects.get(city=city_obj, name=street)
+                except ObjectDoesNotExist:
+                    if not new_street:
+                        raise forms.ValidationError("Указанная улица не существует.")
+        return cd
 
 
 @autostrip
