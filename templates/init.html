@@ -1,8 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Инициализация{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="/media/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var copyaddr = function(){
+        $("#id_cem_street").val($("#id_street").val());
+        $("#id_cem_city").val($("#id_city").val());
+        $("#id_cem_region").val($("#id_region").val());
+        $("#id_cem_country").val($("#id_country").val());
+        $("#id_cem_house").val($("#id_house").val());
+        $("#id_cem_block").val($("#id_block").val());
+        $("#id_cem_building").val($("#id_building").val());
+    };
+</script>
+{% endblock %}
 {% block content %}
     <h1>Инициализация</h1>
     <h3>Создание стартовой конфигурации</h3>
+    <button onClick="copyaddr();">Копировать адрес организации в адрес кладбища</button>
     <div id="forms">
         <form action="" method="post">
             <table>
