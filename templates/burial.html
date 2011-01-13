@@ -148,6 +148,7 @@ $(function(){
 {% block content %}
     <div id="free_form">
     <form action="" method="post" enctype="multipart/form-data">
+        {{ form.non_field_errors }}
         <table width="800">
              <tr>
                 <td width="33%" id="free_form">
@@ -167,7 +168,7 @@ $(function(){
                 <td width="33%">{{ burial.account_book_n }}</td>
                 <td width="33%">
                     {% if user|in_group:"edit_bur_in_adm" %}
-                        {{ form.burial_date }}
+                        {{ form.burial_date.errors }}{{ form.burial_date }}
                     {% else %}
                         {{ burial.date_fact|date:"d.m.Y" }}
                     {% endif %}
@@ -205,7 +206,7 @@ $(function(){
              <tr>
                 <td width="33%" id="free_form">
                     {% if user|in_group:"edit_bur_in_adm" %}
-                        {{ form.cemetery }}
+                        {{ form.cemetery.errors }}{{ form.cemetery }}
                     {% else %}
                         {{ burial.product.place.cemetery.name }}
                     {%  endif %}
@@ -214,7 +215,7 @@ $(function(){
                 <td width="33%" id="free_form">
 
                     {% if user|in_group:"edit_bur_in_adm" %}
-                        {{ form.operation }}{{ form.hoperation }}
+                        {{ form.operation.errors }}{{ form.operation }}{{ form.hoperation.errors }}{{ form.hoperation }}
                     {% else %}
                         {{ burial.operation.op_type }}
                     {%  endif %}
@@ -235,21 +236,21 @@ $(function(){
             <tr>
                 <td width="33%" id="free_form">
                     {% if user|in_group:"edit_bur_in_adm" %}
-                        {{ form.area }}
+                        {{ form.area.errors }}{{ form.area }}
                     {% else %}
                         {{ burial.product.place.area }}
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
                     {% if user|in_group:"edit_bur_in_adm" %}
-                        {{ form.row }}
+                        {{ form.row.errors }}{{ form.row }}
                     {% else %}
                         {{ burial.product.place.row }}
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
                     {% if user|in_group:"edit_bur_in_adm" %}
-                        {{ form.seat }}
+                        {{ form.seat.errors }}{{ form.seat }}
                     {% else %}
                         {{ burial.product.place.seat }}
                     {% endif %}
@@ -300,28 +301,28 @@ $(function(){
              <tr>
                 <td width="33%" id="free_form">
                     {% if user|in_group:"edit_bur_in_adm" %}
-                        {{ form.street }}
+                        {{ form.street.errors }}{{ form.street }}
                     {% else %}
                         {{ burial.customer.location.street.name }}
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
                     {% if user|in_group:"edit_bur_in_adm" %}
-                        {{ form.city }}
+                        {{ form.city.errors }}{{ form.city }}
                     {% else %}
                         {{ burial.customer.location.street.city.name }}
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
                     {% if user|in_group:"edit_bur_in_adm" %}
-                        {{ form.region }}
+                        {{ form.region.errors }}{{ form.region }}
                     {% else %}
                         {{ burial.customer.location.street.city.region.name }}
                     {% endif %}
                 </td>
                 <td width="33%" id="free_form">
                     {% if user|in_group:"edit_bur_in_adm" %}
-                        {{ form.country }}
+                        {{ form.country.errors }}{{ form.country }}
                     {% else %}
                         {{ burial.customer.location.street.city.region.country.name }}
                     {% endif %}
@@ -363,18 +364,6 @@ $(function(){
                     {% endif %}
                 </td>
             </tr>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -431,7 +420,7 @@ $(function(){
         <br />
         <small>Добавить новый:</small>
         <br />
-        {{ form.comment }}
+        {{ form.comment.errors }}{{ form.comment }}
     <h3>Файлы:</h3>
         {% for f in burial.orderfiles_set.all %}
             <b>{{ forloop.counter }}</b>
@@ -445,8 +434,8 @@ $(function(){
         {%  endfor %}
         <small>Добавить новый (до 5 Mb):</small>
         <br />
-        {{ form.file1 }}<br />
-        {{ form.file1_comment }}
+        {{ form.file1.errors }}{{ form.file1 }}<br />
+        {{ form.file1_comment.errors }}{{ form.file1_comment }}
         <br>
         <br>
         <input type="submit" value="Сохранить"  tabindex="22">

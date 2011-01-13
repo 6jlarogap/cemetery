@@ -63,6 +63,7 @@
 {% block title %}Поиск{% endblock %}
 {% block content %}
 <form id="mainform" method="get" action="/">
+{{ form.non_field_errors }}
 <table width="100%" cols="4">
                 <tr>
                     <td width="25%" id="free_form">{{ form.fio.label_tag }}</td>
@@ -71,44 +72,44 @@
                     <td width="25%" id="free_form">{{ form.cemetery.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td width="25%">{{ form.fio }}</td>
+                    <td width="25%">{{ form.fio.errors }}{{ form.fio }}</td>
                     <td width="25%">{{ form.first_name }}</td>
                     <td width="25%">{{ form.patronymic }}</td>
-                    <td width="25%">{{ form.cemetery }}</td>
+                    <td width="25%">{{ form.cemetery.errors }}{{ form.cemetery }}</td>
                 </tr>
                 <tr>
                     <td width="25%" id="free_form">{{ form.birth_date_from.label_tag }}</td>
-                    <td width="25%">{{ form.birth_date_from }}</td>
+                    <td width="25%">{{ form.birth_date_from.errors }}{{ form.birth_date_from }}</td>
                     <td width="25%" id="free_form">{{ form.birth_date_to.label_tag }}</td>
-                    <td width="25%">{{ form.birth_date_to }}</td>
+                    <td width="25%">{{ form.birth_date_to.errors }}{{ form.birth_date_to }}</td>
                 </tr>
                 <tr>
                     <td width="25%" id="free_form">{{ form.death_date_from.label_tag }}</td>
-                    <td width="25%">{{ form.death_date_from }}</td>
+                    <td width="25%">{{ form.death_date_from.errors }}{{ form.death_date_from }}</td>
                     <td width="25%" id="free_form">{{ form.death_date_to.label_tag }}</td>
-                    <td width="25%">{{ form.death_date_to }}</td>
+                    <td width="25%">{{ form.death_date_to.errors }}{{ form.death_date_to }}</td>
                 </tr>
                 <tr>
                     <td width="25%" id="free_form">{{ form.burial_date_from.label_tag }}</td>
-                    <td width="25%">{{ form.burial_date_from }}</td>
+                    <td width="25%">{{ form.burial_date_from.errors }}{{ form.burial_date_from }}</td>
                     <td width="25%" id="free_form">{{ form.burial_date_to.label_tag }}</td>
-                    <td width="25%">{{ form.burial_date_to }}</td>
+                    <td width="25%">{{ form.burial_date_to.errors }}{{ form.burial_date_to }}</td>
                 </tr>
                 <tr>
                     <td width="25%" id="free_form">{{ form.death_certificate.label_tag }}</td>
-                    <td width="25%">{{ form.death_certificate }}</td>
+                    <td width="25%">{{ form.death_certificate.errors }}{{ form.death_certificate }}</td>
                     <td width="25%" id="free_form">{{ form.account_book_n.label_tag }}</td>
-                    <td width="25%">{{ form.account_book_n }}</td>
+                    <td width="25%">{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
                 </tr>
                 <tr>
                     <td width="25%" id="free_form">{{ form.customer.label_tag }}</td>
-                    <td width="25%">{{ form.customer }}</td>
+                    <td width="25%">{{ form.customer.errors }}{{ form.customer }}</td>
                     <td width="25%" id="free_form">{{ form.owner.label_tag }}</td>
-                    <td width="25%">{{ form.owner }}</td>
+                    <td width="25%">{{ form.owner.errors }}{{ form.owner }}</td>
                 </tr>
                 <tr>
                     <td width="25%" id="free_form">{{ form.comment.label_tag }}</td>
-                    <td width="25%">{{ form.comment }}</td>
+                    <td width="25%">{{ form.comment.errors }}{{ form.comment }}</td>
                     <td width="25%" id="free_form"></td>
                     <td width="25%"></td>
                 </tr>
@@ -116,19 +117,19 @@
 			<table width="100%" cols="6">
                 <tr>
                     <td width="16%" id="free_form">{{ form.area.label_tag }}</td>
-                    <td width="16%">{{ form.area }}</td>
+                    <td width="16%">{{ form.area.errors }}{{ form.area }}</td>
                     <td width="16%" id="free_form">{{ form.row.label_tag }}</td>
-                    <td width="16%">{{ form.row }}</td>
+                    <td width="16%">{{ form.row.errors }}{{ form.row }}</td>
                     <td width="16%" id="free_form">{{ form.seat.label_tag }}</td>
-                    <td width="16%">{{ form.seat }}</td>
+                    <td width="16%">{{ form.seat.errors }}{{ form.seat }}</td>
                 </tr>
                 <tr>
                     <td width="16%" id="free_form">{{ form.gps_x.label_tag }}</td>
-                    <td width="16%">{{ form.gps_x }}</td>
+                    <td width="16%">{{ form.gps_x.errors }}{{ form.gps_x }}</td>
                     <td width="16%" id="free_form">{{ form.gps_y.label_tag }}</td>
-                    <td width="16%">{{ form.gps_y }}</td>
+                    <td width="16%">{{ form.gps_y.errors }}{{ form.gps_y }}</td>
                     <td width="16%" id="free_form">{{ form.gps_z.label_tag }}</td>
-                    <td width="16%">{{ form.gps_z }}</td>
+                    <td width="16%">{{ form.gps_z.errors }}{{ form.gps_z }}</td>
                 </tr>
             </table>
     <input type="submit" value="Искать" />&nbsp;&nbsp;<input type="button" value="Сброс" onClick="parent.location='/'" />

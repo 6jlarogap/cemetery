@@ -172,6 +172,7 @@ $(function(){
 {% block content %}
     <div id="free_form">
         <form enctype="multipart/form-data" action="" method="post">
+            {{ form.non_field_errors }}
             <table width="800">
                 <tr>
                     <td width="33%" id="free_form">{{ form.account_book_n.label_tag }}</td>
@@ -180,8 +181,8 @@ $(function(){
                     <td width="33%">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td width="33%">{{ form.account_book_n }}</td>
-                    <td width="33%">{{ form.burial_date }}</td>
+                    <td width="33%">{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
+                    <td width="33%">{{ form.burial_date.errors }}{{ form.burial_date }}</td>
                     <td width="33%">&nbsp;</td>
                 </tr>
                 <tr>
@@ -190,9 +191,9 @@ $(function(){
                     <td width="33%" id="free_form">{{ form.patronymic.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" id="free_form">{{ form.last_name }}</td>
-                    <td width="33%" id="free_form">{{ form.first_name }}</td>
-                    <td width="33%" id="free_form">{{ form.patronymic }}</td>
+                    <td width="33%" id="free_form">{{ form.last_name.errors }}{{ form.last_name }}</td>
+                    <td width="33%" id="free_form">{{ form.first_name.errors }}{{ form.first_name }}</td>
+                    <td width="33%" id="free_form">{{ form.patronymic.errors }}{{ form.patronymic }}</td>
                 </tr>
                 <tr>
                     <td width="33%" id="free_form">{{ form.cemetery.label_tag }}</td>
@@ -200,8 +201,8 @@ $(function(){
                     <td width="33%">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td width="33%" id="free_form">{{ form.cemetery }}</td>
-                    <td width="33%" id="free_form">{{ form.operation }}{{ form.hoperation }}</td>
+                    <td width="33%" id="free_form">{{ form.cemetery.errors }}{{ form.cemetery }}</td>
+                    <td width="33%" id="free_form">{{ form.operation.errors }}{{ form.operation }}{{ form.hoperation.errors }}{{ form.hoperation }}</td>
                     <td width="33%">&nbsp;</td>
                 </tr>
                 <tr>
@@ -210,9 +211,9 @@ $(function(){
                     <td width="33%" id="free_form">{{ form.seat.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" id="free_form">{{ form.area }}</td>
-                    <td width="33%" id="free_form">{{ form.row }}</td>
-                    <td width="33%" id="free_form">{{ form.seat }}</td>
+                    <td width="33%" id="free_form">{{ form.area.errors }}{{ form.area }}</td>
+                    <td width="33%" id="free_form">{{ form.row.errors }}{{ form.row }}</td>
+                    <td width="33%" id="free_form">{{ form.seat.errors }}{{ form.seat }}</td>
                 </tr>
                 <tr>
                     <td width="33%" id="free_form">{{ form.customer_last_name.label_tag }}</td>
@@ -220,9 +221,9 @@ $(function(){
                     <td width="33%" id="free_form">{{ form.customer_patronymic.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" id="free_form">{{ form.customer_last_name }}</td>
-                    <td width="33%" id="free_form">{{ form.customer_first_name }}</td>
-                    <td width="33%" id="free_form">{{ form.customer_patronymic }}</td>
+                    <td width="33%" id="free_form">{{ form.customer_last_name.errors }}{{ form.customer_last_name }}</td>
+                    <td width="33%" id="free_form">{{ form.customer_first_name.errors }}{{ form.customer_first_name }}</td>
+                    <td width="33%" id="free_form">{{ form.customer_patronymic.errors }}{{ form.customer_patronymic }}</td>
                 </tr>
                 <tr>
                     <td width="33%" id="free_form">{{ form.customer_phone.label_tag }}</td>
@@ -230,7 +231,7 @@ $(function(){
                     <td width="33%">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td width="33%" id="free_form">{{ form.customer_phone }}</td>
+                    <td width="33%" id="free_form">{{ form.customer_phone.errors }}{{ form.customer_phone }}</td>
                     <td width="33%">&nbsp;</td>
                     <td width="33%">&nbsp;</td>
                 </tr>
@@ -242,10 +243,10 @@ $(function(){
 {#                    <td width="33%">&nbsp;</td>#}
                 </tr>
                 <tr>
-                    <td id="free_form">{{ form.street }}</td>
-                    <td id="free_form">{{ form.city }}</td>
-                    <td id="free_form">{{ form.region }}</td>
-                    <td id="free_form">{{ form.country }}</td>
+                    <td id="free_form">{{ form.street.errors }}{{ form.street }}</td>
+                    <td id="free_form">{{ form.city.errors }}{{ form.city }}</td>
+                    <td id="free_form">{{ form.region.errors }}{{ form.region }}</td>
+                    <td id="free_form">{{ form.country.errors }}{{ form.country }}</td>
 {#                    <td width="33%" id="free_form">{{ form.new_street }}</td>#}
 {#                    <td width="33%">&nbsp;</td>#}
                 </tr>
@@ -289,10 +290,10 @@ $(function(){
                     <td id="free_form">{{ form.customer_flat.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td id="free_form">{{ form.customer_house }}</td>
-                    <td id="free_form">{{ form.customer_block }}</td>
-                    <td id="free_form">{{ form.customer_building }}</td>
-                    <td id="free_form">{{ form.customer_flat }}</td>
+                    <td id="free_form">{{ form.customer_house.errors }}{{ form.customer_house }}</td>
+                    <td id="free_form">{{ form.customer_block.errors }}{{ form.customer_block }}</td>
+                    <td id="free_form">{{ form.customer_building.errors }}{{ form.customer_building }}</td>
+                    <td id="free_form">{{ form.customer_flat.errors }}{{ form.customer_flat }}</td>
                 </tr>
 {#                <tr>#}
 {#                    <td width="33%" id="free_form">{{ form.customer_flat.label_tag }}</td>#}
@@ -308,7 +309,7 @@ $(function(){
                     <td colspan="3" id="free_form">{{ form.comment.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td colspan="3" id="free_form">{{ form.comment }}</td>
+                    <td colspan="3" id="free_form">{{ form.comment.errors }}{{ form.comment }}</td>
                 </tr>
 
                 <tr>
@@ -317,9 +318,9 @@ $(function(){
                     <td width="33%" id="free_form">{{ form.file3.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" id="free_form">{{ form.file1 }}</td>
-                    <td width="33%" id="free_form">{{ form.file1_comment }}</td>
-                    <td width="33%" id="free_form">{{ form.file3 }}</td>
+                    <td width="33%" id="free_form">{{ form.file1.errors }}{{ form.file1 }}</td>
+                    <td width="33%" id="free_form">{{ form.file1_comment.errors }}{{ form.file1_comment }}</td>
+                    <td width="33%" id="free_form"></td>
                 </tr>
                 <tfoot>
                     <tr>
