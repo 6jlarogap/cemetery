@@ -817,14 +817,15 @@ def journal(request):
 #            new_op.save()
             return redirect("/journal/")
     else:
-        #form = JournalForm(initial={'last_name': 'НЕИЗВЕСТЕН'})
-        initial={"burial_date": datetime.date.today().strftime("%d.%m.%Y"),
-                 "last_name": 'НЕИЗВЕСТНО'}
         if request.user.userprofile.default_cemetery:
-            initial["cemetery"] = request.user.userprofile.default_cemetery
+            cem = request.user.userprofile.default_cemetery
+        else:
+            cem = None
         if request.user.userprofile.default_operation:
-            initial["operation"] = request.user.userprofile.default_operation
-        form = JournalForm(initial)
+            oper = request.user.userprofile.default_operation
+        else:
+            oper = None
+        form = JournalForm(cem=cem, oper=oper)
     today = datetime.date.today()
     burials = Burial.objects.filter(is_trash=False, creator=request.user,
                             date_of_creation__gte=datetime.datetime(year=today.year,

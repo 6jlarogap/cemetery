@@ -13,6 +13,7 @@ from stdimage.forms import StdImageFormField
 
 import re
 import string
+import datetime
 
 
 PER_PAGE_VALUES = (
@@ -412,7 +413,8 @@ class JournalForm(forms.Form):
                                        widget=forms.Select(attrs={"tabindex": "6"}))
     hoperation = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
-    burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}))
+    burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}),
+                                  initial=datetime.date.today().strftime("%d.%m.%Y"))
     comment = forms.CharField(required=False,
                               widget=forms.Textarea(attrs={'rows': 4,
                                                            'cols': 90,
@@ -420,7 +422,8 @@ class JournalForm(forms.Form):
                               label="Комментарий")
     account_book_n = forms.CharField(max_length=9, label="Номер в книге учета*",
                                      widget=forms.TextInput(attrs={"tabindex": "1"}))
-    last_name = forms.CharField(max_length=30, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}))
+    last_name = forms.CharField(max_length=30, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
+                                initial=u"НЕИЗВЕСТНО")
     first_name = forms.CharField(required=False, max_length=30, label="Имя",
                                  widget=forms.TextInput(attrs={"tabindex": "4"}))
     patronymic = forms.CharField(required=False, max_length=30, label="Отчество",
@@ -458,8 +461,14 @@ class JournalForm(forms.Form):
     file1 = StdImageFormField(required=False, label="Картинка (до 5 Mb)")
     file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 1, 'cols': 64}),
                                     label="Комментарий к файлу")
-#    def __init__(self, *args, **kwargs):
-#        super(JournalForm, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        cem = kwargs.pop('cem')
+        oper = kwargs.pop('oper')
+        super(JournalForm, self).__init__(*args, **kwargs)
+        if cem:
+            self.fields["cemetery"].initial = cem
+        if oper:
+            self.fields["operation"].initial = oper
 #        cemetery = Cemetery.objects.all()[0]
 #        choices = list(SoulProducttypeOperation.objects.filter(soul=cemetery.organization.soul_ptr,
 #                p_type=settings.BURIAL_PRODUCTTYPE_ID).values_list("operation__id", "operation__op_type"))
