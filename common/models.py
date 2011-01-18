@@ -137,6 +137,7 @@ class Location(models.Model):
     Адрес.
     """
     uuid = UUIDField(primary_key=True)
+    post_index = models.CharField("Почтовый индекс", max_length=16, blank=True)  # Индекс.
     street = models.ForeignKey(Street, verbose_name="Улица", blank=True, null=True)  # Улица.
     house = models.CharField("Дом", max_length=16, blank=True)  # Дом.
     block = models.CharField("Корпус", max_length=16, blank=True)  # Корпус.

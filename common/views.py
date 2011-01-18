@@ -522,7 +522,7 @@ def management_cemetery(request):
         if form.is_valid():
             cd = form.cleaned_data
             location = Location()
-            location.save()
+#            location.save()
             cemetery = Cemetery()
             cemetery.organization = cd["organization"]
             cemetery.location = location
@@ -536,6 +536,7 @@ def management_cemetery(request):
             location_house = cd.get("house", "")
             location_block = cd.get("block", "")
             location_building = cd.get("building", "")
+            location_post_index = cd.get("post_index", "")
             if location_street and location_city and location_region and location_country:
                 # Есть все для создания непустого Location.
                 # Страна.
@@ -572,7 +573,9 @@ def management_cemetery(request):
                         location.block = location_block
                     if location_building:
                         location.building = location_building
-                location.save()
+            if location_post_index:
+                location.post_index = location_post_index
+            location.save()
             return redirect("/management/cemetery/")
     else:
         form = CemeteryForm()
@@ -609,13 +612,14 @@ def management_edit_cemetery(request, uuid):
             location_house = cd.get("house", "")
             location_block = cd.get("block", "")
             location_building = cd.get("building", "")
+            location_post_index = cd.get("post_index", "")
             # Очищаем Location.
             location.street = None
             location.house = ""
             location.block = ""
             location.building = ""
             location.flat = ""
-            location.save()
+#            location.save()
             if location_street and location_city and location_region and location_country:
                 # Есть все для создания непустого Location.
                 # Страна.
@@ -652,7 +656,9 @@ def management_edit_cemetery(request, uuid):
                         location.block = location_block
                     if location_building:
                         location.building = location_building
-                location.save()
+            if location_post_index:
+                location.post_index = location_post_index
+            location.save()
             return redirect('/management/cemetery/')
     else:
         initial_data = {
@@ -661,6 +667,7 @@ def management_edit_cemetery(request, uuid):
         }
         if cemetery.location.street:
             initial_data["country"] = cemetery.location.street.city.country.name
+            initial_data["region"] = cemetery.location.street.city.region.name
             initial_data["city"] = cemetery.location.street.city.name
             initial_data["street"] = cemetery.location.street.name
             if cemetery.location.house:
@@ -669,6 +676,8 @@ def management_edit_cemetery(request, uuid):
                 initial_data["block"] = cemetery.location.block
             if cemetery.location.building:
                 initial_data["building"] = cemetery.location.building
+        if cemetery.location.post_index:
+            initial_data["post_index"] = cemetery.location.post_index
         form = CemeteryForm(initial=initial_data)
     return direct_to_template(request, 'management_edit_cemetery.html',
                               {'form': form,})
@@ -720,6 +729,8 @@ def journal(request):
                 phone.save()
             # Create customer's location.
             new_location = Location()
+            if cd.get("post_index", ""):
+                new_location.post_index = cd["post_index"]
 #            if (cd.get("customer_country", "") and cd.get("customer_region", "") and
 #                cd.get("customer_city", "") and cd.get("customer_street", "")):
 #                try:
@@ -906,7 +917,9 @@ def edit_burial(request, uuid):
                     street.save()
                 # Сохраняем Location.
                 location.street = street
-                location.save()
+            if cd.get("post_index", ""):
+                location.post_index = cd["post_index"]
+            location.save()
             if cd.get("comment", ""):
                 burial.add_comment(cd["comment"], request.user)
             if "file1" in request.FILES:
@@ -936,6 +949,8 @@ def edit_burial(request, uuid):
             initial_data["city"] = burial.customer.location.street.city.name
             initial_data["region"] = burial.customer.location.street.city.region.name
             initial_data["country"] = burial.customer.location.street.city.region.country.name
+        if burial.customer.location.post_index:
+            initial_data["post_index"] = burial.customer.location.post_index
         form = EditOrderForm(initial=initial_data)
     return direct_to_template(request, 'burial.html', {'burial': burial, 'form': form, 'formset': formset})
 
@@ -1315,6 +1330,7 @@ def init(request):
             org_location_block = cd.get("block", "")
             org_location_building = cd.get("building", "")
             org_location_flat = cd.get("flat", "")
+            org_location_post_index = cd.get("post_index", "")
             if org_location_country and org_location_region and org_location_city and org_location_street:
                 # Есть все для создания непустого Location.
                 # Страна.
@@ -1353,6 +1369,8 @@ def init(request):
                         org_location.building = org_location_building
                     if org_location_flat:
                         org_location.flat = org_location_flat
+            if org_location_post_index:
+                org_location.post_index = org_location_post_index
             org_location.save()
             organization.location = org_location
             organization.save()
@@ -1368,6 +1386,7 @@ def init(request):
             cem_location_house = cd.get("cem_house", "")
             cem_location_block = cd.get("cem_block", "")
             cem_location_building = cd.get("cem_building", "")
+            cem_location_post_index = cd.get("cem_post_index", "")
             if cem_location_country and cem_location_region and cem_location_city and cem_location_street:
                 # Есть все для создания непустого Location.
                 # Страна.
@@ -1404,6 +1423,8 @@ def init(request):
                         cem_location.block = cem_location_block
                     if cem_location_building:
                         cem_location.building = cem_location_building
+            if cem_location_post_index:
+                cem_location.post_index = cem_location_post_index
             cem_location.save()
             cemetery.location = cem_location
             cemetery.save()

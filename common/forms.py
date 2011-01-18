@@ -149,6 +149,7 @@ class CemeteryForm(forms.Form):
     """
     organization = forms.ModelChoiceField(queryset=Organization.objects.all(), label="Организация", empty_label=None)
     name = forms.CharField(max_length=99, label="Название")
+    post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс")
     street = forms.CharField(required=False, max_length=99, label="Улица", widget=forms.TextInput())
     new_street = forms.BooleanField(required=False, label="Новая улица")
     city = forms.CharField(required=False, max_length=36, label="Нас. пункт", widget=forms.TextInput())
@@ -293,6 +294,8 @@ class EditOrderForm(forms.Form):
     area = forms.CharField(max_length=9, label="Участок*", widget=forms.TextInput(attrs={"tabindex": "7"}))
     row = forms.CharField(max_length=9, label="Ряд*", widget=forms.TextInput(attrs={"tabindex": "8"}))
     seat = forms.CharField(max_length=9, label="Место*", widget=forms.TextInput(attrs={"tabindex": "9"}))
+    post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс",
+                             widget=forms.TextInput(attrs={"tabindex": "13"}))
     street = forms.CharField(required=False, max_length=99, label="Улица",
                              widget=forms.TextInput(attrs={"tabindex": "14"}))
     new_street = forms.BooleanField(required=False, label="Новая улица")
@@ -434,27 +437,29 @@ class JournalForm(forms.Form):
                                           widget=forms.TextInput(attrs={"tabindex": "11"}))
     customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика",
                                           widget=forms.TextInput(attrs={"tabindex": "12"}))
+    post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс",
+                             widget=forms.TextInput(attrs={"tabindex": "13"}))
     street = forms.CharField(required=False, max_length=99, label="Улица",
-                             widget=forms.TextInput(attrs={"tabindex": "14"}))
+                             widget=forms.TextInput(attrs={"tabindex": "15"}))
     new_street = forms.BooleanField(required=False, label="Новая улица")
     city = forms.CharField(required=False, max_length=36, label="Нас. пункт",
-                           widget=forms.TextInput(attrs={"tabindex": "15"}))
+                           widget=forms.TextInput(attrs={"tabindex": "16"}))
     new_city = forms.BooleanField(required=False, label="Новый нас. пункт")
     region = forms.CharField(required=False, max_length=36, label="Регион",
-                             widget=forms.TextInput(attrs={"tabindex": "16"}))
+                             widget=forms.TextInput(attrs={"tabindex": "17"}))
     new_region = forms.BooleanField(required=False, label="Новый регион")
     country = forms.CharField(required=False, max_length=24, label="Страна",
-                              widget=forms.TextInput(attrs={"tabindex": "17"}))
+                              widget=forms.TextInput(attrs={"tabindex": "18"}))
     new_country = forms.BooleanField(required=False, label="Новая страна")
     customer_house = forms.CharField(required=False, max_length=16, label="Дом",
-                                     widget=forms.TextInput(attrs={"tabindex": "18"}))
-    customer_block = forms.CharField(required=False, max_length=16, label="Корпус",
                                      widget=forms.TextInput(attrs={"tabindex": "19"}))
+    customer_block = forms.CharField(required=False, max_length=16, label="Корпус",
+                                     widget=forms.TextInput(attrs={"tabindex": "20"}))
     customer_building = forms.CharField(required=False, max_length=16, label="Строение")
     customer_flat = forms.CharField(required=False, max_length=16, label="Квартира",
-                                    widget=forms.TextInput(attrs={"tabindex": "20"}))
+                                    widget=forms.TextInput(attrs={"tabindex": "21"}))
     customer_phone = forms.CharField(required=False, max_length=15, label="Телефон",
-                                     widget=forms.TextInput(attrs={"tabindex": "13"}))
+                                     widget=forms.TextInput(attrs={"tabindex": "14"}))
     area = forms.CharField(max_length=9, label="Участок*", widget=forms.TextInput(attrs={"tabindex": "7"}))
     row = forms.CharField(max_length=9, label="Ряд*", widget=forms.TextInput(attrs={"tabindex": "8"}))
     seat = forms.CharField(max_length=9, label="Место*", widget=forms.TextInput(attrs={"tabindex": "9"}))
@@ -568,6 +573,7 @@ class InitalForm(forms.Form):
     Форма ввода данных для инициализации системы.
     """
     org_name = forms.CharField(label="*Название организации", max_length=99)
+    post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс")
     street = forms.CharField(required=False, max_length=99, label="Улица",
                              widget=forms.TextInput())
     new_street = forms.BooleanField(required=False, label="Новая улица")
@@ -588,6 +594,7 @@ class InitalForm(forms.Form):
     flat = forms.CharField(required=False, max_length=16, label="Квартира",
                                     widget=forms.TextInput())
     cemetery = forms.CharField(label="*Название кладбища", max_length=99)
+    cem_post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс")
     cem_street = forms.CharField(required=False, max_length=99, label="Улица",
                              widget=forms.TextInput())
     cem_new_street = forms.BooleanField(required=False, label="Новая улица")

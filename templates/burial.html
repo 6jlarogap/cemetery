@@ -286,6 +286,32 @@ $(function(){
             </tr>
             <tr>
                 <td id="free_form">
+                    {{ form.post_index.label_tag }}
+                </td>
+                <td id="free_form">
+                </td>
+                <td id="free_form">
+                </td>
+                <td id="free_form">
+                </td>
+            </tr>
+            <tr>
+                <td id="free_form">
+                    {% if user|in_group:"edit_bur_in_adm" %}
+                        {{ form.post_index.errors }}{{ form.post_index }}
+                    {% else %}
+                        {{ burial.customer.location.post_index }}
+                    {% endif %}
+                </td>
+                <td id="free_form">
+                </td>
+                <td id="free_form">
+                </td>
+                <td id="free_form">
+                </td>
+            </tr>
+            <tr>
+                <td id="free_form">
                     {{ form.street.label_tag }}
                 </td>
                 <td id="free_form">
