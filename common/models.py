@@ -194,6 +194,11 @@ class Phone(models.Model):
         unique_together = (("soul", "f_number"),)
     def __unicode__(self):
         return self.f_number
+    def save(self, *args, **kwargs):
+        soul = self.soul
+        if hasattr(soul, "organization"):
+            Burial.objects.filter(product__place__cemetery__organization=soul.organization).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
+        super(Phone, self).save(*args, **kwargs)
 
 
 class Email(models.Model):
