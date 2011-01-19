@@ -1311,6 +1311,11 @@ def init(request):
             # Создаем организацию.
             organization = Organization(creator=admin, name=cd["org_name"])
             organization.save()
+            # Создаем объект Phone для организации.
+            org_phone = cd.get("org_phone", "")
+            if org_phone:
+                org_phone_obj = Phone(soul=organization.soul_ptr, f_number=org_phone)
+                org_phone_obj.save()
             # Создаем объекты SoulProducttypeOperation.
             operations = Operation.objects.all()
             p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)

@@ -573,6 +573,8 @@ class InitalForm(forms.Form):
     Форма ввода данных для инициализации системы.
     """
     org_name = forms.CharField(label="*Название организации", max_length=99)
+    org_phone = forms.CharField(required=False, max_length=15, label="Телефон организации",
+                                widget=forms.TextInput())
     post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс")
     street = forms.CharField(required=False, max_length=99, label="Улица",
                              widget=forms.TextInput())
