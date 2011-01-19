@@ -426,7 +426,7 @@ class JournalForm(forms.Form):
     account_book_n = forms.CharField(max_length=9, label="Номер в книге учета*",
                                      widget=forms.TextInput(attrs={"tabindex": "1"}))
     last_name = forms.CharField(max_length=30, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
-                                initial=u"НЕИЗВЕСТНО")
+                                initial=u"НЕИЗВЕСТЕН")
     first_name = forms.CharField(required=False, max_length=30, label="Имя",
                                  widget=forms.TextInput(attrs={"tabindex": "4"}))
     patronymic = forms.CharField(required=False, max_length=30, label="Отчество",
