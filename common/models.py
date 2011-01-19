@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from stdimage import StdImageField
 from south.modelsinspector import add_introspection_rules
 
-#import datetime
+import datetime
 #import os
 #import re
 
@@ -152,6 +152,9 @@ class Location(models.Model):
                                 self.house, self.block, self.building, self.flat)
         else:
             return u"незаполненный адрес"
+    def save(self, *args, **kwargs):
+        Cemetery.objects.filter(location=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
+        super(Location, self).save(*args, **kwargs)
 
 
 # Checked.
@@ -172,6 +175,10 @@ class Soul(models.Model):
             return u"Юр. лицо: %s" % self.organization
         else:
             return self.uuid
+    def save(self, *args, **kwargs):
+        if hasattr(self, "person"):
+            Burial.objects.filter(person=self.person).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
+        super(Soul, self).save(*args, **kwargs)
     class Meta:
         ordering = ['uuid']
 
@@ -218,6 +225,9 @@ class Person(Soul):
         else:
             result = self.uuid
         return result
+    def save(self, *args, **kwargs):
+        Burial.objects.filter(person=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
+        super(Person, self).save(*args, **kwargs)
     class Meta:
         verbose_name = ('физ. лицо')
         verbose_name_plural = ('физ. лица')
@@ -306,15 +316,19 @@ class Cemetery(models.Model):
     uuid = UUIDField(primary_key=True)
     organization = models.ForeignKey(Organization)  # Связь с душой.
     location = models.ForeignKey(Location, blank=True, null=True)  # Адрес.
-    name = models.CharField(max_length=99, blank=True)  # Название.
+    name = models.CharField("Название", max_length=99, blank=True)  # Название.
     creator = models.ForeignKey(User)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
+    last_sync_date = models.DateTimeField("Дата последней синхронизации", default=datetime.datetime(2000, 1, 1, 0, 0))
     class Meta:
         #ordering = ['name']
         verbose_name = ('кладбище')
         verbose_name_plural = ('кладбища')
     def __unicode__(self):
         return "%s(%s)" % (self.name[:24], self.organization.name[:24])
+    def save(self, *args, **kwargs):
+        self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)
+        super(Cemetery, self).save(*args, **kwargs)
 
 
 class ProductType(models.Model):
@@ -400,6 +414,8 @@ class Place(Product):
         self.area = self.area.lower()
         self.row = self.row.lower()
         self.seat = self.seat.lower()
+
+        Burial.objects.filter(product__place=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
         super(Place, self).save(*args, **kwargs)
     def __unicode__(self):
         return  '%s, %s, %s (%s)' % (self.area, self.row, self.seat,
@@ -502,12 +518,16 @@ class Burial(Order):
     """
     person = models.ForeignKey(Person, verbose_name="Похороненный", related_name='buried')  # Похороненный.
     account_book_n = models.CharField("Номер в книге учета", max_length=9)  # Номер записи к книге учета.
+    last_sync_date = models.DateTimeField("Дата последней синхронизации", default=datetime.datetime(2000, 1, 1, 0, 0))
     class Meta:
         verbose_name = ('захоронение')
         verbose_name_plural = ('захоронения')
         #ordering = ['person__last_name',]
     def __unicode__(self):
         return u"захоронение: %s" % self.person.__unicode__()
+    def save(self, *args, **kwargs):
+        self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)
+        super(Burial, self).save(*args, **kwargs)
 
 
 class Burial1(Order): # Захоронения
