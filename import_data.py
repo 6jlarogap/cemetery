@@ -1,18 +1,11 @@
 # -*- coding: utf-8 -*-
 
-
-
-import datetime
-import socket
-import os
-import sys
-
-sys.path.append(os.path.abspath("/home/tier/job/freelance/Invozm/youmemory"))
-os.environ['DJANGO_SETTINGS_MODULE'] = '/home/tier/job/freelance/Invozm/youmemory/settings'
-
 from django.core import serializers
 
 from common.models import ImpBur, ImpCem, Env, Burial, Cemetery
+
+import datetime
+import socket
 
 serv_uuid = Env.objects.all()[0].uuid
 
