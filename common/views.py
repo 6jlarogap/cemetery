@@ -18,6 +18,7 @@ from django.forms.models import modelformset_factory
 from models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization
 from models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation
 from models import OrderFiles, Phone, Place, ProductType, SoulProducttypeOperation, Role
+from models import Env
 
 from simplepagination import paginate
 from annoying.decorators import render_to
@@ -1306,6 +1307,9 @@ def init(request):
         form = InitalForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
+            # Создаем уникальный uuid сервера.
+            env = Env()
+            env.save()
             # Получаем админа.
             admin = User.objects.filter(is_superuser=True).order_by("id")[0]
             # Создаем организацию.

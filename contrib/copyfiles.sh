@@ -45,4 +45,8 @@ echo "5 0 * * *   /home/django/projects/youmemory/contrib/dumpdb.py" >> /etc/cro
 #Start django daemon
 /etc/init.d/django start
 /etc/init.d/nginx restart
+#Data exchange folder
+mkdir -p /var/cemetery/outbox
+#chown soul:soul /var/cemetery/outbox
+chmod 777 /var/cemetery/outbox
 

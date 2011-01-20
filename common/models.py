@@ -586,6 +586,46 @@ class SoulProducttypeOperation(models.Model):
         unique_together = (("soul", "p_type", "operation"),)
 
 
+class Env(models.Model):
+    """
+    Таблица для хранения уникального uuid сервера.
+    """
+    uuid = UUIDField()
+
+    
+class ImpCem(models.Model):
+    """
+    Таблица для импорта данных кладбищ.
+    """
+    cem_pk = models.CharField("uuid", max_length=36, primary_key=True)
+    name = models.CharField("Название", max_length=99, blank=True)
+    country = models.CharField("Страна", max_length=24, blank=True)
+    region = models.CharField("Регион", max_length=36, blank=True)
+    city = models.CharField("Город", max_length=36, blank=True)
+    street = models.CharField("Улица", max_length=99, blank=True)
+    post_index = models.CharField("Почтовый индекс", max_length=16, blank=True)
+    house = models.CharField("Дом", max_length=16, blank=True)
+    block = models.CharField("Корпус", max_length=16, blank=True)
+    building = models.CharField("Строение", max_length=16, blank=True)
+    f_number = models.CharField("Номер телефона", max_length=15, blank=True)
 
 
-
+class ImpBur(models.Model):
+    """
+    Таблица для импорта данных захоронений.
+    """    
+    deadman_pk = models.CharField("uuid", max_length=36, primary_key=True)
+    bur_pk = models.CharField("uuid", max_length=36)
+    last_name = models.CharField("Фамилия", max_length=30)
+    first_name = models.CharField("Имя", max_length=30, blank=True)
+    patronymic = models.CharField("Отчество", max_length=30, blank=True)
+    birth_date = models.DateField("Дата рождения", blank=True, null=True)
+    death_date = models.DateField("Дата смерти", blank=True, null=True)
+    cemetery = models.ForeignKey(ImpCem)
+    area = models.CharField("Участок", max_length=9)
+    row = models.CharField("Ряд", max_length=9)
+    seat = models.CharField("Место", max_length=9)
+    gps_x = models.FloatField("Координата X", blank=True, null=True)
+    gps_y = models.FloatField("Координата Y", blank=True, null=True)
+    gps_z = models.FloatField("Координата Z", blank=True, null=True)
+    
