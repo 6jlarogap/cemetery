@@ -467,8 +467,8 @@ class JournalForm(forms.Form):
     file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 1, 'cols': 64}),
                                     label="Комментарий к файлу")
     def __init__(self, *args, **kwargs):
-        cem = kwargs.pop('cem')
-        oper = kwargs.pop('oper')
+        cem = kwargs.pop('cem', None)
+        oper = kwargs.pop('oper', None)
         super(JournalForm, self).__init__(*args, **kwargs)
         if cem:
             self.fields["cemetery"].initial = cem
