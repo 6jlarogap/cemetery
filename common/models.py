@@ -632,3 +632,13 @@ class ImpBur(models.Model):
     gps_y = models.FloatField("Координата Y", blank=True, null=True)
     gps_z = models.FloatField("Координата Z", blank=True, null=True)
     
+
+class Media(models.Model):
+    """
+    Таблица media. Пока не знаю, для чего она.
+    """
+    uuid = UUIDField(primary_key=True)
+    soul = models.ForeignKey(Soul)
+    url = models.URLField(blank=True, verify_exists=False)
+    comment = models.TextField(blank=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
