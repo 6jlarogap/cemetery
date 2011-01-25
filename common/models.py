@@ -292,7 +292,7 @@ class RoleTree(models.Model):
     Кто кому подчиняется в организации.
     Собираемся в будущем усовершенствовать - чтобы у одного начальника сразу несколько подчиненных хранить.
     """
-    #uuid = UUIDField(primary_key=True)
+    uuid = UUIDField(primary_key=True)
     master = models.ForeignKey(Role, related_name='rltree_master')  # Начальник.
     slave = models.ForeignKey(Role, related_name='rltree_slave') # Подчиненный.
 
@@ -301,7 +301,7 @@ class PersonRole(models.Model):
     """
     Роль персоны. Фактически, это сотрудники, которым есть доступ в систему.
     """
-    #uuid = UUIDField(primary_key=True)
+    uuid = UUIDField(primary_key=True)
     person = models.ForeignKey(Person)  # Персона.
     role = models.ForeignKey(Role)  # Роль.
     hire_date = models.DateField("Дата приема на работу", blank=True, null=True)
@@ -340,6 +340,7 @@ class ProductType(models.Model):
     """
     Тип продукта.
     """
+    uuid = UUIDField(primary_key=True)
     name = models.CharField("Имя типа продукта", max_length=24)
     def __unicode__(self):
         return self.name
@@ -456,6 +457,7 @@ class Operation(models.Model):
     """
     Операция с продуктом.
     """
+    uuid = UUIDField(primary_key=True)
     op_type = models.CharField("Имя операции", max_length=100)
     def __unicode__(self):
         return self.op_type[:24]
@@ -573,6 +575,7 @@ class SoulProducttypeOperation(models.Model):
     """
     Таблица для связи трех моделей.
     """
+    uuid = UUIDField(primary_key=True)
     soul = models.ForeignKey(Soul, verbose_name="Душа")
     p_type = models.ForeignKey(ProductType, verbose_name="Тип продукта")
     operation = models.ForeignKey(Operation,
