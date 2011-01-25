@@ -16,7 +16,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'youmemory',                      # Or path to database file if using sqlite3.
+        'NAME': 'cemetry',                      # Or path to database file if using sqlite3.
         'USER': 'postgres',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -81,7 +81,7 @@ MIDDLEWARE_CLASSES = (
     'common.middleware.NoCacheMiddleware',
 )
 
-ROOT_URLCONF = 'youmemory.urls'
+ROOT_URLCONF = 'cemetry.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(ROOT_PATH, 'templates'),

@@ -8,7 +8,7 @@ server {
 
     # связь с fastcgi сервером
     location / {
-        fastcgi_pass    unix:/var/run/django/youmemory.socket;
+        fastcgi_pass    unix:/var/run/django/cemetry.socket;
         include         fastcgi_params;
 
         fastcgi_param              PATH_INFO        $fastcgi_script_name;
@@ -18,13 +18,13 @@ server {
 
     # статическое содержимое проекта
     location /media/ {
-        alias /home/django/projects/youmemory/media/;
+        alias /home/django/projects/cemetry/media/;
         expires 30d;
     }
 
     # статическое содержимое админки    
     location /admin_media/ {
-        alias /home/django/projects/youmemory/django/contrib/admin/media/;
+        alias /home/django/projects/cemetry/django/contrib/admin/media/;
         expires 30d;
     }
 }
