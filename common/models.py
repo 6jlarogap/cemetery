@@ -166,7 +166,7 @@ class Soul(models.Model):
     birth_date = models.DateField("Дата рождения", blank=True, null=True)
     death_date = models.DateField("Дата смерти", blank=True, null=True)
     location = models.ForeignKey(Location, blank=True, null=True)  # Адрес орг-ии или человека (Person).
-    creator = models.ForeignKey(User)  # Создатель записи.
+    creator = models.ForeignKey(Soul)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     def __unicode__(self):
         if hasattr(self, "person"):
@@ -277,7 +277,7 @@ class Role(models.Model):
     name = models.CharField("Роль", max_length=50, blank=True)  # Название.
     djgroups = models.ManyToManyField(Group, verbose_name="Django-группы",
                                       blank=True, null=True)
-    creator = models.ForeignKey(User, verbose_name="Автор")  # Создатель записи.
+    creator = models.ForeignKey(Soul, verbose_name="Автор")  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     def __unicode__(self):
         return u"%s - %s" % (self.organization, self.name)
@@ -306,7 +306,7 @@ class PersonRole(models.Model):
     role = models.ForeignKey(Role)  # Роль.
     hire_date = models.DateField("Дата приема на работу", blank=True, null=True)
     discharge_date = models.DateField("Дата увольнения", blank=True, null=True)
-    creator = models.ForeignKey(User)  # Создатель записи.
+    creator = models.ForeignKey(Soul)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     def __unicode__(self):
         return u"%s - %s" % (self.person.__unicode__(), self.role.__unicode__())
@@ -322,7 +322,7 @@ class Cemetery(models.Model):
     organization = models.ForeignKey(Organization)  # Связь с душой.
     location = models.ForeignKey(Location, blank=True, null=True)  # Адрес.
     name = models.CharField("Название", max_length=99, blank=True)  # Название.
-    creator = models.ForeignKey(User)  # Создатель записи.
+    creator = models.ForeignKey(Soul)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     last_sync_date = models.DateTimeField("Дата последней синхронизации", default=datetime.datetime(2000, 1, 1, 0, 0))
     class Meta:
@@ -382,7 +382,7 @@ class ProductFiles(models.Model):
     uuid = UUIDField(primary_key=True)
     product = models.ForeignKey(Product)
     pfile = models.FileField(upload_to="pfiles")
-    creator = models.ForeignKey(User, null=True)  # Создатель записи.
+    creator = models.ForeignKey(Soul, null=True)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
 
 
@@ -393,7 +393,7 @@ class ProductComments(models.Model):
     uuid = UUIDField(primary_key=True)
     product = models.ForeignKey(Product)
     comment = models.TextField()  # Комментарий.
-    creator = models.ForeignKey(User)  # Создатель записи.
+    creator = models.ForeignKey(Soul)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     class Meta:
         ordering = ['date_of_creation']
@@ -410,7 +410,7 @@ class Place(Product):
     gps_x = models.FloatField("Координата X", blank=True, null=True)  # GPS X-ось.
     gps_y = models.FloatField("Координата Y", blank=True, null=True)  # GPS Y-ось.
     gps_z = models.FloatField("Координата Z", blank=True, null=True)  # GPS Z-ось.
-    creator = models.ForeignKey(User, verbose_name="Создатель записи")  # Создатель записи.
+    creator = models.ForeignKey(Soul, verbose_name="Создатель записи")  # Создатель записи.
     date_of_creation = models.DateTimeField("Дата создания записи", auto_now_add=True)  # Дата создания записи.
     def save(self, *args, **kwargs):
         """
@@ -437,7 +437,7 @@ class Place1(Product): # Места
     gps_x = models.FloatField(blank=True, null=True)  # GPS X-ось.
     gps_y = models.FloatField(blank=True, null=True)  # GPS Y-ось.
     gps_z = models.FloatField(blank=True, null=True)  # GPS Z-ось.
-    creator = models.ForeignKey(User)  # Создатель записи.
+    creator = models.ForeignKey(Soul)  # Создатель записи.
     date_of_creation = models.DateTimeField()  # Дата создания записи.
     s1 = models.TextField(blank=True)
     s2 = models.FloatField(blank=True, null=True)
@@ -477,7 +477,7 @@ class Order(models.Model):
     product = models.ForeignKey(Product, related_name="xxx")  # To change!
     operation = models.ForeignKey(Operation)
     is_trash = models.BooleanField(default=False)  # Удален.
-    creator = models.ForeignKey(User)  # Создатель записи.
+    creator = models.ForeignKey(Soul)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     all_comments = models.TextField(blank=True)  # Все комментарии, собранные в одно поле.
     def add_comment(self, txt, creator):
@@ -500,7 +500,7 @@ class OrderFiles(models.Model):
 #    ofile = models.FileField(upload_to="ofiles")
     ofile = StdImageField("Картинка", upload_to='ofiles', thumbnail_size=(100, 75))
     comment = models.CharField(max_length=96, blank=True)
-    creator = models.ForeignKey(User, null=True)  # Создатель записи.
+    creator = models.ForeignKey(Soul, null=True)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
 
 
@@ -511,7 +511,7 @@ class OrderComments(models.Model):
     uuid = UUIDField(primary_key=True)
     order = models.ForeignKey(Order)
     comment = models.TextField()  # Комментарий.
-    creator = models.ForeignKey(User)  # Создатель записи.
+    creator = models.ForeignKey(Soul)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     class Meta:
         ordering = ['date_of_creation']

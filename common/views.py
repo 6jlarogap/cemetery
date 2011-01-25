@@ -188,7 +188,7 @@ def main_page(request):
                 regex = u"%s$" % regex
             burials = burials.filter(customer__person__last_name__iregex=regex)
         if cd["owner"]:
-            burials = burials.filter(creator=cd["owner"])
+            burials = burials.filter(creator=cd["owner"].userprofile.soul)
         if cd["area"]:
             burials = burials.filter(product__place__area=cd["area"])
         if cd["row"]:
@@ -254,7 +254,7 @@ def profile(request):
             if hasattr(request.user, "userprofile"):
                 up = request.user.userprofile
             else:
-                soul = Soul(creator=request.user)
+                soul = Soul(creator=request.user.userprofile.soul)
                 soul.save()
                 up = UserProfile(user=request.user, soul=soul)
             if cd.get("cemetery", ""):
@@ -373,7 +373,7 @@ def management_user(request):
         if form.is_valid():
             cd = form.cleaned_data
             person = Person(last_name=cd['last_name'].capitalize(),
-                            creator=request.user)
+                            creator=request.user.userprofile.soul)
             if cd.get("first_name", ""):
                 person.first_name = cd['first_name'].capitalize()
             if cd.get("patronymic", ""):
@@ -384,7 +384,7 @@ def management_user(request):
                 phone = Phone(soul=person.soul_ptr, f_number=cd['phone'])
                 phone.save()
             person_role = PersonRole(person=person, role=cd['role'],
-                                     creator=request.user)
+                                     creator=request.user.userprofile.soul)
             person_role.save()
             user = User.objects.create_user(username=cd['username'], email="",
                                             password=password)
@@ -478,7 +478,7 @@ def management_edit_user(request, uuid):
             for r in roles:
                 if r not in person.roles.all():
                     # Новая роль.
-                    new_pr = PersonRole(creator=request.user, hire_date=datetime.date.today())
+                    new_pr = PersonRole(creator=request.user.userprofile.soul, hire_date=datetime.date.today())
                     new_pr.person = person
                     new_pr.role = r
                     new_pr.save()
@@ -528,7 +528,7 @@ def management_cemetery(request):
             cemetery.organization = cd["organization"]
             cemetery.location = location
             cemetery.name = cd["name"]
-            cemetery.creator = request.user
+            cemetery.creator = request.user.userprofile.soul
             cemetery.save()
             location_street = cd.get("street", "")
             location_city = cd.get("city", "")
@@ -700,7 +700,7 @@ def journal(request):
                 place = Place.objects.get(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"])
             except ObjectDoesNotExist:
                 # Create new Place.
-                place = Place(creator=request.user)
+                place = Place(creator=request.user.userprofile.soul)
                 place.cemetery = cd["cemetery"]
                 place.area = cd["area"]
                 place.row = cd["row"]
@@ -710,13 +710,13 @@ def journal(request):
                 place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
                 place.save()
             # Create new Person for dead man.
-            new_person = Person(creator=request.user)
+            new_person = Person(creator=request.user.userprofile.soul)
             new_person.last_name = cd["last_name"].capitalize()
             new_person.first_name = cd["first_name"].capitalize()
             new_person.patronymic = cd["patronymic"].capitalize()
             new_person.save()
             # Create new Person for customer.
-            customer = Person(creator=request.user)
+            customer = Person(creator=request.user.userprofile.soul)
             customer.last_name = cd["customer_last_name"].capitalize()
             if cd.get("customer_first_name", ""):
                 customer.first_name = cd["customer_first_name"].capitalize()
@@ -788,7 +788,7 @@ def journal(request):
             customer.save()
 
             # Create new Burial.
-            new_burial = Burial(creator=request.user)
+            new_burial = Burial(creator=request.user.userprofile.soul)
             new_burial.person = new_person
             new_burial.product = place.product_ptr
             new_burial.date_plan = cd["burial_date"]
@@ -803,11 +803,11 @@ def journal(request):
             new_burial.save()
             # Create comment.
             if cd.get("comment", ""):
-                new_burial.add_comment(cd["comment"], request.user)
+                new_burial.add_comment(cd["comment"], request.user.userprofile.soul)
             # Save images.
             for nf in request.FILES:
                 nfile = request.FILES[nf]
-                of = OrderFiles(creator=request.user)
+                of = OrderFiles(creator=request.user.userprofile.soul)
                 of.order = new_burial.order_ptr
                 of.ofile = nfile
                 if cd.get("file1_comment", ""):
@@ -815,14 +815,14 @@ def journal(request):
                 of.save()
 
 #            # Create new Order.
-#            new_order = Order(creator=request.user)
+#            new_order = Order(creator=request.user.userprofile.soul)
 #            new_order.responsible = MAIN_ORGANIZATION.soul_ptr
 ##            new_order.customer = customer
 #            #new_order.doer = request.user
 #            new_order.save()
 
 #            # Create new OrderPosition.
-#            new_op = OrderPosition(creator=request.user)
+#            new_op = OrderPosition(creator=request.user.userprofile.soul)
 #            new_op.order = new_order
 #            new_op.product = new_burial.product_ptr
 #            new_op.operation = cd["service"].operation
@@ -839,7 +839,7 @@ def journal(request):
             oper = None
         form = JournalForm(cem=cem, oper=oper)
     today = datetime.date.today()
-    burials = Burial.objects.filter(is_trash=False, creator=request.user,
+    burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul,
                             date_of_creation__gte=datetime.datetime(year=today.year,
                             month=today.month, day=today.day)).order_by('-date_of_creation', 'person__last_name')[:50]
     return direct_to_template(request, 'journal.html', {'form': form, 'burials': burials})
@@ -874,7 +874,7 @@ def edit_burial(request, uuid):
                 place = Place.objects.get(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"])
             except ObjectDoesNotExist:
                 place = Place(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"],
-                              creator=request.user)
+                              creator=request.user.userprofile.soul)
                 place.soul = cd["cemetery"].organization.soul_ptr  # писать ту орг-ию, что у Cemetery!!!
                 place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
                 place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
@@ -922,10 +922,10 @@ def edit_burial(request, uuid):
                 location.post_index = cd["post_index"]
             location.save()
             if cd.get("comment", ""):
-                burial.add_comment(cd["comment"], request.user)
+                burial.add_comment(cd["comment"], request.user.userprofile.soul)
             if "file1" in request.FILES:
                 nfile = request.FILES["file1"]
-                of = OrderFiles(creator=request.user)
+                of = OrderFiles(creator=request.user.userprofile.soul)
                 of.order = burial.order_ptr
                 of.ofile = nfile
                 if cd.get("file1_comment", ""):
@@ -1172,7 +1172,7 @@ def import_csv(request):
                             comment = comment.decode(settings.CSV_ENCODING).strip()
 
                         # Захороненный.
-                        deadman = Person(creator=request.user)
+                        deadman = Person(creator=request.user.userprofile.soul)
                         deadman.last_name = ln
                         if fn:
                             deadman.first_name = fn
@@ -1187,7 +1187,7 @@ def import_csv(request):
                         deadman.save()
 
                         # Заказчик.
-                        customer = Person(creator=request.user)
+                        customer = Person(creator=request.user.userprofile.soul)
                         customer.last_name = cust_ln
                         if cust_fn:
                             customer.first_name = cust_fn
@@ -1231,7 +1231,7 @@ def import_csv(request):
                             place = Place.objects.get(cemetery=cemetery, area__iexact=area, row__iexact=row,
                                                       seat__iexact=seat)
                         except ObjectDoesNotExist:
-                            place = Place(creator=request.user)
+                            place = Place(creator=request.user.userprofile.soul)
                             place.cemetery = cemetery
                             place.area = area
                             place.row = row
@@ -1242,7 +1242,7 @@ def import_csv(request):
                             place.save()
 
                         # Захоронение.
-                        burial = Burial(creator=request.user)
+                        burial = Burial(creator=request.user.userprofile.soul)
                         burial.person = deadman
                         burial.account_book_n = n
                         burial.responsible = place.cemetery.organization.soul_ptr
@@ -1260,7 +1260,7 @@ def import_csv(request):
                             operation = Operation.objects.get(id=settings.OPER_4)
                         burial.operation = operation
                         burial.save()
-                        burial.add_comment(comment, request.user)
+                        burial.add_comment(comment, request.user.userprofile.soul)
                         iduuids.append((str_id, burial.uuid))
                     except Exception, err_descr:
                         # Откатываем транзакцию.
@@ -1310,10 +1310,8 @@ def init(request):
             # Создаем уникальный uuid сервера.
             env = Env()
             env.save()
-            # Получаем админа.
-            admin = User.objects.filter(is_superuser=True).order_by("id")[0]
             # Создаем организацию.
-            organization = Organization(creator=admin, name=cd["org_name"])
+            organization = Organization(creator=request.user.userprofile.soul, name=cd["org_name"])
             organization.save()
             # Создаем объект Phone для организации.
             org_phone = cd.get("org_phone", "")
@@ -1385,7 +1383,7 @@ def init(request):
             organization.save()
 
             # Кладбище.
-            cemetery = Cemetery(creator=admin, organization=organization, name=cd["cemetery"])
+            cemetery = Cemetery(creator=request.user.userprofile.soul, organization=organization, name=cd["cemetery"])
             # Создаем Location для организации.
             cem_location = Location()
             cem_location_country = cd.get("cem_country", "")
@@ -1440,7 +1438,7 @@ def init(request):
             
             # Директор.
             # Создаем объект Person.
-            person = Person(creator=admin, last_name=cd["last_name"].capitalize())
+            person = Person(creator=request.user.userprofile.soul, last_name=cd["last_name"].capitalize())
             first_name = cd.get("first_name", "")
             patronymic = cd.get("patronymic", "")
             phone = cd.get("phone", "")
@@ -1454,9 +1452,9 @@ def init(request):
                 dir_phone = Phone(soul=person.soul_ptr, f_number=phone)
                 dir_phone.save()
             # Роль.
-            role = Role(creator=admin, name="Директор", organization=organization)
+            role = Role(creator=request.user.userprofile.soul, name="Директор", organization=organization)
             role.save()
-            person_role = PersonRole(person=person, role=role, creator=admin)
+            person_role = PersonRole(person=person, role=role, creator=request.user.userprofile.soul)
             person_role.save()
 
             # Системный пользователь django.
