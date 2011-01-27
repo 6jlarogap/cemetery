@@ -707,7 +707,7 @@ def journal(request):
                 place.seat = cd["seat"]
                 place.soul = cd["cemetery"].organization.soul_ptr
                 place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
-                place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
+                place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
                 place.save()
             # Create new Person for dead man.
             new_person = Person(creator=request.user.userprofile.soul)
@@ -943,7 +943,7 @@ def edit_burial(request, uuid):
             "row": burial.product.place.row,
             "seat": burial.product.place.seat,
             "operation": burial.operation,
-            "hoperation": burial.operation.id,
+            "hoperation": burial.operation.uuid,
         }
         if burial.customer.location and hasattr(burial.customer.location, "street") and burial.customer.location.street:
             initial_data["street"] = burial.customer.location.street.name
@@ -1009,7 +1009,7 @@ def get_oper(request):
         else:
             orgsoul=cemetery.organization.soul_ptr
             choices = SoulProducttypeOperation.objects.filter(soul=orgsoul,
-                              p_type=settings.PLACE_PRODUCTTYPE_ID).values_list("operation__id", "operation__op_type")
+                              p_type=settings.PLACE_PRODUCTTYPE_ID).values_list("operation__uuid", "operation__op_type")
             for c in choices:
                 rez.append({"optionValue": c[0], "optionDisplay": c[1]})
             rez.insert(0, {"optionValue": 0, "optionDisplay": u'---------'})
@@ -1320,7 +1320,7 @@ def init(request):
                 org_phone_obj.save()
             # Создаем объекты SoulProducttypeOperation.
             operations = Operation.objects.all()
-            p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
+            p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
             for op in operations:
                 spo = SoulProducttypeOperation()
                 spo.soul = organization.soul_ptr

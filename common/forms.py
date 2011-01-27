@@ -290,7 +290,7 @@ class EditOrderForm(forms.Form):
     cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(), label="Кладбище*", empty_label=None)
     operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None,
                                        widget=forms.Select(attrs={"tabindex": "6"}))
-    hoperation = forms.IntegerField(required=False, widget=forms.HiddenInput)
+    hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
     area = forms.CharField(max_length=9, label="Участок*", widget=forms.TextInput(attrs={"tabindex": "7"}))
     row = forms.CharField(max_length=9, label="Ряд*", widget=forms.TextInput(attrs={"tabindex": "8"}))
     seat = forms.CharField(max_length=9, label="Место*", widget=forms.TextInput(attrs={"tabindex": "9"}))
@@ -414,7 +414,7 @@ class JournalForm(forms.Form):
                                       label="Кладбище*")
     operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None,
                                        widget=forms.Select(attrs={"tabindex": "6"}))
-    hoperation = forms.IntegerField(required=False, widget=forms.HiddenInput)
+    hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
 
     burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}),
                                   initial=datetime.date.today().strftime("%d.%m.%Y"))
