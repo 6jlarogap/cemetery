@@ -128,6 +128,8 @@ class Street(models.Model):
     class Meta:
         ordering = ['city', 'name']
         unique_together = (("city", "name"),)
+        verbose_name = ('улица')
+        verbose_name_plural = ('улицы')
     def __unicode__(self):
         return self.name
 
@@ -166,7 +168,7 @@ class Soul(models.Model):
     birth_date = models.DateField("Дата рождения", blank=True, null=True)
     death_date = models.DateField("Дата смерти", blank=True, null=True)
     location = models.ForeignKey(Location, blank=True, null=True)  # Адрес орг-ии или человека (Person).
-    creator = models.ForeignKey(Soul)  # Создатель записи.
+    creator = models.ForeignKey("Soul", blank=True, null=True)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     def __unicode__(self):
         if hasattr(self, "person"):
@@ -272,8 +274,7 @@ class Role(models.Model):
     Роль в организации.
     """
     uuid = UUIDField(primary_key=True)
-    organization = models.ForeignKey(Organization,
-                                     verbose_name="Организация")  # Связь с юр. лицом.
+    organization = models.ForeignKey(Organization, verbose_name="Организация", related_name="orgrole")  # Связь с юр. лицом.
     name = models.CharField("Роль", max_length=50, blank=True)  # Название.
     djgroups = models.ManyToManyField(Group, verbose_name="Django-группы",
                                       blank=True, null=True)
@@ -302,7 +303,7 @@ class PersonRole(models.Model):
     Роль персоны. Фактически, это сотрудники, которым есть доступ в систему.
     """
     uuid = UUIDField(primary_key=True)
-    person = models.ForeignKey(Person)  # Персона.
+    person = models.ForeignKey(Person, related_name="personrole")  # Персона.
     role = models.ForeignKey(Role)  # Роль.
     hire_date = models.DateField("Дата приема на работу", blank=True, null=True)
     discharge_date = models.DateField("Дата увольнения", blank=True, null=True)
@@ -319,7 +320,7 @@ class Cemetery(models.Model):
     Кладбище.
     """
     uuid = UUIDField(primary_key=True)
-    organization = models.ForeignKey(Organization)  # Связь с душой.
+    organization = models.ForeignKey(Organization, related_name="cemetery")  # Связь с душой.
     location = models.ForeignKey(Location, blank=True, null=True)  # Адрес.
     name = models.CharField("Название", max_length=99, blank=True)  # Название.
     creator = models.ForeignKey(Soul)  # Создатель записи.
@@ -473,13 +474,13 @@ class Order(models.Model):
     uuid = UUIDField(primary_key=True)
     responsible = models.ForeignKey(Soul, related_name='ordr_responsible')  # Ответственный.
     customer = models.ForeignKey(Soul, related_name='ordr_customer')  # Клиент.
-    doer = models.ForeignKey(Soul, blank=True, null=True)  # Исполнитель (работник).
+    doer = models.ForeignKey(Soul, blank=True, null=True, related_name="doerorder")  # Исполнитель (работник).
     date_plan = models.DateTimeField(blank=True, null=True)  # Планируемая дата исполнения.
     date_fact = models.DateTimeField("Фактическая дата исполнения", blank=True, null=True)  # Фактическая дата исполнения.
     product = models.ForeignKey(Product, related_name="xxx")  # To change!
     operation = models.ForeignKey(Operation)
     is_trash = models.BooleanField(default=False)  # Удален.
-    creator = models.ForeignKey(Soul)  # Создатель записи.
+    creator = models.ForeignKey(Soul, related_name="order")  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     all_comments = models.TextField(blank=True)  # Все комментарии, собранные в одно поле.
     def add_comment(self, txt, creator):
