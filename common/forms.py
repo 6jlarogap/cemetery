@@ -638,10 +638,137 @@ class InitalForm(forms.Form):
         return un
     def clean(self):
         cd = self.cleaned_data
-        if cd.get("password1", "") == cd.get("password2", ""):
-            return cd
+        # Страна/регион/нас. пункт/улица орг-ии.
+        country = cd.get("country", "")
+        region = cd.get("region", "")
+        city = cd.get("city", "")
+        street = cd.get("street", "")
+        if country and region and city and street:
+            # Страна.
+            try:
+                country_object = GeoCountry.objects.get(name__iexact=country)
+            except ObjectDoesNotExist:
+                if not cd.get("new_country", False):
+                    raise forms.ValidationError("Организация: страна не найдена.")
+                else:
+                    new_country = True
+            else:
+                if not cd.get("new_country", False):
+                    new_country = False
+                else:
+                    raise forms.ValidationError("Организация: страна с таким именем уже существует.")
+            # Регион.
+            if new_country and not cd.get("new_region", False):
+
+                raise forms.ValidationError("Организация: у новой страны регион должен быть тоже новым.")
+            try:
+                region_object = GeoRegion.objects.get(country__name__iexact=country, name__iexact=region)
+            except ObjectDoesNotExist:
+                if not cd.get("new_region", False):
+                    raise forms.ValidationError("Организация: регион не найден.")
+                else:
+                    new_region = True
+            else:
+                if not cd.get("new_region", False):
+                    new_region = False
+                else:
+                    raise forms.ValidationError("Организация: регион с таким именем уже существует в выбранной стране.")
+            # Нас. пункт.
+            if new_region and not cd.get("new_city", False):
+                raise forms.ValidationError("Организация: у нового региона нас. пункт должен быть тоже новым.")
+            try:
+                city_object = GeoCity.objects.get(region__name__iexact=region, name__iexact=city)
+            except ObjectDoesNotExist:
+                if not cd.get("new_city", False):
+                    raise forms.ValidationError("Организация: нас. пункт не найден.")
+                else:
+                    new_city = True
+            else:
+                if not cd.get("new_city", False):
+                    new_city = False
+                else:
+                    raise forms.ValidationError("Организация: нас. пункт с таким именем уже существует в выбранном регионе.")
+            # Улица.
+            if new_city and not cd.get("new_street", False):
+                raise forms.ValidationError("Организация: у нового нас. пункта улица должна быть тоже новой.")
+            try:
+                street_object = Street.objects.get(city__name__iexact=city, name__iexact=street)
+            except ObjectDoesNotExist:
+                if not cd.get("new_street", False):
+                    raise forms.ValidationError("Организация: улица не найдена.")
+            else:
+                if cd.get("new_street", False):
+                    raise forms.ValidationError("Организация: улица с таким именем уже существует в выбранном нас. пункте.")
         else:
+            if country or region or city or street:  # Есть, но не все.
+                raise forms.ValidationError("Организация: не все поля адреса заполнены.")
+
+        # Страна/регион/нас. пункт/улица кладбища .
+        cem_country = cd.get("cem_country", "")
+        cem_region = cd.get("cem_region", "")
+        cem_city = cd.get("cem_city", "")
+        cem_street = cd.get("cem_street", "")
+        if cem_country and cem_region and cem_city and cem_street:
+            # Страна.
+            try:
+                cem_country_object = GeoCountry.objects.get(name__iexact=cem_country)
+            except ObjectDoesNotExist:
+                if not cd.get("cem_new_country", False):
+                    raise forms.ValidationError("Кладбище: страна не найдена.")
+                else:
+                    cem_new_country = True
+            else:
+                if not cd.get("cem_new_country", False):
+                    cem_new_country = False
+                else:
+                    raise forms.ValidationError("Кладбище: страна с таким именем уже существует.")
+            # Регион.
+            if cem_new_country and not cd.get("cem_new_region", False):
+                raise forms.ValidationError("Кладбище: у новой страны регион должен быть тоже новым.")
+            try:
+                cem_region_object = GeoRegion.objects.get(country__name__iexact=cem_country, name__iexact=cem_region)
+            except ObjectDoesNotExist:
+                if not cd.get("cem_new_region", False):
+                    raise forms.ValidationError("Кладбище: регион не найден.")
+                else:
+                    cem_new_region = True
+            else:
+                if not cd.get("cem_new_region", False):
+                    cem_new_region = False
+                else:
+                    raise forms.ValidationError("Кладбище: регион с таким именем уже существует в выбранной стране.")
+            # Нас. пункт.
+            if cem_new_region and not cd.get("cem_new_city", False):
+                raise forms.ValidationError("Кладбище: у нового региона нас. пункт должен быть тоже новым.")
+            try:
+                cem_city_object = GeoCity.objects.get(region__name__iexact=cem_region, name__iexact=cem_city)
+            except ObjectDoesNotExist:
+                if not cd.get("cem_new_city", False):
+                    raise forms.ValidationError("Кладбище: нас. пункт не найден.")
+                else:
+                    cem_new_city = True
+            else:
+                if not cd.get("cem_new_city", False):
+                    cem_new_city = False
+                else:
+                    raise forms.ValidationError("Кладбище: нас. пункт с таким именем уже существует в выбранном регионе.")
+            # Улица.
+            if cem_new_city and not cd.get("cem_new_street", False):
+                raise forms.ValidationError("Кладбище: у нового нас. пункта улица должна быть тоже новой.")
+            try:
+                cem_street_object = Street.objects.get(city__name__iexact=cem_city, name__iexact=cem_street)
+            except ObjectDoesNotExist:
+                if not cd.get("cem_new_street", False):
+                    raise forms.ValidationError("Кладбище: улица не найдена.")
+            else:
+                if cd.get("cem_new_street", False):
+                    raise forms.ValidationError("Кладбище: улица с таким именем уже существует в выбранном нас. пункте.")
+        else:
+            if cem_country or cem_region or cem_city or cem_street:  # Есть, но не все.
+                raise forms.ValidationError("Кладбище: не все поля адреса заполнены.")
+        if cd.get("password1", "") != cd.get("password2", ""):
             raise forms.ValidationError("Пароли не совпадают.")
+        return cd
 
 
 class ImportForm(forms.Form):
