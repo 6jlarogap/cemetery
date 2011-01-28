@@ -1,0 +1,4 @@
+outbox_dir="/var/cemetery/outbox"
+inbox_dir="/var/cemetery/inbox"
+db_dumps_dir="/var/cemetery/dumps"
+server_addr="192.168.0.5"
