@@ -196,8 +196,9 @@
 	        </td>
 	        <td>
                 {% if user|in_group:"edit_burial" %}
-                    <a href='/burial/{{ b.uuid }}/'><img src="/media/edit.png"></a>
+                    <a title="редактировать" href='/burial/{{ b.uuid }}/'><img src="/media/edit.png"></a>
                 {% endif %}
+                <a title="к могиле" href='/?tobur={{ b.uuid }}'><img width="16" src="/media/tree.png"></a>
 	        </td>
 	    </tr>
 	{% endfor %}

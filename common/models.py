@@ -477,7 +477,7 @@ class Order(models.Model):
     doer = models.ForeignKey(Soul, blank=True, null=True, related_name="doerorder")  # Исполнитель (работник).
     date_plan = models.DateTimeField(blank=True, null=True)  # Планируемая дата исполнения.
     date_fact = models.DateTimeField("Фактическая дата исполнения", blank=True, null=True)  # Фактическая дата исполнения.
-    product = models.ForeignKey(Product, related_name="xxx")  # To change!
+    product = models.ForeignKey(Product, related_name="order")
     operation = models.ForeignKey(Operation)
     is_trash = models.BooleanField(default=False)  # Удален.
     creator = models.ForeignKey(Soul, related_name="order")  # Создатель записи.

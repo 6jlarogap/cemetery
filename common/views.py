@@ -210,6 +210,15 @@ def main_page(request):
             if not (regex.endswith("?") or regex.endswith("*")):
                 regex = u"%s$" % regex
             burials = burials.filter(all_comments__iregex=regex)
+        # Переход "к могиле".
+        tobur_uuid = request.GET.get("tobur", "")
+        if tobur_uuid:
+            try:
+                burial = Burial.objects.get(uuid=tobur_uuid)
+            except ObjectDoesNotExist:
+                pass
+            else:
+                burials = burials.filter(product__place=burial.product.place)
     else:
         #if request.user.is_authenticated() and not request.user.is_superuser and not form_data:
         if request.user.is_authenticated() and not form_data:
