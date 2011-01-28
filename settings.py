@@ -113,15 +113,15 @@ LOGIN_REDIRECT_URL = "/"
 PAGINATION_USER_PER_PAGE_ALLOWED = True
 
 
-PLACE_PRODUCTTYPE_ID = "752d1806-2943-11e0-9953-485b39c96dfe"
+PLACE_PRODUCTTYPE_ID = "60925a32-2add-11e0-8b17-485b39c96dfe"
 #BURIAL_PRODUCTTYPE_ID = 1
 
 
 # Операции.
-OPER_1 = "8677f614-2941-11e0-8eb0-485b39c96dfe"  # Подзахоронение урны.
-OPER_2 = "8aaa42be-2941-11e0-8eb0-485b39c96dfe"  # Подзахоронение.
-OPER_3 = "8e435ba4-2941-11e0-8eb0-485b39c96dfe"  # Захоронение в существующую могилу.
-OPER_4 = "922353c8-2941-11e0-8eb0-485b39c96dfe"  # Захоронение.
+OPER_1 = "6e0492ac-2add-11e0-8b17-485b39c96dfe"  # Подзахоронение урны.
+OPER_2 = "732795d6-2add-11e0-8b17-485b39c96dfe"  # Подзахоронение.
+OPER_3 = "78672a34-2add-11e0-8b17-485b39c96dfe"  # Захоронение в существующую могилу.
+OPER_4 = "7d58e9ec-2add-11e0-8b17-485b39c96dfe"  # Захоронение.
 
 # Кодировка для файлов обмена.
 CSV_ENCODING = "utf8"

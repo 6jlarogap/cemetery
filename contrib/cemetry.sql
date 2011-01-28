@@ -185,7 +185,7 @@ ALTER SEQUENCE auth_permission_id_seq OWNED BY auth_permission.id;
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('auth_permission_id_seq', 126, true);
+SELECT pg_catalog.setval('auth_permission_id_seq', 129, true);
 
 
 --
@@ -352,7 +352,7 @@ CREATE TABLE common_cemetery (
     organization_id character varying(36) NOT NULL,
     location_id character varying(36),
     name character varying(99) NOT NULL,
-    creator_id integer NOT NULL,
+    creator_id character varying(36) NOT NULL,
     date_of_creation timestamp with time zone NOT NULL,
     last_sync_date timestamp with time zone NOT NULL
 );
@@ -531,6 +531,21 @@ CREATE TABLE common_location (
 ALTER TABLE public.common_location OWNER TO postgres;
 
 --
+-- Name: common_media; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE common_media (
+    uuid character varying(36) NOT NULL,
+    soul_id character varying(36) NOT NULL,
+    url character varying(200) NOT NULL,
+    comment text NOT NULL,
+    "timestamp" timestamp with time zone
+);
+
+
+ALTER TABLE public.common_media OWNER TO postgres;
+
+--
 -- Name: common_metro; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -548,40 +563,12 @@ ALTER TABLE public.common_metro OWNER TO postgres;
 --
 
 CREATE TABLE common_operation (
-    id integer NOT NULL,
+    uuid character varying(36) NOT NULL,
     op_type character varying(100) NOT NULL
 );
 
 
 ALTER TABLE public.common_operation OWNER TO postgres;
-
---
--- Name: common_operation_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE common_operation_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_operation_id_seq OWNER TO postgres;
-
---
--- Name: common_operation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE common_operation_id_seq OWNED BY common_operation.id;
-
-
---
--- Name: common_operation_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('common_operation_id_seq', 4, true);
-
 
 --
 -- Name: common_order; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -595,9 +582,9 @@ CREATE TABLE common_order (
     date_plan timestamp with time zone,
     date_fact timestamp with time zone,
     product_id character varying(36) NOT NULL,
-    operation_id integer NOT NULL,
+    operation_id character varying(36) NOT NULL,
     is_trash boolean NOT NULL,
-    creator_id integer NOT NULL,
+    creator_id character varying(36) NOT NULL,
     date_of_creation timestamp with time zone NOT NULL,
     all_comments text NOT NULL
 );
@@ -613,7 +600,7 @@ CREATE TABLE common_ordercomments (
     uuid character varying(36) NOT NULL,
     order_id character varying(36) NOT NULL,
     comment text NOT NULL,
-    creator_id integer NOT NULL,
+    creator_id character varying(36) NOT NULL,
     date_of_creation timestamp with time zone NOT NULL
 );
 
@@ -629,7 +616,7 @@ CREATE TABLE common_orderfiles (
     order_id character varying(36) NOT NULL,
     ofile character varying(100) NOT NULL,
     comment character varying(96) NOT NULL,
-    creator_id integer,
+    creator_id character varying(36),
     date_of_creation timestamp with time zone NOT NULL
 );
 
@@ -669,45 +656,17 @@ ALTER TABLE public.common_person OWNER TO postgres;
 --
 
 CREATE TABLE common_personrole (
-    id integer NOT NULL,
+    uuid character varying(36) NOT NULL,
     person_id character varying(36) NOT NULL,
     role_id character varying(36) NOT NULL,
     hire_date date,
     discharge_date date,
-    creator_id integer NOT NULL,
+    creator_id character varying(36) NOT NULL,
     date_of_creation timestamp with time zone NOT NULL
 );
 
 
 ALTER TABLE public.common_personrole OWNER TO postgres;
-
---
--- Name: common_personrole_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE common_personrole_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_personrole_id_seq OWNER TO postgres;
-
---
--- Name: common_personrole_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE common_personrole_id_seq OWNED BY common_personrole.id;
-
-
---
--- Name: common_personrole_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('common_personrole_id_seq', 1, false);
-
 
 --
 -- Name: common_phone; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -735,7 +694,7 @@ CREATE TABLE common_place (
     gps_x double precision,
     gps_y double precision,
     gps_z double precision,
-    creator_id integer NOT NULL,
+    creator_id character varying(36) NOT NULL,
     date_of_creation timestamp with time zone NOT NULL
 );
 
@@ -761,7 +720,7 @@ CREATE TABLE common_product (
     soul_id character varying(36) NOT NULL,
     name character varying(50) NOT NULL,
     measure character varying(50) NOT NULL,
-    p_type_id integer NOT NULL,
+    p_type_id character varying(36) NOT NULL,
     all_comments text NOT NULL
 );
 
@@ -776,7 +735,7 @@ CREATE TABLE common_productcomments (
     uuid character varying(36) NOT NULL,
     product_id character varying(36) NOT NULL,
     comment text NOT NULL,
-    creator_id integer NOT NULL,
+    creator_id character varying(36) NOT NULL,
     date_of_creation timestamp with time zone NOT NULL
 );
 
@@ -791,7 +750,7 @@ CREATE TABLE common_productfiles (
     uuid character varying(36) NOT NULL,
     product_id character varying(36) NOT NULL,
     pfile character varying(100) NOT NULL,
-    creator_id integer,
+    creator_id character varying(36),
     date_of_creation timestamp with time zone NOT NULL
 );
 
@@ -803,40 +762,12 @@ ALTER TABLE public.common_productfiles OWNER TO postgres;
 --
 
 CREATE TABLE common_producttype (
-    id integer NOT NULL,
+    uuid character varying(36) NOT NULL,
     name character varying(24) NOT NULL
 );
 
 
 ALTER TABLE public.common_producttype OWNER TO postgres;
-
---
--- Name: common_producttype_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE common_producttype_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_producttype_id_seq OWNER TO postgres;
-
---
--- Name: common_producttype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE common_producttype_id_seq OWNED BY common_producttype.id;
-
-
---
--- Name: common_producttype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('common_producttype_id_seq', 1, false);
-
 
 --
 -- Name: common_role; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -846,7 +777,7 @@ CREATE TABLE common_role (
     uuid character varying(36) NOT NULL,
     organization_id character varying(36) NOT NULL,
     name character varying(50) NOT NULL,
-    creator_id integer NOT NULL,
+    creator_id character varying(36) NOT NULL,
     date_of_creation timestamp with time zone NOT NULL
 );
 
@@ -899,41 +830,13 @@ SELECT pg_catalog.setval('common_role_djgroups_id_seq', 1, false);
 --
 
 CREATE TABLE common_roletree (
-    id integer NOT NULL,
+    uuid character varying(36) NOT NULL,
     master_id character varying(36) NOT NULL,
     slave_id character varying(36) NOT NULL
 );
 
 
 ALTER TABLE public.common_roletree OWNER TO postgres;
-
---
--- Name: common_roletree_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE common_roletree_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_roletree_id_seq OWNER TO postgres;
-
---
--- Name: common_roletree_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE common_roletree_id_seq OWNED BY common_roletree.id;
-
-
---
--- Name: common_roletree_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('common_roletree_id_seq', 1, false);
-
 
 --
 -- Name: common_soul; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -944,7 +847,7 @@ CREATE TABLE common_soul (
     birth_date date,
     death_date date,
     location_id character varying(36),
-    creator_id integer NOT NULL,
+    creator_id character varying(36),
     date_of_creation timestamp with time zone NOT NULL
 );
 
@@ -956,42 +859,14 @@ ALTER TABLE public.common_soul OWNER TO postgres;
 --
 
 CREATE TABLE common_soulproducttypeoperation (
-    id integer NOT NULL,
+    uuid character varying(36) NOT NULL,
     soul_id character varying(36) NOT NULL,
-    p_type_id integer NOT NULL,
-    operation_id integer NOT NULL
+    p_type_id character varying(36) NOT NULL,
+    operation_id character varying(36) NOT NULL
 );
 
 
 ALTER TABLE public.common_soulproducttypeoperation OWNER TO postgres;
-
---
--- Name: common_soulproducttypeoperation_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE common_soulproducttypeoperation_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_soulproducttypeoperation_id_seq OWNER TO postgres;
-
---
--- Name: common_soulproducttypeoperation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE common_soulproducttypeoperation_id_seq OWNED BY common_soulproducttypeoperation.id;
-
-
---
--- Name: common_soulproducttypeoperation_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('common_soulproducttypeoperation_id_seq', 1, false);
-
 
 --
 -- Name: common_street; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -1014,7 +889,7 @@ CREATE TABLE common_userprofile (
     user_id integer NOT NULL,
     soul_id character varying(36) NOT NULL,
     default_cemetery_id character varying(36),
-    default_operation_id integer,
+    default_operation_id character varying(36),
     default_country_id character varying(36),
     default_region_id character varying(36),
     default_city_id character varying(36),
@@ -1070,7 +945,7 @@ ALTER SEQUENCE django_admin_log_id_seq OWNED BY django_admin_log.id;
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('django_admin_log_id_seq', 23, true);
+SELECT pg_catalog.setval('django_admin_log_id_seq', 24, true);
 
 
 --
@@ -1112,7 +987,7 @@ ALTER SEQUENCE django_content_type_id_seq OWNED BY django_content_type.id;
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('django_content_type_id_seq', 42, true);
+SELECT pg_catalog.setval('django_content_type_id_seq', 43, true);
 
 
 --
@@ -1271,42 +1146,7 @@ ALTER TABLE common_env ALTER COLUMN id SET DEFAULT nextval('common_env_id_seq'::
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE common_operation ALTER COLUMN id SET DEFAULT nextval('common_operation_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE common_personrole ALTER COLUMN id SET DEFAULT nextval('common_personrole_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE common_producttype ALTER COLUMN id SET DEFAULT nextval('common_producttype_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
 ALTER TABLE common_role_djgroups ALTER COLUMN id SET DEFAULT nextval('common_role_djgroups_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE common_roletree ALTER COLUMN id SET DEFAULT nextval('common_roletree_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE common_soulproducttypeoperation ALTER COLUMN id SET DEFAULT nextval('common_soulproducttypeoperation_id_seq'::regclass);
 
 
 --
@@ -1342,7 +1182,6 @@ ALTER TABLE south_migrationhistory ALTER COLUMN id SET DEFAULT nextval('south_mi
 --
 
 COPY auth_group (id, name) FROM stdin;
-1	adminka
 2	delete_orderfile
 3	edit_burial
 4	edit_bur_in_adm
@@ -1354,6 +1193,7 @@ COPY auth_group (id, name) FROM stdin;
 10	management_edit_user
 11	management_user
 12	profile
+1	adminka
 \.
 
 
@@ -1362,108 +1202,108 @@ COPY auth_group (id, name) FROM stdin;
 --
 
 COPY auth_group_permissions (id, group_id, permission_id) FROM stdin;
-1	1	4
-2	1	5
-3	1	6
-4	1	28
-5	1	29
-6	1	30
-7	1	31
-8	1	32
-9	1	33
-10	1	34
-11	1	35
-12	1	36
-13	1	37
-14	1	38
-15	1	39
-16	1	40
-17	1	41
-18	1	42
-19	1	43
-20	1	44
-21	1	45
-22	1	46
-23	1	47
-24	1	48
-25	1	49
-26	1	50
-27	1	51
-28	1	52
-29	1	53
-30	1	54
-31	1	55
-32	1	56
-33	1	57
-34	1	58
-35	1	59
-36	1	60
-37	1	61
-38	1	62
-39	1	63
-40	1	64
-41	1	65
-42	1	66
-43	1	67
-44	1	68
-45	1	69
-46	1	70
-47	1	71
-48	1	72
-49	1	73
-50	1	74
-51	1	75
-52	1	76
-53	1	77
-54	1	78
-55	1	79
-56	1	80
-57	1	81
-58	1	82
-59	1	83
-60	1	84
-61	1	85
-62	1	86
-63	1	87
-64	1	88
-65	1	89
-66	1	90
-67	1	91
-68	1	92
-69	1	93
-70	1	94
-71	1	95
-72	1	96
-73	1	97
-74	1	98
-75	1	99
-76	1	100
-77	1	101
-78	1	102
-79	1	103
-80	1	104
-81	1	105
-82	1	106
-83	1	107
-84	1	108
-85	1	109
-86	1	110
-87	1	111
-88	1	112
-89	1	113
-90	1	114
-91	1	115
-92	1	116
-93	1	117
-94	1	118
-95	1	119
-96	1	120
-97	1	121
-98	1	122
-99	1	123
-100	1	124
-101	1	125
-102	1	126
+1	1	28
+2	1	29
+3	1	30
+4	1	31
+5	1	32
+6	1	33
+7	1	34
+8	1	35
+9	1	36
+10	1	37
+11	1	38
+12	1	39
+13	1	40
+14	1	41
+15	1	42
+16	1	43
+17	1	44
+18	1	45
+19	1	46
+20	1	47
+21	1	48
+22	1	49
+23	1	50
+24	1	51
+25	1	52
+26	1	53
+27	1	54
+28	1	55
+29	1	56
+30	1	57
+31	1	58
+32	1	59
+33	1	60
+34	1	61
+35	1	62
+36	1	63
+37	1	64
+38	1	65
+39	1	66
+40	1	67
+41	1	68
+42	1	69
+43	1	70
+44	1	71
+45	1	72
+46	1	73
+47	1	74
+48	1	75
+49	1	76
+50	1	77
+51	1	78
+52	1	79
+53	1	80
+54	1	81
+55	1	82
+56	1	83
+57	1	84
+58	1	85
+59	1	86
+60	1	87
+61	1	88
+62	1	89
+63	1	90
+64	1	91
+65	1	92
+66	1	93
+67	1	94
+68	1	95
+69	1	96
+70	1	97
+71	1	98
+72	1	99
+73	1	100
+74	1	101
+75	1	102
+76	1	103
+77	1	104
+78	1	105
+79	1	106
+80	1	107
+81	1	108
+82	1	109
+83	1	110
+84	1	111
+85	1	112
+86	1	113
+87	1	114
+88	1	115
+89	1	116
+90	1	117
+91	1	118
+92	1	119
+93	1	120
+94	1	121
+95	1	122
+96	1	123
+97	1	124
+98	1	125
+99	1	126
+100	1	127
+101	1	128
+102	1	129
 \.
 
 
@@ -1519,9 +1359,9 @@ COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
 37	Can add metro	13	add_metro
 38	Can change metro	13	change_metro
 39	Can delete metro	13	delete_metro
-40	Can add street	14	add_street
-41	Can change street	14	change_street
-42	Can delete street	14	delete_street
+40	Can add улица	14	add_street
+41	Can change улица	14	change_street
+42	Can delete улица	14	delete_street
 43	Can add location	15	add_location
 44	Can change location	15	change_location
 45	Can delete location	15	delete_location
@@ -1606,6 +1446,9 @@ COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
 124	Can add imp bur	42	add_impbur
 125	Can change imp bur	42	change_impbur
 126	Can delete imp bur	42	delete_impbur
+127	Can add media	43	add_media
+128	Can change media	43	change_media
+129	Can delete media	43	delete_media
 \.
 
 
@@ -1614,7 +1457,7 @@ COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY auth_user (id, username, first_name, last_name, email, password, is_staff, is_active, is_superuser, last_login, date_joined) FROM stdin;
-1	soul	Админ	Админов	pythonprogrammer@mail.ru	sha1$9984c$5fc5449a6451e7131e515a7e71dd172562324b15	t	t	t	2011-01-20 19:25:00.73017+03	2011-01-20 18:58:20+03
+1	soul			pythonprogrammer@mail.ru	sha1$4577d$f5939aa4345e986d4b0d2cb9ab3799d032720636	t	t	t	2011-01-28 15:44:50.479615+03	2011-01-28 15:43:24.389277+03
 \.
 
 
@@ -1679,7 +1522,7 @@ COPY common_env (id, uuid) FROM stdin;
 --
 
 COPY common_geocity (uuid, country_id, region_id, name) FROM stdin;
-78150f12-24af-11e0-91ee-485b39c96dfe	6c0a7b62-24af-11e0-91ee-485b39c96dfe	72214e68-24af-11e0-91ee-485b39c96dfe	НЕИЗВЕСТЕН
+f08c6f20-2adc-11e0-8b17-485b39c96dfe	9398d222-2adc-11e0-8b17-485b39c96dfe	ead988d8-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН
 \.
 
 
@@ -1688,7 +1531,7 @@ COPY common_geocity (uuid, country_id, region_id, name) FROM stdin;
 --
 
 COPY common_geocountry (uuid, name) FROM stdin;
-6c0a7b62-24af-11e0-91ee-485b39c96dfe	НЕИЗВЕСТЕН
+9398d222-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН
 \.
 
 
@@ -1697,7 +1540,7 @@ COPY common_geocountry (uuid, name) FROM stdin;
 --
 
 COPY common_georegion (uuid, country_id, name) FROM stdin;
-72214e68-24af-11e0-91ee-485b39c96dfe	6c0a7b62-24af-11e0-91ee-485b39c96dfe	НЕИЗВЕСТЕН
+ead988d8-2adc-11e0-8b17-485b39c96dfe	9398d222-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН
 \.
 
 
@@ -1726,6 +1569,14 @@ COPY common_location (uuid, post_index, street_id, house, block, building, flat,
 
 
 --
+-- Data for Name: common_media; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY common_media (uuid, soul_id, url, comment, "timestamp") FROM stdin;
+\.
+
+
+--
 -- Data for Name: common_metro; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -1737,11 +1588,11 @@ COPY common_metro (uuid, city_id, name) FROM stdin;
 -- Data for Name: common_operation; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_operation (id, op_type) FROM stdin;
-1	Захоронение
-2	Захоронение в существующую могилу
-3	Подзахоронение
-4	Подзахоронение урны
+COPY common_operation (uuid, op_type) FROM stdin;
+6e0492ac-2add-11e0-8b17-485b39c96dfe	Подзахоронение урны
+732795d6-2add-11e0-8b17-485b39c96dfe	Подзахоронение
+78672a34-2add-11e0-8b17-485b39c96dfe	Захоронение в существующую могилу
+7d58e9ec-2add-11e0-8b17-485b39c96dfe	Захоронение
 \.
 
 
@@ -1789,7 +1640,7 @@ COPY common_person (soul_ptr_id, last_name, first_name, patronymic) FROM stdin;
 -- Data for Name: common_personrole; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_personrole (id, person_id, role_id, hire_date, discharge_date, creator_id, date_of_creation) FROM stdin;
+COPY common_personrole (uuid, person_id, role_id, hire_date, discharge_date, creator_id, date_of_creation) FROM stdin;
 \.
 
 
@@ -1837,7 +1688,8 @@ COPY common_productfiles (uuid, product_id, pfile, creator_id, date_of_creation)
 -- Data for Name: common_producttype; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_producttype (id, name) FROM stdin;
+COPY common_producttype (uuid, name) FROM stdin;
+60925a32-2add-11e0-8b17-485b39c96dfe	Место захоронения
 \.
 
 
@@ -1861,7 +1713,7 @@ COPY common_role_djgroups (id, role_id, group_id) FROM stdin;
 -- Data for Name: common_roletree; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_roletree (id, master_id, slave_id) FROM stdin;
+COPY common_roletree (uuid, master_id, slave_id) FROM stdin;
 \.
 
 
@@ -1870,7 +1722,7 @@ COPY common_roletree (id, master_id, slave_id) FROM stdin;
 --
 
 COPY common_soul (uuid, birth_date, death_date, location_id, creator_id, date_of_creation) FROM stdin;
-627035ac-24ae-11e0-a866-485b39c96dfe	2011-01-20	\N	\N	1	2011-01-20 19:00:21.554923+03
+6f5832e0-2adc-11e0-8b17-485b39c96dfe	2011-01-28	\N	\N	\N	2011-01-28 15:45:07.033887+03
 \.
 
 
@@ -1878,7 +1730,7 @@ COPY common_soul (uuid, birth_date, death_date, location_id, creator_id, date_of
 -- Data for Name: common_soulproducttypeoperation; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_soulproducttypeoperation (id, soul_id, p_type_id, operation_id) FROM stdin;
+COPY common_soulproducttypeoperation (uuid, soul_id, p_type_id, operation_id) FROM stdin;
 \.
 
 
@@ -1887,7 +1739,7 @@ COPY common_soulproducttypeoperation (id, soul_id, p_type_id, operation_id) FROM
 --
 
 COPY common_street (uuid, city_id, name) FROM stdin;
-7ef4bf08-24af-11e0-91ee-485b39c96dfe	78150f12-24af-11e0-91ee-485b39c96dfe	НЕИЗВЕСТЕН
+f74670f4-2adc-11e0-8b17-485b39c96dfe	f08c6f20-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН
 \.
 
 
@@ -1896,7 +1748,7 @@ COPY common_street (uuid, city_id, name) FROM stdin;
 --
 
 COPY common_userprofile (user_id, soul_id, default_cemetery_id, default_operation_id, default_country_id, default_region_id, default_city_id, records_per_page, records_order_by) FROM stdin;
-1	627035ac-24ae-11e0-a866-485b39c96dfe	\N	\N	\N	\N	\N	\N	
+1	6f5832e0-2adc-11e0-8b17-485b39c96dfe	\N	\N	\N	\N	\N	\N	
 \.
 
 
@@ -1905,29 +1757,30 @@ COPY common_userprofile (user_id, soul_id, default_cemetery_id, default_operatio
 --
 
 COPY django_admin_log (id, action_time, user_id, content_type_id, object_id, object_repr, action_flag, change_message) FROM stdin;
-1	2011-01-20 19:00:21.565947+03	1	16	627035ac-24ae-11e0-a866-485b39c96dfe	627035ac-24ae-11e0-a866-485b39c96dfe	1	
-2	2011-01-20 19:00:26.337992+03	1	38	1	soul	1	
-3	2011-01-20 19:02:51.833777+03	1	3	1	soul	2	Изменен first_name и last_name.
-4	2011-01-20 19:07:47.162508+03	1	10	6c0a7b62-24af-11e0-91ee-485b39c96dfe	НЕИЗВЕСТЕН	1	
-5	2011-01-20 19:07:57.380827+03	1	11	72214e68-24af-11e0-91ee-485b39c96dfe	НЕИЗВЕСТЕН	1	
-6	2011-01-20 19:08:07.367327+03	1	12	78150f12-24af-11e0-91ee-485b39c96dfe	НЕИЗВЕСТЕН	1	
-7	2011-01-20 19:08:18.8986+03	1	14	7ef4bf08-24af-11e0-91ee-485b39c96dfe	НЕИЗВЕСТЕН	1	
-8	2011-01-20 19:25:31.321701+03	1	2	1	adminka	1	
-9	2011-01-20 19:25:43.121329+03	1	2	2	delete_orderfile	1	
-10	2011-01-20 19:25:52.388272+03	1	2	3	edit_burial	1	
-11	2011-01-20 19:25:59.550589+03	1	2	4	edit_bur_in_adm	1	
-12	2011-01-20 19:26:06.407321+03	1	2	5	import_csv	1	
-13	2011-01-20 19:26:12.836615+03	1	2	6	journal	1	
-14	2011-01-20 19:26:19.855257+03	1	2	7	management	1	
-15	2011-01-20 19:26:27.911854+03	1	2	8	management_cemetery	1	
-16	2011-01-20 19:26:33.769468+03	1	2	9	management_edit_cemetery	1	
-17	2011-01-20 19:26:38.947841+03	1	2	10	management_edit_user	1	
-18	2011-01-20 19:26:44.427456+03	1	2	11	management_user	1	
-19	2011-01-20 19:26:53.069503+03	1	2	12	profile	1	
-20	2011-01-20 19:28:35.657108+03	1	32	1	Захоронение	1	
-21	2011-01-20 19:28:46.584118+03	1	32	2	Захоронение в существующ	1	
-22	2011-01-20 19:28:50.802636+03	1	32	3	Подзахоронение	1	
-23	2011-01-20 19:28:55.976769+03	1	32	4	Подзахоронение урны	1	
+1	2011-01-28 15:45:07.040404+03	1	16	6f5832e0-2adc-11e0-8b17-485b39c96dfe	6f5832e0-2adc-11e0-8b17-485b39c96dfe	1	
+2	2011-01-28 15:45:12.942314+03	1	38	1	soul	1	
+3	2011-01-28 15:46:07.857479+03	1	10	9398d222-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН	1	
+4	2011-01-28 15:48:34.244386+03	1	11	ead988d8-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН	1	
+5	2011-01-28 15:48:43.805609+03	1	12	f08c6f20-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН	1	
+6	2011-01-28 15:48:55.090532+03	1	14	f74670f4-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН	1	
+7	2011-01-28 15:49:54.727965+03	1	2	1	adminka	1	
+8	2011-01-28 15:50:01.053803+03	1	2	2	delete_orderfile	1	
+9	2011-01-28 15:50:07.454203+03	1	2	3	edit_burial	1	
+10	2011-01-28 15:50:17.015851+03	1	2	4	edit_bur_in_adm	1	
+11	2011-01-28 15:50:23.612979+03	1	2	5	import_csv	1	
+12	2011-01-28 15:50:29.041387+03	1	2	6	journal	1	
+13	2011-01-28 15:50:34.03621+03	1	2	7	management	1	
+14	2011-01-28 15:50:39.953935+03	1	2	8	management_cemetery	1	
+15	2011-01-28 15:50:46.142822+03	1	2	9	management_edit_cemetery	1	
+16	2011-01-28 15:50:56.389525+03	1	2	10	management_edit_user	1	
+17	2011-01-28 15:51:03.753634+03	1	2	11	management_user	1	
+18	2011-01-28 15:51:10.839738+03	1	2	12	profile	1	
+19	2011-01-28 15:51:28.266722+03	1	2	1	adminka	2	Изменен permissions.
+20	2011-01-28 15:51:51.747794+03	1	26	60925a32-2add-11e0-8b17-485b39c96dfe	Место захоронения	1	
+21	2011-01-28 15:52:14.306345+03	1	32	6e0492ac-2add-11e0-8b17-485b39c96dfe	Подзахоронение урны	1	
+22	2011-01-28 15:52:22.923654+03	1	32	732795d6-2add-11e0-8b17-485b39c96dfe	Подзахоронение	1	
+23	2011-01-28 15:52:31.72944+03	1	32	78672a34-2add-11e0-8b17-485b39c96dfe	Захоронение в существующ	1	
+24	2011-01-28 15:52:40.024929+03	1	32	7d58e9ec-2add-11e0-8b17-485b39c96dfe	Захоронение	1	
 \.
 
 
@@ -1949,7 +1802,7 @@ COPY django_content_type (id, name, app_label, model) FROM stdin;
 11	регион	common	georegion
 12	населенный пункт	common	geocity
 13	metro	common	metro
-14	street	common	street
+14	улица	common	street
 15	location	common	location
 16	soul	common	soul
 17	phone	common	phone
@@ -1978,6 +1831,7 @@ COPY django_content_type (id, name, app_label, model) FROM stdin;
 40	env	common	env
 41	imp cem	common	impcem
 42	imp bur	common	impbur
+43	media	common	media
 \.
 
 
@@ -1986,9 +1840,7 @@ COPY django_content_type (id, name, app_label, model) FROM stdin;
 --
 
 COPY django_session (session_key, session_data, expire_date) FROM stdin;
-5403a92a105d9f3639b161bb5be9b98b	gAJ9cQEuMDZkMmE5Y2RhZTkxYjkwNjE2MzFjNTAyMTAwOTZiMjk=\n	2011-02-03 18:59:17.282048+03
-f737ef3584628cad2ade73bbb9689bdb	gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjViYTdhMWYyYzY5ZmNjMTI0ZWYx\nNzc1NjNjNWRmMDUy\n	2011-02-03 19:02:39.38102+03
-6ea1f141a525870e6d5e7343635b72ae	gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjViYTdhMWYyYzY5ZmNjMTI0ZWYx\nNzc1NjNjNWRmMDUy\n	2011-02-03 19:25:00.750814+03
+75ee9389679f9db4e9ee5857785c33c1	gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjViYTdhMWYyYzY5ZmNjMTI0ZWYx\nNzc1NjNjNWRmMDUy\n	2011-02-11 15:44:50.499785+03
 \.
 
 
@@ -2234,6 +2086,14 @@ ALTER TABLE ONLY common_location
 
 
 --
+-- Name: common_media_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY common_media
+    ADD CONSTRAINT common_media_pkey PRIMARY KEY (uuid);
+
+
+--
 -- Name: common_metro_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -2246,7 +2106,7 @@ ALTER TABLE ONLY common_metro
 --
 
 ALTER TABLE ONLY common_operation
-    ADD CONSTRAINT common_operation_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT common_operation_pkey PRIMARY KEY (uuid);
 
 
 --
@@ -2302,7 +2162,7 @@ ALTER TABLE ONLY common_personrole
 --
 
 ALTER TABLE ONLY common_personrole
-    ADD CONSTRAINT common_personrole_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT common_personrole_pkey PRIMARY KEY (uuid);
 
 
 --
@@ -2366,7 +2226,7 @@ ALTER TABLE ONLY common_productfiles
 --
 
 ALTER TABLE ONLY common_producttype
-    ADD CONSTRAINT common_producttype_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT common_producttype_pkey PRIMARY KEY (uuid);
 
 
 --
@@ -2398,7 +2258,7 @@ ALTER TABLE ONLY common_role
 --
 
 ALTER TABLE ONLY common_roletree
-    ADD CONSTRAINT common_roletree_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT common_roletree_pkey PRIMARY KEY (uuid);
 
 
 --
@@ -2422,7 +2282,7 @@ ALTER TABLE ONLY common_soulproducttypeoperation
 --
 
 ALTER TABLE ONLY common_soulproducttypeoperation
-    ADD CONSTRAINT common_soulproducttypeoperation_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT common_soulproducttypeoperation_pkey PRIMARY KEY (uuid);
 
 
 --
@@ -2583,6 +2443,13 @@ CREATE INDEX common_cemetery_creator_id ON common_cemetery USING btree (creator_
 
 
 --
+-- Name: common_cemetery_creator_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_cemetery_creator_id_like ON common_cemetery USING btree (creator_id varchar_pattern_ops);
+
+
+--
 -- Name: common_cemetery_location_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -2723,6 +2590,20 @@ CREATE INDEX common_location_street_id_like ON common_location USING btree (stre
 
 
 --
+-- Name: common_media_soul_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_media_soul_id ON common_media USING btree (soul_id);
+
+
+--
+-- Name: common_media_soul_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_media_soul_id_like ON common_media USING btree (soul_id varchar_pattern_ops);
+
+
+--
 -- Name: common_metro_city_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -2741,6 +2622,13 @@ CREATE INDEX common_metro_city_id_like ON common_metro USING btree (city_id varc
 --
 
 CREATE INDEX common_order_creator_id ON common_order USING btree (creator_id);
+
+
+--
+-- Name: common_order_creator_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_order_creator_id_like ON common_order USING btree (creator_id varchar_pattern_ops);
 
 
 --
@@ -2779,6 +2667,13 @@ CREATE INDEX common_order_operation_id ON common_order USING btree (operation_id
 
 
 --
+-- Name: common_order_operation_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_order_operation_id_like ON common_order USING btree (operation_id varchar_pattern_ops);
+
+
+--
 -- Name: common_order_product_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -2814,6 +2709,13 @@ CREATE INDEX common_ordercomments_creator_id ON common_ordercomments USING btree
 
 
 --
+-- Name: common_ordercomments_creator_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_ordercomments_creator_id_like ON common_ordercomments USING btree (creator_id varchar_pattern_ops);
+
+
+--
 -- Name: common_ordercomments_order_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -2835,6 +2737,13 @@ CREATE INDEX common_orderfiles_creator_id ON common_orderfiles USING btree (crea
 
 
 --
+-- Name: common_orderfiles_creator_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_orderfiles_creator_id_like ON common_orderfiles USING btree (creator_id varchar_pattern_ops);
+
+
+--
 -- Name: common_orderfiles_order_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -2853,6 +2762,13 @@ CREATE INDEX common_orderfiles_order_id_like ON common_orderfiles USING btree (o
 --
 
 CREATE INDEX common_personrole_creator_id ON common_personrole USING btree (creator_id);
+
+
+--
+-- Name: common_personrole_creator_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_personrole_creator_id_like ON common_personrole USING btree (creator_id varchar_pattern_ops);
 
 
 --
@@ -2919,10 +2835,24 @@ CREATE INDEX common_place_creator_id ON common_place USING btree (creator_id);
 
 
 --
+-- Name: common_place_creator_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_place_creator_id_like ON common_place USING btree (creator_id varchar_pattern_ops);
+
+
+--
 -- Name: common_product_p_type_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE INDEX common_product_p_type_id ON common_product USING btree (p_type_id);
+
+
+--
+-- Name: common_product_p_type_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_product_p_type_id_like ON common_product USING btree (p_type_id varchar_pattern_ops);
 
 
 --
@@ -2947,6 +2877,13 @@ CREATE INDEX common_productcomments_creator_id ON common_productcomments USING b
 
 
 --
+-- Name: common_productcomments_creator_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_productcomments_creator_id_like ON common_productcomments USING btree (creator_id varchar_pattern_ops);
+
+
+--
 -- Name: common_productcomments_product_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -2968,6 +2905,13 @@ CREATE INDEX common_productfiles_creator_id ON common_productfiles USING btree (
 
 
 --
+-- Name: common_productfiles_creator_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_productfiles_creator_id_like ON common_productfiles USING btree (creator_id varchar_pattern_ops);
+
+
+--
 -- Name: common_productfiles_product_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -2986,6 +2930,13 @@ CREATE INDEX common_productfiles_product_id_like ON common_productfiles USING bt
 --
 
 CREATE INDEX common_role_creator_id ON common_role USING btree (creator_id);
+
+
+--
+-- Name: common_role_creator_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_role_creator_id_like ON common_role USING btree (creator_id varchar_pattern_ops);
 
 
 --
@@ -3059,6 +3010,13 @@ CREATE INDEX common_soul_creator_id ON common_soul USING btree (creator_id);
 
 
 --
+-- Name: common_soul_creator_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_soul_creator_id_like ON common_soul USING btree (creator_id varchar_pattern_ops);
+
+
+--
 -- Name: common_soul_location_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -3080,10 +3038,24 @@ CREATE INDEX common_soulproducttypeoperation_operation_id ON common_soulproductt
 
 
 --
+-- Name: common_soulproducttypeoperation_operation_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_soulproducttypeoperation_operation_id_like ON common_soulproducttypeoperation USING btree (operation_id varchar_pattern_ops);
+
+
+--
 -- Name: common_soulproducttypeoperation_p_type_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE INDEX common_soulproducttypeoperation_p_type_id ON common_soulproducttypeoperation USING btree (p_type_id);
+
+
+--
+-- Name: common_soulproducttypeoperation_p_type_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_soulproducttypeoperation_p_type_id_like ON common_soulproducttypeoperation USING btree (p_type_id varchar_pattern_ops);
 
 
 --
@@ -3178,6 +3150,13 @@ CREATE INDEX common_userprofile_default_operation_id ON common_userprofile USING
 
 
 --
+-- Name: common_userprofile_default_operation_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_userprofile_default_operation_id_like ON common_userprofile USING btree (default_operation_id varchar_pattern_ops);
+
+
+--
 -- Name: common_userprofile_default_region_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -3258,7 +3237,7 @@ ALTER TABLE ONLY common_burial
 --
 
 ALTER TABLE ONLY common_cemetery
-    ADD CONSTRAINT common_cemetery_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_cemetery_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3334,6 +3313,14 @@ ALTER TABLE ONLY common_location
 
 
 --
+-- Name: common_media_soul_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY common_media
+    ADD CONSTRAINT common_media_soul_id_fkey FOREIGN KEY (soul_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
 -- Name: common_metro_city_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3346,7 +3333,7 @@ ALTER TABLE ONLY common_metro
 --
 
 ALTER TABLE ONLY common_order
-    ADD CONSTRAINT common_order_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_order_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3370,7 +3357,7 @@ ALTER TABLE ONLY common_order
 --
 
 ALTER TABLE ONLY common_order
-    ADD CONSTRAINT common_order_operation_id_fkey FOREIGN KEY (operation_id) REFERENCES common_operation(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_order_operation_id_fkey FOREIGN KEY (operation_id) REFERENCES common_operation(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3394,7 +3381,7 @@ ALTER TABLE ONLY common_order
 --
 
 ALTER TABLE ONLY common_ordercomments
-    ADD CONSTRAINT common_ordercomments_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_ordercomments_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3410,7 +3397,7 @@ ALTER TABLE ONLY common_ordercomments
 --
 
 ALTER TABLE ONLY common_orderfiles
-    ADD CONSTRAINT common_orderfiles_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_orderfiles_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3442,7 +3429,7 @@ ALTER TABLE ONLY common_person
 --
 
 ALTER TABLE ONLY common_personrole
-    ADD CONSTRAINT common_personrole_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_personrole_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3482,7 +3469,7 @@ ALTER TABLE ONLY common_place
 --
 
 ALTER TABLE ONLY common_place
-    ADD CONSTRAINT common_place_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_place_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3498,7 +3485,7 @@ ALTER TABLE ONLY common_place
 --
 
 ALTER TABLE ONLY common_product
-    ADD CONSTRAINT common_product_p_type_id_fkey FOREIGN KEY (p_type_id) REFERENCES common_producttype(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_product_p_type_id_fkey FOREIGN KEY (p_type_id) REFERENCES common_producttype(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3514,7 +3501,7 @@ ALTER TABLE ONLY common_product
 --
 
 ALTER TABLE ONLY common_productcomments
-    ADD CONSTRAINT common_productcomments_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_productcomments_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3530,7 +3517,7 @@ ALTER TABLE ONLY common_productcomments
 --
 
 ALTER TABLE ONLY common_productfiles
-    ADD CONSTRAINT common_productfiles_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_productfiles_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3546,7 +3533,7 @@ ALTER TABLE ONLY common_productfiles
 --
 
 ALTER TABLE ONLY common_role
-    ADD CONSTRAINT common_role_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_role_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3582,14 +3569,6 @@ ALTER TABLE ONLY common_roletree
 
 
 --
--- Name: common_soul_creator_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_soul
-    ADD CONSTRAINT common_soul_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: common_soul_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3602,7 +3581,7 @@ ALTER TABLE ONLY common_soul
 --
 
 ALTER TABLE ONLY common_soulproducttypeoperation
-    ADD CONSTRAINT common_soulproducttypeoperation_operation_id_fkey FOREIGN KEY (operation_id) REFERENCES common_operation(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_soulproducttypeoperation_operation_id_fkey FOREIGN KEY (operation_id) REFERENCES common_operation(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3610,7 +3589,7 @@ ALTER TABLE ONLY common_soulproducttypeoperation
 --
 
 ALTER TABLE ONLY common_soulproducttypeoperation
-    ADD CONSTRAINT common_soulproducttypeoperation_p_type_id_fkey FOREIGN KEY (p_type_id) REFERENCES common_producttype(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_soulproducttypeoperation_p_type_id_fkey FOREIGN KEY (p_type_id) REFERENCES common_producttype(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3658,7 +3637,7 @@ ALTER TABLE ONLY common_userprofile
 --
 
 ALTER TABLE ONLY common_userprofile
-    ADD CONSTRAINT common_userprofile_default_operation_id_fkey FOREIGN KEY (default_operation_id) REFERENCES common_operation(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_userprofile_default_operation_id_fkey FOREIGN KEY (default_operation_id) REFERENCES common_operation(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -3691,6 +3670,14 @@ ALTER TABLE ONLY common_userprofile
 
 ALTER TABLE ONLY auth_permission
     ADD CONSTRAINT content_type_id_refs_id_728de91f FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: creator_id_refs_uuid_40fcd9f5; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY common_soul
+    ADD CONSTRAINT creator_id_refs_uuid_40fcd9f5 FOREIGN KEY (creator_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
