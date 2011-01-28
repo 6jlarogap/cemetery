@@ -235,6 +235,13 @@ class Person(Soul):
     def save(self, *args, **kwargs):
         Burial.objects.filter(person=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
         super(Person, self).save(*args, **kwargs)
+    def get_initials(self):
+        initials = u""
+        if self.first_name:
+            initials = u"%s." % self.first_name[:1].upper()
+            if self.patronymic:
+                initials = u"%s%s." % (initials, self.patronymic[:1].upper())
+        return initials
     class Meta:
         verbose_name = ('физ. лицо')
         verbose_name_plural = ('физ. лица')
