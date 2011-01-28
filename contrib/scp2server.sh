@@ -1,4 +1,4 @@
 #!/bin/sh
-scp /var/cemetery/outbox/*.json soul@192.168.0.5:/var/cemetery/inbox/
-&&
-rm -rf /var/cemetery/outbox/*.json
+source constants
+scp $outbox_dir/*.json soul@$server_addr:$inbox_dir/
+rm -rf $outbox_dir/*.json
