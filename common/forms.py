@@ -266,7 +266,7 @@ class UserProfileForm(forms.Form):
     """
     cemetery = forms.ModelChoiceField(required=False, queryset=Cemetery.objects.all(), label="Кладбище")
     operation = forms.ModelChoiceField(required=False, queryset=Operation.objects.all(), label="Услуга")
-    hoperation = forms.IntegerField(required=False, widget=forms.HiddenInput)
+    hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
     records_per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label="Записей на странице")
     records_order_by = forms.ChoiceField(required=False, choices=ORDER_BY_VALUES, label="Сортировка по")
     def clean(self):
