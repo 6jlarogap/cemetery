@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os.path
+from contrib.constants import *
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

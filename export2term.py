@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
 from common.models import Burial
 
 import csv
@@ -9,7 +10,7 @@ csv.register_dialect("tabsep", delimiter="\t")
 burials = Burial.objects.filter(is_trash=False).order_by("person__last_name",
                                                          "person__first_name", "person__patronymic")
 #print burials.count()
-f = open("/var/cemetery/terminal/export.csv", "w")
+f = open(settings.EXPORT2TERMINAL_FILE, "w")
 writer = csv.writer(f, "tabsep")
 for burial in burials:
     uuid = burial.person.uuid
