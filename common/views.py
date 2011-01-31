@@ -1238,7 +1238,7 @@ def import_csv(request):
                             place.seat = seat
                             place.soul = cemetery.organization.soul_ptr
                             place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
-                            place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
+                            place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
                             place.save()
 
                         # Захоронение.
@@ -1251,13 +1251,13 @@ def import_csv(request):
                         burial.date_fact = datetime.datetime.strptime(bur_date, "%Y-%m-%d  %H:%M:%S")
                         burial.product = place.product_ptr
                         if u"урн" in comment.lower():
-                            operation = Operation.objects.get(id=settings.OPER_1)
+                            operation = Operation.objects.get(uuid=settings.OPER_1)
                         elif u"подзахоронение" in comment.lower():
-                            operation = Operation.objects.get(id=settings.OPER_2)
+                            operation = Operation.objects.get(uuid=settings.OPER_2)
                         elif u"захоронение в " in comment.lower():
-                            operation = Operation.objects.get(id=settings.OPER_3)
+                            operation = Operation.objects.get(uuid=settings.OPER_3)
                         else:
-                            operation = Operation.objects.get(id=settings.OPER_4)
+                            operation = Operation.objects.get(uuid=settings.OPER_4)
                         burial.operation = operation
                         burial.save()
                         burial.add_comment(comment, request.user.userprofile.soul)
