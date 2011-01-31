@@ -26,6 +26,6 @@ for burial in burials:
     row = burial.product.place.row.encode('cp1251')
     seat = burial.product.place.seat.encode('cp1251')
     cemetery = burial.product.place.cemetery.name.encode('cp1251')
-    if last_name OR last_name != u"НЕИЗВЕСТЕН":
+    if (last_name) and (last_name != "НЕИЗВЕСТЕН"):
         writer.writerow((uuid, last_name, initials, date, area, row, seat, cemetery))
 f.close()
