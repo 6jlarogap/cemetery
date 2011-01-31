@@ -44,9 +44,6 @@
                             {% if user|in_group:"management" %}
                                 <a href="/management/">[Управление]</a>&nbsp;&nbsp;|&nbsp;
                             {% endif %}
-                            {% if user|in_group:"profile" %}
-                                <a href="/profile/">[Настройки]</a>&nbsp;&nbsp;|&nbsp;
-                            {% endif %}
                             <a href="/logout/">[Выход]</a>
                         {% else %}
                             <a href="/login/">[Вход]</a>
