@@ -304,7 +304,7 @@ def profile(request):
                 initial_data["cemetery"] = profile.default_cemetery
             if profile.default_operation:
                 initial_data["operation"] = profile.default_operation
-                initial_data["hoperation"] = profile.default_operation.id
+                initial_data["hoperation"] = profile.default_operation.uuid
 #            if profile.default_country:
 #                initial_data["default_country"]= profile.default_country
 #            if profile.default_region:
@@ -523,7 +523,7 @@ def management_cemetery(request):
         if form.is_valid():
             cd = form.cleaned_data
             location = Location()
-#            location.save()
+            location.save()
             cemetery = Cemetery()
             cemetery.organization = cd["organization"]
             cemetery.location = location
