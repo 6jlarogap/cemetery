@@ -1261,7 +1261,6 @@ def import_csv(request):
                         burial.operation = operation
                         burial.save()
                         burial.add_comment(comment, request.user.userprofile.soul)
-                        iduuids.append((str_id, burial.uuid))
                     except Exception, err_descr:
                         # Откатываем транзакцию.
                         transaction.rollback()
@@ -1273,6 +1272,7 @@ def import_csv(request):
                     else:
                         # Коммитим все.
                         transaction.commit()
+                        iduuids.append((str_id, deadman.uuid))
                         good_nr += 1
             myseparator = u'=== ОПИСАНИЕ ОШИБОК ==='
             writer.writerow([myseparator.encode('utf8')])
