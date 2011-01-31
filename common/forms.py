@@ -410,27 +410,25 @@ class JournalForm(forms.Form):
     """
     Форма создания нового захоронения.
     """
-    cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(),
-                                      label="Кладбище*")
-    operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None,
-                                       widget=forms.Select(attrs={"tabindex": "6"}))
-    hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
 
-    burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}),
-                                  initial=datetime.date.today().strftime("%d.%m.%Y"))
-    comment = forms.CharField(required=False,
-                              widget=forms.Textarea(attrs={'rows': 4,
-                                                           'cols': 90,
-                                                           'tabindex': "21"}),
-                              label="Комментарий")
     account_book_n = forms.CharField(max_length=9, label="Номер в книге учета*",
                                      widget=forms.TextInput(attrs={"tabindex": "1"}))
+    burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}),
+                                  initial=datetime.date.today().strftime("%d.%m.%Y"))
     last_name = forms.CharField(max_length=30, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
                                 initial=u"НЕИЗВЕСТЕН")
     first_name = forms.CharField(required=False, max_length=30, label="Имя",
                                  widget=forms.TextInput(attrs={"tabindex": "4"}))
     patronymic = forms.CharField(required=False, max_length=30, label="Отчество",
                                  widget=forms.TextInput(attrs={"tabindex": "5"}))
+    cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(),
+                                      label="Кладбище*")
+    operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None,
+                                       widget=forms.Select(attrs={"tabindex": "6"}))
+    hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
+    area = forms.CharField(max_length=9, label="Участок*", widget=forms.TextInput(attrs={"tabindex": "7"}))
+    row = forms.CharField(max_length=9, label="Ряд*", widget=forms.TextInput(attrs={"tabindex": "8"}))
+    seat = forms.CharField(max_length=9, label="Место*", widget=forms.TextInput(attrs={"tabindex": "9"}))
     customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
                                          widget=forms.TextInput(attrs={"tabindex": "10"}))
     customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика",
@@ -439,6 +437,8 @@ class JournalForm(forms.Form):
                                           widget=forms.TextInput(attrs={"tabindex": "12"}))
     post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс",
                              widget=forms.TextInput(attrs={"tabindex": "13"}))
+    customer_phone = forms.CharField(required=False, max_length=15, label="Телефон",
+                                     widget=forms.TextInput(attrs={"tabindex": "14"}))
     street = forms.CharField(required=False, max_length=99, label="Улица",
                              widget=forms.TextInput(attrs={"tabindex": "15"}))
     new_street = forms.BooleanField(required=False, label="Новая улица")
@@ -458,11 +458,11 @@ class JournalForm(forms.Form):
     customer_building = forms.CharField(required=False, max_length=16, label="Строение")
     customer_flat = forms.CharField(required=False, max_length=16, label="Квартира",
                                     widget=forms.TextInput(attrs={"tabindex": "21"}))
-    customer_phone = forms.CharField(required=False, max_length=15, label="Телефон",
-                                     widget=forms.TextInput(attrs={"tabindex": "14"}))
-    area = forms.CharField(max_length=9, label="Участок*", widget=forms.TextInput(attrs={"tabindex": "7"}))
-    row = forms.CharField(max_length=9, label="Ряд*", widget=forms.TextInput(attrs={"tabindex": "8"}))
-    seat = forms.CharField(max_length=9, label="Место*", widget=forms.TextInput(attrs={"tabindex": "9"}))
+    comment = forms.CharField(required=False,
+                              widget=forms.Textarea(attrs={'rows': 4,
+                                                           'cols': 90,
+                                                           'tabindex': "22"}),
+                              label="Комментарий")
     file1 = StdImageFormField(required=False, label="Картинка (до 5 Mb)")
     file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 1, 'cols': 64}),
                                     label="Комментарий к файлу")
