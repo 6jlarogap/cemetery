@@ -16,7 +16,7 @@ set -e
 #### CONFIGURATION (override in /etc/default/django)
 
 # django project names/directories
-DJANGO_SITES="cemetry"
+DJANGO_SITES="cemetery"
 
 # path to the directory with your django projects
 SITES_PATH=/home/django/projects
