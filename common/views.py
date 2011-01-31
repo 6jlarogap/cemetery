@@ -877,7 +877,7 @@ def edit_burial(request, uuid):
                               creator=request.user.userprofile.soul)
                 place.soul = cd["cemetery"].organization.soul_ptr  # писать ту орг-ию, что у Cemetery!!!
                 place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
-                place.p_type = ProductType.objects.get(id=settings.PLACE_PRODUCTTYPE_ID)
+                place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
                 place.save()
             burial.product = place.product_ptr
             burial.save()
