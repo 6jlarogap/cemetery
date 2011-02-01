@@ -1451,12 +1451,16 @@ def init(request):
             if phone:
                 dir_phone = Phone(soul=person.soul_ptr, f_number=phone)
                 dir_phone.save()
-            # Роль.
+            # Роль директора
             role = Role(creator=request.user.userprofile.soul, name="Директор", organization=organization)
             role.save()
             person_role = PersonRole(person=person, role=role, creator=request.user.userprofile.soul)
             person_role.save()
-
+#            # Роль работника
+#            role = Role(creator=request.user.userprofile.soul, name="Работник", organization=organization)
+#            role.save()
+#            person_role = PersonRole(person=person, role=role, creator=request.user.userprofile.soul)
+#            person_role.save()
             # Системный пользователь django.
             user = User.objects.create_user(username=cd["username"], email="", password=cd["password1"])
             user.is_staff = True
