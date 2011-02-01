@@ -37,6 +37,7 @@ update-rc.d django defaults
 #Restore postgres dump
 createdb -U postgres cemetery
 cat cemetery.sql | psql -U postgres cemetery
+#cat pg_views.sql | psql -U postgres cemetery
 #Database dump cron script
 chmod a+x /home/django/projects/cemetery/contrib/dumpdb.py
 echo "5 0 * * *   /home/django/projects/cemetery/contrib/dumpdb.py" >> /etc/crontab
