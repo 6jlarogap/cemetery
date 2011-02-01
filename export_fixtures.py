@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.core import serializers
+from django.conf import settings
 
 from common.models import ImpBur, ImpCem, Env, Burial, Cemetery
 
 import datetime
 import socket
+import os
 
 serv_uuid = Env.objects.all()[0].uuid
 
@@ -55,7 +57,7 @@ data = list(ImpCem.objects.all()) + list(ImpBur.objects.all())
 rez = serializers.serialize("json", data)
 
 today = datetime.date.today()
-filename = "/var/cemetery/outbox/%04d%02d%02d.%s.%s.json" % (today.year, today.month, today.day, socket.gethostname(), serv_uuid)
+filename = os.path.join(settings.OUTBOX_DIR, "%04d%02d%02d.%s.%s.json" % (today.year, today.month, today.day, socket.gethostname(), serv_uuid))
 f = open(filename, "w")
 f.write(rez)
 f.close()

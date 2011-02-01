@@ -1102,7 +1102,7 @@ def import_csv(request):
                         cust_ln, cust_fn, cust_ptrc, cust_initials,
                         city, street, house, block, flat,
                         comment) = l
-                        # ID записи в табилице MySQL.
+                        # ID записи в таблице MySQL.
                         str_id = int(str_id)
                         # Номер в книге учета.
                         n = n.decode(settings.CSV_ENCODING).strip().lower()
