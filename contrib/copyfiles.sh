@@ -37,16 +37,16 @@ update-rc.d django defaults
 #Restore postgres dump
 createdb -U postgres cemetery
 cat cemetery.sql | psql -U postgres cemetery
-#Database dumps directory
-mkdir /var/dumps
 #Database dump cron script
 chmod a+x /home/django/projects/cemetery/contrib/dumpdb.py
 echo "5 0 * * *   /home/django/projects/cemetery/contrib/dumpdb.py" >> /etc/crontab
 #Start django daemon
 /etc/init.d/django start
 /etc/init.d/nginx restart
-#Data exchange folder
+#Outbox
 mkdir -p /var/cemetery/outbox
-#chown soul:soul /var/cemetery/outbox
+mkdir -p /var/cemetery/inbox
+mkdir -p /var/cemetery/dumps
+mkdir -p /var/cemetery/terminal
+chown -R soul:soul /var/cemetery
 chmod 777 /var/cemetery/outbox
-
