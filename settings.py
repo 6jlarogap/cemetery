@@ -9,7 +9,7 @@ TEMPLATE_DEBUG = DEBUG
 ROOT_PATH = os.path.dirname(__file__)
 
 ADMINS = (
-    ('Roman', 'pythonprogrammer@mail.ru'),
+    ('Soul', 'soul@youmemory.org'),
 )
 
 MANAGERS = ADMINS
