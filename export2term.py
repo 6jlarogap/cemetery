@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.conf import settings
+from contrib.constants import *
+#from django.conf import settings
 from common.models import Burial
-
+from django import db
 import csv
 
 csv.register_dialect("tabsep", delimiter="\t")
@@ -12,24 +13,31 @@ burials = Burial.objects.filter(is_trash=False).order_by("person__last_name",
 #print burials.count()
 f = open(settings.EXPORT2TERMINAL_FILE, "w")
 writer = csv.writer(f, "tabsep")
-for burial in burials:
-    uuid = burial.person.uuid
-    last_name = burial.person.last_name.encode('cp1251')
-    initials = burial.person.get_initials().encode('cp1251')
-    if not initials:
-        initials = u"-"
-    bur_date = burial.date_fact
-    if bur_date:
-        date = bur_date.date().strftime("%d.%m.%Y")
+
+total = burials.count()
+step_size = 1000
+count = 1 
+for step in xrange(0, total, step_size):
+    for burial in burials:[step:step + step_size]:
+        db.reset_queries()
+        uuid = burial.person.uuid
+        last_name = burial.person.last_name.encode('cp1251')
+        initials = burial.person.get_initials().encode('cp1251')
+        if not initials:
+            initials = u"-"
+        bur_date = burial.date_fact
+        if bur_date:
+            date = bur_date.date().strftime("%d.%m.%Y")
 #        date = bur_date.date().isoformat()
 #        time = bur_date.time().strftime("%H:%M:%S")
-    else:
-        date = u"-"
+        else:
+            date = u"-"
 #        time = u"-"
-    area = burial.product.place.area.encode('cp1251')
-    row = burial.product.place.row.encode('cp1251')
-    seat = burial.product.place.seat.encode('cp1251')
-    cemetery = burial.product.place.cemetery.name.encode('cp1251')
-    if (last_name) and (last_name != "НЕИЗВЕСТЕН"):
-        writer.writerow((uuid, last_name, initials, date, area, row, seat, cemetery))
+        area = burial.product.place.area.encode('cp1251')
+        row = burial.product.place.row.encode('cp1251')
+        seat = burial.product.place.seat.encode('cp1251')
+        cemetery = burial.product.place.cemetery.name.encode('cp1251')
+        if (last_name) and (last_name != "НЕИЗВЕСТЕН"):
+            writer.writerow((uuid, last_name, initials, date, area, row, seat, cemetery))
+        count += 1
 f.close()

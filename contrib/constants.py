@@ -2,6 +2,7 @@
 
 # Константы с путями в файловой системе.
 EXPORT2TERMINAL_FILE = "/var/cemetery/terminal/export.csv"
+EXPORT2TERMINAL_VOST_FILE = "/var/cemetery/terminal/export_vost.csv"
 INBOX_DIR = "/var/cemetery/inbox/"
 OUTBOX_DIR = "/var/cemetery/outbox/"
 DUMPS_DIR = "/var/cemetery/dumps/"
