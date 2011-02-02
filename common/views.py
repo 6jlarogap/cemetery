@@ -1127,9 +1127,18 @@ def import_csv(request):
                         else:
                             initials = initials.decode(settings.CSV_ENCODING).strip().upper()
                         # Участок/ряд/место.
-                        area = area.decode(settings.CSV_ENCODING).strip()
-                        row = row.decode(settings.CSV_ENCODING).strip()
-                        seat = seat.decode(settings.CSV_ENCODING).strip()
+                        if area == "N":
+                            area = u"0"
+                        else:
+                            area = area.decode(settings.CSV_ENCODING).strip()
+                        if row == "N":
+                            row = u"0"
+                        else:
+                            row = row.decode(settings.CSV_ENCODING).strip()
+                        if seat == "N":
+                            seat = u"0"
+                        else:
+                            seat = seat.decode(settings.CSV_ENCODING).strip()
                         # Фамилия заказчика.
                         if cust_ln == "N":
                             cust_ln = u""
