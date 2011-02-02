@@ -42,9 +42,9 @@
                 <td>
                     Комментарий
                 </td>
-                <td>
-                    Опции
-                </td>
+{#                <td>#}
+{#                    Опции#}
+{#                </td>#}
             </thead>
             {% for b in object_list %}
             <tr>
@@ -58,26 +58,26 @@
                     {{ b.person.patronymic }}
                 </td>
                 <td>
-                    {{ b.bur_date|date:"d.m.Y" }}
+                    {{ b.date_fact|date:"d.m.Y" }}
                 </td>
                 <td>
                     {{ b.account_book_n }}
                 </td>
                 <td>
-                    {{ b.place.area }}
+                    {{ b.product.place.area }}
                 </td>
                 <td>
-                    {{ b.place.row }}
+                    {{ b.product.place.row }}
                 </td>
                 <td>
-                    {{ b.place.seat }}
+                    {{ b.product.place.seat }}
                 </td>
                 <td>
-                    {{ b.place.cemetery.name }}
+                    {{ b.product.place.cemetery.name }}
                 </td>
-                {% if b.order_position.order.customer.person.last_name %}
+                {% if b.customer.person.last_name %}
                 <td>
-                    {{ b.order_position.order.customer.person.last_name }}
+                    {{ b.customer.person.last_name }}
                 </td>
                 {% else %}
                 <td>
@@ -85,14 +85,14 @@
                 </td>
                 {% endif %}
                 <td>
-                    {{ b.order_position.operation.op_type }}
+                    {{ b.operation.op_type }}
                 </td>
                 <td>
                     {{ b.all_comments }}
                 </td>
-                <td>
-                    &nbsp;
-                </td>
+{#                <td>#}
+{#                    &nbsp;#}
+{#                </td>#}
             </tr>
             {% endfor %}
         </table>
