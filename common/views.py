@@ -19,6 +19,7 @@ from models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organ
 from models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation
 from models import OrderFiles, Phone, Place, ProductType, SoulProducttypeOperation, Role
 from models import Env
+from django import db
 
 from simplepagination import paginate
 from annoying.decorators import render_to
@@ -1093,6 +1094,7 @@ def import_csv(request):
             bad_nr = 0
             s_time = datetime.datetime.now()
             for l in r:
+                db.reset_queries()
                 if l:
                     try:
                         (str_id,
