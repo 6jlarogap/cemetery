@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from contrib.constants import *
-#from django.conf import settings
 from common.models import Burial
 from django import db
 import csv
@@ -11,14 +10,14 @@ csv.register_dialect("tabsep", delimiter="\t")
 burials = Burial.objects.filter(is_trash=False).order_by("person__last_name",
                                                          "person__first_name", "person__patronymic")
 #print burials.count()
-f = open(settings.EXPORT2TERMINAL_FILE, "w")
+f = open(EXPORT2TERMINAL_FILE, "w")
 writer = csv.writer(f, "tabsep")
 
 total = burials.count()
 step_size = 1000
 count = 1 
 for step in xrange(0, total, step_size):
-    for burial in burials:[step:step + step_size]:
+    for burial in burials[step:step + step_size]:
         db.reset_queries()
         uuid = burial.person.uuid
         last_name = burial.person.last_name.encode('cp1251')

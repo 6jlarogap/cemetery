@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from contrib.constants import *
-#from django.conf import settings
 from common.models import Burial
 from django import db
 import csv
@@ -11,8 +10,7 @@ csv.register_dialect("vostochnoe", delimiter=" ", quotechar='"', quoting=csv.QUO
 burials = Burial.objects.filter(is_trash=False).order_by("person__last_name",
                                                          "person__first_name", "person__patronymic")
 #print burials.count()
-f = open(settings.EXPORT2TERMINAL_VOST_FILE, "w")
-#f = open("/var/cemetery/terminal/export_vost.csv", "w")
+f = open(EXPORT2TERMINAL_VOST_FILE, "w")
 writer = csv.writer(f, "vostochnoe")
 
 total = burials.count()
