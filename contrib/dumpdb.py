@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import glob
 from constants import DUMPS_DIR, STORE_DUMPS
 
-
-
-os.system("make_dump.sh")
+os.system(os.path.join(os.path.realpath(os.path.dirname(sys.argv[0])), "make_dump.sh"))
 
 files = glob.glob("%s*.gz" % DUMPS_DIR)
 files.sort()
