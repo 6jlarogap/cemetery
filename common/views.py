@@ -1159,10 +1159,13 @@ def import_csv(request):
                             cust_initials = u""
                         else:
                             cust_initials = cust_initials.decode(settings.CSV_ENCODING).strip().upper()
+                        # Город.
                         if city == "N":
-                            city = u""
+                            city = u"НЕИЗВЕСТЕН"  # Если в базе был Null.
                         else:
                             city = city.decode(settings.CSV_ENCODING).strip().capitalize()
+                        if not city:
+                            city = u"НЕИЗВЕСТЕН"  # Если в базе была пустая строка.
                         if street == "N":
                             street = u""
                         else:
@@ -1217,7 +1220,11 @@ def import_csv(request):
                             if cities:
                                 cust_city = cities[0]
                             else:
-                                cust_city = GeoCity.objects.get(name__iexact="НЕИЗВЕСТЕН")
+                                cust_city = GeoCity()
+                                cust_city.country = GeoCountry.objects.get(name__iexact="НЕИЗВЕСТЕН")
+                                cust_city.region = GeoRegion.objects.get(name__iexact="НЕИЗВЕСТЕН")
+                                cust_city.name = city
+                                cust_city.save()
                             try:
                                 cust_street = Street.objects.get(city=cust_city, name__iexact=street)
                             except ObjectDoesNotExist:
