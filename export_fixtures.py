@@ -28,7 +28,6 @@ for cem in cemeteries:
     if cem.organization.phone_set.all():
         imp_cem_rec.f_number = cem.organization.phone_set.all()[0]
     imp_cem_rec.save()
-cemeteries.update(last_sync_date=datetime.datetime.now())
 
 # Обрабатываем захоронения.
 burials = Burial.objects.filter(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
@@ -51,7 +50,6 @@ for bur in burials:
     imp_bur_rec.gps_y = bur.product.place.gps_y
     imp_bur_rec.gps_z = bur.product.place.gps_z
     imp_bur_rec.save()
-burials.update(last_sync_date=datetime.datetime.now())
 
 data = list(ImpCem.objects.all()) + list(ImpBur.objects.all())
 rez = serializers.serialize("json", data)
@@ -64,3 +62,6 @@ f.close()
 
 ImpBur.objects.all().delete()
 ImpCem.objects.all().delete()
+
+cemeteries.update(last_sync_date=datetime.datetime.now())
+burials.update(last_sync_date=datetime.datetime.now())
