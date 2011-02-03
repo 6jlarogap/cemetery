@@ -797,7 +797,7 @@ def journal(request):
             new_burial.account_book_n = cd["account_book_n"]
             new_burial.customer = customer.soul_ptr
 #            new_burial.name = u"Захоронение"
-#            new_burial.p_type = ProductType.objects.get(id=settings.BURIAL_PRODUCTTYPE_ID)
+#            new_burial.p_type = ProductType.objects.get(uuid=settings.BURIAL_PRODUCTTYPE_ID)
             new_burial.responsible = cd["cemetery"].organization.soul_ptr  #ставить орг-ию кладбища
             new_burial.doer = request.user.userprofile.soul
             new_burial.operation = cd["operation"]
