@@ -42,7 +42,7 @@ cat cemetery.sql | psql -U postgres cemetery
 chmod a+x /home/django/projects/cemetery/contrib/dumpdb.py
 echo "5 0 * * *   /home/django/projects/cemetery/contrib/dumpdb.py" >> /etc/crontab
 #Start django daemon
-/etc/init.d/django start
+/etc/init.d/django restart
 /etc/init.d/nginx restart
 #Outbox
 mkdir -p /var/cemetery/outbox
