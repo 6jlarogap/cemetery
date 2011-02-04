@@ -58,9 +58,15 @@ def main_page(request):
     """
     form_data = request.GET or None
     form = SearchForm(form_data)
-    burials = Burial1.objects.filter(is_trash=False).order_by("person__last_name",
-                                                              "person__first_name",
-                                                              "person__patronymic")
+    if request.GET.has_key("cemetery"):
+        first = False
+        burials = Burial1.objects.filter(is_trash=False).order_by("person__last_name",
+                                                                  "person__first_name",
+                                                                  "person__patronymic")
+    else:
+        first = True
+        burials_nr = Burial1.objects.filter(is_trash=False).count()
+        burials = Burial1.objects.none()
     pp = None
     if form.is_valid():
         cd = form.cleaned_data
@@ -233,9 +239,12 @@ def main_page(request):
     else:
         result = {"form": form,
                   "object_list": burials,
-                  "obj_nr": len(burials),
                   "TEMPLATE": "burials.html",
                   }
+        if first:
+            result["obj_nr"] = burials_nr
+        else:
+            result["obj_nr"] = burials.count()
         #if pp:
             #result["per_page"] = pp
     return result
