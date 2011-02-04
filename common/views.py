@@ -31,7 +31,8 @@ from common.forms import UserProfileForm
 from cStringIO import StringIO
 
 
-csv.register_dialect("4mysql", escapechar="\\", quoting=csv.QUOTE_NONE)
+csv.register_dialect("4mysqlout", escapechar="\\", quoting=csv.QUOTE_NONE)
+csv.register_dialect("4mysql", escapechar="\\", quoting=csv.QUOTE_ALL, doublequote=False)
 
 def is_in_group(group_name):
     """
@@ -58,9 +59,15 @@ def main_page(request):
     """
     form_data = request.GET or None
     form = SearchForm(form_data)
-    burials = Burial1.objects.filter(is_trash=False).order_by("person__last_name",
-                                                              "person__first_name",
-                                                              "person__patronymic")
+    if request.GET.has_key("cemetery"):
+        first = False
+        burials = Burial1.objects.filter(is_trash=False).order_by("person__last_name",
+                                                                  "person__first_name",
+                                                                  "person__patronymic")
+    else:
+        first = True
+        burials_nr = Burial1.objects.filter(is_trash=False).count()
+        burials = Burial1.objects.none()
     pp = None
     if form.is_valid():
         cd = form.cleaned_data
@@ -233,9 +240,12 @@ def main_page(request):
     else:
         result = {"form": form,
                   "object_list": burials,
-                  "obj_nr": len(burials),
                   "TEMPLATE": "burials.html",
                   }
+        if first:
+            result["obj_nr"] = burials_nr
+        else:
+            result["obj_nr"] = burials.count()
         #if pp:
             #result["per_page"] = pp
     return result
@@ -1087,7 +1097,7 @@ def import_csv(request):
             response['Content-Disposition'] = 'attachment; filename=import_result.csv'
             temp_file = StringIO()
 #            writer = csv.writer(response, "4mysql")
-            writer = csv.writer(temp_file, "4mysql")
+            writer = csv.writer(temp_file, "4mysqlout")
             err_descrs = []
             iduuids = []
             good_nr = 0

@@ -216,7 +216,7 @@ class Person(Soul):
     """
     Физическое лицо (клиент, сотрудник, кто угодно).
     """
-    last_name = models.CharField("Фамилия", max_length=30)  # Фамилия.
+    last_name = models.CharField("Фамилия", max_length=128)  # Фамилия.
     first_name = models.CharField("Имя", max_length=30, blank=True)  # Имя.
     patronymic = models.CharField("Отчество", max_length=30, blank=True)  # Отчество.
     #death_certificate = models.CharField("Свидетельство о смерти",
