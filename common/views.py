@@ -1097,7 +1097,8 @@ def import_csv(request):
             response['Content-Disposition'] = 'attachment; filename=import_result.csv'
             temp_file = StringIO()
 #            writer = csv.writer(response, "4mysql")
-            writer = csv.writer(temp_file, "4mysqlout")
+#            writer = csv.writer(temp_file, "4mysqlout")
+            writer = csv.writer(temp_file, "4mysql")
             err_descrs = []
             iduuids = []
             good_nr = 0
