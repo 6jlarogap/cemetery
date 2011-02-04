@@ -643,7 +643,7 @@ ALTER TABLE public.common_organization OWNER TO postgres;
 
 CREATE TABLE common_person (
     soul_ptr_id character varying(36) NOT NULL,
-    last_name character varying(30) NOT NULL,
+    last_name character varying(128) NOT NULL,
     first_name character varying(30) NOT NULL,
     patronymic character varying(30) NOT NULL
 );
@@ -1083,7 +1083,7 @@ ALTER SEQUENCE south_migrationhistory_id_seq OWNED BY south_migrationhistory.id;
 -- Name: south_migrationhistory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('south_migrationhistory_id_seq', 1, false);
+SELECT pg_catalog.setval('south_migrationhistory_id_seq', 2, true);
 
 
 --
@@ -1457,7 +1457,7 @@ COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY auth_user (id, username, first_name, last_name, email, password, is_staff, is_active, is_superuser, last_login, date_joined) FROM stdin;
-1	soul			pythonprogrammer@mail.ru	sha1$4577d$f5939aa4345e986d4b0d2cb9ab3799d032720636	t	t	t	2011-02-04 11:56:45.976941+03	2011-01-28 15:43:24.389277+03
+1	soul			pythonprogrammer@mail.ru	sha1$4577d$f5939aa4345e986d4b0d2cb9ab3799d032720636	t	t	t	2011-02-04 20:34:13.612313+03	2011-01-28 15:43:24.389277+03
 \.
 
 
@@ -13821,6 +13821,7 @@ COPY django_content_type (id, name, app_label, model) FROM stdin;
 COPY django_session (session_key, session_data, expire_date) FROM stdin;
 75ee9389679f9db4e9ee5857785c33c1	gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjViYTdhMWYyYzY5ZmNjMTI0ZWYx\nNzc1NjNjNWRmMDUy\n	2011-02-11 15:44:50.499785+03
 13ab3eba13f8071d1e42b90311d4ff8c	gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjViYTdhMWYyYzY5ZmNjMTI0ZWYx\nNzc1NjNjNWRmMDUy\n	2011-02-18 11:56:45.997297+03
+c96909c92e5fb09e5ef4bafa71dc3998	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLAXUu\nZTE5YWE2ZDU4MGYzYzdjOTU2ZjJiOTc5ZGQ0MWMxMjk=\n	2011-02-18 20:34:13.637365+03
 \.
 
 
@@ -13838,6 +13839,8 @@ COPY django_site (id, domain, name) FROM stdin;
 --
 
 COPY south_migrationhistory (id, app_name, migration, applied) FROM stdin;
+1	common	0001_initial	2011-02-04 17:32:49.205802+03
+2	common	0002_auto__chg_field_person_last_name	2011-02-04 17:33:12.734982+03
 \.
 
 
