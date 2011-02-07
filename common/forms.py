@@ -85,7 +85,7 @@ class SearchForm(forms.Form):
     burial_date_from = forms.DateField(required=False, label="Дата захоронения с", widget=CalendarWidget)
     burial_date_to = forms.DateField(required=False, label="Дата захоронения по", widget=CalendarWidget)
     death_certificate = forms.CharField(required=False, max_length=30, label="Номер свидетельства о смерти")
-    account_book_n = forms.CharField(required=False, max_length=9, label="Номер в книге учета")
+    account_book_n = forms.CharField(required=False, max_length=16, label="Номер в книге учета")
     customer = forms.CharField(required=False, max_length=30, label="Фамилия заказчика")
     owner = forms.ModelChoiceField(required=False, queryset=User.objects.all(), empty_label="Не выбран",
                                    label="Создатель")
@@ -411,7 +411,7 @@ class JournalForm(forms.Form):
     Форма создания нового захоронения.
     """
 
-    account_book_n = forms.CharField(max_length=9, label="Номер в книге учета*",
+    account_book_n = forms.CharField(max_length=16, label="Номер в книге учета*",
                                      widget=forms.TextInput(attrs={"tabindex": "1"}))
     burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}),
                                   initial=datetime.date.today().strftime("%d.%m.%Y"))

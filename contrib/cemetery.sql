@@ -326,7 +326,7 @@ SELECT pg_catalog.setval('auth_user_user_permissions_id_seq', 1, false);
 CREATE TABLE common_burial (
     order_ptr_id character varying(36) NOT NULL,
     person_id character varying(36) NOT NULL,
-    account_book_n character varying(9) NOT NULL,
+    account_book_n character varying(16) NOT NULL,
     last_sync_date timestamp with time zone NOT NULL
 );
 

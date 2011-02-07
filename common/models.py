@@ -532,7 +532,7 @@ class Burial(Order):
     Захоронение.
     """
     person = models.ForeignKey(Person, verbose_name="Похороненный", related_name='buried')  # Похороненный.
-    account_book_n = models.CharField("Номер в книге учета", max_length=9)  # Номер записи к книге учета.
+    account_book_n = models.CharField("Номер в книге учета", max_length=16)  # Номер записи к книге учета.
     last_sync_date = models.DateTimeField("Дата последней синхронизации", default=datetime.datetime(2000, 1, 1, 0, 0))
     class Meta:
         verbose_name = ('захоронение')
@@ -547,7 +547,7 @@ class Burial(Order):
 
 class Burial1(Order): # Захоронения
     person = models.ForeignKey(Person)  # Похороненный.
-    account_book_n = models.CharField(max_length=9, unique=True)  # Номер записи к книге учета.
+    account_book_n = models.CharField(max_length=16, unique=True)  # Номер записи к книге учета.
     s1 = models.TextField(blank=True, null=True)
     s2 = models.FloatField(blank=True, null=True)
     s3 = models.TextField(blank=True, null=True)
