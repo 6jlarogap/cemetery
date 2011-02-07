@@ -15,7 +15,6 @@ writer = csv.writer(f, "vostochnoe")
 
 total = burials.count()
 step_size = 1000
-count = 1 
 for step in xrange(0, total, step_size):
     for burial in burials[step:step + step_size]:
         db.reset_queries()
@@ -35,5 +34,4 @@ for step in xrange(0, total, step_size):
         cemetery = burial.product.place.cemetery.name.encode('cp1251')
         if (last_name) and (last_name != "НЕИЗВЕСТЕН"):
             writer.writerow((uuid, last_name, initials, date, area, row, seat, cemetery))
-        count += 1
 f.close()
