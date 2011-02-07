@@ -1139,6 +1139,11 @@ def import_csv(request):
                             initials = u""
                         else:
                             initials = initials.decode(settings.CSV_ENCODING).strip().upper()
+                        # Дата захоронения
+                        try:
+                            bur_date = datetime.datetime.strptime(bur_date[0:10], "%Y-%m-%d")
+                        except ValueError:
+                            bur_date = datetime.datetime.strptime(bur_date[0:10], "%d.%m.%Y")
                         # Участок/ряд/место.
                         if area == "N":
                             area = u"0"
@@ -1277,7 +1282,7 @@ def import_csv(request):
                         burial.responsible = place.cemetery.organization.soul_ptr
                         burial.customer = customer
                         burial.doer = request.user.userprofile.soul
-                        burial.date_fact = datetime.datetime.strptime(bur_date, "%Y-%m-%d  %H:%M:%S")
+                        burial.date_fact = bur_date
                         burial.product = place.product_ptr
                         if u"урн" in comment.lower():
                             operation = Operation.objects.get(uuid=settings.OPER_1)
