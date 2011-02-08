@@ -84,7 +84,7 @@ class SearchForm(forms.Form):
 #    death_date_to = forms.DateField(required=False, label="Дата смерти по", widget=CalendarWidget)
     burial_date_from = forms.DateField(required=False, label="Дата захоронения с", widget=CalendarWidget)
     burial_date_to = forms.DateField(required=False, label="Дата захоронения по", widget=CalendarWidget)
-    death_certificate = forms.CharField(required=False, max_length=30, label="Номер свидетельства о смерти")
+#    death_certificate = forms.CharField(required=False, max_length=30, label="Номер свидетельства о смерти")
     account_book_n = forms.CharField(required=False, max_length=16, label="Номер в книге учета")
     customer = forms.CharField(required=False, max_length=30, label="Фамилия заказчика")
     owner = forms.ModelChoiceField(required=False, queryset=User.objects.all(), empty_label="Не выбран",
