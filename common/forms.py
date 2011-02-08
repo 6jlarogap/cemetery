@@ -87,7 +87,7 @@ class SearchForm(forms.Form):
 #    death_certificate = forms.CharField(required=False, max_length=30, label="Номер свидетельства о смерти")
     account_book_n = forms.CharField(required=False, max_length=16, label="Номер в книге учета")
     customer = forms.CharField(required=False, max_length=30, label="Фамилия заказчика")
-    owner = forms.ModelChoiceField(required=False, queryset=User.objects.all(), empty_label="Не выбран",
+    owner = forms.ModelChoiceField(required=False, queryset=User.objects.all(), empty_label="Все",
                                    label="Создатель")
     area = forms.CharField(required=False, max_length=9, label="Участок")
     row = forms.CharField(required=False, max_length=9, label="Ряд")

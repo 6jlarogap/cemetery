@@ -11,7 +11,7 @@ class PersonAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             self.exclude = ()
         else:
-            self.exclude = ("creator", "location",)
+            self.exclude = ("creator", "location")
         return super(PersonAdmin, self).get_form(request, obj=None, **kwargs)
 
 
