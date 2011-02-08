@@ -6,7 +6,6 @@ from django import db
 import csv
 
 csv.register_dialect("vostochnoe", delimiter=" ", quotechar='"', quoting=csv.QUOTE_ALL)
-
 burials = Burial.objects.filter(is_trash=False).order_by("person__last_name",
                                                          "person__first_name", "person__patronymic")
 #print burials.count()

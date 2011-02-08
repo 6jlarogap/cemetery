@@ -116,7 +116,7 @@ class EditUserForm(forms.Form):
     first_name = forms.CharField(max_length=30, label="Имя", required=False)
     patronymic = forms.CharField(max_length=30, label="Отчество", required=False)
     role = forms.ModelMultipleChoiceField(queryset=Role.objects.all(), label="Роль")
-    is_staff = forms.BooleanField(required=False, label="Доступ в админку")
+#    is_staff = forms.BooleanField(required=False, label="Доступ в админку")
     default_rights = forms.BooleanField(required=False, label="Поставить права по умолчанию")
 #    phone = forms.CharField(max_length=15, label="Телефон", required=False)
     password1 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),

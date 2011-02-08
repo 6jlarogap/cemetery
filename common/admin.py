@@ -32,7 +32,7 @@ class OFAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             self.exclude = ()
         else:
-            self.exclude = ("order",)
+            self.exclude = ("order", "creator")
         return super(OFAdmin, self).get_form(request, obj=None, **kwargs)
 
 
@@ -42,7 +42,7 @@ class OCAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             self.exclude = ()
         else:
-            self.exclude = ("order",)
+            self.exclude = ("order", "creator")
         return super(OCAdmin, self).get_form(request, obj=None, **kwargs)
 
 

@@ -1284,6 +1284,8 @@ def import_csv(request):
                         burial.customer = customer
                         burial.doer = request.user.userprofile.soul
                         burial.date_fact = bur_date
+#                        try:
+#                            test_date = datetime.datetime.date(bur_date).strftime("%d.%m.%Y")
                         burial.product = place.product_ptr
                         if u"урн" in comment.lower():
                             operation = Operation.objects.get(uuid=settings.OPER_1)
