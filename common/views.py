@@ -171,14 +171,14 @@ def main_page(request):
 
         if cd["cemetery"]:
             burials = burials.filter(product__place__cemetery=cd["cemetery"])
-        if cd["birth_date_from"]:
-            burials = burials.filter(person__birth_date__gte=cd["birth_date_from"])
-        if cd["birth_date_to"]:
-            burials = burials.filter(person__birth_date__lte=cd["birth_date_to"])
-        if cd["death_date_from"]:
-            burials = burials.filter(person__birth_date__gte=cd["death_date_from"])
-        if cd["death_date_to"]:
-            burials = burials.filter(person__birth_date__lte=cd["death_date_to"])
+#        if cd["birth_date_from"]:
+#            burials = burials.filter(person__birth_date__gte=cd["birth_date_from"])
+#        if cd["birth_date_to"]:
+#            burials = burials.filter(person__birth_date__lte=cd["birth_date_to"])
+#        if cd["death_date_from"]:
+#            burials = burials.filter(person__birth_date__gte=cd["death_date_from"])
+#        if cd["death_date_to"]:
+#            burials = burials.filter(person__birth_date__lte=cd["death_date_to"])
         if cd["burial_date_from"]:
             burials = burials.filter(date_fact__gte=cd["burial_date_from"])
         if cd["burial_date_to"]:

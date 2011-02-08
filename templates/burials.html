@@ -77,12 +77,14 @@
                     <td width="25%">{{ form.patronymic }}</td>
                     <td width="25%">{{ form.cemetery.errors }}{{ form.cemetery }}</td>
                 </tr>
+                <!--
                 <tr>
                     <td width="25%" id="free_form">{{ form.birth_date_from.label_tag }}</td>
                     <td width="25%">{{ form.birth_date_from.errors }}{{ form.birth_date_from }}</td>
                     <td width="25%" id="free_form">{{ form.birth_date_to.label_tag }}</td>
                     <td width="25%">{{ form.birth_date_to.errors }}{{ form.birth_date_to }}</td>
                 </tr>
+                -->
                 <tr>
                     <td width="25%" id="free_form">{{ form.death_date_from.label_tag }}</td>
                     <td width="25%">{{ form.death_date_from.errors }}{{ form.death_date_from }}</td>
@@ -134,7 +136,7 @@
             </table>
     <input type="submit" value="Искать" />&nbsp;&nbsp;<input type="button" value="Сброс" onClick="parent.location='/'" />
 <table width="100%" border="1">
-{#	<caption style="background:#2D992D;"><font color="#FFD700">&nbsp;{{ obj_nr }}</font> записей&nbsp;&nbsp;|&nbsp;&nbsp;по {{ form.per_page }} записей на странице&nbsp;&nbsp;|&nbsp;&nbsp;сортировка по {{ form.records_order_by }}&nbsp;&nbsp;|<input type="button" value="Печать" onClick="window.open($.query.set('print', 1).REMOVE('per_page').toString(),'_blank');" /></caption>#}
+    <!--	<caption style="background:#2D992D;"><font color="#FFD700">&nbsp;{{ obj_nr }}</font> записей&nbsp;&nbsp;|&nbsp;&nbsp;по {{ form.per_page }} записей на странице&nbsp;&nbsp;|&nbsp;&nbsp;сортировка по {{ form.records_order_by }}&nbsp;&nbsp;|<input type="button" value="Печать" onClick="window.open($.query.set('print', 1).REMOVE('per_page').toString(),'_blank');" /></caption>-->
     <caption style="background:#2D992D;"><font color="#FFD700">&nbsp;{{ obj_nr }}</font> записей&nbsp;&nbsp;|&nbsp;&nbsp;по {{ form.per_page }} записей на странице&nbsp;&nbsp;|&nbsp;&nbsp;сортировка по {{ form.records_order_by }}&nbsp;&nbsp;|<input type="button" value="Печать" onClick="window.open($.query.set('print', 1).toString(),'_blank');" /></caption>
 	<thead>
                         <td>Фамилия</td>
