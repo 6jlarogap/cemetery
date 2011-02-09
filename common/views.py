@@ -147,25 +147,25 @@ def main_page(request):
                 patr = parts[2].strip(",")
             regex = re.sub(r'\?', r'.', lname)
             regex = re.sub(r'\*', r'.*', regex)
-            if not (regex.startswith("?") or regex.startswith("*")):
+            if not regex.startswith("."):
                 regex = u"^%s" % regex
-            if not (regex.endswith("?") or regex.endswith("*")):
+            if not (regex.endswith(".") or regex.endswith(".*")):
                 regex = u"%s$" % regex
             burials = burials.filter(person__last_name__iregex=regex)
             if fname:
                 regex = re.sub(r'\?', r'.', fname)
                 regex = re.sub(r'\*', r'.*', regex)
-                if not (regex.startswith("?") or regex.startswith("*")):
+                if not regex.startswith("."):
                     regex = u"^%s" % regex
-#                if not (regex.endswith("?") or regex.endswith("*")):
+#                if not (regex.endswith(".") or regex.endswith(".*")):
 #                    regex = u"%s$" % regex
                 burials = burials.filter(person__first_name__iregex=regex)
             if patr:
                 regex = re.sub(r'\?', r'.', patr)
                 regex = re.sub(r'\*', r'.*', regex)
-                if not (regex.startswith("?") or regex.startswith("*")):
+                if not regex.startswith("."):
                     regex = u"^%s" % regex
-#                if not (regex.endswith("?") or regex.endswith("*")):
+#                if not (regex.endswith(".") or regex.endswith(".*")):
 #                    regex = u"%s$" % regex
                 burials = burials.filter(person__patronymic__iregex=regex)
 
@@ -190,9 +190,9 @@ def main_page(request):
         if cd["customer"]:
             regex = re.sub(r'\?', r'.', cd["customer"])
             regex = re.sub(r'\*', r'.*', regex)
-            if not (regex.startswith("?") or regex.startswith("*")):
+            if not regex.startswith("."):
                 regex = u"^%s" % regex
-            if not (regex.endswith("?") or regex.endswith("*")):
+            if not (regex.endswith(".") or regex.endswith(".*")):
                 regex = u"%s$" % regex
             burials = burials.filter(customer__person__last_name__iregex=regex)
         if cd["owner"]:
@@ -213,9 +213,9 @@ def main_page(request):
         if cd["comment"]:
             regex = re.sub(r'\?', r'.', cd["comment"])
             regex = re.sub(r'\*', r'.*', regex)
-            if not (regex.startswith("?") or regex.startswith("*")):
+            if not regex.startswith("."):
                 regex = u"^%s" % regex
-            if not (regex.endswith("?") or regex.endswith("*")):
+            if not (regex.endswith(".") or regex.endswith(".*")):
                 regex = u"%s$" % regex
             burials = burials.filter(all_comments__iregex=regex)
     else:
