@@ -462,8 +462,13 @@ $(function(){
         <br />
         {{ form.file1.errors }}{{ form.file1 }}<br />
         {{ form.file1_comment.errors }}{{ form.file1_comment }}
-        <br>
-        <br>
+        <br />
+        <br />
+        {% if user|in_group:"edit_bur_in_adm" %}
+            {{ form.in_trash.label_tag }}{{ form.in_trash }}
+        {% endif %}
+        <br />
+        <br />
         <input type="submit" value="Сохранить"  tabindex="22">
         <button type="button" onclick="top.location.href='{{ request.path }}';" tabindex="23">Отмена</button>
     </form>
