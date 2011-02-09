@@ -450,11 +450,12 @@ $(function(){
     <h3>Файлы:</h3>
         {% for f in burial.orderfiles_set.all %}
             <b>{{ forloop.counter }}</b>
-            <img src="{{ f.ofile.thumbnail.url }}">
+{#            <img src="{{ f.ofile.thumbnail.url }}">#}
+            <a href="/media/{{ f.ofile }}">скачать</a>
             <a href="/admin/common/orderfiles/{{ f.uuid }}/" target="_blank">редактировать</a>
             <a href="/orderfile/delete/{{ burial.uuid }}/{{ f.uuid }}/">удалить</a>
             <br />
-            Комментарий к картинке: <i>{{ f.comment }}</i>
+            Комментарий к файлу: <i>{{ f.comment }}</i>
             <br />
             <small><b>{{ f.creator }}</b>, {{ f.date_of_creation }}</small><br /><br />
         {%  endfor %}

@@ -507,8 +507,8 @@ class OrderFiles(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     order = models.ForeignKey(Order)
-#    ofile = models.FileField(upload_to="ofiles")
-    ofile = StdImageField("Картинка", upload_to='ofiles', thumbnail_size=(100, 75))
+    ofile = models.FileField("Файл", upload_to="ofiles")
+#    ofile = StdImageField("Картинка", upload_to='ofiles', thumbnail_size=(100, 75))
     comment = models.CharField(max_length=96, blank=True)
     creator = models.ForeignKey(Soul, null=True)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
