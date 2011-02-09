@@ -59,14 +59,15 @@ def main_page(request):
     """
     form_data = request.GET or None
     form = SearchForm(form_data)
-    if request.GET.has_key("cemetery"):
+    trash = bool(request.GET.get("trash", False))
+    if request.GET.has_key("cemetery") or trash:
         first = False
-        burials = Burial1.objects.filter(is_trash=False).order_by("person__last_name",
+        burials = Burial1.objects.filter(is_trash=trash).order_by("person__last_name",
                                                                   "person__first_name",
                                                                   "person__patronymic")
     else:
         first = True
-        burials_nr = Burial1.objects.filter(is_trash=False).count()
+        burials_nr = Burial1.objects.filter(is_trash=trash).count()
         burials = Burial1.objects.none()
     pp = None
     if form.is_valid():
@@ -881,7 +882,7 @@ def edit_burial(request, uuid):
             burial.date_fact = cd["burial_date"]
             operation = cd["operation"]
             burial.operation = operation
-            burial.save()
+#            burial.save()
             try:
                 place = Place.objects.get(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"])
             except ObjectDoesNotExist:
@@ -892,6 +893,8 @@ def edit_burial(request, uuid):
                 place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
                 place.save()
             burial.product = place.product_ptr
+            in_trash = cd.get("in_trash", False)
+            burial.is_trash = in_trash
             burial.save()
             # Обработка Location заказчика.
             # TEMP! Пока есть заказчики без Location.
@@ -956,6 +959,7 @@ def edit_burial(request, uuid):
             "seat": burial.product.place.seat,
             "operation": burial.operation,
             "hoperation": burial.operation.uuid,
+            "in_trash": burial.is_trash,
         }
         if burial.customer.location and hasattr(burial.customer.location, "street") and burial.customer.location.street:
             initial_data["street"] = burial.customer.location.street.name

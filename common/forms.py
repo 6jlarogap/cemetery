@@ -313,6 +313,7 @@ class EditOrderForm(forms.Form):
     file1 = StdImageFormField(required=False, label="Картинка (до 5 Mb)")
     file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 1, 'cols': 64}),
                               label="Комментарий к файлу")
+    in_trash = forms.BooleanField(required=False, label="В корзине")
     def clean(self):
         cd = self.cleaned_data
         # Валидация кладбища/операции.
