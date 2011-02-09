@@ -59,7 +59,7 @@ def main_page(request):
     form_data = request.GET or None
     form = SearchForm(form_data)
     trash = bool(request.GET.get("trash", False))
-    if request.GET.has_key("cemetery"):
+    if request.GET.has_key("cemetery") or trash:
         first = False
         burials = Burial1.objects.filter(is_trash=trash).order_by("person__last_name",
                                                                   "person__first_name",
