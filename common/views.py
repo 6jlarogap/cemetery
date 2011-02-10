@@ -148,7 +148,7 @@ def main_page(request):
                 patr = parts[2].strip(",")
             regex = re.sub(r'\?', r'.', lname)
             regex = re.sub(r'\*', r'.*', regex)
-            if not (regex.startswith(".") or regex.startswith(".*")):
+            if not regex.startswith("."):
                 regex = u"^%s" % regex
             if not (regex.endswith(".") or regex.endswith(".*")):
                 regex = u"%s$" % regex
@@ -156,7 +156,7 @@ def main_page(request):
             if fname:
                 regex = re.sub(r'\?', r'.', fname)
                 regex = re.sub(r'\*', r'.*', regex)
-                if not (regex.startswith(".") or regex.startswith(".*")):
+                if not regex.startswith("."):
                     regex = u"^%s" % regex
 #                if not (regex.endswith(".") or regex.endswith(".*")):
 #                    regex = u"%s$" % regex
@@ -164,7 +164,7 @@ def main_page(request):
             if patr:
                 regex = re.sub(r'\?', r'.', patr)
                 regex = re.sub(r'\*', r'.*', regex)
-                if not (regex.startswith(".") or regex.startswith(".*")):
+                if not regex.startswith("."):
                     regex = u"^%s" % regex
 #                if not (regex.endswith(".") or regex.endswith(".*")):
 #                    regex = u"%s$" % regex
@@ -191,7 +191,7 @@ def main_page(request):
         if cd["customer"]:
             regex = re.sub(r'\?', r'.', cd["customer"])
             regex = re.sub(r'\*', r'.*', regex)
-            if not (regex.startswith(".") or regex.startswith(".*")):
+            if not regex.startswith("."):
                 regex = u"^%s" % regex
             if not (regex.endswith(".") or regex.endswith(".*")):
                 regex = u"%s$" % regex
@@ -212,14 +212,14 @@ def main_page(request):
         if cd["gps_z"]:
             burials = burials.filter(product__place__gps_z=cd["gps_z"])
         if cd["comment"]:
-#            regex = re.sub(r'\?', r'.', cd["comment"])
-#            regex = re.sub(r'\*', r'.*', regex)
-#            if not (regex.startswith(".") or regex.startswith(".*")):
-#                regex = u"^%s" % regex
-#            if not (regex.endswith(".") or regex.endswith(".*")):
-#                regex = u"%s$" % regex
-#            burials = burials.filter(all_comments__iregex=regex)
-            burials = burials.filter(all_comments__icontains=cd["comment"])
+#            burials = burials.filter(all_comments__icontains=cd["comment"])
+            regex = re.sub(r'\?', r'.', cd["comment"])
+            regex = re.sub(r'\*', r'.*', regex)
+            if not regex.startswith("."):
+                regex = u"^%s" % regex
+            if not (regex.endswith(".") or regex.endswith("*")):
+                regex = u"%s$" % regex
+            burials = burials.filter(all_comments__iregex=regex)
     else:
         #if request.user.is_authenticated() and not request.user.is_superuser and not form_data:
         if request.user.is_authenticated() and not form_data:

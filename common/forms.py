@@ -9,7 +9,6 @@ from models import SoulProducttypeOperation
 
 from annoying.decorators import autostrip
 
-from stdimage.forms import StdImageFormField
 
 import re
 import string
@@ -310,7 +309,7 @@ class EditOrderForm(forms.Form):
     new_country = forms.BooleanField(required=False, label="Новая страна")
     comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 90, 'tabindex': '21'}),
                               label="Комментарий")
-    file1 = StdImageFormField(required=False, label="Картинка (до 5 Mb)")
+    file1 = forms.FileField(required=False, label="Файл")
     file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 1, 'cols': 64}),
                               label="Комментарий к файлу")
     in_trash = forms.BooleanField(required=False, label="В корзине")
@@ -464,7 +463,7 @@ class JournalForm(forms.Form):
                                                            'cols': 90,
                                                            'tabindex': "22"}),
                               label="Комментарий")
-    file1 = StdImageFormField(required=False, label="Картинка (до 5 Mb)")
+    file1 = forms.FileField(required=False, label="Файл")
     file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 1, 'cols': 64}),
                                     label="Комментарий к файлу")
     def __init__(self, *args, **kwargs):
