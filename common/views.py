@@ -1291,14 +1291,16 @@ def import_csv(request):
 #                        try:
 #                            test_date = datetime.datetime.date(bur_date).strftime("%d.%m.%Y")
                         burial.product = place.product_ptr
-                        if u"урн" in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_1)
+                        if u"урна" in comment.lower():
+                            operation = Operation.objects.get(uuid=settings.OPER_5)
                         elif u"подзахоронение" in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_2)
-                        elif u"захоронение в " in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_3)
-                        else:
                             operation = Operation.objects.get(uuid=settings.OPER_4)
+                        elif u"захоронение в существ" in comment.lower():
+                            operation = Operation.objects.get(uuid=settings.OPER_3)
+                        elif u"почетное захоронение" in comment.lower():
+                            operation = Operation.objects.get(uuid=settings.OPER_2)
+                        else:
+                            operation = Operation.objects.get(uuid=settings.OPER_1)
                         burial.operation = operation
                         burial.save()
                         burial.add_comment(comment, request.user.userprofile.soul)
