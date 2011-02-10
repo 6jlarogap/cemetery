@@ -494,11 +494,11 @@ class Order(models.Model):
         comment = OrderComments(order=self, comment=txt,
                                   creator=creator)
         comment.save()
-        if self.all_comments:
-            self.all_comments = "%s\n%s" % (self.all_comments, txt)
-        else:
-            self.all_comments = txt
-        self.save()
+#        if self.all_comments:
+#            self.all_comments = "%s\n%s" % (self.all_comments, txt)
+#        else:
+#            self.all_comments = txt
+#        self.save()
 
 
 class OrderFiles(models.Model):
