@@ -6,98 +6,52 @@
     <body>
         <table width="100%" border="1">
             <thead>
-                <td>
-                    Фамилия
-                </td>
-                <td>
-                    Имя
-                </td>
-                <td>
-                    Отч
-                </td>
-                <td>
-                    Дата захор
-                </td>
-                <td>
-                    N в кн
-                </td>
-                <td>
-                    Уч
-                </td>
-                <td>
-                    Ряд
-                </td>
-                <td>
-                    Мог
-                </td>
-                <td>
-                    Кладб
-                </td>
-                <td>
-                    Заказчик
-                </td>
-                <td>
-                    Услуга
-                </td>
-                <td>
-                    Комментарий
-                </td>
+                <td>N в кн</td>
+                <td>ФИО</td>
+<!--
+                <td>Имя</td>
+                <td>Отч</td>
+-->
+                <td>Дата захор</td>
+                <td>Уч</td>
+                <td>Ряд</td>
+                <td>Мог</td>
+                <td>Кладб</td>
+                <td>Заказчик</td>
+                <td>Услуга</td>
+                <td>Комментарий</td>
 {#                <td>#}
 {#                    Опции#}
 {#                </td>#}
             </thead>
-            {% for b in object_list %}
-            <tr>
-                <td>
-                    {{ b.person.last_name }}
-                </td>
-                <td>
-                    {{ b.person.first_name }}
-                </td>
-                <td>
-                    {{ b.person.patronymic }}
-                </td>
-                <td>
-                    {{ b.date_fact|date:"d.m.Y" }}
-                </td>
-                <td>
-                    {{ b.account_book_n }}
-                </td>
-                <td>
-                    {{ b.product.place.area }}
-                </td>
-                <td>
-                    {{ b.product.place.row }}
-                </td>
-                <td>
-                    {{ b.product.place.seat }}
-                </td>
-                <td>
-                    {{ b.product.place.cemetery.name }}
-                </td>
-                {% if b.customer.person.last_name %}
-                <td>
-                    {{ b.customer.person.last_name }}
+    	{% for b in object_list %}
+	    <tr>
+	        <td>{{ b.account_book_n }}</td>
+	        <td>
+                <b> {{ b.person.last_name }}</b>
+	            {{ b.person.first_name }}
+	            {{ b.person.patronymic }}
+	        </td>
+	        <td>{{ b.date_fact|date:"d.m.Y" }}</td>
+	        <td>{{ b.product.place.area }}</td>
+	        <td>{{ b.product.place.row }}</td>
+	        <td>{{ b.product.place.seat }}</td>
+	        <td>{{ b.product.place.cemetery.name }}</td>
+	        {% if b.customer.person.last_name %}
+		        <td>
+		            {{ b.customer.person.last_name }}
                     {{ b.customer.person.first_name }}
                     {{ b.customer.person.patronymic }}
-                </td>
-                {% else %}
-                <td>
-                    &nbsp;
-                </td>
-                {% endif %}
-                <td>
-                    {{ b.operation.op_type }}
-                </td>
-                <td>
-                    <!--                    {{ b.all_comments }}-->
-                    {% for comment in b.ordercomments_set.all %}
-                        {{ comment.comment }}
-                    {% endfor %}
-                </td>
-{#                <td>#}
-{#                    &nbsp;#}
-{#                </td>#}
+		        </td>
+	        {% else %}
+    	        <td>&nbsp;</td>
+	        {% endif %}
+	        <td>{{ b.operation.op_type }}</td>
+	        <td>
+                {% for comment in b.ordercomments_set.all %}
+                    {{ comment.comment }}
+                {% endfor %}
+	        </td>
             </tr>
             {% endfor %}
         </table>
