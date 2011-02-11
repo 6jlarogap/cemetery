@@ -226,12 +226,19 @@ $(function(){
                     <td width="33%" id="free_form">{{ form.customer_patronymic.errors }}{{ form.customer_patronymic }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" id="free_form">{{ form.customer_phone.label_tag }}</td>
-                    <td width="33%" id="free_form">{{ form.post_index.label_tag }}</td>
+<!--                    
+                <h3>Телефоны заказчика:</h3>
+                <table>
+                    {{ phoneset }}
+                </table>
+                    <td width="33%" id="free_form">Телефоны заказчика</td> 
+-->
+                    <!--                    <td width="33%" id="free_form">{{ form.customer_phone.label_tag }}</td> -->
                     <td width="33%">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td width="33%" id="free_form">{{ form.customer_phone.errors }}{{ form.customer_phone }}</td>
+                    <!--                    <td width="33%" id="free_form">{{ form.customer_phone.errors }}{{ form.customer_phone }}</td>-->
+                    <td width="33%" id="free_form">{{ form.post_index.label_tag }}</td>
                     <td width="33%" id="free_form">{{ form.post_index.errors }}{{ form.post_index }}</td>
                     <td width="33%">&nbsp;</td>
                 </tr>
@@ -305,6 +312,9 @@ $(function(){
 {#                    <td width="33%">&nbsp;</td>#}
 {#                    <td width="33%">&nbsp;</td>#}
 {#                </tr>#}
+                <tr>
+                    <td width="33%" id="free_form">{{ phoneset }}</td>
+                </tr>
                 <tr>
                     <td colspan="3" id="free_form">{{ form.comment.label_tag }}</td>
                 </tr>

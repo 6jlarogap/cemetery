@@ -437,8 +437,8 @@ class JournalForm(forms.Form):
                                           widget=forms.TextInput(attrs={"tabindex": "12"}))
     post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс",
                              widget=forms.TextInput(attrs={"tabindex": "13"}))
-    customer_phone = forms.CharField(required=False, max_length=15, label="Телефон",
-                                     widget=forms.TextInput(attrs={"tabindex": "14"}))
+#    customer_phone = forms.CharField(required=False, max_length=15, label="Телефон",
+#                                     widget=forms.TextInput(attrs={"tabindex": "14"}))
     street = forms.CharField(required=False, max_length=99, label="Улица",
                              widget=forms.TextInput(attrs={"tabindex": "15"}))
     new_street = forms.BooleanField(required=False, label="Новая улица")

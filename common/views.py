@@ -435,9 +435,9 @@ def management_edit_user(request, uuid):
     user = person.userprofile.user
     PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=1)
     if request.method == "POST":
-        formset = PhoneFormSet(request.POST, request.FILES, queryset=Phone.objects.filter(soul=person.soul_ptr))
+        phoneset = PhoneFormSet(request.POST, request.FILES, queryset=Phone.objects.filter(soul=person.soul_ptr))
         form = EditUserForm(request.POST)
-        if formset.is_valid() and form.is_valid():
+        if phoneset.is_valid() and form.is_valid():
             cd = form.cleaned_data
             person.last_name = cd["last_name"].capitalize()
             if cd.get("first_name", ""):
@@ -453,7 +453,7 @@ def management_edit_user(request, uuid):
 #                    phone = Phone(soul=person.soul_ptr)
 #                phone.f_number = cd["phone"]
 #                phone.save()
-            for phone in formset.save(commit=False):
+            for phone in phoneset.save(commit=False):
                 phone.soul = person.soul_ptr
                 phone.save()
             if cd.get("password1", ""):
@@ -502,7 +502,7 @@ def management_edit_user(request, uuid):
             user.save()
             return redirect('/management/user/')
     else:
-        formset = PhoneFormSet(queryset=Phone.objects.filter(soul=person.soul_ptr))
+        phoneset = PhoneFormSet(queryset=Phone.objects.filter(soul=person.soul_ptr))
         initial_data = {"last_name": person.last_name,
                         "username": user.username,
                         "is_staff": user.is_staff,
@@ -521,7 +521,7 @@ def management_edit_user(request, uuid):
         if person.patronymic:
             initial_data["patronymic"] = person.patronymic
         form = EditUserForm(initial=initial_data)
-    return direct_to_template(request, 'management_edit_user.html', {'form': form, 'formset': formset})
+    return direct_to_template(request, 'management_edit_user.html', {'form': form, 'phoneset': phoneset})
 
 
 @login_required
@@ -705,6 +705,9 @@ def journal(request):
     """
     Страница ввода нового захоронения.
     """
+#    if request.method == "POST":
+        
+    PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=4)
     if request.method == "POST":
         form = JournalForm(request.POST, request.FILES)
         if form.is_valid():
@@ -736,12 +739,20 @@ def journal(request):
                 customer.first_name = cd["customer_first_name"].capitalize()
             if cd.get("customer_patronymic", ""):
                 customer.patronymic = cd["patronymic"].capitalize()
-            customer.save()
-            # Create customer's Phone.
-            if cd.get("customer_phone", ""):
-                phone = Phone(soul=customer.soul_ptr)
-                phone.f_number = cd["customer_phone"]
-                phone.save()
+#            customer.save() //rd-- we already have customer.save down after location
+#      # Create customer's Phone.
+#      if cd.get("customer_phone", ""):
+
+            # Customer phone
+            phoneset = PhoneFormSet(request.POST, request.FILES)
+            if phoneset.is_valid():
+                for phone in phoneset.save(commit=False):
+                    phone.soul = customer.soul_ptr
+                    phone.save()
+
+#                phone = Phone(soul=customer.soul_ptr)
+#                phone.f_number = cd["customer_phone"]
+#                phone.save()
             # Create customer's location.
             new_location = Location()
             if cd.get("post_index", ""):
@@ -843,6 +854,7 @@ def journal(request):
 #            new_op.save()
             return redirect("/journal/")
     else:
+        phoneset = PhoneFormSet(queryset=Phone.objects.filter(soul=''))
         if request.user.userprofile.default_cemetery:
             cem = request.user.userprofile.default_cemetery
         else:
@@ -856,8 +868,7 @@ def journal(request):
     burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul,
                             date_of_creation__gte=datetime.datetime(year=today.year,
                             month=today.month, day=today.day)).order_by('-date_of_creation', 'person__last_name')[:50]
-    return direct_to_template(request, 'journal.html', {'form': form, 'burials': burials})
-
+    return direct_to_template(request, 'journal.html', {'form': form, 'burials': burials, 'phoneset': phoneset})
 
 @login_required
 @is_in_group("edit_burial")
@@ -870,13 +881,13 @@ def edit_burial(request, uuid):
         burial = Burial.objects.get(uuid=uuid)
     except ObjectDoesNotExist:
         raise Http404
-    PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=1)
+    PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=2)
     if request.method == "POST":
-        formset = PhoneFormSet(request.POST, request.FILES,
+        phoneset = PhoneFormSet(request.POST, request.FILES,
                                queryset=Phone.objects.filter(soul=burial.customer.person.soul_ptr))
         form = EditOrderForm(request.POST, request.FILES)
-        if formset.is_valid() and form.is_valid():
-            for phone in formset.save(commit=False):
+        if phoneset.is_valid() and form.is_valid():
+            for phone in phoneset.save(commit=False):
                 phone.soul = burial.customer.person.soul_ptr
                 phone.save()
             cd = form.cleaned_data
@@ -950,8 +961,8 @@ def edit_burial(request, uuid):
             return redirect("/burial/%s/" % uuid)
     else:
 #        phones = Phone.objects.filter(soul=burial.customer.person.soul_ptr)
-#        formset = OrderFormSet(ins)
-        formset = PhoneFormSet(queryset=Phone.objects.filter(soul=burial.customer.person.soul_ptr))
+#        phoneset = OrderFormSet(ins)
+        phoneset = PhoneFormSet(queryset=Phone.objects.filter(soul=burial.customer.person.soul_ptr))
         initial_data = {
             "burial_date": datetime.datetime.date(burial.date_fact).strftime("%d.%m.%Y"),
             "cemetery": burial.product.place.cemetery,
@@ -970,7 +981,7 @@ def edit_burial(request, uuid):
         if burial.customer.location.post_index:
             initial_data["post_index"] = burial.customer.location.post_index
         form = EditOrderForm(initial=initial_data)
-    return direct_to_template(request, 'burial.html', {'burial': burial, 'form': form, 'formset': formset})
+    return direct_to_template(request, 'burial.html', {'burial': burial, 'form': form, 'phoneset': phoneset})
 
 
 @login_required
