@@ -1303,7 +1303,9 @@ def import_csv(request):
 #                        try:
 #                            test_date = datetime.datetime.date(bur_date).strftime("%d.%m.%Y")
                         burial.product = place.product_ptr
-                        if u"урна" in comment.lower():
+                        if u"захоронение детское" in comment.lower():
+                            operation = Operation.objects.get(uuid=settings.OPER_6)
+                        elif u"урна" in comment.lower():
                             operation = Operation.objects.get(uuid=settings.OPER_5)
                         elif u"подзахоронение" in comment.lower():
                             operation = Operation.objects.get(uuid=settings.OPER_4)
