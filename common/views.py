@@ -51,7 +51,6 @@ def is_in_group(group_name):
 
 
 @render_to()
-#@paginate(style='digg', per_page=1)
 @paginate(style='digg')
 def main_page(request):
     """
@@ -110,30 +109,6 @@ def main_page(request):
                                            '-product__place1__s9')
             else:
                 burials = burials.order_by(cd["records_order_by"])
-#        if cd.get("last_name", ""):
-#            regex = re.sub(r'\?', r'.', cd["last_name"])
-#            regex = re.sub(r'\*', r'.*', regex)
-#            if not (regex.startswith(".") or regex.startswith(".*")):
-#                regex = u"^%s" % regex
-#            if not (regex.endswith(".") or regex.endswith(".*")):
-#                regex = u"%s$" % regex
-#            burials = burials.filter(person__last_name__iregex=regex)
-#        if cd["first_name"]:
-#            regex = re.sub(r'\?', r'.', cd["first_name"])
-#            regex = re.sub(r'\*', r'.*', regex)
-#            if not (regex.startswith(".") or regex.startswith(".*")):
-#                regex = u"^%s" % regex
-#            if not (regex.endswith(".") or regex.endswith(".*")):
-#                regex = u"%s$" % regex
-#            burials = burials.filter(person__first_name__iregex=regex)
-#        if cd["patronymic"]:
-#            regex = re.sub(r'\?', r'.', cd["patronymic"])
-#            regex = re.sub(r'\*', r'.*', regex)
-#            if not (regex.startswith(".") or regex.startswith(".*")):
-#                regex = u"^%s" % regex
-#            if not (regex.endswith(".") or regex.endswith(".*")):
-#                regex = u"%s$" % regex
-#            burials = burials.filter(person__patronymic__iregex=regex)
         if cd.get("fio", ""):
             text = re.sub(r"\.", " ", cd["fio"])
             parts = text.split()
@@ -204,7 +179,6 @@ def main_page(request):
             burials = burials.filter(product__place__row=cd["row"])
         if cd["seat"]:
             burials = burials.filter(product__place__seat=cd["seat"])
-
         if cd["gps_x"]:
             burials = burials.filter(product__place__gps_x=cd["gps_x"])
         if cd["gps_y"]:
@@ -212,14 +186,6 @@ def main_page(request):
         if cd["gps_z"]:
             burials = burials.filter(product__place__gps_z=cd["gps_z"])
         if cd["comment"]:
-#            burials = burials.filter(all_comments__icontains=cd["comment"])
-            regex = re.sub(r'\?', r'.', cd["comment"])
-            regex = re.sub(r'\*', r'.*', regex)
-            if not regex.startswith("."):
-                regex = u"^%s" % regex
-            if not (regex.endswith(".") or regex.endswith("*")):
-                regex = u"%s$" % regex
-#            burials = burials.filter(ordercomments__comment__iregex=regex)
             burials = burials.filter(ordercomments__comment__icontains=cd["comment"])
     else:
         #if request.user.is_authenticated() and not request.user.is_superuser and not form_data:
