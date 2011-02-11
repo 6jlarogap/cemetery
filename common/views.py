@@ -125,7 +125,7 @@ def main_page(request):
             regex = re.sub(r'\*', r'.*', regex)
             if not regex.startswith("."):
                 regex = u"^%s" % regex
-            if not (regex.endswith(".") or regex.endswith(".*")):
+            if not (regex.endswith(".") or regex.endswith("*")):
                 regex = u"%s$" % regex
             burials = burials.filter(person__last_name__iregex=regex)
             if fname:
@@ -133,7 +133,7 @@ def main_page(request):
                 regex = re.sub(r'\*', r'.*', regex)
                 if not regex.startswith("."):
                     regex = u"^%s" % regex
-#                if not (regex.endswith(".") or regex.endswith(".*")):
+#                if not (regex.endswith(".") or regex.endswith("*")):
 #                    regex = u"%s$" % regex
                 burials = burials.filter(person__first_name__iregex=regex)
             if patr:
@@ -141,7 +141,7 @@ def main_page(request):
                 regex = re.sub(r'\*', r'.*', regex)
                 if not regex.startswith("."):
                     regex = u"^%s" % regex
-#                if not (regex.endswith(".") or regex.endswith(".*")):
+#                if not (regex.endswith(".") or regex.endswith("*")):
 #                    regex = u"%s$" % regex
                 burials = burials.filter(person__patronymic__iregex=regex)
 
@@ -168,7 +168,7 @@ def main_page(request):
             regex = re.sub(r'\*', r'.*', regex)
             if not regex.startswith("."):
                 regex = u"^%s" % regex
-            if not (regex.endswith(".") or regex.endswith(".*")):
+            if not (regex.endswith(".") or regex.endswith("*")):
                 regex = u"%s$" % regex
             burials = burials.filter(customer__person__last_name__iregex=regex)
         if cd["owner"]:
