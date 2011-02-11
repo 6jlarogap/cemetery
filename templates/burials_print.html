@@ -78,6 +78,8 @@
                 {% if b.customer.person.last_name %}
                 <td>
                     {{ b.customer.person.last_name }}
+                    {{ b.customer.person.first_name }}
+                    {{ b.customer.person.patronymic }}
                 </td>
                 {% else %}
                 <td>
