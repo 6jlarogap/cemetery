@@ -22,7 +22,7 @@ class BurialAdmin(admin.ModelAdmin):
             self.exclude = ()
         else:
             self.exclude = ("person", "responsible", "customer",  "doer",  "date_plan", "date_fact", "product",
-                            "operation", "is_trash", "creator", "date_of_creation")
+                            "operation", "is_trash", "creator", "date_of_creation", "last_sync_date")
         return super(BurialAdmin, self).get_form(request, obj=None, **kwargs)
 
 
