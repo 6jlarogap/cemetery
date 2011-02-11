@@ -586,7 +586,6 @@ CREATE TABLE common_order (
     is_trash boolean NOT NULL,
     creator_id character varying(36) NOT NULL,
     date_of_creation timestamp with time zone NOT NULL,
-    all_comments text NOT NULL
 );
 
 
@@ -721,7 +720,6 @@ CREATE TABLE common_product (
     name character varying(50) NOT NULL,
     measure character varying(50) NOT NULL,
     p_type_id character varying(36) NOT NULL,
-    all_comments text NOT NULL
 );
 
 
@@ -13581,7 +13579,7 @@ c9b7a6b5-12a5-4da5-8242-b9e556bcc6e3	Захоронение детское
 -- Data for Name: common_order; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_order (uuid, responsible_id, customer_id, doer_id, date_plan, date_fact, product_id, operation_id, is_trash, creator_id, date_of_creation, all_comments) FROM stdin;
+COPY common_order (uuid, responsible_id, customer_id, doer_id, date_plan, date_fact, product_id, operation_id, is_trash, creator_id, date_of_creation) FROM stdin;
 \.
 
 
@@ -13645,7 +13643,7 @@ COPY common_place (product_ptr_id, cemetery_id, area, "row", seat, gps_x, gps_y,
 -- Data for Name: common_product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_product (uuid, soul_id, name, measure, p_type_id, all_comments) FROM stdin;
+COPY common_product (uuid, soul_id, name, measure, p_type_id) FROM stdin;
 \.
 
 

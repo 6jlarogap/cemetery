@@ -377,7 +377,11 @@ $(function(){
                         <td>&nbsp;</td>
                     {% endif %}
                     <td>{{ burial.operation.op_type|truncatewords:2 }}</td>
-                    <td>{{ burial.all_comments }}</td>
+                    <td>
+                        {% for comment in b.ordercomments_set.all %}
+                            {{ comment.comment }}
+                        {% endfor %}
+                    </td>
                     <td><button title="Редактировать" onclick="top.location.href='/burial/{{ burial.uuid }}/';"><img src="/media/edit.png"></button></td>
                 </tr>
             {% endfor %}

@@ -366,7 +366,7 @@ class Product(models.Model):
     name = models.CharField("Название", max_length=50)  # Название продукта.
     measure = models.CharField("Единицы измерения", max_length=50, blank=True)  # Размерность.
     p_type = models.ForeignKey(ProductType, verbose_name="Тип продукта")
-    all_comments = models.TextField("Все комментарии", blank=True)  # Все комментарии, собранные в одно поле.
+#    all_comments = models.TextField("Все комментарии", blank=True)  # Все комментарии, собранные в одно поле.
     def add_comment(self, txt, creator):
         comment = ProductComments(product=self, comment=txt,
                                   creator=creator)
@@ -489,7 +489,7 @@ class Order(models.Model):
     is_trash = models.BooleanField(default=False)  # Удален.
     creator = models.ForeignKey(Soul, related_name="order")  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
-    all_comments = models.TextField(blank=True)  # Все комментарии, собранные в одно поле.
+#    all_comments = models.TextField(blank=True)  # Все комментарии, собранные в одно поле.
     def add_comment(self, txt, creator):
         comment = OrderComments(order=self, comment=txt,
                                   creator=creator)
