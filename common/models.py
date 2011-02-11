@@ -371,11 +371,11 @@ class Product(models.Model):
         comment = ProductComments(product=self, comment=txt,
                                   creator=creator)
         comment.save()
-        if self.all_comments:
-            self.all_comments = "%s\n%s" % (self.all_comments, txt)
-        else:
-            self.all_comments = txt
-        self.save()
+#        if self.all_comments:
+#            self.all_comments = "%s\n%s" % (self.all_comments, txt)
+#        else:
+#            self.all_comments = txt
+#        self.save()
     def __unicode__(self):
 #        if hasattr(self, "place"):
 #            return u"уч%sряд%sместо%s" % (self.place.area, self.place.row, self.place.seat)
