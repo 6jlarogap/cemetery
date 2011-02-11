@@ -674,7 +674,7 @@ ALTER TABLE public.common_personrole OWNER TO postgres;
 CREATE TABLE common_phone (
     uuid character varying(36) NOT NULL,
     soul_id character varying(36) NOT NULL,
-    f_number character varying(15) NOT NULL
+    f_number character varying(20) NOT NULL
 );
 
 

@@ -117,7 +117,7 @@ class EditUserForm(forms.Form):
     role = forms.ModelMultipleChoiceField(queryset=Role.objects.all(), label="Роль")
 #    is_staff = forms.BooleanField(required=False, label="Доступ в админку")
     default_rights = forms.BooleanField(required=False, label="Поставить права по умолчанию")
-#    phone = forms.CharField(max_length=15, label="Телефон", required=False)
+#    phone = forms.CharField(max_length=20, label="Телефон", required=False)
     password1 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
                                 label="Пароль")
     password2 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
@@ -234,7 +234,7 @@ class NewUserForm(forms.Form):
     patronymic = forms.CharField(max_length=30, label="Отчество", required=False)
     role = forms.ModelChoiceField(queryset=Role.objects.all(), label="Роль")
     is_staff = forms.BooleanField(required=False, label="Доступ в админку")
-    phone = forms.CharField(max_length=15, label="Телефон", required=False)
+    phone = forms.CharField(max_length=20, label="Телефон", required=False)
     password1 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль")
     password2 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль (еще раз)")
     def clean(self):
@@ -437,7 +437,7 @@ class JournalForm(forms.Form):
                                           widget=forms.TextInput(attrs={"tabindex": "12"}))
     post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс",
                              widget=forms.TextInput(attrs={"tabindex": "13"}))
-#    customer_phone = forms.CharField(required=False, max_length=15, label="Телефон",
+#    customer_phone = forms.CharField(required=False, max_length=20, label="Телефон",
 #                                     widget=forms.TextInput(attrs={"tabindex": "14"}))
     street = forms.CharField(required=False, max_length=99, label="Улица",
                              widget=forms.TextInput(attrs={"tabindex": "15"}))
@@ -573,7 +573,7 @@ class InitalForm(forms.Form):
     Форма ввода данных для инициализации системы.
     """
     org_name = forms.CharField(label="*Название организации", max_length=99)
-    org_phone = forms.CharField(required=False, max_length=15, label="Телефон организации",
+    org_phone = forms.CharField(required=False, max_length=20, label="Телефон организации",
                                 widget=forms.TextInput())
     post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс")
     street = forms.CharField(required=False, max_length=99, label="Улица",
@@ -625,7 +625,7 @@ class InitalForm(forms.Form):
                                  widget=forms.TextInput())
     password1 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="*Пароль")
     password2 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="*Пароль(еще раз)")
-    phone = forms.CharField(required=False, max_length=15, label="Телефон директора",
+    phone = forms.CharField(required=False, max_length=20, label="Телефон директора",
                                      widget=forms.TextInput())
     def clean_username(self):
         """

@@ -191,7 +191,7 @@ class Phone(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     soul = models.ForeignKey(Soul)
-    f_number = models.CharField("Номер телефона", max_length=15)  # Телефон.
+    f_number = models.CharField("Номер телефона", max_length=20)  # Телефон.
     class Meta:
         unique_together = (("soul", "f_number"),)
     def __unicode__(self):

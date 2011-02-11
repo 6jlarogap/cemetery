@@ -433,7 +433,7 @@ def management_edit_user(request, uuid):
     except ObjectDoesNotExist:
         raise Http404
     user = person.userprofile.user
-    PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=1)
+    PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=3)
     if request.method == "POST":
         phoneset = PhoneFormSet(request.POST, request.FILES, queryset=Phone.objects.filter(soul=person.soul_ptr))
         form = EditUserForm(request.POST)
