@@ -45,6 +45,13 @@ class OCAdmin(admin.ModelAdmin):
             self.exclude = ("order", "creator")
         return super(OCAdmin, self).get_form(request, obj=None, **kwargs)
 
+#class RoleAdmin(admin.ModelAdmin):
+#    def get_form(self, request, obj=None, **kwargs):
+#        if request.user.is_superuser:
+#            self.exclude = ()
+#        else:
+#            self.exclude = ("creator")
+#        return super(RoleAdmin, self).get_form(request, obj=None, **kwargs)
 
 admin.site.register(Organization)
 admin.site.register(Role)
@@ -73,4 +80,5 @@ admin.site.register(Person, PersonAdmin)
 admin.site.register(Burial, BurialAdmin)
 admin.site.register(OrderFiles, OFAdmin)
 admin.site.register(OrderComments, OCAdmin)
+#admin.site.register(Role, RoleAdmin)
 
