@@ -211,7 +211,10 @@
 	            {{ b.operation.op_type }}
 	        </td>
 	        <td>
-	            {{ b.all_comments }}
+{#	            {{ b.all_comments }}#}
+                {% for comment in b.ordercomments_set.all %}
+                    {{ comment.comment }}
+                {% endfor %}
 	        </td>
 	        <td>
                 {% if user|in_group:"edit_burial" %}
