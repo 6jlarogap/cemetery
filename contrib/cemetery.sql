@@ -585,7 +585,7 @@ CREATE TABLE common_order (
     operation_id character varying(36) NOT NULL,
     is_trash boolean NOT NULL,
     creator_id character varying(36) NOT NULL,
-    date_of_creation timestamp with time zone NOT NULL,
+    date_of_creation timestamp with time zone NOT NULL
 );
 
 
@@ -719,7 +719,7 @@ CREATE TABLE common_product (
     soul_id character varying(36) NOT NULL,
     name character varying(50) NOT NULL,
     measure character varying(50) NOT NULL,
-    p_type_id character varying(36) NOT NULL,
+    p_type_id character varying(36) NOT NULL
 );
 
 
