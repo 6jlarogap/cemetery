@@ -340,48 +340,64 @@ $(function(){
             </table>
         </form>
 
-    {% if burials %}
-        <table width="100%">
+    {% if object_list %}
+        <table width="100%" border=1>
             <caption style="background:#2D992D">История ввода</caption>
             <thead>
-                <td>Фамилия</td>
-                <td>Имя</td>
-                <td>Отчество</td>
-                <td>Дата захоронения</td>
-                <td>N в книге учета</td>
-                <td>Участок</td>
+                <td>№ в кн</td>
+                <td>ФИО</td>
+                <td>Дата захор</td>
+                <td>Уч</td>
                 <td>Ряд</td>
-                <td>Место</td>
-                <td>Кладбище</td>
-                <td>Заказчик</td>
+                <td>Мог</td>
+                <td>Кладб</td>
                 <td>Услуга</td>
+                <td>Заказчик</td>
+                <td>Телефон</td>
                 <td>Комментарий</td>
                 <td>Опции</td>
             </thead>
-            {% for burial in burials %}
-                <tr>
-                    <td>{{ burial.person.last_name }}</td>
-                    <td>{{ burial.person.first_name }}</td>
-                    <td>{{ burial.person.patronymic }}</td>
-                    <td>{{ burial.date_fact|date:"d.m.Y" }}</td>
-                    <td>{{ burial.account_book_n }}</td>
-                    <td>{{ burial.product.place.area }}</td>
-                    <td>{{ burial.product.place.row }}</td>
-                    <td>{{ burial.product.place.seat }}</td>
-                    <td>{{ burial.product.place.cemetery.name }}</td>
-                    {% if burial.customer.person.last_name %}
-                        <td>{{ burial.customer.person.last_name }} {{ burial.customer.person.first_name|first|add:"." }} {{ burial.customer.person.patronymic|first|add:"." }}</td>
-                    {% else %}
-                        <td>&nbsp;</td>
-                    {% endif %}
-                    <td>{{ burial.operation.op_type|truncatewords:2 }}</td>
+                    {% for b in object_list %}
+            <tr>
+                <td>{{ b.account_book_n }}</td>
+                <td>
+                    <h1> {{ b.person.last_name }}</h1>
+                    {{ b.person.first_name }}
+                    {{ b.person.patronymic }}
+                </td>
+                <td>{{ b.date_fact|date:"d.m.Y" }}</td>
+                <td>{{ b.product.place.area }}</td>
+                <td>{{ b.product.place.row }}</td>
+                <td>{{ b.product.place.seat }}</td>
+                <td>{{ b.product.place.cemetery.name }}</td>
+                <td>{{ b.operation.op_type }}</td>
+                {% if b.customer.person.last_name %}
                     <td>
-                        {% for comment in b.ordercomments_set.all %}
-                            {{ comment.comment }}
-                        {% endfor %}
+                        {{ b.customer.person.last_name }}
+                        {{ b.customer.person.first_name }}
+                        {{ b.customer.person.patronymic }}
                     </td>
-                    <td><button title="Редактировать" onclick="top.location.href='/burial/{{ burial.uuid }}/';"><img src="/media/edit.png"></button></td>
-                </tr>
+                {% else %}
+                    <td>&nbsp;</td>
+                {% endif %}
+                <td>
+                    {% for phone in b.customer.phone_set.all  %}
+                    {{ phone.f_number }}
+                    <br>
+                    {%endfor%}
+                </td>
+                <td>
+                    {% for comment in b.ordercomments_set.all %}
+                    {{ comment.comment }}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if user|in_group:"edit_burial" %}
+                        <a title="редактировать" href='/burial/{{ b.uuid }}/'><img src="/media/edit.png"></a>
+                    {% endif %}
+                    <a title="к могиле" href='/?cemetery={{ b.product.place.cemetery.uuid }}&area={{ b.product.place.area }}&row={{ b.product.place.row }}&seat={{ b.product.place.seat }}'><img width="16" src="/media/tree.png"></a>
+                </td>
+            </tr>
             {% endfor %}
         </table>
         <br>

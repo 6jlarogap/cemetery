@@ -155,17 +155,14 @@
     <thead>
         <td>№ в кн</td>
         <td>ФИО</td>
-<!--                        
-        <td>Имя</td>
-        <td>Отч</td>
--->
         <td>Дата захор</td>
         <td>Уч</td>
         <td>Ряд</td>
         <td>Мог</td>
         <td>Кладб</td>
-        <td>Заказчик</td>
         <td>Услуга</td>
+        <td>Заказчик</td>
+        <td>Телефон</td>
         <td>Комментарий</td>
         <td>Опции</td>
     </thead>
@@ -182,6 +179,7 @@
         <td>{{ b.product.place.row }}</td>
         <td>{{ b.product.place.seat }}</td>
         <td>{{ b.product.place.cemetery.name }}</td>
+        <td>{{ b.operation.op_type }}</td>
         {% if b.customer.person.last_name %}
             <td>
                 {{ b.customer.person.last_name }}
@@ -191,10 +189,15 @@
         {% else %}
             <td>&nbsp;</td>
         {% endif %}
-        <td>{{ b.operation.op_type }}</td>
+        <td>
+            {% for phone in b.customer.phone_set.all  %}
+            {{ phone.f_number }}
+            <br>
+            {%endfor%}
+        </td>
         <td>
             {% for comment in b.ordercomments_set.all %}
-                {{ comment.comment }}
+            {{ comment.comment }}
             {% endfor %}
         </td>
         <td>

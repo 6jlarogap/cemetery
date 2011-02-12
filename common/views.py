@@ -849,8 +849,8 @@ def journal(request):
     today = datetime.date.today()
     burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul,
                             date_of_creation__gte=datetime.datetime(year=today.year,
-                            month=today.month, day=today.day)).order_by('-date_of_creation', 'person__last_name')[:50]
-    return direct_to_template(request, 'journal.html', {'form': form, 'burials': burials, 'phoneset': phoneset})
+                            month=today.month, day=today.day)).order_by('-date_of_creation')[:220]
+    return direct_to_template(request, 'journal.html', {'form': form, 'object_list': burials, 'phoneset': phoneset})
 
 @login_required
 @is_in_group("edit_burial")
