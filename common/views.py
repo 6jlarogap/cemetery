@@ -692,6 +692,7 @@ def journal(request):
     PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=4)
     if request.method == "POST":
         form = JournalForm(request.POST, request.FILES)
+        phoneset = PhoneFormSet(request.POST, request.FILES)
         if form.is_valid():
             cd = form.cleaned_data
             # Try to get Place.
@@ -726,7 +727,6 @@ def journal(request):
 #      if cd.get("customer_phone", ""):
 
             # Customer phone
-            phoneset = PhoneFormSet(request.POST, request.FILES)
             if phoneset.is_valid():
                 for phone in phoneset.save(commit=False):
                     phone.soul = customer.soul_ptr
@@ -836,7 +836,7 @@ def journal(request):
 #            new_op.save()
             return redirect("/journal/")
     else:
-        phoneset = PhoneFormSet(queryset=Phone.objects.filter(soul=''))
+        phoneset = PhoneFormSet(queryset=Phone.objects.none())
         if request.user.userprofile.default_cemetery:
             cem = request.user.userprofile.default_cemetery
         else:
