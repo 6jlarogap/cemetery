@@ -102,7 +102,7 @@ class SearchForm(forms.Form):
                                                                                   attrs={'onChange': 'submit_form();'}),
                                        label="Сортировка по")
     page = forms.IntegerField(required=False, widget=forms.HiddenInput, label="Страница")
-
+    operation = forms.ModelChoiceField(required=False, queryset=Operation.objects.all(), label="Услуга")
 
 @autostrip
 class EditUserForm(forms.Form):
