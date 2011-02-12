@@ -103,6 +103,7 @@ class SearchForm(forms.Form):
                                        label="Сортировка по")
     page = forms.IntegerField(required=False, widget=forms.HiddenInput, label="Страница")
 
+    operations = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=Operation.objects.all(), label="Услуги")
 
 @autostrip
 class EditUserForm(forms.Form):
