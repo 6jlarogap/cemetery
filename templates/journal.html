@@ -36,6 +36,16 @@ $(function(){
      if ($(this).val()=="")
      {$(this).val("НЕИЗВЕСТЕН");}
      });
+
+ $("#id_street").focus(function(){
+     if ($(this).val()=="НЕИЗВЕСТЕН")
+     {$(this).val("");}
+     });
+
+ $("#id_street").focusout(function(){
+     if ($(this).val()=="")
+     {$(this).val("НЕИЗВЕСТЕН");}
+     });
 });
 
 //Первоначальное заполнение списка услуг.
