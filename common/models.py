@@ -170,6 +170,8 @@ class Soul(models.Model):
     location = models.ForeignKey(Location, blank=True, null=True)  # Адрес орг-ии или человека (Person).
     creator = models.ForeignKey("Soul", blank=True, null=True)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
+    #death_certificate = models.CharField("Свидетельство о смерти",
+                                         #max_length=30, blank=True)  # Номер свидетельства о смерти.
     def __unicode__(self):
         if hasattr(self, "person"):
             return u"Физ. лицо: %s" % self.person
@@ -219,8 +221,6 @@ class Person(Soul):
     last_name = models.CharField("Фамилия", max_length=128)  # Фамилия.
     first_name = models.CharField("Имя", max_length=30, blank=True)  # Имя.
     patronymic = models.CharField("Отчество", max_length=30, blank=True)  # Отчество.
-    #death_certificate = models.CharField("Свидетельство о смерти",
-                                         #max_length=30, blank=True)  # Номер свидетельства о смерти.
     roles = models.ManyToManyField("Role", through="PersonRole", verbose_name="Роли")
     def __unicode__(self):
         if self.last_name:

@@ -123,9 +123,25 @@ def main_page(request):
                 patr = parts[2].strip(",")
             regex = re.sub(r'\?', r'.', lname)
             regex = re.sub(r'\*', r'.*', regex)
-            if not regex.startswith("."):
+
+#            if not regex.startswith("."):
+#                regex = u"^%s" % regex
+#            if regex.endswith(".") and not regex.endswith("*"):
+#                regex = u"%s$" % regex
+
+# //rd-- fio search field regex rules            
+# ".етер"   # ^
+# "етер"    # ^
+# "етер.*"  # ^
+# ".етер.*" # ^
+# "етер."   # ^$
+# ".*етер"  # $
+# ".*етер." # $
+            if not regex.startswith(".*"):
                 regex = u"^%s" % regex
-            if not (regex.endswith(".") or regex.endswith("*")):
+                if regex.endswith("."):
+                    regex = u"%s$" % regex
+            else:
                 regex = u"%s$" % regex
             burials = burials.filter(person__last_name__iregex=regex)
             if fname:
