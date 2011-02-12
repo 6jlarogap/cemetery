@@ -15,30 +15,28 @@
 $(function(){
   $("#id_burial_date").focus(function(){
      this.select();
- }
-
-         );
-
-
+     });
+  
  $("#id_last_name").focus(function(){
      if ($(this).val()=="НЕИЗВЕСТЕН")
-     {
-         $(this).val("");
-     }
- }
+     {$(this).val("");}
+     });
 
-         );
  $("#id_last_name").focusout(function(){
      if ($(this).val()=="")
-     {
-         $(this).val("НЕИЗВЕСТЕН");
-     }
- }
+     { $(this).val("НЕИЗВЕСТЕН");}
+     });
 
-         );
-}
-);
+ $("#id_customer_last_name").focus(function(){
+     if ($(this).val()=="НЕИЗВЕСТЕН")
+     {$(this).val("");}
+     });
 
+ $("#id_customer_last_name").focusout(function(){
+     if ($(this).val()=="")
+     {$(this).val("НЕИЗВЕСТЕН");}
+     });
+});
 
 //Первоначальное заполнение списка услуг.
 $(function(){

@@ -726,12 +726,6 @@ def journal(request):
 #      # Create customer's Phone.
 #      if cd.get("customer_phone", ""):
 
-            # Customer phone
-            if phoneset.is_valid():
-                for phone in phoneset.save(commit=False):
-                    phone.soul = customer.soul_ptr
-                    phone.save()
-
 #                phone = Phone(soul=customer.soul_ptr)
 #                phone.f_number = cd["customer_phone"]
 #                phone.save()
@@ -793,6 +787,12 @@ def journal(request):
             new_location.save()
             customer.location = new_location
             customer.save()
+
+            # Customer phone
+            if phoneset.is_valid():
+                for phone in phoneset.save(commit=False):
+                    phone.soul = customer.soul_ptr
+                    phone.save()
 
             # Create new Burial.
             new_burial = Burial(creator=request.user.userprofile.soul)
