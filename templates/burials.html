@@ -139,6 +139,7 @@
         <td width="16%" id="free_form">{{ form.seat.label_tag }}</td>
         <td width="16%">{{ form.seat.errors }}{{ form.seat }}</td>
     </tr>
+    <!--
     <tr>
         <td width="16%" id="free_form">{{ form.gps_x.label_tag }}</td>
         <td width="16%">{{ form.gps_x.errors }}{{ form.gps_x }}</td>
@@ -147,6 +148,7 @@
         <td width="16%" id="free_form">{{ form.gps_z.label_tag }}</td>
         <td width="16%">{{ form.gps_z.errors }}{{ form.gps_z }}</td>
     </tr>
+    -->
 </table>
 <input type="submit" value="Искать" />&nbsp;&nbsp;<input type="button" value="Сброс" onClick="parent.location='/'" />
 <table width="100%" border="1">
@@ -172,7 +174,7 @@
     <tr>
         <td>{{ b.account_book_n }}</td>
         <td>
-            <h1> {{ b.person.last_name }}</h1>
+            <b> {{ b.person.last_name }}</b>
             {{ b.person.first_name }}
             {{ b.person.patronymic }}
         </td>
