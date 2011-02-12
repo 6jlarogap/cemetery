@@ -171,6 +171,8 @@ def main_page(request):
 #            burials = burials.filter(person__birth_date__gte=cd["death_date_from"])
 #        if cd["death_date_to"]:
 #            burials = burials.filter(person__birth_date__lte=cd["death_date_to"])
+        if cd["operation"]:
+            burials = burials.filter(operation=cd["operation"])
         if cd["burial_date_from"]:
             burials = burials.filter(date_fact__gte=cd["burial_date_from"])
         if cd["burial_date_to"]:

@@ -15,22 +15,15 @@
 $(function(){
     $("#id_burial_date").focus(function(){
      this.select();
- }
-
-         );
-
+     });
 
     $.getJSON("/getoper/",{id: $("#id_cemetery").val(), ajax: 'true'}, function(j){
       var options = '';
       for (var i = 0; i < j.length; i++) {
         if (j[i].optionValue == $("#id_hoperation").val())
-        {
-            options += '<option selected value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
-        }
+        { options += '<option selected value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>'; }
         else
-        {
-            options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
-        }
+        { options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>'; }
       }
       $("#id_operation").html(options);
     });
