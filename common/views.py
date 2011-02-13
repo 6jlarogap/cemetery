@@ -26,6 +26,7 @@ from annoying.decorators import render_to
 
 import re
 import datetime
+import time
 import csv
 from common.forms import UserProfileForm
 from cStringIO import StringIO
@@ -947,7 +948,9 @@ def edit_burial(request, uuid):
 #        phones = Phone.objects.filter(soul=burial.customer.person.soul_ptr)
 #        phoneset = OrderFormSet(ins)
         phoneset = PhoneFormSet(queryset=Phone.objects.filter(soul=burial.customer.person.soul_ptr))
+#        time.accept2dyear=0
         initial_data = {
+#            "burial_date": time.strftime("%d.%m.%Y", datetime.datetime.date(burial.date_fact).isoformat()),
             "burial_date": datetime.datetime.date(burial.date_fact).strftime("%d.%m.%Y"),
             "cemetery": burial.product.place.cemetery,
             "area": burial.product.place.area,

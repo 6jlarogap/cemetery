@@ -562,7 +562,8 @@ class JournalForm(forms.Form):
                 if not house:
                     raise forms.ValidationError("Не указан дом.")
         else:
-            if country or region or city or street:  # Есть, но не все.
+#            if country or region or city or street:  # Есть, но не все.
+            if country or region or city:  # Есть, но не все.
                 raise forms.ValidationError("Не все поля адреса заполнены.")
             if house or block or building or flat:
                 raise forms.ValidationError("Не выбрана улица.")
