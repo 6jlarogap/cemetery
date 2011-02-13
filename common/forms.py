@@ -107,7 +107,7 @@ class SearchForm(forms.Form):
 @autostrip
 class EditUserForm(forms.Form):
     """
-    Форма создания нового пользователя системы.
+    Форма редактирования пользователя системы.
     """
     username = forms.CharField(label="Имя пользователя", max_length=30,
                                help_text="Допускаются только латинские буквы, цифры и знаки @ . + - _")

@@ -30,6 +30,7 @@ import time
 import csv
 from common.forms import UserProfileForm
 from cStringIO import StringIO
+#from django.utils import datetime_safe
 
 
 csv.register_dialect("4mysqlout", escapechar="\\", quoting=csv.QUOTE_NONE)
@@ -948,10 +949,13 @@ def edit_burial(request, uuid):
 #        phones = Phone.objects.filter(soul=burial.customer.person.soul_ptr)
 #        phoneset = OrderFormSet(ins)
         phoneset = PhoneFormSet(queryset=Phone.objects.filter(soul=burial.customer.person.soul_ptr))
-#        time.accept2dyear=0
+#        b_date = datetime_safe.date(burial.date_fact)
+        b_date = datetime.datetime.date(burial.date_fact)
         initial_data = {
-#            "burial_date": time.strftime("%d.%m.%Y", datetime.datetime.date(burial.date_fact).isoformat()),
-            "burial_date": datetime.datetime.date(burial.date_fact).strftime("%d.%m.%Y"),
+            "burial_date": "%02d.%02d.%02d" %(b_date.day, b_date.month, b_date.year), 
+#            "burial_date": b_date.strftime("%d.%m.%Y"),
+#            "burial_date": datetime.datetime_safe.date(burial.date_fact).strftime("%d.%m.%Y"),
+#            "burial_date": datetime.datetime.date(burial.date_fact).strftime("%d.%m.%Y"),
             "cemetery": burial.product.place.cemetery,
             "area": burial.product.place.area,
             "row": burial.product.place.row,
@@ -1292,14 +1296,16 @@ def import_csv(request):
                         burial.product = place.product_ptr
                         if u"захоронение детское" in comment.lower():
                             operation = Operation.objects.get(uuid=settings.OPER_6)
-                        elif u"урна" in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_5)
-                        elif u"подзахоронение" in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_4)
                         elif u"захоронение в существ" in comment.lower():
                             operation = Operation.objects.get(uuid=settings.OPER_3)
                         elif u"почетное захоронение" in comment.lower():
                             operation = Operation.objects.get(uuid=settings.OPER_2)
+                        elif u"захоронение" in comment.lower():
+                            operation = Operation.objects.get(uuid=settings.OPER_1)
+                        elif u"подзахоронение" in comment.lower():
+                            operation = Operation.objects.get(uuid=settings.OPER_4)
+                        elif u"урна" in comment.lower():
+                            operation = Operation.objects.get(uuid=settings.OPER_5)
                         else:
                             operation = Operation.objects.get(uuid=settings.OPER_1)
                         burial.operation = operation
