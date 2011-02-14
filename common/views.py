@@ -13,9 +13,9 @@ from django.conf import settings
 #from django.utils import simplejson
 from django.utils.simplejson.encoder import JSONEncoder
 from forms import SearchForm, NewUserForm, EditUserForm, ImportForm
-from forms import CemeteryForm, JournalForm, EditOrderForm, InitalForm
+from forms import CemeteryForm, JournalForm, EditOrderForm, InitalForm, OrderCommentForm
 from django.forms.models import modelformset_factory
-from models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization
+from models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization, OrderComments
 from models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation
 from models import OrderFiles, Phone, Place, ProductType, SoulProducttypeOperation, Role
 from models import Env
@@ -50,6 +50,34 @@ def is_in_group(group_name):
                 return f(request, *args, **kwargs)
         return _check_group
     return _dec
+
+def ulogin(request):
+    """
+    Страница логина.
+    """
+    if request.user.is_authenticated():
+        return redirect('/logout/')
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            login(request, form.get_user())
+            next_url = request.GET.get("next", "/")
+            return redirect(next_url)
+    else:
+        form = AuthenticationForm()
+        request.session.set_test_cookie()
+    return direct_to_template(request, 'login.html', {'form':
+                                                      form})
+
+
+@login_required
+def ulogout(request):
+    """
+    Выход пользователя из системы.
+    """
+    logout(request)
+    next_url = request.GET.get("next", "/")
+    return redirect(next_url)
 
 
 @render_to()
@@ -315,34 +343,6 @@ def profile(request):
             form = UserProfileForm()
     return direct_to_template(request, 'profile2.html', {"form": form})
 
-
-def ulogin(request):
-    """
-    Страница логина.
-    """
-    if request.user.is_authenticated():
-        return redirect('/logout/')
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            login(request, form.get_user())
-            next_url = request.GET.get("next", "/")
-            return redirect(next_url)
-    else:
-        form = AuthenticationForm()
-        request.session.set_test_cookie()
-    return direct_to_template(request, 'login.html', {'form':
-                                                      form})
-
-
-@login_required
-def ulogout(request):
-    """
-    Выход пользователя из системы.
-    """
-    logout(request)
-    next_url = request.GET.get("next", "/")
-    return redirect(next_url)
 
 
 @login_required
@@ -686,8 +686,6 @@ def journal(request):
     """
     Страница ввода нового захоронения.
     """
-#    if request.method == "POST":
-        
     PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=4)
     if request.method == "POST":
         form = JournalForm(request.POST, request.FILES)
@@ -721,13 +719,6 @@ def journal(request):
                 customer.first_name = cd["customer_first_name"].capitalize()
             if cd.get("customer_patronymic", ""):
                 customer.patronymic = cd["patronymic"].capitalize()
-#            customer.save() //rd-- we already have customer.save down after location
-#      # Create customer's Phone.
-#      if cd.get("customer_phone", ""):
-
-#                phone = Phone(soul=customer.soul_ptr)
-#                phone.f_number = cd["customer_phone"]
-#                phone.save()
             # Create customer's location.
             new_location = Location()
             if cd.get("post_index", ""):
@@ -970,118 +961,193 @@ def edit_burial(request, uuid):
     return direct_to_template(request, 'burial.html', {'burial': burial, 'form': form, 'phoneset': phoneset})
 
 
+
 @login_required
-@is_in_group("delete_orderfile")
-def delete_orderfile(request, ouuid, fuuid):
+@transaction.commit_on_success
+def init(request):
     """
-    Удаление картинки ордера.
+    Страница ввода инициализационных данных.
     """
-    try:
-        f = OrderFiles.objects.get(order__uuid=ouuid, uuid=fuuid)
-    except ObjectDoesNotExist:
-        raise Http404
-    f.delete()
-    return redirect("/burial/%s/" % ouuid)
+    user = request.user
+    if not user.is_superuser:
+        return HttpResponseForbidden("Forbidden")
+    if request.method == "POST":
+        form = InitalForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            # Создаем уникальный uuid сервера.
+            env = Env()
+            env.save()
+            # Создаем организацию.
+            organization = Organization(creator=request.user.userprofile.soul, name=cd["org_name"])
+            organization.save()
+            # Создаем объект Phone для организации.
+            org_phone = cd.get("org_phone", "")
+            if org_phone:
+                org_phone_obj = Phone(soul=organization.soul_ptr, f_number=org_phone)
+                org_phone_obj.save()
+            # Создаем объекты SoulProducttypeOperation.
+            operations = Operation.objects.all()
+            p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
+            for op in operations:
+                spo = SoulProducttypeOperation()
+                spo.soul = organization.soul_ptr
+                spo.p_type = p_type
+                spo.operation = op
+                spo.save()
+            # Создаем Location для организации.
+            org_location = Location()
+            org_location_country = cd.get("country", "")
+            org_location_region = cd.get("region", "")
+            org_location_city = cd.get("city", "")
+            org_location_street = cd.get("street", "")
+            org_location_house = cd.get("house", "")
+            org_location_block = cd.get("block", "")
+            org_location_building = cd.get("building", "")
+            org_location_flat = cd.get("flat", "")
+            org_location_post_index = cd.get("post_index", "")
+            if org_location_country and org_location_region and org_location_city and org_location_street:
+                # Есть все для создания непустого Location.
+                # Страна.
+                try:
+                    country = GeoCountry.objects.get(name__iexact=org_location_country)
+                except ObjectDoesNotExist:
+                    country = GeoCountry(name=org_location_country.capitalize())
+                    country.save()
+                # Регион.
+                try:
+                    region = GeoRegion.objects.get(name__iexact=org_location_region,
+                                                   country=country)
+                except ObjectDoesNotExist:
+                    region = GeoRegion(name=org_location_region.capitalize(), country=country)
+                    region.save()
+                # Нас. пункт.
+                try:
+                    city = GeoCity.objects.get(name__iexact=org_location_city, region=region)
+                except ObjectDoesNotExist:
+                    city = GeoCity(name=org_location_city.capitalize(), country=country,
+                                   region=region)
+                    city.save()
+                # Улица.
+                try:
+                    street = Street.objects.get(name__iexact=org_location_street, city=city)
+                except ObjectDoesNotExist:
+                    street = Street(name=org_location_street.capitalize(), city=city)
+                    street.save()
+                # Продолжаем с Location.
+                org_location.street = street
+                if org_location_house:
+                    org_location.house = org_location_house
+                    if org_location_block:
+                        org_location.block = org_location_block
+                    if org_location_building:
+                        org_location.building = org_location_building
+                    if org_location_flat:
+                        org_location.flat = org_location_flat
+            if org_location_post_index:
+                org_location.post_index = org_location_post_index
+            org_location.save()
+            organization.location = org_location
+            organization.save()
 
+            # Кладбище.
+            cemetery = Cemetery(creator=request.user.userprofile.soul, organization=organization, name=cd["cemetery"])
+            # Создаем Location для организации.
+            cem_location = Location()
+            cem_location_country = cd.get("cem_country", "")
+            cem_location_region = cd.get("cem_region", "")
+            cem_location_city = cd.get("cem_city", "")
+            cem_location_street = cd.get("cem_street", "")
+            cem_location_house = cd.get("cem_house", "")
+            cem_location_block = cd.get("cem_block", "")
+            cem_location_building = cd.get("cem_building", "")
+            cem_location_post_index = cd.get("cem_post_index", "")
+            if cem_location_country and cem_location_region and cem_location_city and cem_location_street:
+                # Есть все для создания непустого Location.
+                # Страна.
+                try:
+                    country = GeoCountry.objects.get(name__iexact=cem_location_country)
+                except ObjectDoesNotExist:
+                    country = GeoCountry(name=cem_location_country.capitalize())
+                    country.save()
+                # Регион.
+                try:
+                    region = GeoRegion.objects.get(name__iexact=cem_location_region,
+                                                   country=country)
+                except ObjectDoesNotExist:
+                    region = GeoRegion(name=cem_location_region.capitalize(), country=country)
+                    region.save()
+                # Нас. пункт.
+                try:
+                    city = GeoCity.objects.get(name__iexact=cem_location_city, region=region)
+                except ObjectDoesNotExist:
+                    city = GeoCity(name=cem_location_city.capitalize(), country=country,
+                                   region=region)
+                    city.save()
+                # Улица.
+                try:
+                    street = Street.objects.get(name__iexact=cem_location_street, city=city)
+                except ObjectDoesNotExist:
+                    street = Street(name=cem_location_street.capitalize(), city=city)
+                    street.save()
+                # Продолжаем с Location.
+                cem_location.street = street
+                if cem_location_house:
+                    cem_location.house = cem_location_house
+                    if cem_location_block:
+                        cem_location.block = cem_location_block
+                    if cem_location_building:
+                        cem_location.building = cem_location_building
+            if cem_location_post_index:
+                cem_location.post_index = cem_location_post_index
+            cem_location.save()
+            cemetery.location = cem_location
+            cemetery.save()
+            
+            # Директор.
+            # Создаем объект Person.
+            person = Person(creator=request.user.userprofile.soul, last_name=cd["last_name"].capitalize())
+            first_name = cd.get("first_name", "")
+            patronymic = cd.get("patronymic", "")
+            phone = cd.get("phone", "")
+            if first_name:
+                person.first_name = first_name.capitalize()
+                if patronymic:
+                    person.patronymic = patronymic.capitalize()
+            person.save()
+            # Создаем объект Phone.
+            if phone:
+                dir_phone = Phone(soul=person.soul_ptr, f_number=phone)
+                dir_phone.save()
+            # Роль директора
+            role = Role(creator=request.user.userprofile.soul, name="Директор", organization=organization)
+            role.save()
+            person_role = PersonRole(person=person, role=role, creator=request.user.userprofile.soul)
+            person_role.save()
+#            # Роль работника
+#            role = Role(creator=request.user.userprofile.soul, name="Работник", organization=organization)
+#            role.save()
+#            person_role = PersonRole(person=person, role=role, creator=request.user.userprofile.soul)
+#            person_role.save()
+            # Системный пользователь django.
+            user = User.objects.create_user(username=cd["username"], email="", password=cd["password1"])
+            user.is_staff = True
+            user.last_name = cd["last_name"].capitalize()
+            if first_name:
+                user.first_name = first_name.capitalize()
+            user.save()
+            # Создаем объект UserProfile.
+            profile = UserProfile(user=user, soul=person.soul_ptr)
+            profile.save()
 
-def get_customer_ln(request):
-    """
-    Получение уникального списка фамилий всех заказчиков.
-    """
-    person_lns = []
-    q = request.GET.get('q', None)
-    if q is not None:
-        rezult = Person.objects.filter(ordr_customer__isnull=False,
-                                   last_name__istartswith=q).values("last_name").order_by("last_name").distinct()[:16]
-        person_lns = [item["last_name"] for item in rezult]
-    return direct_to_template(request, 'ajax.html', {'objects': person_lns,})
-
-
-def get_deadman(request):
-    """
-    Получение уникального списка ФИО захороненных.
-    """
-    persons = []
-    q = request.GET.get('q', None)
-    if q is not None:
-        rezult = Person.objects.filter(buried__isnull=False, last_name__istartswith=q).values("last_name",
-                          "first_name", "patronymic").order_by("last_name", "first_name", "patronymic").distinct()[:16]
-        persons = ["%s %s %s" % (item["last_name"], item["first_name"], item["patronymic"]) for item in rezult]
-    return direct_to_template(request, 'ajax.html', {'objects': persons,})
-
-
-def get_oper(request):
-    """
-    Получение списка доступных операций для выбранного кладбища.
-    """
-    rez = []
-    if request.method == "GET" and request.GET.get("id", False):
-        try:
-            cemetery = Cemetery.objects.get(uuid=request.GET["id"])
-        except:
-            pass
-        else:
-            orgsoul=cemetery.organization.soul_ptr
-            choices = SoulProducttypeOperation.objects.filter(soul=orgsoul,
-                              p_type=settings.PLACE_PRODUCTTYPE_ID).values_list("operation__uuid", "operation__op_type")
-            for c in choices:
-                rez.append({"optionValue": c[0], "optionDisplay": c[1]})
-            rez.insert(0, {"optionValue": 0, "optionDisplay": u'---------'})
-    return HttpResponse(JSONEncoder().encode(rez))
-
-
-def get_street(request):
-    """
-    Получение улицы с городом, регионом и страной.
-    """
-    streets = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = Street.objects.filter(name__istartswith=q).order_by("name", "city__name", "city__region__name",
-                                                                     "city__region__country__name")[:24]
-        for s in rezult:
-            streets.append(u"%s/%s/%s/%s" % (s.name, s.city.name, s.city.region.name, s.city.region.country.name))
-    return HttpResponse(JSONEncoder().encode(streets))
-
-
-def get_countries(request):
-    """
-    Получение списка стран с пом. AJAX-запроса.
-    """
-    countries = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = GeoCountry.objects.filter(name__istartswith=q).order_by("name")[:8]
-        for s in rezult:
-            countries.append(s.name)
-    return HttpResponse(JSONEncoder().encode(countries))
-
-
-def get_cities(request):
-    """
-    Получение списка нас. пунктов с пом. AJAX-запроса.
-    """
-    cities = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = GeoCity.objects.filter(name__istartswith=q).order_by("name", "region__name",
-                                                                      "region__country__name")[:24]
-        for s in rezult:
-            cities.append(u"%s/%s/%s" % (s.name, s.region.name, s.region.country.name))
-    return HttpResponse(JSONEncoder().encode(cities))
-
-
-def get_regions(request):
-    """
-    Получение списка регионов с пом. AJAX-запроса.
-    """
-    regions = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = GeoRegion.objects.filter(name__istartswith=q).order_by("name", "country__name")[:24]
-        for s in rezult:
-            regions.append(u"%s/%s" % (s.name, s.country.name))
-    return HttpResponse(JSONEncoder().encode(regions))
+            # Добавление пользователя во все существующие django-группы.
+            dgroups = Group.objects.all()
+            for dgr in dgroups:
+                user.groups.add(dgr)
+            return redirect("/logout/")
+    else:
+        form = InitalForm()
+    return direct_to_template(request, "init.html", {"form": form,})
 
 
 @login_required
@@ -1340,188 +1406,115 @@ def import_csv(request):
 
 
 @login_required
-@transaction.commit_on_success
-def init(request):
+@is_in_group("delete_orderfile")
+def delete_orderfile(request, ouuid, fuuid):
     """
-    Страница ввода инициализационных данных.
+    Удаление картинки ордера.
     """
-    user = request.user
-    if not user.is_superuser:
-        return HttpResponseForbidden("Forbidden")
-    if request.method == "POST":
-        form = InitalForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            # Создаем уникальный uuid сервера.
-            env = Env()
-            env.save()
-            # Создаем организацию.
-            organization = Organization(creator=request.user.userprofile.soul, name=cd["org_name"])
-            organization.save()
-            # Создаем объект Phone для организации.
-            org_phone = cd.get("org_phone", "")
-            if org_phone:
-                org_phone_obj = Phone(soul=organization.soul_ptr, f_number=org_phone)
-                org_phone_obj.save()
-            # Создаем объекты SoulProducttypeOperation.
-            operations = Operation.objects.all()
-            p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
-            for op in operations:
-                spo = SoulProducttypeOperation()
-                spo.soul = organization.soul_ptr
-                spo.p_type = p_type
-                spo.operation = op
-                spo.save()
-            # Создаем Location для организации.
-            org_location = Location()
-            org_location_country = cd.get("country", "")
-            org_location_region = cd.get("region", "")
-            org_location_city = cd.get("city", "")
-            org_location_street = cd.get("street", "")
-            org_location_house = cd.get("house", "")
-            org_location_block = cd.get("block", "")
-            org_location_building = cd.get("building", "")
-            org_location_flat = cd.get("flat", "")
-            org_location_post_index = cd.get("post_index", "")
-            if org_location_country and org_location_region and org_location_city and org_location_street:
-                # Есть все для создания непустого Location.
-                # Страна.
-                try:
-                    country = GeoCountry.objects.get(name__iexact=org_location_country)
-                except ObjectDoesNotExist:
-                    country = GeoCountry(name=org_location_country.capitalize())
-                    country.save()
-                # Регион.
-                try:
-                    region = GeoRegion.objects.get(name__iexact=org_location_region,
-                                                   country=country)
-                except ObjectDoesNotExist:
-                    region = GeoRegion(name=org_location_region.capitalize(), country=country)
-                    region.save()
-                # Нас. пункт.
-                try:
-                    city = GeoCity.objects.get(name__iexact=org_location_city, region=region)
-                except ObjectDoesNotExist:
-                    city = GeoCity(name=org_location_city.capitalize(), country=country,
-                                   region=region)
-                    city.save()
-                # Улица.
-                try:
-                    street = Street.objects.get(name__iexact=org_location_street, city=city)
-                except ObjectDoesNotExist:
-                    street = Street(name=org_location_street.capitalize(), city=city)
-                    street.save()
-                # Продолжаем с Location.
-                org_location.street = street
-                if org_location_house:
-                    org_location.house = org_location_house
-                    if org_location_block:
-                        org_location.block = org_location_block
-                    if org_location_building:
-                        org_location.building = org_location_building
-                    if org_location_flat:
-                        org_location.flat = org_location_flat
-            if org_location_post_index:
-                org_location.post_index = org_location_post_index
-            org_location.save()
-            organization.location = org_location
-            organization.save()
+    try:
+        f = OrderFiles.objects.get(order__uuid=ouuid, uuid=fuuid)
+    except ObjectDoesNotExist:
+        raise Http404
+    f.delete()
+    return redirect("/burial/%s/" % ouuid)
 
-            # Кладбище.
-            cemetery = Cemetery(creator=request.user.userprofile.soul, organization=organization, name=cd["cemetery"])
-            # Создаем Location для организации.
-            cem_location = Location()
-            cem_location_country = cd.get("cem_country", "")
-            cem_location_region = cd.get("cem_region", "")
-            cem_location_city = cd.get("cem_city", "")
-            cem_location_street = cd.get("cem_street", "")
-            cem_location_house = cd.get("cem_house", "")
-            cem_location_block = cd.get("cem_block", "")
-            cem_location_building = cd.get("cem_building", "")
-            cem_location_post_index = cd.get("cem_post_index", "")
-            if cem_location_country and cem_location_region and cem_location_city and cem_location_street:
-                # Есть все для создания непустого Location.
-                # Страна.
-                try:
-                    country = GeoCountry.objects.get(name__iexact=cem_location_country)
-                except ObjectDoesNotExist:
-                    country = GeoCountry(name=cem_location_country.capitalize())
-                    country.save()
-                # Регион.
-                try:
-                    region = GeoRegion.objects.get(name__iexact=cem_location_region,
-                                                   country=country)
-                except ObjectDoesNotExist:
-                    region = GeoRegion(name=cem_location_region.capitalize(), country=country)
-                    region.save()
-                # Нас. пункт.
-                try:
-                    city = GeoCity.objects.get(name__iexact=cem_location_city, region=region)
-                except ObjectDoesNotExist:
-                    city = GeoCity(name=cem_location_city.capitalize(), country=country,
-                                   region=region)
-                    city.save()
-                # Улица.
-                try:
-                    street = Street.objects.get(name__iexact=cem_location_street, city=city)
-                except ObjectDoesNotExist:
-                    street = Street(name=cem_location_street.capitalize(), city=city)
-                    street.save()
-                # Продолжаем с Location.
-                cem_location.street = street
-                if cem_location_house:
-                    cem_location.house = cem_location_house
-                    if cem_location_block:
-                        cem_location.block = cem_location_block
-                    if cem_location_building:
-                        cem_location.building = cem_location_building
-            if cem_location_post_index:
-                cem_location.post_index = cem_location_post_index
-            cem_location.save()
-            cemetery.location = cem_location
-            cemetery.save()
-            
-            # Директор.
-            # Создаем объект Person.
-            person = Person(creator=request.user.userprofile.soul, last_name=cd["last_name"].capitalize())
-            first_name = cd.get("first_name", "")
-            patronymic = cd.get("patronymic", "")
-            phone = cd.get("phone", "")
-            if first_name:
-                person.first_name = first_name.capitalize()
-                if patronymic:
-                    person.patronymic = patronymic.capitalize()
-            person.save()
-            # Создаем объект Phone.
-            if phone:
-                dir_phone = Phone(soul=person.soul_ptr, f_number=phone)
-                dir_phone.save()
-            # Роль директора
-            role = Role(creator=request.user.userprofile.soul, name="Директор", organization=organization)
-            role.save()
-            person_role = PersonRole(person=person, role=role, creator=request.user.userprofile.soul)
-            person_role.save()
-#            # Роль работника
-#            role = Role(creator=request.user.userprofile.soul, name="Работник", organization=organization)
-#            role.save()
-#            person_role = PersonRole(person=person, role=role, creator=request.user.userprofile.soul)
-#            person_role.save()
-            # Системный пользователь django.
-            user = User.objects.create_user(username=cd["username"], email="", password=cd["password1"])
-            user.is_staff = True
-            user.last_name = cd["last_name"].capitalize()
-            if first_name:
-                user.first_name = first_name.capitalize()
-            user.save()
-            # Создаем объект UserProfile.
-            profile = UserProfile(user=user, soul=person.soul_ptr)
-            profile.save()
 
-            # Добавление пользователя во все существующие django-группы.
-            dgroups = Group.objects.all()
-            for dgr in dgroups:
-                user.groups.add(dgr)
-            return redirect("/logout/")
-    else:
-        form = InitalForm()
-    return direct_to_template(request, "init.html", {"form": form,})
+def get_customer_ln(request):
+    """
+    Получение уникального списка фамилий всех заказчиков.
+    """
+    person_lns = []
+    q = request.GET.get('q', None)
+    if q is not None:
+        rezult = Person.objects.filter(ordr_customer__isnull=False,
+                                   last_name__istartswith=q).values("last_name").order_by("last_name").distinct()[:16]
+        person_lns = [item["last_name"] for item in rezult]
+    return direct_to_template(request, 'ajax.html', {'objects': person_lns,})
+
+
+def get_deadman(request):
+    """
+    Получение уникального списка ФИО захороненных.
+    """
+    persons = []
+    q = request.GET.get('q', None)
+    if q is not None:
+        rezult = Person.objects.filter(buried__isnull=False, last_name__istartswith=q).values("last_name",
+                          "first_name", "patronymic").order_by("last_name", "first_name", "patronymic").distinct()[:16]
+        persons = ["%s %s %s" % (item["last_name"], item["first_name"], item["patronymic"]) for item in rezult]
+    return direct_to_template(request, 'ajax.html', {'objects': persons,})
+
+
+def get_oper(request):
+    """
+    Получение списка доступных операций для выбранного кладбища.
+    """
+    rez = []
+    if request.method == "GET" and request.GET.get("id", False):
+        try:
+            cemetery = Cemetery.objects.get(uuid=request.GET["id"])
+        except:
+            pass
+        else:
+            orgsoul=cemetery.organization.soul_ptr
+            choices = SoulProducttypeOperation.objects.filter(soul=orgsoul,
+                              p_type=settings.PLACE_PRODUCTTYPE_ID).values_list("operation__uuid", "operation__op_type")
+            for c in choices:
+                rez.append({"optionValue": c[0], "optionDisplay": c[1]})
+            rez.insert(0, {"optionValue": 0, "optionDisplay": u'---------'})
+    return HttpResponse(JSONEncoder().encode(rez))
+
+
+def get_street(request):
+    """
+    Получение улицы с городом, регионом и страной.
+    """
+    streets = []
+    q = request.GET.get('term', None)
+    if q is not None:
+        rezult = Street.objects.filter(name__istartswith=q).order_by("name", "city__name", "city__region__name",
+                                                                     "city__region__country__name")[:24]
+        for s in rezult:
+            streets.append(u"%s/%s/%s/%s" % (s.name, s.city.name, s.city.region.name, s.city.region.country.name))
+    return HttpResponse(JSONEncoder().encode(streets))
+
+
+def get_countries(request):
+    """
+    Получение списка стран с пом. AJAX-запроса.
+    """
+    countries = []
+    q = request.GET.get('term', None)
+    if q is not None:
+        rezult = GeoCountry.objects.filter(name__istartswith=q).order_by("name")[:8]
+        for s in rezult:
+            countries.append(s.name)
+    return HttpResponse(JSONEncoder().encode(countries))
+
+
+def get_cities(request):
+    """
+    Получение списка нас. пунктов с пом. AJAX-запроса.
+    """
+    cities = []
+    q = request.GET.get('term', None)
+    if q is not None:
+        rezult = GeoCity.objects.filter(name__istartswith=q).order_by("name", "region__name",
+                                                                      "region__country__name")[:24]
+        for s in rezult:
+            cities.append(u"%s/%s/%s" % (s.name, s.region.name, s.region.country.name))
+    return HttpResponse(JSONEncoder().encode(cities))
+
+
+def get_regions(request):
+    """
+    Получение списка регионов с пом. AJAX-запроса.
+    """
+    regions = []
+    q = request.GET.get('term', None)
+    if q is not None:
+        rezult = GeoRegion.objects.filter(name__istartswith=q).order_by("name", "country__name")[:24]
+        for s in rezult:
+            regions.append(u"%s/%s" % (s.name, s.country.name))
+    return HttpResponse(JSONEncoder().encode(regions))
+
