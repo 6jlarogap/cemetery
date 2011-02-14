@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.contrib.auth.models import User
-from models import Cemetery, GeoCountry, GeoRegion, Organization, GeoCity, Phone, Operation, Street, Role
+from models import Cemetery, GeoCountry, GeoRegion, Organization, GeoCity, Phone, Operation, Street, Role, OrderComments
 from models import SoulProducttypeOperation
 
 from annoying.decorators import autostrip
@@ -404,6 +404,22 @@ class EditOrderForm(forms.Form):
 ##        choices = SoulProducttypeOperation.objects.filter(soul=orgsoul, p_type=settings.BURIAL_PRODUCTTYPE_ID).values_list("operation__id", "operation__op_type")
 #        self.fields["operation"].choices = choices
 
+
+@autostrip
+class OrderCommentForm(forms.Form):
+    """
+    Форма редактирования комментария к заказу.
+    """
+    comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 90}),
+                              label="Комментарий")
+    bdelete = forms.BooleanField(required=False, label="удалить")
+
+    def clean(self):
+        cd = self.cleaned_data
+        if not cd.get("bdelete", None):
+            if not cd.get("comment", None):
+                raise forms.ValidationError("Пустой комментарий сохранить нельзя. Нажмите 'удалить'")
+        return cd
 
 @autostrip
 class JournalForm(forms.Form):
