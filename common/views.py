@@ -81,11 +81,6 @@ def main_page(request):
                 if request.user.userprofile.records_per_page != cd["per_page"]:
                     request.user.userprofile.records_per_page = cd["per_page"]
                     request.user.userprofile.save()
-            # Сохраняем в профиль значение records_order_by.
-            if cd.get("records_order_by", ""):
-                if request.user.userprofile.records_order_by != cd["records_order_by"]:
-                    request.user.userprofile.records_order_by = cd["records_order_by"]
-                    request.user.userprofile.save()
         if cd.get("records_order_by", ""):
             if cd["records_order_by"] == u'account_book_n':
                 burials = burials.order_by('s1', 's2', 's3')
