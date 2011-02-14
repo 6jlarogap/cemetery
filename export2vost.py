@@ -24,7 +24,9 @@ for step in xrange(0, total, step_size):
             initials = u"-"
         bur_date = burial.date_fact
         if bur_date:
-            date = bur_date.date().strftime("%d.%m.%Y")
+            b_date = bur_date.date()
+            date = "%02d.%02d.%02d" %(b_date.day, b_date.month, b_date.year)
+#            date = bur_date.date().strftime("%d.%m.%Y")
         else:
             date = u"-"
         area = burial.product.place.area.encode('cp1251')
