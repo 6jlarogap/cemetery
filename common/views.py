@@ -561,18 +561,21 @@ def order_comment_edit(request, uuid):
             try:
                 comment = OrderComments.objects.get(uuid=uuid)
             except ObjectDoesNotExist:
-                pass
+                raise Http404
             else:
-                comment.comment = cd["comment"]
-                comment.creator = request.user.userprofile.soul
-                comment.date_of_creation = datetime.datetime.now()
-                comment.save()
-                return redirect("/burial/%s/" % comment.order.uuid)
+                ouuid = comment.order.uuid
+                if cd["bdelete"]:
+                    comment.delete()
+                else:
+                    comment.comment = cd["comment"]
+                    comment.creator = request.user.userprofile.soul
+                    comment.date_of_creation = datetime.datetime.now()
+                    comment.save()
+                return redirect("/burial/%s/" % ouuid)
     else:
         initial_data = {"comment": OrderComments.objects.get(uuid=uuid).comment}
         form = OrderCommentForm(initial=initial_data)
     return direct_to_template(request, "order_comment_edit.html", {"form": form})
-
 
 
 @login_required
@@ -1433,6 +1436,7 @@ def import_csv(request):
     else:
         form = ImportForm()
     return direct_to_template(request, "import.html", {"form": form})
+
 
 
 @login_required

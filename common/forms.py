@@ -412,6 +412,14 @@ class OrderCommentForm(forms.Form):
     """
     comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 90}),
                               label="Комментарий")
+    bdelete = forms.BooleanField(required=False, label="удалить")
+
+    def clean(self):
+        cd = self.cleaned_data
+        if not cd.get("bdelete", None):
+            if not cd.get("comment", None):
+                raise forms.ValidationError("Пустой комментарий сохранить нельзя. Нажмите 'удалить'")
+        return cd
 
 @autostrip
 class JournalForm(forms.Form):
