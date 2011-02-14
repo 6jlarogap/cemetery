@@ -410,7 +410,7 @@ class OrderCommentForm(forms.Form):
     """
     Форма редактирования комментария к заказу.
     """
-    comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 90, 'tabindex': '21'}),
+    comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 90}),
                               label="Комментарий")
 
 @autostrip
