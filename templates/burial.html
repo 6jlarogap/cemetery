@@ -434,7 +434,7 @@ $(function(){
     <h3>Комментарии:</h3>
         {% for c in burial.ordercomments_set.all %}
         <!--            <b>{{ forloop.counter }}</b> {{ c.comment }} <a href="/admin/common/ordercomments/{{ c.uuid }}/" target="_blank">редактировать</a><br />-->
-            <b>{{ forloop.counter }}</b> {{ c.comment }} <a href="/ordercomment/{{ c.uuid }}/" target="_blank">редактировать</a><br />
+            <b>{{ forloop.counter }}</b> {{ c.comment }} <a href="/ordercomment/{{ c.uuid }}/" target="_self">редактировать</a><br />
             <small><b>{{ c.creator }}</b>, {{ c.date_of_creation }}</small><br /><br />
         {%  endfor %}
         <br />
