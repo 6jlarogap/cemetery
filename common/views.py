@@ -1394,10 +1394,10 @@ def import_csv(request):
                             operation = Operation.objects.get(uuid=settings.OPER_3)
                         elif u"почетное захоронение" in comment.lower():
                             operation = Operation.objects.get(uuid=settings.OPER_2)
-                        elif u"захоронение" in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_1)
                         elif u"подзахоронение" in comment.lower():
                             operation = Operation.objects.get(uuid=settings.OPER_4)
+                        elif u"захоронение" in comment.lower():
+                            operation = Operation.objects.get(uuid=settings.OPER_1)
                         elif u"урна" in comment.lower():
                             operation = Operation.objects.get(uuid=settings.OPER_5)
                         else:
