@@ -3,7 +3,7 @@
 {% block scripts %}
 <script type="text/javascript" src="/media/js/jquery-1.4.4.min.js"></script>
 <script type="text/javascript" charset="utf-8">
-    var copyaddr = function(){
+    var copyOrgToCem = function(){
         $("#id_cemetery").val($("#id_org_name").val());
         $("#id_cem_post_index").val($("#id_post_index").val());
         $("#id_cem_street").val($("#id_street").val());
@@ -19,7 +19,7 @@
 {% block content %}
     <h1>Инициализация</h1>
     <h3>Создание стартовой конфигурации</h3>
-    <button onClick="copyaddr();">Копировать адрес организации в адрес кладбища</button>
+    <button onClick="copyOrgToCem();">Копировать данные организации в данные кладбища</button>
     <div id="forms">
         <form action="" method="post">
             <table>
