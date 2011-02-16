@@ -7,8 +7,10 @@
     {% if user|in_group:"management_cemetery" %}
         <h2>Кладбища <a href='/management/cemetery/'>тут</a></h2>
     {% endif %}
+    <!--    
     <h2>Сервисы (в админке) <a href='/admin/common/soulproducttypeoperation/' target="_blank">тут</a></h2>
     <h2>Роли (в админке) <a href='/admin/common/role/' target="_blank">тут</a></h2>
+    -->
     {% if user|in_group:"management_user" %}
         <h2>Персонал <a href='/management/user/'>тут</a></h2>
     {% endif %}
