@@ -704,10 +704,9 @@ def management_user(request):
             profile = UserProfile(user=user, soul=person.soul_ptr)
             profile.save()
             if hasattr(cd['role'], "djgroups") and cd['role'].djgroups.all():
-                if cd.get("is_staff", False):
-                    user.is_staff = True
                 for djgr in cd['role'].djgroups.all():
                     user.groups.add(djgr)  # Добавляем человека в django-группу, связанную с его ролью.
+            user.is_staff = True
             user.save()
             return redirect("/management/user/")
     else:
@@ -754,9 +753,9 @@ def management_edit_user(request, uuid):
                 phone.save()
             if cd.get("password1", ""):
                 user.set_password(cd['password1'])
-            is_staff = cd.get("is_staff", None)
-            if is_staff is not None:
-                user.is_staff = is_staff
+#            is_staff = cd.get("is_staff", None)
+#            if is_staff is not None:
+#                user.is_staff = is_staff
             # Roles processing.
             if cd.get("default_rights", False):
                 # Если сбрасываем все права на дефолтные.
@@ -800,8 +799,8 @@ def management_edit_user(request, uuid):
     else:
         phoneset = PhoneFormSet(queryset=Phone.objects.filter(soul=person.soul_ptr))
         initial_data = {"last_name": person.last_name,
-                        "username": user.username,
-                        "is_staff": user.is_staff,
+                        "username": user.username
+#                        "is_staff": user.is_staff,
                         }
 #        phones = Phone.objects.filter(soul=person.soul_ptr)
 #        if phones:
