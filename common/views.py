@@ -1177,7 +1177,7 @@ def init(request):
             dgroups = Group.objects.all()
             for dgr in dgroups:
                 user.groups.add(dgr)
-            return redirect("/logout/")
+            return redirect("/admin/")
     else:
         form = InitalForm()
     return direct_to_template(request, "init.html", {"form": form})
