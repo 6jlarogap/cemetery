@@ -1201,7 +1201,6 @@ def import_csv(request):
 #            writer = csv.writer(temp_file, "4mysqlout")
             writer = csv.writer(temp_file, "4mysql")
             err_descrs = []
-            iduuids = []
             good_nr = 0
             bad_nr = 0
             s_time = datetime.datetime.now()
@@ -1415,16 +1414,11 @@ def import_csv(request):
                     else:
                         # Коммитим все.
                         transaction.commit()
-                        iduuids.append((str_id, deadman.uuid))
                         good_nr += 1
             myseparator = u'=== ОПИСАНИЕ ОШИБОК ==='
             writer.writerow([myseparator.encode('utf8')])
             for err in err_descrs:
                 writer.writerow((err,))
-            myseparator = u'=== ID-UUID ==='
-            writer.writerow([myseparator.encode('utf8')])
-            for u in iduuids:
-                writer.writerow(u)
             response.write("Начало/Конец: %s/%s\n" % (s_time, datetime.datetime.now()))
             response.write("Всего/Удачно/Ошибок: %d/%d/%d\n" % (good_nr+bad_nr, good_nr, bad_nr))
             response.write("=== СТРОКИ С ОШИБКАМИ ===\n")
