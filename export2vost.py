@@ -18,8 +18,8 @@ for step in xrange(0, total, step_size):
     for burial in burials[step:step + step_size]:
         db.reset_queries()
         uuid = burial.person.uuid
-        last_name = burial.person.last_name.encode('cp1251')
-        initials = burial.person.get_initials().encode('cp1251')
+        last_name = burial.person.last_name.upper().encode('cp1251')
+        initials = burial.person.get_initials().upper().encode('cp1251')
         if not initials:
             initials = u"-"
         bur_date = burial.date_fact
