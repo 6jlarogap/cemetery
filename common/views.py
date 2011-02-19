@@ -302,7 +302,7 @@ def journal(request):
             if cd.get("customer_first_name", ""):
                 customer.first_name = cd["customer_first_name"].capitalize()
             if cd.get("customer_patronymic", ""):
-                customer.patronymic = cd["patronymic"].capitalize()
+                customer.patronymic = cd["customer_patronymic"].capitalize()
             # Create customer's location.
             new_location = Location()
             if cd.get("post_index", ""):
