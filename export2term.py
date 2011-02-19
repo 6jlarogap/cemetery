@@ -10,7 +10,8 @@ csv.register_dialect("tabsep", delimiter="\t")
 burials = Burial.objects.filter(is_trash=False).order_by("person__last_name",
                                                          "person__first_name", "person__patronymic")
 #print burials.count()
-f = open(EXPORT2TERMINAL_FILE, "w")
+fname = EXPORT2TERMINAL_FILE + '.partial'
+f = open(fname, "w")
 writer = csv.writer(f, "tabsep")
 
 total = burials.count()
@@ -40,3 +41,5 @@ for step in xrange(0, total, step_size):
         if (last_name) and (last_name != "НЕИЗВЕСТЕН"):
             writer.writerow((uuid, last_name, initials, date, area, row, seat, cemetery))
 f.close()
+os.chmod(fname, stat.S_IWOTH | stat.S_IROTH | stat.S_IWGRP | stat.S_IRGRP | stat.S_IRUSR | stat.S_IWUSR)
+os.rename(fname,EXPORT2TERMINAL_FILE)
