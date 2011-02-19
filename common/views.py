@@ -522,7 +522,7 @@ def edit_burial(request, uuid):
 #        b_date = datetime_safe.date(burial.date_fact)
         b_date = datetime.datetime.date(burial.date_fact)
         initial_data = {
-            "burial_date": "%02d.%02d.%02d" %(b_date.day, b_date.month, b_date.year), 
+            "burial_date": "%02d.%02d.%04d" %(b_date.day, b_date.month, b_date.year), 
 #            "burial_date": b_date.strftime("%d.%m.%Y"),
 #            "burial_date": datetime.datetime_safe.date(burial.date_fact).strftime("%d.%m.%Y"),
 #            "burial_date": datetime.datetime.date(burial.date_fact).strftime("%d.%m.%Y"),
