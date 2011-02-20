@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load adminmedia %}
 {% load my_filters %}
-{% block title %}Просмотр журнала{% endblock %}
+{% block title %}Редактирование захоронения{% endblock %}
 {% block scripts %}
 {{ form.media }}
 <link rel="stylesheet" href="/media/css/ui-lightness/jquery-ui-1.8.6.custom.css" type="text/css" />
@@ -143,22 +143,39 @@ $(function(){
     <form action="" method="post" enctype="multipart/form-data">
         {{ form.non_field_errors }}
         <table width="800">
-             <tr>
-                <td width="33%" id="free_form">
-                    {% if user|in_group:"edit_bur_in_adm" %}
-                        <a href="/admin/common/burial/{{ burial.uuid }}/" target="_blank" tabindex="1">Номер в книге учета</a>
-                    {% else %}
-                        Номер в книге учета
-                    {% endif %}
-                </td>
-                <td width="33%" id="free_form">
-                    Дата захоронения
-                </td>
-
+            <tr>
+                <td width="33%" id="free_form">{{ form.account_book_n.label_tag }}</td>
+                <td width="33%" id="free_form">{{ form.burial_date.label_tag }}</td>
                 <td width="33%">&nbsp;</td>
             </tr>
+            <tr>
+                {% if user|in_group:"edit_burial" %}
+                    <td width="33%">{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
+                    <td width="33%">{{ form.burial_date.errors }}{{ form.burial_date }}</td>
+                {% else %}
+                    <td width="33%">{{ burial.account_book_n }}</td>
+                    <td width="33%">{{ burial.date_fact|date:"d.m.Y" }}</td>
+                {% endif %}
+                <td width="33%">&nbsp;</td>
+            </tr>
+            <!--
+            <tr>
+            <td width="33%" id="free_form">
+                {% if user|in_group:"edit_bur_in_adm" %}
+                    <a href="/admin/common/burial/{{ burial.uuid }}/" target="_blank" tabindex="1">Номер в книге учета</a>
+                {% else %}
+                    Номер в книге учета
+                {% endif %}
+            </td>
+            <td width="33%" id="free_form">
+                Дата захоронения
+            </td>
+
+            <td width="33%">&nbsp;</td>
+            </tr>
+
              <tr>
-                <td width="33%">{{ burial.account_book_n }}</td>
+                <td width="33%">{{ form.account_book_n }}</td>
                 <td width="33%">
                     {% if user|in_group:"edit_bur_in_adm" %}
                         {{ form.burial_date.errors }}{{ form.burial_date }}
@@ -168,6 +185,7 @@ $(function(){
                 </td>
                 <td width="33%">&nbsp;</td>
             </tr>
+            -->
             <tr>
                 <td width="33%" id="free_form">
                     {% if user|in_group:"edit_bur_in_adm" %}

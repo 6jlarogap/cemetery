@@ -105,43 +105,6 @@ class SearchForm(forms.Form):
     operation = forms.ModelChoiceField(required=False, queryset=Operation.objects.all(), label="Услуга")
 
 @autostrip
-class EditUserForm(forms.Form):
-    """
-    Форма редактирования пользователя системы.
-    """
-    username = forms.CharField(label="Имя пользователя", max_length=30,
-                               help_text="Допускаются только латинские буквы, цифры и знаки @ . + - _")
-    last_name = forms.CharField(max_length=30, label="Фамилия")
-    first_name = forms.CharField(max_length=30, label="Имя", required=False)
-    patronymic = forms.CharField(max_length=30, label="Отчество", required=False)
-    role = forms.ModelMultipleChoiceField(queryset=Role.objects.all(), label="Роль")
-#    is_staff = forms.BooleanField(required=False, label="Доступ в админку")
-#    default_rights = forms.BooleanField(required=False, label="Поставить права по умолчанию")
-#    phone = forms.CharField(max_length=20, label="Телефон", required=False)
-    password1 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
-                                label="Пароль")
-    password2 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
-                                label="Пароль (еще раз)")
-    def clean(self):
-        cd = self.cleaned_data
-        username = cd["username"]
-        # Проверка username на наличие недопустимых символов.
-        rest = re.sub(r"[a-zA-Z0-9\@\.\+\-\_]", "", username)
-        if rest:
-            raise forms.ValidationError("Недопустимые символы в имени пользователя.")
-#        try:
-#            user = User.objects.get(username=username)
-#        except ObjectDoesNotExist:
-#            pass
-#        else:
-#            raise forms.ValidationError("Имя пользователя уже зарегистрировано за другим сотрудником.")
-        if cd.get("password1", "") == cd.get("password2", ""):
-            return cd
-        else:
-            raise forms.ValidationError("Пароли не совпадают.")
-
-        
-@autostrip
 class CemeteryForm(forms.Form):
     """
     Форма создания кладбища.
@@ -223,68 +186,9 @@ class CemeteryForm(forms.Form):
 
 
 @autostrip
-class NewUserForm(forms.Form):
-    """
-    Форма создания нового пользователя системы.
-    """
-    username = forms.CharField(label="Имя пользователя", max_length=30,
-                               help_text="Допускаются только латинские буквы, цифры и знаки @ . + - _")
-    last_name = forms.CharField(max_length=30, label="Фамилия")
-    first_name = forms.CharField(max_length=30, label="Имя", required=False)
-    patronymic = forms.CharField(max_length=30, label="Отчество", required=False)
-    role = forms.ModelChoiceField(queryset=Role.objects.all(), label="Роль")
-#    is_staff = forms.BooleanField(required=False, label="Доступ в админку")
-    phone = forms.CharField(max_length=20, label="Телефон", required=False)
-    password1 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль")
-    password2 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль (еще раз)")
-    def clean(self):
-        cd = self.cleaned_data
-        username = cd["username"]
-        # Проверка username на наличие недопустимых символов
-        rest = re.sub(r"[a-zA-Z0-9\@\.\+\-\_]", "", username)
-        if rest:
-            raise forms.ValidationError("Недопустимые символы в имени пользователя.")
-        try:
-            user = User.objects.get(username=username)
-        except ObjectDoesNotExist:
-            pass
-        else:
-            raise forms.ValidationError("Имя пользователя уже зарегистрировано за другим сотрудником.")
-        pass1 = cd.get("password1", "")
-        pass2 = cd.get("password2", "")
-        if pass1 and pass2:
-            if pass1 == pass2:
-                return cd
-            raise forms.ValidationError("Пароли не совпадают.")
-
-
-@autostrip
-class UserProfileForm(forms.Form):
-    """
-    Форма значений по умолчанию для профиля пользователя.
-    """
-    cemetery = forms.ModelChoiceField(required=False, queryset=Cemetery.objects.all(), label="Кладбище")
-    operation = forms.ModelChoiceField(required=False, queryset=Operation.objects.all(), label="Услуга")
-    hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
-    records_per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label="Записей на странице")
-    records_order_by = forms.ChoiceField(required=False, choices=ORDER_BY_VALUES, label="Сортировка по")
-    def clean(self):
-        cd = self.cleaned_data
-        cemetery = cd.get("cemetery", None)
-        operation = cd.get("operation", None)
-        if operation and not cemetery:
-            raise forms.ValidationError("Не выбрано кладбище.")
-        if operation:
-            try:
-                spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
-                                                           p_type=settings.PLACE_PRODUCTTYPE_ID)
-            except:
-                raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
-        return cd
-
-
-@autostrip
 class EditOrderForm(forms.Form):
+    account_book_n = forms.CharField(max_length=16, label="Номер в книге учета*",
+                                     widget=forms.TextInput(attrs={"tabindex": "1"}))
     burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}))
     cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(), label="Кладбище*", empty_label=None)
     operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None,
@@ -796,3 +700,103 @@ class ImportForm(forms.Form):
     """""
     csv_file = forms.FileField(label="CSV файл")
     cemetery = forms.ModelChoiceField(queryset = Cemetery.objects.all(), label = "Кладбище")
+
+
+@autostrip
+class NewUserForm(forms.Form):
+    """
+    Форма создания нового пользователя системы.
+    """
+    username = forms.CharField(label="Имя пользователя", max_length=30,
+                               help_text="Допускаются только латинские буквы, цифры и знаки @ . + - _")
+    last_name = forms.CharField(max_length=30, label="Фамилия")
+    first_name = forms.CharField(max_length=30, label="Имя", required=False)
+    patronymic = forms.CharField(max_length=30, label="Отчество", required=False)
+    role = forms.ModelChoiceField(queryset=Role.objects.all(), label="Роль")
+#    is_staff = forms.BooleanField(required=False, label="Доступ в админку")
+    phone = forms.CharField(max_length=20, label="Телефон", required=False)
+    password1 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль")
+    password2 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль (еще раз)")
+    def clean(self):
+        cd = self.cleaned_data
+        username = cd["username"]
+        # Проверка username на наличие недопустимых символов
+        rest = re.sub(r"[a-zA-Z0-9\@\.\+\-\_]", "", username)
+        if rest:
+            raise forms.ValidationError("Недопустимые символы в имени пользователя.")
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            pass
+        else:
+            raise forms.ValidationError("Имя пользователя уже зарегистрировано за другим сотрудником.")
+        pass1 = cd.get("password1", "")
+        pass2 = cd.get("password2", "")
+        if pass1 and pass2:
+            if pass1 == pass2:
+                return cd
+            raise forms.ValidationError("Пароли не совпадают.")
+
+
+@autostrip
+class EditUserForm(forms.Form):
+    """
+    Форма редактирования пользователя системы.
+    """
+    username = forms.CharField(label="Имя пользователя", max_length=30,
+                               help_text="Допускаются только латинские буквы, цифры и знаки @ . + - _")
+    last_name = forms.CharField(max_length=30, label="Фамилия")
+    first_name = forms.CharField(max_length=30, label="Имя", required=False)
+    patronymic = forms.CharField(max_length=30, label="Отчество", required=False)
+    role = forms.ModelMultipleChoiceField(queryset=Role.objects.all(), label="Роль")
+#    is_staff = forms.BooleanField(required=False, label="Доступ в админку")
+#    default_rights = forms.BooleanField(required=False, label="Поставить права по умолчанию")
+#    phone = forms.CharField(max_length=20, label="Телефон", required=False)
+    password1 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
+                                label="Пароль")
+    password2 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
+                                label="Пароль (еще раз)")
+    def clean(self):
+        cd = self.cleaned_data
+        username = cd["username"]
+        # Проверка username на наличие недопустимых символов.
+        rest = re.sub(r"[a-zA-Z0-9\@\.\+\-\_]", "", username)
+        if rest:
+            raise forms.ValidationError("Недопустимые символы в имени пользователя.")
+#        try:
+#            user = User.objects.get(username=username)
+#        except ObjectDoesNotExist:
+#            pass
+#        else:
+#            raise forms.ValidationError("Имя пользователя уже зарегистрировано за другим сотрудником.")
+        if cd.get("password1", "") == cd.get("password2", ""):
+            return cd
+        else:
+            raise forms.ValidationError("Пароли не совпадают.")
+
+        
+@autostrip
+class UserProfileForm(forms.Form):
+    """
+    Форма значений по умолчанию для профиля пользователя.
+    """
+    cemetery = forms.ModelChoiceField(required=False, queryset=Cemetery.objects.all(), label="Кладбище")
+    operation = forms.ModelChoiceField(required=False, queryset=Operation.objects.all(), label="Услуга")
+    hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
+    records_per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label="Записей на странице")
+    records_order_by = forms.ChoiceField(required=False, choices=ORDER_BY_VALUES, label="Сортировка по")
+    def clean(self):
+        cd = self.cleaned_data
+        cemetery = cd.get("cemetery", None)
+        operation = cd.get("operation", None)
+        if operation and not cemetery:
+            raise forms.ValidationError("Не выбрано кладбище.")
+        if operation:
+            try:
+                spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
+                                                           p_type=settings.PLACE_PRODUCTTYPE_ID)
+            except:
+                raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
+        return cd
+
+

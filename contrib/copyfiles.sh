@@ -37,13 +37,12 @@ update-rc.d django defaults
 #Restore postgres dump
 createdb -U postgres cemetery
 cat cemetery.sql | psql -U postgres cemetery
-#cat pg_views.sql | psql -U postgres cemetery
 #Database dump cron script
 #chmod a+x /home/django/projects/cemetery/contrib/dumpdb.py
-echo "PYTHONPATH=/home/django/projects/cemetery:$PYTHONPATH"
-echo "DJANGO_SETTINGS_MODULE=settings"
-echo "5 16 * * *    www-data:www-data   python /home/django/projects/cemetery/contrib/dumpdb.py" >> /etc/crontab
-echo "35 10 * * *    www-data:www-data   python /home/django/projects/cemetery/contrib/export2term.py" >> /etc/crontab
+#echo "PYTHONPATH=/home/django/projects/cemetery:$PYTHONPATH"
+#echo "DJANGO_SETTINGS_MODULE=settings"
+#echo "5 16 * * *    www-data:www-data   python /home/django/projects/cemetery/contrib/dumpdb.py" >> /etc/crontab
+#echo "35 10 * * *    www-data:www-data   python /home/django/projects/cemetery/contrib/export2term.py" >> /etc/crontab
 #Start django daemon
 /etc/init.d/django restart
 /etc/init.d/nginx restart
@@ -53,4 +52,4 @@ mkdir -p /var/cemetery/inbox
 mkdir -p /var/cemetery/dumps
 mkdir -p /var/cemetery/terminal
 chown -R www-data:www-data /var/cemetery
-chmod 777 /var/cemetery/outbox
+#chmod 777 /var/cemetery/outbox

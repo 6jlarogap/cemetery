@@ -447,6 +447,7 @@ def edit_burial(request, uuid):
                 phone.soul = burial.customer.person.soul_ptr
                 phone.save()
             cd = form.cleaned_data
+            burial.account_book_n = cd["account_book_n"]
             burial.date_fact = cd["burial_date"]
             operation = cd["operation"]
             burial.operation = operation
@@ -519,13 +520,10 @@ def edit_burial(request, uuid):
 #        phones = Phone.objects.filter(soul=burial.customer.person.soul_ptr)
 #        phoneset = OrderFormSet(ins)
         phoneset = PhoneFormSet(queryset=Phone.objects.filter(soul=burial.customer.person.soul_ptr))
-#        b_date = datetime_safe.date(burial.date_fact)
         b_date = datetime.datetime.date(burial.date_fact)
         initial_data = {
+            "account_book_n": burial.account_book_n,
             "burial_date": "%02d.%02d.%04d" %(b_date.day, b_date.month, b_date.year), 
-#            "burial_date": b_date.strftime("%d.%m.%Y"),
-#            "burial_date": datetime.datetime_safe.date(burial.date_fact).strftime("%d.%m.%Y"),
-#            "burial_date": datetime.datetime.date(burial.date_fact).strftime("%d.%m.%Y"),
             "cemetery": burial.product.place.cemetery,
             "area": burial.product.place.area,
             "row": burial.product.place.row,
