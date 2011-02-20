@@ -39,8 +39,8 @@ createdb -U postgres cemetery
 cat cemetery.sql | psql -U postgres cemetery
 #Database dump cron script
 #chmod a+x /home/django/projects/cemetery/contrib/dumpdb.py
-#echo "PYTHONPATH=/home/django/projects/cemetery:$PYTHONPATH"
-#echo "DJANGO_SETTINGS_MODULE=settings"
+#echo "PYTHONPATH=/home/django/projects/cemetery:$PYTHONPATH" >> /etc/crontab
+#echo "DJANGO_SETTINGS_MODULE=settings" >> /etc/crontab
 #echo "5 16 * * *    www-data:www-data   python /home/django/projects/cemetery/contrib/dumpdb.py" >> /etc/crontab
 #echo "35 10 * * *    www-data:www-data   python /home/django/projects/cemetery/contrib/export2term.py" >> /etc/crontab
 #Start django daemon

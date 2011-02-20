@@ -11,6 +11,9 @@ import os
 
 serv_uuid = Env.objects.all()[0].uuid
 
+ImpBur.objects.all().delete()
+ImpCem.objects.all().delete()
+
 # Обрабатываем кладбища.
 cemeteries = Cemetery.objects.filter(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
 for cem in cemeteries:
@@ -30,7 +33,7 @@ for cem in cemeteries:
     imp_cem_rec.save()
 
 # Обрабатываем захоронения.
-burials = Burial.objects.filter(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
+burials = Burial.objects.filter(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))[:500]
 for bur in burials:
     uuid = bur.person.uuid
     cemetery = ImpCem.objects.get(cem_pk=bur.product.place.cemetery.uuid)
@@ -63,5 +66,5 @@ f.close()
 ImpBur.objects.all().delete()
 ImpCem.objects.all().delete()
 
-cemeteries.update(last_sync_date=datetime.datetime.now())
-burials.update(last_sync_date=datetime.datetime.now())
+#cemeteries.update(last_sync_date=datetime.datetime.now())
+#burials.update(last_sync_date=datetime.datetime.now())

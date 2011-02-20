@@ -13,7 +13,7 @@ from django.conf import settings
 #from django.utils import simplejson
 from django.utils.simplejson.encoder import JSONEncoder
 from forms import SearchForm, NewUserForm, EditUserForm, ImportForm
-from forms import CemeteryForm, JournalForm, EditOrderForm, InitalForm, OrderCommentForm
+from forms import CemeteryForm, JournalForm, EditBurialForm, InitalForm, OrderCommentForm
 from django.forms.models import modelformset_factory
 from models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization, OrderComments
 from models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation
@@ -307,22 +307,6 @@ def journal(request):
             new_location = Location()
             if cd.get("post_index", ""):
                 new_location.post_index = cd["post_index"]
-#            if (cd.get("customer_country", "") and cd.get("customer_region", "") and
-#                cd.get("customer_city", "") and cd.get("customer_street", "")):
-#                try:
-#                    street = Street.objects.get(city=cd["customer_city"], name__iexact=cd["customer_street"])
-#                except ObjectDoesNotExist:
-#                    street = Street(city=cd["customer_city"], name=cd["customer_street"].capitalize())
-#                    street.save()
-#                new_location.street = street
-#                if cd.get("customer_house", ""):
-#                    new_location.house = cd["customer_house"]
-#                if cd.get("customer_block", ""):
-#                    new_location.block = cd["customer_block"]
-#                if cd.get("customer_building", ""):
-#                    new_location.building = cd["customer_building"]
-#                if cd.get("customer_flat", ""):
-#                    new_location.flat = cd["customer_flat"]
             if cd.get("country", ""):
                 # Страна.
                 try:
@@ -441,17 +425,27 @@ def edit_burial(request, uuid):
     if request.method == "POST":
         phoneset = PhoneFormSet(request.POST, request.FILES,
                                queryset=Phone.objects.filter(soul=burial.customer.person.soul_ptr))
-        form = EditOrderForm(request.POST, request.FILES)
-        if phoneset.is_valid() and form.is_valid():
-            for phone in phoneset.save(commit=False):
-                phone.soul = burial.customer.person.soul_ptr
-                phone.save()
+        form = EditBurialForm(request.POST, request.FILES)
+        if form.is_valid():
+            if phoneset.is_valid(): 
+                for phone in phoneset.save(commit=False):
+                    phone.soul = burial.customer.person.soul_ptr
+                    phone.save()
             cd = form.cleaned_data
             burial.account_book_n = cd["account_book_n"]
             burial.date_fact = cd["burial_date"]
+
+            # Updating deadman's FIO
+            if burial.person:
+                deadman = burial.person
+            else:
+                raise Http404
+            deadman.last_name = cd["last_name"].capitalize()
+            deadman.first_name = cd["first_name"].capitalize()
+            deadman.patronymic = cd["patronymic"].capitalize()
+            deadman.save()
             operation = cd["operation"]
             burial.operation = operation
-#            burial.save()
             try:
                 place = Place.objects.get(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"])
             except ObjectDoesNotExist:
@@ -465,15 +459,21 @@ def edit_burial(request, uuid):
             in_trash = cd.get("in_trash", False)
             burial.is_trash = in_trash
             burial.save()
+            # Updating customer's FIO
+            try:
+                customer = Person.objects.get(uuid=burial.customer.uuid)
+            except ObjectDoesNotExist:
+                #customer is organization!
+                raise Http404
+            customer.last_name = cd["customer_last_name"].capitalize()
+            customer.first_name = cd["customer_first_name"].capitalize()
+            customer.patronymic = cd["customer_patronymic"].capitalize()
+            customer.save()
             # Обработка Location заказчика.
-            # TEMP! Пока есть заказчики без Location.
-            if not hasattr(burial.customer, "location") or burial.customer.location is None:
-                location = Location()
-                location.save()
-                burial.customer.location = location
-                burial.customer.save()
-            else:
+            if customer.location:
                 location = burial.customer.location
+            else:
+                raise Http404
             # Поля модели Location.
             if cd.get("country", ""):
                 # Страна.
@@ -504,6 +504,14 @@ def edit_burial(request, uuid):
                 location.street = street
             if cd.get("post_index", ""):
                 location.post_index = cd["post_index"]
+            if cd.get("customer_house", ""):
+                location.house = cd["customer_house"]
+            if cd.get("customer_building", ""):
+                location.building = cd["customer_building"]
+            if cd.get("customer_block", ""):
+                location.block = cd["customer_block"]
+            if cd.get("customer_flat", ""):
+                location.flat = cd["customer_flat"]
             location.save()
             if cd.get("comment", ""):
                 burial.add_comment(cd["comment"], request.user.userprofile.soul)
@@ -525,22 +533,45 @@ def edit_burial(request, uuid):
             "account_book_n": burial.account_book_n,
             "burial_date": "%02d.%02d.%04d" %(b_date.day, b_date.month, b_date.year), 
             "cemetery": burial.product.place.cemetery,
+            "operation": burial.operation,
+            "hoperation": burial.operation.uuid,
             "area": burial.product.place.area,
             "row": burial.product.place.row,
             "seat": burial.product.place.seat,
-            "operation": burial.operation,
-            "hoperation": burial.operation.uuid,
             "in_trash": burial.is_trash,
         }
-        if burial.customer.location and hasattr(burial.customer.location, "street") and burial.customer.location.street:
-            initial_data["street"] = burial.customer.location.street.name
-            initial_data["city"] = burial.customer.location.street.city.name
-            initial_data["region"] = burial.customer.location.street.city.region.name
-            initial_data["country"] = burial.customer.location.street.city.region.country.name
-        if burial.customer.location.post_index:
-            initial_data["post_index"] = burial.customer.location.post_index
-        form = EditOrderForm(initial=initial_data)
-    return direct_to_template(request, 'burial.html', {'burial': burial, 'form': form, 'phoneset': phoneset})
+        if burial.person:
+            deadman = burial.person
+            initial_data["last_name"] = deadman.last_name
+            initial_data["first_name"] = deadman.first_name
+            initial_data["patronymic"] = deadman.patronymic
+        if burial.customer:
+            try:
+                customer = Person.objects.get(uuid=burial.customer.uuid)
+            except ObjectDoesNotExist:
+                #customer is organization!
+                raise Http404
+            initial_data["customer_last_name"] = customer.last_name
+            initial_data["customer_first_name"] = customer.first_name
+            initial_data["customer_patronymic"] = customer.patronymic
+            if customer.location and hasattr(customer.location, "street") and customer.location.street:
+                location = customer.location
+                initial_data["street"] = location.street.name
+                initial_data["city"] = location.street.city.name
+                initial_data["region"] = location.street.city.region.name
+                initial_data["country"] = location.street.city.region.country.name
+                if location.post_index:
+                    initial_data["post_index"] = location.post_index
+                if location.house:
+                    initial_data["customer_house"] = location.house
+                if location.block:
+                    initial_data["customer_block"] = location.block
+                if location.building:
+                    initial_data["customer_building"] = location.building
+                if location.flat:
+                    initial_data["customer_flat"] = location.flat
+        form = EditBurialForm(initial=initial_data)
+    return direct_to_template(request, 'burial_edit.html', {'burial': burial, 'form': form, 'phoneset': phoneset})
 
 
 
@@ -704,7 +735,7 @@ def management_user(request):
             if hasattr(cd['role'], "djgroups") and cd['role'].djgroups.all():
                 for djgr in cd['role'].djgroups.all():
                     user.groups.add(djgr)  # Добавляем человека в django-группу, связанную с его ролью.
-            user.is_staff = True
+#            user.is_staff = True
             user.save()
             return redirect("/management/user/")
     else:
@@ -1161,7 +1192,7 @@ def init(request):
 #            person_role.save()
             # Системный пользователь django.
             user = User.objects.create_user(username=cd["username"], email="", password=cd["password1"])
-            user.is_staff = True
+#            user.is_staff = True
             user.last_name = cd["last_name"].capitalize()
             if first_name:
                 user.first_name = first_name.capitalize()
