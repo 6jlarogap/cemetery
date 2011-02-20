@@ -190,10 +190,10 @@ class JournalForm(forms.Form):
         rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", last_name)
         if rest:
             raise forms.ValidationError("Недопустимые символы в имени усопшего.")
-        cust_last_name = cd["customer_last_name"]
-        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", cust_last_name)
-        if rest:
-            raise forms.ValidationError("Недопустимые символы в имени Заказчика.")
+#        cust_last_name = cd["customer_last_name"]
+#        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", cust_last_name)
+#        if rest:
+#            raise forms.ValidationError("Недопустимые символы в имени Заказчика.")
         # Валидация кладбища/операции.
         operation = cd.get("operation", None)
         if not operation:
@@ -340,10 +340,10 @@ class EditBurialForm(forms.Form):
         rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", last_name)
         if rest:
             raise forms.ValidationError("Недопустимые символы в имени усопшего.")
-        cust_last_name = cd["customer_last_name"]
-        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", cust_last_name)
-        if rest:
-            raise forms.ValidationError("Недопустимые символы в имени Заказчика.")
+#        cust_last_name = cd["customer_last_name"]
+#        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", cust_last_name)
+#        if rest:
+#            raise forms.ValidationError("Недопустимые символы в имени Заказчика.")
         # Валидация кладбища/операции.
         operation = cd.get("operation", None)
         if not operation:

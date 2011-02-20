@@ -1222,7 +1222,6 @@ def import_csv(request):
         form = ImportForm(request.POST, request.FILES)
         if form.is_valid():
             cd = form.cleaned_data
-            r = csv.reader(cd["csv_file"], "4mysql")
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment; filename=import_result.csv'
             temp_file = StringIO()
@@ -1233,6 +1232,7 @@ def import_csv(request):
             good_nr = 0
             bad_nr = 0
             s_time = datetime.datetime.now()
+            r = csv.reader(cd["csv_file"], "4mysql")
             for l in r:
                 db.reset_queries()
                 if l:
