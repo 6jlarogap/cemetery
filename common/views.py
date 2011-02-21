@@ -1325,10 +1325,6 @@ def import_csv(request):
                             block = ""
                         if flat == "N":
                             flat = ""
-                        if comment == "N":
-                            comment = u""
-                        else:
-                            comment = comment.decode(settings.CSV_ENCODING).strip()
 
                         # Захороненный.
                         deadman = Person(creator=request.user.userprofile.soul)
@@ -1415,23 +1411,27 @@ def import_csv(request):
 #                        try:
 #                            test_date = datetime.datetime.date(bur_date).strftime("%d.%m.%Y")
                         burial.product = place.product_ptr
-                        if u"захоронение детское" in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_6)
-                        elif u"захоронение в существ" in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_3)
-                        elif u"почетное захоронение" in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_2)
-                        elif u"подзахоронение" in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_4)
-                        elif u"захоронение" in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_1)
-                        elif u"урна" in comment.lower():
-                            operation = Operation.objects.get(uuid=settings.OPER_5)
+                        operation = Operation.objects.get(uuid=settings.OPER_1) # Захоронение
+                        if comment == "N":
+                            comment = u""
                         else:
-                            operation = Operation.objects.get(uuid=settings.OPER_1)
+                            comment = comment.decode(settings.CSV_ENCODING).strip()
+                            if u"захоронение детское" in comment.lower():
+                                operation = Operation.objects.get(uuid=settings.OPER_6)
+                            elif u"захоронение в существ" in comment.lower():
+                                operation = Operation.objects.get(uuid=settings.OPER_3)
+                            elif u"почетное захоронение" in comment.lower():
+                                operation = Operation.objects.get(uuid=settings.OPER_2)
+                            elif u"подзахоронение" in comment.lower():
+                                operation = Operation.objects.get(uuid=settings.OPER_4)
+                            elif u"захоронение" in comment.lower():
+                                operation = Operation.objects.get(uuid=settings.OPER_1)
+                            elif u"урна" in comment.lower():
+                                operation = Operation.objects.get(uuid=settings.OPER_5)
                         burial.operation = operation
                         burial.save()
-                        burial.add_comment(comment, request.user.userprofile.soul)
+                        if comment != u"":
+                            burial.add_comment(comment, request.user.userprofile.soul)
                     except Exception, err_descr:
                         # Откатываем транзакцию.
                         transaction.rollback()
