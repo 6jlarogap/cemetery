@@ -4,3 +4,4 @@
 media/ofiles
 .tmp*
 pytest.py
+contrib/packages/i386/samba/
