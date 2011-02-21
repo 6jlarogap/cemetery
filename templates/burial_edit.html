@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+{% load adminmedia %}
+{% load my_filters %}
+{% block title %}Редактирование захоронения{% endblock %}
+{% block scripts %}
+{{ form.media }}
+<link rel="stylesheet" href="/media/css/ui-lightness/jquery-ui-1.8.6.custom.css" type="text/css" />
+<script type="text/javascript" src="/media/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="/media/js/jquery-ui-1.8.6.custom.min.js"></script>
+<script type="text/javascript">
+    window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";
+</script>
+<script type="text/javascript" charset="utf-8">
+//Первоначальное заполнение списка услуг.
+$(function(){
+    $("#id_burial_date").focus(function(){
+     this.select();
+     });
+
+    $.getJSON("/getoper/",{id: $("#id_cemetery").val(), ajax: 'true'}, function(j){
+      var options = '';
+      for (var i = 0; i < j.length; i++) {
+        if (j[i].optionValue == $("#id_hoperation").val())
+        { options += '<option selected value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>'; }
+        else
+        { options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>'; }
+      }
+      $("#id_operation").html(options);
+    });
+    });
+$(function(){
+//   $("#id_country").change(function(){
+//            $("#id_region").val("");
+//            $("#id_city").val("");
+//            $("#id_street").val("");
+//        });
+//   $("#id_region").change(function(){
+//            $("#id_city").val("");
+//            $("#id_street").val("");
+//        });
+//   $("#id_city").change(function(){
+//            $("#id_street").val("");
+//        });
+  // Обработчик изменения выбранной услуги.
+  $("#id_operation").change(function(){
+    $("#id_hoperation").val($("#id_operation").val());
+  });
+  // Обработчик изменения выбранного кладбища.
+  $("#id_cemetery").change(function(){
+    $.getJSON("/getoper/",{id: $(this).val(), ajax: 'true'}, function(j){
+      var options = '';
+      for (var i = 0; i < j.length; i++) {
+        if (j[i].optionValue == $("#id_hoperation").val())
+        {
+            options += '<option selected value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
+//            $("#id_hoperation").val(j[i].optionValue);
+//            s = 1;
+        }
+        else
+        {
+            options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
+        }
+//        if (s == 0)
+//          {
+//            options = '<option value="0">----------------</option>' + options;
+//          }
+      }
+      $("#id_operation").html(options);
+      $("#id_area").val("");
+      $("#id_row").val("");
+      $("#id_seat").val("");
+    });
+  });
+
+   //автодополнение страны.
+   $("#id_country").autocomplete({
+        source: "/getcountries/",
+        minLength: 1,
+        delay: 100,
+    });
+
+   //автодополнение региона.
+   $("#id_region").autocomplete({
+        source: "/getregions/",
+        minLength: 2,
+        delay: 100,
+        select: function(event, ui) {
+            $("#id_region").val(ui.item.value.split("/")[0]);
+            $("#id_country").val(ui.item.value.split("/")[1]);
+            return false;
+       },
+       focus: function(event, ui) {
+            $("#id_region").val(ui.item.value.split("/")[0]);
+//            $("#id_country").val(ui.item.value.split("/")[1]);
+            return false;
+       }
+   });
+   //автодополнение нас. пункта.
+   $("#id_city").autocomplete({
+        source: "/getcities/",
+        minLength: 2,
+        delay: 100,
+        select: function(event, ui) {
+            $("#id_city").val(ui.item.value.split("/")[0]);
+            $("#id_region").val(ui.item.value.split("/")[1]);
+            $("#id_country").val(ui.item.value.split("/")[2]);
+            return false;
+       },
+       focus: function(event, ui) {
+            $("#id_city").val(ui.item.value.split("/")[0]);
+//            $("#id_region").val(ui.item.value.split("/")[1]);
+//            $("#id_country").val(ui.item.value.split("/")[2]);
+            return false;
+       }
+
+    });
+   //автодополнение улицы.
+   $("#id_street").autocomplete({
+        source: "/getstreets/",
+        minLength: 2,
+        delay: 100,
+        select: function(event, ui) {
+            $("#id_street").val(ui.item.value.split("/")[0]);
+            $("#id_city").val(ui.item.value.split("/")[1]);
+            $("#id_region").val(ui.item.value.split("/")[2]);
+            $("#id_country").val(ui.item.value.split("/")[3]);
+            return false;
+       },
+       focus: function(event, ui) {
+            $("#id_street").val(ui.item.value.split("/")[0]);
+//            $("#id_city").val(ui.item.value.split("/")[1]);
+//            $("#id_region").val(ui.item.value.split("/")[2]);
+//            $("#id_country").val(ui.item.value.split("/")[3]);
+            return false;
+       }
+
+    });
+})
+</script>
+{%  endblock %}
+{% block content %}
+    <div id="free_form">
+    <form action="" method="post" enctype="multipart/form-data">
+        {{ form.non_field_errors }}
+        <table width="800">
+            <tr>
+                <td width="33%" id="free_form">{{ form.account_book_n.label_tag }}</td>
+                <td width="33%" id="free_form">{{ form.burial_date.label_tag }}</td>
+                <td width="33%">&nbsp;</td>
+            </tr>
+            <tr>
+                {% if user|in_group:"edit_burial" %}
+                    <td width="33%">{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
+                    <td width="33%">{{ form.burial_date.errors }}{{ form.burial_date }}</td>
+                {% else %}
+                    <td width="33%">{{ burial.account_book_n }}</td>
+                    <td width="33%">{{ burial.date_fact|date:"d.m.Y" }}</td>
+                {% endif %}
+                <td width="33%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td width="33%" id="free_form">{{ form.last_name.label_tag }}</td>
+                <td width="33%" id="free_form">{{ form.first_name.label_tag }}</td>
+                <td width="33%" id="free_form">{{ form.patronymic.label_tag }}</td>
+            </tr>
+            <tr>
+                {% if user|in_group:"edit_burial" %}
+                    <td width="33%" id="free_form">{{ form.last_name.errors }}{{ form.last_name }}</td>
+                    <td width="33%" id="free_form">{{ form.first_name.errors }}{{ form.first_name }}</td>
+                    <td width="33%" id="free_form">{{ form.patronymic.errors }}{{ form.patronymic }}</td>
+                {% else %}
+                    <td width="33%" id="free_form">{{ burial.person.last_name }}</td>
+                    <td width="33%" id="free_form">{{ burial.person.first_name }}</td>
+                    <td width="33%" id="free_form">{{ burial.person.patronymic }}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td width="33%" id="free_form">{{ form.cemetery.label_tag }}</td>
+                <td width="33%" id="free_form">{{ form.operation.label_tag }}</td>
+                <td width="33%">&nbsp;</td>
+            </tr>
+            <tr>
+                {% if user|in_group:"edit_burial" %}
+                    <td width="33%" id="free_form">{{ form.cemetery.errors }}{{ form.cemetery }}</td>
+                    <td width="33%" id="free_form">{{ form.operation.errors }}{{ form.operation }}{{ form.hoperation.errors }}{{ form.hoperation }}</td>
+                    <td width="33%">&nbsp;</td>
+                {% else %}
+                    <td width="33%" id="free_form">{{ burial.product.place.cemetery.name }}</td>
+                    <td width="33%" id="free_form">{{ burial.operation.op_type }}</td>
+                    <td width="33%">&nbsp;</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td width="33%" id="free_form">{{ form.area.label_tag }}</td>
+                <td width="33%" id="free_form">{{ form.row.label_tag }}</td>
+                <td width="33%" id="free_form">{{ form.seat.label_tag }}</td>
+            </tr>
+            <tr>
+                {% if user|in_group:"edit_burial" %}
+                    <td width="33%" id="free_form">{{ form.area.errors }}{{ form.area }}</td>
+                    <td width="33%" id="free_form">{{ form.row.errors }}{{ form.row }}</td>
+                    <td width="33%" id="free_form">{{ form.seat.errors }}{{ form.seat }}</td>
+                {% else %}
+                    <td width="33%" id="free_form">{{ burial.product.place.area }}</td>
+                    <td width="33%" id="free_form">{{ burial.product.place.row }}</td>
+                    <td width="33%" id="free_form">{{ burial.product.place.seat }}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td width="33%" id="free_form">{{ form.customer_last_name.label_tag }}</td>
+                <td width="33%" id="free_form">{{ form.customer_first_name.label_tag }}</td>
+                <td width="33%" id="free_form">{{ form.customer_patronymic.label_tag }}</td>
+            </tr>
+            <tr>
+                {% if user|in_group:"edit_burial" %}
+                    <td width="33%" id="free_form">{{ form.customer_last_name.errors }}{{ form.customer_last_name }}</td>
+                    <td width="33%" id="free_form">{{ form.customer_first_name.errors }}{{ form.customer_first_name }}</td>
+                    <td width="33%" id="free_form">{{ form.customer_patronymic.errors }}{{ form.customer_patronymic }}</td>
+                {% else %}
+                    <td width="33%" id="free_form">{{ burial.customer.person.last_name }}</td>
+                    <td width="33%" id="free_form">{{ burial.customer.person.first_name }}</td>
+                    <td width="33%" id="free_form">{{ burial.customer.person.patronymic }}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td width="33%" id="free_form">{{ form.post_index.label_tag }}</td>
+                {% if user|in_group:"edit_burial" %}
+                    <td width="33%" id="free_form">{{ form.post_index.errors }}{{ form.post_index }}</td>
+                {% else %}
+                    {{ burial.customer.location.post_index }}
+                {% endif %}
+                <td width="33%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td id="free_form">{{ form.street.label_tag }}</td>
+                <td id="free_form">{{ form.city.label_tag }}</td>
+                <td id="free_form">{{ form.region.label_tag }}</td>
+                <td id="free_form">{{ form.country.label_tag }}</td>
+            </tr>
+            <tr>
+                {% if user|in_group:"edit_burial" %}
+                    <td id="free_form">{{ form.street.errors }}{{ form.street }}</td>
+                    <td id="free_form">{{ form.city.errors }}{{ form.city }}</td>
+                    <td id="free_form">{{ form.region.errors }}{{ form.region }}</td>
+                    <td id="free_form">{{ form.country.errors }}{{ form.country }}</td>
+                {% else %}
+                    {{ burial.customer.location.street.name }}
+                    {{ burial.customer.location.street.city.name }}
+                    {{ burial.customer.location.street.city.region.name }}
+                    {{ burial.customer.location.street.city.region.country.name }}
+                {% endif %}
+            </tr>
+            <tr>
+                <td id="free_form">{{ form.new_street.label_tag }}</td>
+                <td id="free_form">{{ form.new_city.label_tag }}</td>
+                <td id="free_form">{{ form.new_region.label_tag }}</td>
+                <td id="free_form">{{ form.new_country.label_tag }}</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                {% if user|in_group:"edit_burial" %}
+                    <td id="free_form">{{ form.new_street }}</td>
+                    <td id="free_form">{{ form.new_city }}</td>
+                    <td id="free_form">{{ form.new_region }}</td>
+                    <td id="free_form">{{ form.new_country }}</td>
+                {% else %}
+                    {{ form.new_street }}
+                    {{ form.new_city }}
+                    {{ form.new_region }}
+                    {{ form.new_country }}
+                {% endif %}
+            </tr>
+            <tr>
+                <td id="free_form">{{ form.customer_house.label_tag }}</td>
+                <td id="free_form">{{ form.customer_block.label_tag }}</td>
+                <td id="free_form">{{ form.customer_building.label_tag }}</td>
+                <td id="free_form">{{ form.customer_flat.label_tag }}</td>
+            </tr>
+            <tr>
+                {% if user|in_group:"edit_burial" %}
+                    <td id="free_form">{{ form.customer_house.errors }}{{ form.customer_house }}</td>
+                    <td id="free_form">{{ form.customer_block.errors }}{{ form.customer_block }}</td>
+                    <td id="free_form">{{ form.customer_building.errors }}{{ form.customer_building }}</td>
+                    <td id="free_form">{{ form.customer_flat.errors }}{{ form.customer_flat }}</td>
+                {% else %}
+                    <td id="free_form">{{ burial.customer.location.house }}</td>
+                    <td id="free_form">{{ burial.customer.location.block }}</td>
+                    <td id="free_form">{{ burial.customer.location.building }}</td>
+                    <td id="free_form">{{ burial.customer.location.flat }}</td>
+                {% endif %}
+            </tr>
+        </table>
+    </div>
+    <br />
+    <div>
+    <h3>Телефоны заказчика:</h3>
+    <table>
+        {{ phoneset }}
+    </table>
+    <h3>Комментарии:</h3>
+        {% for c in burial.ordercomments_set.all %}
+        <!--            <b>{{ forloop.counter }}</b> {{ c.comment }} <a href="/admin/common/ordercomments/{{ c.uuid }}/" target="_blank">редактировать</a><br />-->
+            <b>{{ forloop.counter }}</b> {{ c.comment }} <a href="/ordercomment/{{ c.uuid }}/" target="_self">редактировать</a><br />
+            <small><b>{{ c.creator }}</b>, {{ c.date_of_creation }}</small><br /><br />
+        {%  endfor %}
+        <br />
+        <small>Добавить новый:</small>
+        <br />
+        {{ form.comment.errors }}{{ form.comment }}
+    <h3>Файлы:</h3>
+        {% for f in burial.orderfiles_set.all %}
+            <b>{{ forloop.counter }}</b>
+{#            <img src="{{ f.ofile.thumbnail.url }}">#}
+            <a href="/media/{{ f.ofile }}">скачать</a>
+            <a href="/admin/common/orderfiles/{{ f.uuid }}/" target="_blank">редактировать</a>
+            <a href="/orderfile/delete/{{ burial.uuid }}/{{ f.uuid }}/">удалить</a>
+            <br />
+            Комментарий к файлу: <i>{{ f.comment }}</i>
+            <br />
+            <small><b>{{ f.creator }}</b>, {{ f.date_of_creation }}</small><br /><br />
+        {%  endfor %}
+        <small>Добавить новый (до 5 Mb):</small>
+        <br />
+        {{ form.file1.errors }}{{ form.file1 }}<br />
+        {{ form.file1_comment.errors }}{{ form.file1_comment }}
+        <br />
+        <br />
+        {% if user|in_group:"edit_bur_in_adm" %}
+            {{ form.in_trash.label_tag }}{{ form.in_trash }}
+        {% endif %}
+        <br />
+        <br />
+        <input type="submit" value="Сохранить"  tabindex="22">
+        <button type="button" onclick="top.location.href='{{ request.path }}';" tabindex="23">Отмена</button>
+    </form>
+    </div>
+    <br />
+    <br />
+    <br />
+    <a href="/journal/">Назад</a>
+
+{% endblock %}
