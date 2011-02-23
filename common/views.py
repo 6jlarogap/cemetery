@@ -12,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 #from django.utils import simplejson
 from django.utils.simplejson.encoder import JSONEncoder
-from forms import SearchForm, NewUserForm, EditUserForm, ImportForm
+from forms import SearchForm, NewUserForm, EditUserForm, ImportForm, OrderFileCommentForm
 from forms import CemeteryForm, JournalForm, EditBurialForm, InitalForm, OrderCommentForm
 from django.forms.models import modelformset_factory
 from models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization, OrderComments
@@ -369,7 +369,7 @@ def journal(request):
             # Create comment.
             if cd.get("comment", ""):
                 new_burial.add_comment(cd["comment"], request.user.userprofile.soul)
-            # Save images.
+            # Save files.
             for nf in request.FILES:
                 nfile = request.FILES[nf]
                 of = OrderFiles(creator=request.user.userprofile.soul)
@@ -579,9 +579,38 @@ def edit_burial(request, uuid):
 #@permission_required('common.change_ordercomment')
 @is_in_group("edit_burial")
 @transaction.commit_on_success
+def order_filecomment_edit(request, uuid):
+    """
+    Страница редактирования комментария к файлу.
+    """
+    try:
+        f = OrderFiles.objects.get(uuid=uuid)
+    except ObjectDoesNotExist:
+        raise Http404
+    else:
+        if request.method == "POST":
+            form = OrderFileCommentForm(request.POST)
+            if form.is_valid():
+                cd = form.cleaned_data
+#                ouuid = f.order.uuid
+                f.comment = cd["comment"]
+                f.creator = request.user.userprofile.soul
+                f.date_of_creation = datetime.datetime.now()
+                f.save()
+                return redirect("/burial/%s/" % f.order.uuid)
+        else:
+            initial_data = {"comment": f.comment}
+            form = OrderFileCommentForm(initial=initial_data)
+        return direct_to_template(request, "order_comment_edit.html", {"form": form})
+
+
+@login_required
+#@permission_required('common.change_ordercomment')
+@is_in_group("edit_burial")
+@transaction.commit_on_success
 def order_comment_edit(request, uuid):
     """
-    Страница редактирования комментария.
+    Страница редактирования комментария к захоронению.
     """
     if request.method == "POST":
         form = OrderCommentForm(request.POST)
@@ -1473,7 +1502,7 @@ def import_csv(request):
 @is_in_group("delete_orderfile")
 def delete_orderfile(request, ouuid, fuuid):
     """
-    Удаление картинки ордера.
+    Удаление файла ордера.
     """
     try:
         f = OrderFiles.objects.get(order__uuid=ouuid, uuid=fuuid)

@@ -446,6 +446,14 @@ class EditBurialForm(forms.Form):
 
 
 @autostrip
+class OrderFileCommentForm(forms.Form):
+    """
+    Форма редактирования комментария к файлу заказу.
+    """
+    comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 90}),
+                              label="Комментарий")
+
+@autostrip
 class OrderCommentForm(forms.Form):
     """
     Форма редактирования комментария к заказу.

@@ -17,6 +17,16 @@ $(function(){
      this.select();
      });
 
+     $("#id_customer_last_name").focus(function(){
+         if ($(this).val()=="НЕИЗВЕСТЕН")
+         {$(this).val("");}
+         });
+
+     $("#id_customer_last_name").focusout(function(){
+         if ($(this).val()=="")
+         {$(this).val("НЕИЗВЕСТЕН");}
+         });
+
     $.getJSON("/getoper/",{id: $("#id_cemetery").val(), ajax: 'true'}, function(j){
       var options = '';
       for (var i = 0; i < j.length; i++) {
@@ -309,15 +319,16 @@ $(function(){
         {{ form.comment.errors }}{{ form.comment }}
     <h3>Файлы:</h3>
         {% for f in burial.orderfiles_set.all %}
-            <b>{{ forloop.counter }}</b>
+            <b>{{ forloop.counter }} &nbsp; {{ f.ofile.name }}</b>
 {#            <img src="{{ f.ofile.thumbnail.url }}">#}
             <a href="/media/{{ f.ofile }}">скачать</a>
-            <a href="/admin/common/orderfiles/{{ f.uuid }}/" target="_blank">редактировать</a>
             <a href="/orderfile/delete/{{ burial.uuid }}/{{ f.uuid }}/">удалить</a>
             <br />
-            Комментарий к файлу: <i>{{ f.comment }}</i>
+            <small>Комментарий к файлу:</small> <i>{{ f.comment }}</i>
             <br />
-            <small><b>{{ f.creator }}</b>, {{ f.date_of_creation }}</small><br /><br />
+            <a href="/orderfilecomment/{{ f.uuid }}/" target="_self">редактировать комментарий</a>
+            <br />
+            <small><i>{{ f.creator }}</i>, {{ f.date_of_creation }}</small><br /><br />
         {%  endfor %}
         <small>Добавить новый (до 5 Mb):</small>
         <br />
