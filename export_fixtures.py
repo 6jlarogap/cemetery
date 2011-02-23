@@ -33,11 +33,11 @@ for cem in cemeteries:
     imp_cem_rec.save()
 
 # Обрабатываем захоронения.
-burials = Burial.objects.filter(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))[:500]
+burials = Burial.objects.filter(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))#[:500]
 for bur in burials:
     uuid = bur.person.uuid
     cemetery = ImpCem.objects.get(cem_pk=bur.product.place.cemetery.uuid)
-    ImpBur.objects.filter(deadman_pk=uuid).delete()
+#    ImpBur.objects.filter(deadman_pk=uuid).delete()
     imp_bur_rec = ImpBur(deadman_pk=uuid)  # Запись в таблице импорта захоронений.
     imp_bur_rec.bur_pk = bur.uuid
     imp_bur_rec.last_name = bur.person.last_name

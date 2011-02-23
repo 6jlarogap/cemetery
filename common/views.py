@@ -1253,6 +1253,8 @@ def import_csv(request):
                             ln = u""
                         else:
                             ln = ln.decode(settings.CSV_ENCODING).strip().capitalize()
+                            ln = re.sub(r'ё', r'е', ln)
+                            ln = re.sub(r'Ё', r'Е', ln)
                         # Имя захороненного.
                         if fn == "N":
                             fn = u""
@@ -1291,6 +1293,8 @@ def import_csv(request):
                             cust_ln = u""
                         else:
                             cust_ln = cust_ln.decode(settings.CSV_ENCODING).strip().capitalize()
+                            cust_ln = re.sub(r'ё', r'е', cust_ln)
+                            cust_ln = re.sub(r'Ё', r'Е', cust_ln)
                         # Имя заказчика.
                         if cust_fn == "N":
                             cust_fn = u""
@@ -1317,6 +1321,8 @@ def import_csv(request):
                             street = u""
                         else:
                             street = street.decode(settings.CSV_ENCODING).strip().capitalize()
+                            street = re.sub(r'ё', r'е', street)
+                            street = re.sub(r'Ё', r'Е', street)
                         if house == "N":
                             house = u""
                         else:
@@ -1416,6 +1422,8 @@ def import_csv(request):
                             comment = u""
                         else:
                             comment = comment.decode(settings.CSV_ENCODING).strip()
+                            comment = re.sub(r'ё', r'е', comment)
+                            comment = re.sub(r'Ё', r'Е', comment)
                             if u"захоронение детское" in comment.lower():
                                 operation = Operation.objects.get(uuid=settings.OPER_6)
                             elif u"захоронение в существ" in comment.lower():

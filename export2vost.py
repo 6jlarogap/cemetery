@@ -36,7 +36,7 @@ for step in xrange(0, total, step_size):
         row = burial.product.place.row.encode('cp1251')
         seat = burial.product.place.seat.encode('cp1251')
         cemetery = burial.product.place.cemetery.name.encode('cp1251')
-        if (last_name) and (last_name != "НЕИЗВЕСТЕН"):
+        if (last_name) and (last_name.upper() != "НЕИЗВЕСТЕН"):
             writer.writerow((uuid, last_name, initials, date, area, row, seat, cemetery))
 f.close()
 os.chmod(fname, stat.S_IWOTH | stat.S_IROTH | stat.S_IWGRP | stat.S_IRGRP | stat.S_IRUSR | stat.S_IWUSR)
