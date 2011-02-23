@@ -4,7 +4,8 @@ adduser --disabled-password --gecos "" django
 usermod -p $1$KQwQ4Rq7$CtkUF2cjpb9raBQZPjy4J0 django
 #Copy project files
 mkdir /home/django/projects
-cp -R ../../cemetery /home/django/projects
+#cp -R ../../cemetery /home/django/projects
+git clone --no-hardlinks ../../cemetery /home/django/projects/cemetery
 chown -R www-data:www-data /home/django/projects
 #Postgres
 cp configs/postgres/pg_hba.conf /etc/postgresql/8.4/main/
@@ -38,7 +39,8 @@ update-rc.d django defaults
 createdb -U postgres cemetery
 cat cemetery.sql | psql -U postgres cemetery
 #Database dump cron script
-#chmod a+x /home/django/projects/cemetery/contrib/dumpdb.py
+#chmod +x /home/django/projects/cemetery/contrib/dumpdb.py
+#chmod +x /home/django/projects/cemetery/contrib/export2term.py
 #echo "PYTHONPATH=/home/django/projects/cemetery:$PYTHONPATH" >> /etc/crontab
 #echo "DJANGO_SETTINGS_MODULE=settings" >> /etc/crontab
 #echo "5 16 * * *    www-data:www-data   python /home/django/projects/cemetery/contrib/dumpdb.py" >> /etc/crontab
