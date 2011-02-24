@@ -168,7 +168,8 @@ def main_page(request):
                     regex = u"%s$" % regex
             else:
                 regex = u"%s$" % regex
-            burials = burials.filter(person__last_name__iregex=regex)
+            burials = burials.filter(person__last_name__iregex=regex.capitalize()) #-- case insensivity patch
+#            burials = burials.filter(person__last_name__iregex=regex)
             if fname:
                 regex = re.sub(r'\?', r'.', fname)
                 regex = re.sub(r'\*', r'.*', regex)
