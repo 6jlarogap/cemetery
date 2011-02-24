@@ -676,8 +676,8 @@ class ImportForm(forms.Form):
     """
     Форма импорта csv-файла.
     """""
-    csv_file = forms.FileField(label="CSV файл")
     cemetery = forms.ModelChoiceField(queryset = Cemetery.objects.all(), label = "Кладбище")
+    csv_file = forms.FileField(label="CSV файл")
 
 
 @autostrip
