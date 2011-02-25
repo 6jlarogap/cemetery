@@ -14,10 +14,13 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
+    # Нужно для работы нашего виджета календаря.
+    # Add this to get widgets.AdminDateWidget() working for non is_staff, is_superuser *
+    # This must be placed before (r'^admin/(.*)', admin.site.root), as that gobals up everything *
+    (r'^admin/jsi18n/', 'django.views.i18n.javascript_catalog'),
+
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
-    # Нужно для работы нашего виджета календаря.
-    (r'^admin/jsi18n/', 'django.views.i18n.javascript_catalog'),
 
     (r'^$', 'common.views.main_page'),
     (r'^init/$', 'common.views.init'),
