@@ -189,7 +189,7 @@ class JournalForm(forms.Form):
         last_name = cd["last_name"]
         rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", last_name)
         if rest:
-            raise forms.ValidationError("Недопустимые символы в имени усопшего.")
+            raise forms.ValidationError("Недопустимые символы в имени усопшего. Допускаются только буквы, цифры и тире")
 #        cust_last_name = cd["customer_last_name"]
 #        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", cust_last_name)
 #        if rest:
@@ -197,7 +197,7 @@ class JournalForm(forms.Form):
         # Валидация кладбища/операции.
         operation = cd.get("operation", None)
         if not operation:
-            raise forms.ValidationError("Не выбрана операция.")
+            raise forms.ValidationError("Не выбрана услуга.")
         cemetery = cd["cemetery"]
         try:
             spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
