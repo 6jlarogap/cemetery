@@ -56,4 +56,4 @@ mkdir -p /var/cemetery/inbox
 mkdir -p /var/cemetery/dumps
 mkdir -p /var/cemetery/terminal
 chown -R www-data:www-data /var/cemetery
-#chmod 777 /var/cemetery/outbox
+chmod 777 /var/cemetery/terminal
