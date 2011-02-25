@@ -816,12 +816,12 @@ def management_edit_user(request, uuid):
 #            if is_staff is not None:
 #                user.is_staff = is_staff
             # Roles processing.
-            if cd.get("default_rights", False):
+#            if cd.get("default_rights", False):
                 # Если сбрасываем все права на дефолтные.
-                user.groups.clear()
-                for r in person.roles.all():
-                    for djgr in r.djgroups.all():
-                        user.groups.add(djgr)
+#                user.groups.clear()
+#                for r in person.roles.all():
+#                    for djgr in r.djgroups.all():
+#                        user.groups.add(djgr)
             # Если оставляем кастомные наборы прав.
             roles = cd["role"]
             groups_to_remove = set()
@@ -842,7 +842,7 @@ def management_edit_user(request, uuid):
             safe_gr_to_remove = groups_to_remove - groups_to_remain
             for djgr in safe_gr_to_remove:
                 user.groups.remove(djgr)
-            # Создание новых ролей исполнителя.
+            # Назначение Исполнителя на новые роли.
             for r in roles:
                 if r not in person.roles.all():
                     # Новая роль.
@@ -1242,7 +1242,7 @@ def init(request):
 
 
 @login_required
-@is_in_group("import_csv")
+#@is_in_group("import_csv")
 @transaction.commit_manually
 def import_csv(request):
     """
