@@ -1273,6 +1273,8 @@ def import_csv(request):
         form = ImportForm(request.POST, request.FILES)
         if form.is_valid():
             cd = form.cleaned_data
+            if cd["creator"]:
+                creator = cd["creator"].userprofile.soul
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment; filename=import_result.csv'
             temp_file = StringIO()
@@ -1384,7 +1386,7 @@ def import_csv(request):
                             flat = ""
 
                         # Захороненный.
-                        deadman = Person(creator=request.user.userprofile.soul)
+                        deadman = Person(creator=creator)
                         deadman.last_name = ln
                         if fn:
                             deadman.first_name = fn
@@ -1399,7 +1401,7 @@ def import_csv(request):
                         deadman.save()
 
                         # Заказчик.
-                        customer = Person(creator=request.user.userprofile.soul)
+                        customer = Person(creator=creator)
                         customer.last_name = cust_ln
                         if cust_fn:
                             customer.first_name = cust_fn
@@ -1447,7 +1449,7 @@ def import_csv(request):
                             place = Place.objects.get(cemetery=cemetery, area__iexact=area, row__iexact=row,
                                                       seat__iexact=seat)
                         except ObjectDoesNotExist:
-                            place = Place(creator=request.user.userprofile.soul)
+                            place = Place(creator=creator)
                             place.cemetery = cemetery
                             place.area = area
                             place.row = row
@@ -1458,7 +1460,7 @@ def import_csv(request):
                             place.save()
 
                         # Захоронение.
-                        burial = Burial(creator=request.user.userprofile.soul)
+                        burial = Burial(creator=creator)
                         burial.person = deadman
                         burial.account_book_n = n
                         burial.responsible = place.cemetery.organization.soul_ptr
