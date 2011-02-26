@@ -648,6 +648,7 @@ def profile(request):
             if hasattr(request.user, "userprofile"):
                 up = request.user.userprofile
             else:
+                # this case could not happen - we creating profile with user creation!
                 soul = Soul(creator=request.user.userprofile.soul)
                 soul.save()
                 up = UserProfile(user=request.user, soul=soul)
@@ -755,9 +756,9 @@ def management_user(request):
             if cd.get('phone', ""):
                 phone = Phone(soul=person.soul_ptr, f_number=cd['phone'])
                 phone.save()
-            person_role = PersonRole(person=person, role=cd['role'],
-                                     creator=request.user.userprofile.soul)
-            person_role.save()
+#            person_role = PersonRole(person=person, role=cd['role'],
+#                                     creator=request.user.userprofile.soul)
+#            person_role.save()
             user = User.objects.create_user(username=cd['username'], email="",
                                             password=password)
             user.last_name = cd['last_name'].capitalize()
@@ -765,15 +766,20 @@ def management_user(request):
                 user.first_name = cd['first_name'].capitalize()
             profile = UserProfile(user=user, soul=person.soul_ptr)
             profile.save()
-            if hasattr(cd['role'], "djgroups") and cd['role'].djgroups.all():
-                for djgr in cd['role'].djgroups.all():
-                    user.groups.add(djgr)  # Добавляем человека в django-группу, связанную с его ролью.
+            # Добавление пользователя во все существующие django-группы.
+            dgroups = Group.objects.all()
+            for dgr in dgroups:
+                user.groups.add(dgr)
+#            if hasattr(cd['role'], "djgroups") and cd['role'].djgroups.all():
+#                for djgr in cd['role'].djgroups.all():
+#                    user.groups.add(djgr)  # Добавляем человека в django-группу, связанную с его ролью.
 #            user.is_staff = True
             user.save()
             return redirect("/management/user/")
     else:
         form = NewUserForm()
-    users = PersonRole.objects.all().order_by('person__last_name', 'person__first_name')
+    users = User.objects.all().order_by('last_name')
+#    users = PersonRole.objects.all().order_by('person__last_name', 'person__first_name')
     return direct_to_template(request, 'management_user.html',
                               {'form': form, "users": users})
 
@@ -828,37 +834,37 @@ def management_edit_user(request, uuid):
 #                for r in person.roles.all():
 #                    for djgr in r.djgroups.all():
 #                        user.groups.add(djgr)
-            # Если оставляем кастомные наборы прав.
-            roles = cd["role"]
-            groups_to_remove = set()
-            groups_to_remain = set()
-            # Удаление удаленных ролей исполнителя.
-            for r in person.roles.all():
-                if r not in roles:
-                    # Роль удалена.
-                    old_pr = PersonRole.objects.get(person=person, role=r)
-                    old_pr.delete()
-                    # удаление исполнителя из соответствующих django-групп.
-                    for djgr in r.djgroups.all():
-                        groups_to_remove.add(djgr)
-                else:
-                    for djgr in r.djgroups.all():
-                        groups_to_remain.add(djgr)
-            # Безопасное удаление django-групп.
-            safe_gr_to_remove = groups_to_remove - groups_to_remain
-            for djgr in safe_gr_to_remove:
-                user.groups.remove(djgr)
-            # Назначение Исполнителя на новые роли.
-            for r in roles:
-                if r not in person.roles.all():
-                    # Новая роль.
-                    new_pr = PersonRole(creator=request.user.userprofile.soul, hire_date=datetime.date.today())
-                    new_pr.person = person
-                    new_pr.role = r
-                    new_pr.save()
-                    # добавление исполнителя в соответствующие django-группы.
-                    for djgr in r.djgroups.all():
-                        user.groups.add(djgr)
+#            # Если оставляем кастомные наборы прав.
+#            roles = cd["role"]
+#            groups_to_remove = set()
+#            groups_to_remain = set()
+#            # Удаление удаленных ролей исполнителя.
+#            for r in person.roles.all():
+#                if r not in roles:
+#                    # Роль удалена.
+#                    old_pr = PersonRole.objects.get(person=person, role=r)
+#                    old_pr.delete()
+#                    # удаление исполнителя из соответствующих django-групп.
+#                    for djgr in r.djgroups.all():
+#                        groups_to_remove.add(djgr)
+#                else:
+#                    for djgr in r.djgroups.all():
+#                        groups_to_remain.add(djgr)
+#            # Безопасное удаление django-групп.
+#            safe_gr_to_remove = groups_to_remove - groups_to_remain
+#            for djgr in safe_gr_to_remove:
+#                user.groups.remove(djgr)
+#            # Назначение Исполнителя на новые роли.
+#            for r in roles:
+#                if r not in person.roles.all():
+#                    # Новая роль.
+#                    new_pr = PersonRole(creator=request.user.userprofile.soul, hire_date=datetime.date.today())
+#                    new_pr.person = person
+#                    new_pr.role = r
+#                    new_pr.save()
+#                    # добавление исполнителя в соответствующие django-группы.
+#                    for djgr in r.djgroups.all():
+#                        user.groups.add(djgr)
             user.save()
             return redirect('/management/user/')
     else:
@@ -870,12 +876,12 @@ def management_edit_user(request, uuid):
 #        phones = Phone.objects.filter(soul=person.soul_ptr)
 #        if phones:
 #            initial_data["phone"] = phones[0]
-        if person.personrole_set.all():
-            prs = PersonRole.objects.filter(person=person)
-            roles = []
-            for pr in prs:
-                roles.append(pr.role)
-            initial_data["role"] = roles
+#        if person.personrole_set.all():
+#            prs = PersonRole.objects.filter(person=person)
+#            roles = []
+#            for pr in prs:
+#                roles.append(pr.role)
+#            initial_data["role"] = roles
         if person.first_name:
             initial_data["first_name"] = person.first_name
         if person.patronymic:
@@ -1222,11 +1228,11 @@ def init(request):
             if phone:
                 dir_phone = Phone(soul=person.soul_ptr, f_number=phone)
                 dir_phone.save()
-            # Роль директора
-            role = Role(creator=request.user.userprofile.soul, name="Директор", organization=organization)
-            role.save()
-            person_role = PersonRole(person=person, role=role, creator=request.user.userprofile.soul)
-            person_role.save()
+#            # Роль директора
+#            role = Role(creator=request.user.userprofile.soul, name="Директор", organization=organization)
+#            role.save()
+#            person_role = PersonRole(person=person, role=role, creator=request.user.userprofile.soul)
+#            person_role.save()
 #            # Роль работника
 #            role = Role(creator=request.user.userprofile.soul, name="Работник", organization=organization)
 #            role.save()
@@ -1247,7 +1253,7 @@ def init(request):
             dgroups = Group.objects.all()
             for dgr in dgroups:
                 user.groups.add(dgr)
-            return redirect("/admin/")
+            return redirect("/management/")
     else:
         form = InitalForm()
     return direct_to_template(request, "init.html", {"form": form})

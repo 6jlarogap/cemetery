@@ -19,24 +19,31 @@
         <br>
         <table width="100%">
             <thead>
+                <td width="15%">Логин</td>
                 <td width="15%">Фамилия</td>
+                <!--
                 <td width="15%">Имя</td>
                 <td width="15%">Отчество</td>
-                <td width="45%">Роль</td>
+                <td width="45%">Роль</td>-->
                 <td width="10%" align="center">Опции</td>
             </thead>
             {% for u in users %}
-                <tr>
-                    <td width="20%">{{ u.person.last_name }}</td>
-                    <td width="20%">{{ u.person.first_name }}</td>
-                    <td width="20%">{{ u.person.patronymic }}</td>
-                    <td width="20%">{{ u.role.organization }}: {{ u.role.name }}</td>
-                    <td width="20%" align="center">
-                        <button title="Редактировать" onclick="top.location.href='/management/user/edit/{{ u.person.uuid }}/';"><img src="/media/edit.png"></button>
-                        &nbsp;
-                        <!--|&nbsp;-->
-                        <!--<button title="Удалить" onclick="if (confirm('Удалить исполнителя?')){top.location.href='/management/user/delete/{{ u.person.uuid }}/';}"><img src="/media/delete.png"></button>-->
-                </tr>
+            <tr>
+                <td width="20%">{{ u.username }}</td>
+                <td width="20%">{{ u.last_name }}</td>
+                <!--
+                <td width="20%">{{ u.first_name }}</td>
+                <td width="20%">{{ u.person.last_name }}</td>
+                <td width="20%">{{ u.person.first_name }}</td>
+                <td width="20%">{{ u.person.patronymic }}</td>
+                <td width="20%">{{ u.role.organization }}: {{ u.role.name }}</td>
+                -->
+                <td width="20%" align="center">
+                    <button title="Редактировать" onclick="top.location.href='/management/user/edit/{{ u.userprofile.soul.uuid }}/';"><img src="/media/edit.png"></button>
+                    &nbsp;
+                    <!--|&nbsp;-->
+                    <!--<button title="Удалить" onclick="if (confirm('Удалить исполнителя?')){top.location.href='/management/user/delete/{{ u.person.uuid }}/';}"><img src="/media/delete.png"></button>-->
+            </tr>
             {% endfor %}
         </table>
     {% endif %}

@@ -39,7 +39,6 @@
                         {% if user.is_authenticated %}
                             {% if user.is_superuser %}
                                 <a href="/init/">[Инициализация]</a>&nbsp;&nbsp;|&nbsp;
-                                <a href='/management/import/'>[Импорт]</a>&nbsp;&nbsp;|&nbsp;
                                 <a href="/management/">[Управление]</a>&nbsp;&nbsp;|&nbsp;
                             {% else %}
                                 <a href='/?trash=1'>[Корзина]</a>&nbsp;&nbsp;|&nbsp;
