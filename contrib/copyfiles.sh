@@ -39,14 +39,12 @@ update-rc.d django defaults
 createdb -U postgres cemetery
 cat cemetery.sql | psql -U postgres cemetery
 #Test strings
-#chmod +x /home/django/projects/cemetery/contrib/dumpdb.py
-#chmod +x /home/django/projects/cemetery/contrib/export2term.py
 #echo "*/1 * * * *    www-data   python /home/django/projects/cemetery/contrib/dumpdb.py 2>>/tmp/cronerror.txt" >> /etc/crontab
-#Database dump cron script
-#echo "PYTHONPATH=/home/django/projects/cemetery:$PYTHONPATH" >> /etc/crontab
-#echo "DJANGO_SETTINGS_MODULE=settings" >> /etc/crontab
-#echo "5 16 * * *    www-data   python /home/django/projects/cemetery/contrib/dumpdb.py" >> /etc/crontab
-#echo "35 10 * * *    www-data   python /home/django/projects/cemetery/contrib/export2term.py" >> /etc/crontab
+Database dump cron script
+echo "PYTHONPATH=/home/django/projects/cemetery:\$PYTHONPATH" >> /etc/crontab
+echo "DJANGO_SETTINGS_MODULE=settings" >> /etc/crontab
+echo "5 16 * * *    www-data   python /home/django/projects/cemetery/contrib/dumpdb.py" >> /etc/crontab
+echo "15 15 * * *    www-data   python /home/django/projects/cemetery/contrib/export2term.py" >> /etc/crontab
 #Start django daemon
 /etc/init.d/django restart
 /etc/init.d/nginx restart
@@ -57,3 +55,10 @@ mkdir -p /var/cemetery/dumps
 mkdir -p /var/cemetery/terminal
 chown -R www-data:www-data /var/cemetery
 chmod 777 /var/cemetery/terminal
+#--configs
+cp configs/ubuntu/etc/network/interfaces /etc/network/interfaces
+chown root:root /etc/network/interfaces
+chmod 644 /etc/network/interfaces
+cp configs/ubuntu/etc/samba/smb.conf /etc/samba/smb.conf
+chown root:root /etc/samba/smb.conf
+chmod 644 /etc/samba/smb.conf
