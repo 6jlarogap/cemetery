@@ -1,4 +1,5 @@
 *.pyo
+tmp\.*
 *.pyc
 *.swp
 media/ofiles
