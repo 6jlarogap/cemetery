@@ -37,16 +37,13 @@
                     </div>
                     <div id="header_menu_system">
                         {% if user.is_authenticated %}
-                            {% if not user.is_superuser %}
-                                <a href='/?trash=1'>[Корзина]</a>&nbsp;&nbsp;|&nbsp;
-                            {% endif %}
-                            <a href="/profile/">{{ user.last_name }} {{ user.first_name }} {{ user.userprofile.soul.person.patronymic }} ({{ user.username }})</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
                             {% if user.is_superuser %}
                                 <a href="/init/">[Инициализация]</a>&nbsp;&nbsp;|&nbsp;
                                 <a href='/management/import/'>[Импорт]</a>&nbsp;&nbsp;|&nbsp;
-                            {% endif %}
-                            {% if user|in_group:"management" %}
                                 <a href="/management/">[Управление]</a>&nbsp;&nbsp;|&nbsp;
+                            {% else %}
+                                <a href='/?trash=1'>[Корзина]</a>&nbsp;&nbsp;|&nbsp;
+                                <a href="/profile/">{{ user.last_name }} {{ user.first_name }} {{ user.userprofile.soul.person.patronymic }} ({{ user.username }})</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
                             {% endif %}
                             <a href="/logout/">[Выход]</a>
                         {% else %}

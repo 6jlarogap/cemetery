@@ -68,8 +68,6 @@ def ulogin(request):
         request.session.set_test_cookie()
     return direct_to_template(request, 'login.html', {'form':
                                                       form})
-
-
 @login_required
 def ulogout(request):
     """
@@ -78,7 +76,6 @@ def ulogout(request):
     logout(request)
     next_url = request.GET.get("next", "/")
     return redirect(next_url)
-
 
 @render_to()
 @paginate(style='digg')
@@ -721,22 +718,28 @@ def profile(request):
 
 @login_required
 #@permission_required('common.change_burial')
-@is_in_group("management")
+#@is_in_group("management")
 def management(request):
     """
     Общая страница выбора вариантов управления.
     """
+    user = request.user
+    if not user.is_superuser:
+        return HttpResponseForbidden("Forbidden")
     return direct_to_template(request, 'management.html')
 
 
 @login_required
 #@permission_required('common.change_burial')
-@is_in_group("management_user")
+#@is_in_group("management_user")
 @transaction.commit_on_success
 def management_user(request):
     """
     Страница управления пользователями (создание нового, показ существующих).
     """
+    user = request.user
+    if not user.is_superuser:
+        return HttpResponseForbidden("Forbidden")
     if request.method == 'POST':
         form = NewUserForm(request.POST)
         if form.is_valid():
@@ -776,12 +779,15 @@ def management_user(request):
 
 
 @login_required
-@is_in_group("management_edit_user")
+#@is_in_group("management_edit_user")
 @transaction.commit_on_success
 def management_edit_user(request, uuid):
     """
     Редактирование данных исполнителя.
     """
+    user = request.user
+    if not user.is_superuser:
+        return HttpResponseForbidden("Forbidden")
     try:
         person = Person.objects.get(uuid=uuid)
     except ObjectDoesNotExist:
@@ -880,12 +886,15 @@ def management_edit_user(request, uuid):
 
 @login_required
 #@permission_required('common.change_burial')
-@is_in_group("management_cemetery")
+#@is_in_group("management_cemetery")
 @transaction.commit_on_success
 def management_cemetery(request):
     """
     Страница управления кладбищами.
     """
+    user = request.user
+    if not user.is_superuser:
+        return HttpResponseForbidden("Forbidden")
     if request.method == "POST":
         form = CemeteryForm(request.POST)
         if form.is_valid():
@@ -956,12 +965,15 @@ def management_cemetery(request):
 
 @login_required
 #@permission_required('common.change_burial')
-@is_in_group("management_edit_cemetery")
+#@is_in_group("management_edit_cemetery")
 @transaction.commit_on_success
 def management_edit_cemetery(request, uuid):
     """
     Редактирование данных кладбища.
     """
+    user = request.user
+    if not user.is_superuser:
+        return HttpResponseForbidden("Forbidden")
     try:
         cemetery = Cemetery.objects.get(uuid=uuid)
     except ObjectDoesNotExist:
@@ -1248,6 +1260,9 @@ def import_csv(request):
     """
     Импорт захоронений из csv-файла.
     """
+    user = request.user
+    if not user.is_superuser:
+        return HttpResponseForbidden("Forbidden")
     if request.method == "POST":
         form = ImportForm(request.POST, request.FILES)
         if form.is_valid():
