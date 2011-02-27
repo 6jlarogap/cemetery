@@ -202,8 +202,11 @@ def main_page(request):
             burials = burials.filter(date_fact__lte=cd["burial_date_to"])
 #        if cd["death_certificate"]:
 #            burials = burials.filter(person__soul_ptr__deathcertificate__s_number=cd["death_certificate"])
-        if cd["account_book_n"]:
-            burials = burials.filter(account_book_n=cd["account_book_n"])
+        if cd["account_book_n_from"]:
+#            burials = burials.filter(account_book_n=cd["account_book_n"])
+            burials = burials.filter(s2__gte=cd["account_book_n_from"])
+        if cd["account_book_n_to"]:
+            burials = burials.filter(s2__lte=cd["account_book_n_to"])
         if cd["customer"]:
             regex = re.sub(r'\?', r'.', cd["customer"])
             regex = re.sub(r'\*', r'.*', regex)
