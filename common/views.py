@@ -1465,7 +1465,7 @@ def import_csv(request):
                         burial.account_book_n = n
                         burial.responsible = place.cemetery.organization.soul_ptr
                         burial.customer = customer
-                        burial.doer = request.user.userprofile.soul
+                        burial.doer = creator
                         burial.date_fact = bur_date
 #                        try:
 #                            test_date = datetime.datetime.date(bur_date).strftime("%d.%m.%Y")
@@ -1492,7 +1492,7 @@ def import_csv(request):
                         burial.operation = operation
                         burial.save()
                         if comment != u"":
-                            burial.add_comment(comment, request.user.userprofile.soul)
+                            burial.add_comment(comment, creator)
                     except Exception, err_descr:
                         # Откатываем транзакцию.
                         transaction.rollback()
