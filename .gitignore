@@ -5,4 +5,5 @@ tmp\.*
 .tmp*
 pytest.py
 contrib/packages/i386/samba/
-media/ofiles/.*
+media/ofiles/*
+!media/ofiles/
