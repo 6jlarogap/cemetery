@@ -209,6 +209,9 @@
             {% endfor %}
         </td>
         <td>
+            {% if b.orderfiles_set.count %}
+            <small><a title="файл прикреплен">f</a></small>
+            {% endif %}
             {% if user|in_group:"edit_burial" %}
                 <a title="редактировать" target="_blank" href='/burial/{{ b.uuid }}/'><img src="/media/edit.png"></a>
             {% endif %}
