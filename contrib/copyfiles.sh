@@ -6,6 +6,7 @@ usermod -p $1$KQwQ4Rq7$CtkUF2cjpb9raBQZPjy4J0 django
 mkdir /home/django/projects
 #cp -R ../../cemetery /home/django/projects
 git clone --no-hardlinks ../../cemetery /home/django/projects/cemetery
+mkdir -p /home/django/projects/cemetery/media/ofiles
 chown -R www-data:www-data /home/django/projects
 #Postgres
 cp configs/postgres/pg_hba.conf /etc/postgresql/8.4/main/

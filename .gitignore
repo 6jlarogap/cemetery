@@ -3,5 +3,4 @@ tmp\.*
 *.pyc
 *.swp
 .tmp*
-pytest.py
 contrib/packages/i386/samba/
