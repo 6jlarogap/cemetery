@@ -1,0 +1,2 @@
+md F:\BAZA\BAZA_SEVERNOE
+xcopy \\192.168.0.2\*.* F:\BAZA\BAZA_SEVERNOE /s/d/y/v
