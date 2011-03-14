@@ -41,7 +41,7 @@ createdb -U postgres cemetery
 cat cemetery.sql | psql -U postgres cemetery
 #Test strings
 #echo "*/1 * * * *    www-data   python /home/django/projects/cemetery/contrib/dumpdb.py 2>>/tmp/cronerror.txt" >> /etc/crontab
-Database dump cron script
+#Database dump cron script
 echo "PYTHONPATH=/home/django/projects/cemetery:\$PYTHONPATH" >> /etc/crontab
 echo "DJANGO_SETTINGS_MODULE=settings" >> /etc/crontab
 echo "5 16 * * *    www-data   python /home/django/projects/cemetery/contrib/dumpdb.py" >> /etc/crontab
@@ -60,6 +60,8 @@ chmod 777 /var/cemetery/terminal
 cp configs/ubuntu/etc/network/interfaces /etc/network/interfaces
 chown root:root /etc/network/interfaces
 chmod 644 /etc/network/interfaces
+/etc/init.d/networking restart
 cp configs/ubuntu/etc/samba/smb.conf /etc/samba/smb.conf
 chown root:root /etc/samba/smb.conf
 chmod 644 /etc/samba/smb.conf
+/etc/init.d/smbd restart
