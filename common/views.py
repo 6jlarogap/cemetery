@@ -137,19 +137,15 @@ def main_page(request):
             fname = ""
             patr = ""
             lname = parts[0].strip(",")
+            lname = lname.capitalize()  # //rd-- patch to not working iregex
             if len(parts) > 1:
                 fname = parts[1].strip(",")
 #                if not fname[-1].isalpha():
 #                    fname = "%s*" % fname
+                fname = fname.capitalize()# //rd-- patch to not working iregex
             if len(parts) > 2:
                 patr = parts[2].strip(",")
-            regex = re.sub(r'\?', r'.', lname)
-            regex = re.sub(r'\*', r'.*', regex)
-
-#            if not regex.startswith("."):
-#                regex = u"^%s" % regex
-#            if regex.endswith(".") and not regex.endswith("*"):
-#                regex = u"%s$" % regex
+                patr = patr.capitalize()# //rd-- patch to not working iregex
 
 # //rd-- fio search field regex rules            
 # ".етер"   # ^
@@ -159,13 +155,15 @@ def main_page(request):
 # "етер."   # ^$
 # ".*етер"  # $
 # ".*етер." # $
+
+            regex = re.sub(r'\?', r'.', lname)
+            regex = re.sub(r'\*', r'.*', regex)
             if not regex.startswith(".*"):
                 regex = u"^%s" % regex
                 if regex.endswith("."):
                     regex = u"%s$" % regex
             else:
                 regex = u"%s$" % regex
-#            burials = burials.filter(person__last_name__iregex=regex.capitalize()) #-- case insensivity patch
             burials = burials.filter(person__last_name__iregex=regex)
             if fname:
                 regex = re.sub(r'\?', r'.', fname)
@@ -208,12 +206,22 @@ def main_page(request):
         if cd["account_book_n_to"]:
             burials = burials.filter(s2__lte=cd["account_book_n_to"])
         if cd["customer"]:
-            regex = re.sub(r'\?', r'.', cd["customer"])
+            custname = cd["customer"]
+            custname = custname.capitalize()# //rd-- patch to not working iregex
+            regex = re.sub(r'\?', r'.', custname)
             regex = re.sub(r'\*', r'.*', regex)
-            if not regex.startswith("."):
+            if not regex.startswith(".*"):
                 regex = u"^%s" % regex
-            if not (regex.endswith(".") or regex.endswith("*")):
+                if regex.endswith("."):
+                    regex = u"%s$" % regex
+            else:
                 regex = u"%s$" % regex
+#            regex = re.sub(r'\?', r'.', cd["customer"])
+#            regex = re.sub(r'\*', r'.*', regex)
+#            if not regex.startswith("."):
+#                regex = u"^%s" % regex
+#            if not (regex.endswith(".") or regex.endswith("*")):
+#                regex = u"%s$" % regex
             burials = burials.filter(customer__person__last_name__iregex=regex)
         if cd["owner"]:
             burials = burials.filter(creator=cd["owner"].userprofile.soul)
