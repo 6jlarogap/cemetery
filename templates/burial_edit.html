@@ -321,7 +321,7 @@ $(function(){
         {% for f in burial.orderfiles_set.all %}
             <b>{{ forloop.counter }} &nbsp; {{ f.ofile.name }}</b>
 {#            <img src="{{ f.ofile.thumbnail.url }}">#}
-            <a href="/media/{{ f.ofile }}">скачать</a>
+            <a href="/media/{{ f.ofile }}">открыть</a>
             <a href="/orderfile/delete/{{ burial.uuid }}/{{ f.uuid }}/">удалить</a>
             <br />
             <small>Комментарий к файлу:</small> <i>{{ f.comment }}</i>
