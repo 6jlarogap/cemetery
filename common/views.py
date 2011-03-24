@@ -202,7 +202,8 @@ def main_page(request):
 #            burials = burials.filter(person__soul_ptr__deathcertificate__s_number=cd["death_certificate"])
         if cd["account_book_n_from"]:
             burials = burials.filter(s2__gte=cd["account_book_n_from"])
-            burials = burials.filter(s2__lte=cd["account_book_n_from"])
+            if not cd["account_book_n_to"]:
+                burials = burials.filter(s2__lte=cd["account_book_n_from"])
         if cd["account_book_n_to"]:
             burials = burials.filter(s2__lte=cd["account_book_n_to"])
         if cd["customer"]:
