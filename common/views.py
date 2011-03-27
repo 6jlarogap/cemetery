@@ -268,8 +268,8 @@ def main_page(request):
             result["obj_nr"] = burials_nr
         else:
             result["obj_nr"] = burials.count()
-        #if pp:
-            #result["per_page"] = pp
+        if pp:
+            result["per_page"] = pp
     return result
 
 
