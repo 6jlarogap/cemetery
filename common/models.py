@@ -14,10 +14,6 @@ import os
 from django_extensions.db.fields import UUIDField
 from django.core.files.storage import FileSystemStorage
 
-
-fs_ofiles = FileSystemStorage(location='/var/cemetery/media')
-
-
 rules = [
     (
         (StdImageField, ),
@@ -511,7 +507,7 @@ class OrderFiles(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     order = models.ForeignKey(Order)
-    ofile = models.FileField("Файл", storage=fs_ofiles, upload_to="ofiles")
+    ofile = models.FileField("Файл", upload_to="ofiles")
 #    ofile = StdImageField("Картинка", upload_to='ofiles', thumbnail_size=(100, 75))
     comment = models.CharField(max_length=96, blank=True)
     creator = models.ForeignKey(Soul, null=True)  # Создатель записи.
