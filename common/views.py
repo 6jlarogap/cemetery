@@ -196,6 +196,8 @@ def main_page(request):
             burials = burials.filter(operation=cd["operation"])
         if cd["burial_date_from"]:
             burials = burials.filter(date_fact__gte=cd["burial_date_from"])
+            if not cd["burial_date_to"]:
+                burials = burials.filter(date_fact__lte=cd["burial_date_from"])
         if cd["burial_date_to"]:
             burials = burials.filter(date_fact__lte=cd["burial_date_to"])
 #        if cd["death_certificate"]:
