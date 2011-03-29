@@ -12,7 +12,6 @@ import os
 #import re
 
 from django_extensions.db.fields import UUIDField
-from django.core.files.storage import FileSystemStorage
 
 rules = [
     (
