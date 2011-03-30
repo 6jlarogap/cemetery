@@ -1396,9 +1396,9 @@ def import_csv(request):
                         else:
                             house = house.decode(settings.CSV_ENCODING).strip().lower()
                         if block == "N":
-                            block = ""
+                            block = u""
                         if flat == "N":
-                            flat = ""
+                            flat = u""
 
                         # Захороненный.
                         deadman = Person(creator=creator)
