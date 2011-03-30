@@ -30,7 +30,8 @@ class OFAdmin(admin.ModelAdmin):
 #    exclude = ("order",)
     def get_form(self, request, obj=None, **kwargs):
         if request.user.is_superuser:
-            self.exclude = ()
+#            self.exclude = ()
+            self.exclude = ("order", "creator")
         else:
             self.exclude = ("order", "creator")
         return super(OFAdmin, self).get_form(request, obj=None, **kwargs)
