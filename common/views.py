@@ -531,7 +531,7 @@ def edit_burial(request, uuid):
                 nfile = request.FILES["file1"]
                 of = OrderFiles(creator=request.user.userprofile.soul)
                 of.order = burial.order_ptr
-                of.ofile = nfile
+                of.ofile = unicode(nfile)
                 if cd.get("file1_comment", ""):
                     of.comment = cd["file1_comment"]
                 of.save()
