@@ -209,6 +209,9 @@ class JournalForm(forms.Form):
         country = cd.get("country", "")
         region = cd.get("region", "")
         city = cd.get("city", "")
+        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-\.]", "", city)
+        if rest:
+            raise forms.ValidationError("Недопустимые символы в имени населенного пункта. Допускаются только буквы, цифры, тире и точка")
         street = cd.get("street", "")
         house = cd.get("customer_house", "")
         block = cd.get("customer_block", "")
@@ -340,11 +343,11 @@ class EditBurialForm(forms.Form):
         last_name = cd["last_name"]
         rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", last_name)
         if rest:
-            raise forms.ValidationError("Недопустимые символы в имени усопшего.")
+            raise forms.ValidationError("Недопустимые символы в фамилии усопшего.")
 #        cust_last_name = cd["customer_last_name"]
 #        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", cust_last_name)
 #        if rest:
-#            raise forms.ValidationError("Недопустимые символы в имени Заказчика.")
+#            raise forms.ValidationError("Недопустимые символы в фамилии Заказчика.")
         # Валидация кладбища/операции.
         operation = cd.get("operation", None)
         if not operation:
@@ -365,6 +368,9 @@ class EditBurialForm(forms.Form):
         country = cd.get("country", "")
         region = cd.get("region", "")
         city = cd.get("city", "")
+        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-\.]", "", city)
+        if rest:
+            raise forms.ValidationError("Недопустимые символы в имени населенного пункта. Допускаются только буквы, цифры, тире и точка")
         street = cd.get("street", "")
         house = cd.get("customer_house", "")
         block = cd.get("customer_block", "")
