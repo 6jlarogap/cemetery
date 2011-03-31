@@ -386,6 +386,7 @@ def journal(request):
                 nfile = request.FILES[nf]
                 of = OrderFiles(creator=request.user.userprofile.soul)
                 of.order = new_burial.order_ptr
+                nfile.name = unicode(nfile.name)
                 of.ofile = nfile
                 if cd.get("file1_comment", ""):
                     of.comment = cd["file1_comment"]
