@@ -420,7 +420,7 @@ def journal(request):
     today = datetime.date.today()
     burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul,
                             date_of_creation__gte=datetime.datetime(year=today.year,
-                            month=today.month, day=today.day)).order_by('-date_of_creation')[:220]
+                            month=today.month, day=today.day)).order_by('-date_of_creation')[:20]
     return direct_to_template(request, 'journal.html', {'form': form, 'object_list': burials, 'phoneset': phoneset})
 
 @login_required
@@ -565,7 +565,10 @@ def edit_burial(request, uuid):
             except ObjectDoesNotExist:
                 #customer is organization!
                 raise Http404
-            initial_data["customer_last_name"] = customer.last_name
+            if customer.last_name == "":
+                initial_data["customer_last_name"] = u"НЕИЗВЕСТЕН"
+            else:
+                initial_data["customer_last_name"] = customer.last_name
             initial_data["customer_first_name"] = customer.first_name
             initial_data["customer_patronymic"] = customer.patronymic
             if customer.location and hasattr(customer.location, "street") and customer.location.street:
@@ -1359,7 +1362,7 @@ def import_csv(request):
                             seat = seat.decode(settings.CSV_ENCODING).strip()
                         # Фамилия заказчика.
                         if cust_ln == "N":
-                            cust_ln = u""
+                            cust_ln = u"НЕИЗВЕСТЕН"  # Если в базе был Null
                         else:
                             cust_ln = cust_ln.decode(settings.CSV_ENCODING).strip().capitalize()
                             cust_ln = re.sub(r'ё', r'е', cust_ln)
