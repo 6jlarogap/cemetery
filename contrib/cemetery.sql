@@ -477,6 +477,7 @@ CREATE TABLE common_impbur (
     patronymic character varying(30) NOT NULL,
     birth_date date,
     death_date date,
+    burial_date date,
     cemetery_id character varying(36) NOT NULL,
     area character varying(9) NOT NULL,
     "row" character varying(9) NOT NULL,
@@ -13525,7 +13526,7 @@ a86c7b8a-303c-11e0-b70a-485b39c96dfe	a76178bc-303c-11e0-b70a-485b39c96dfe	Яма
 -- Data for Name: common_impbur; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_impbur (deadman_pk, bur_pk, last_name, first_name, patronymic, birth_date, death_date, cemetery_id, area, "row", seat, gps_x, gps_y, gps_z) FROM stdin;
+COPY common_impbur (deadman_pk, bur_pk, last_name, first_name, patronymic, birth_date, death_date, burial_date, cemetery_id, area, "row", seat, gps_x, gps_y, gps_z) FROM stdin;
 \.
 
 

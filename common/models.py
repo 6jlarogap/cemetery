@@ -637,6 +637,7 @@ class ImpBur(models.Model):
     patronymic = models.CharField("Отчество", max_length=30, blank=True)
     birth_date = models.DateField("Дата рождения", blank=True, null=True)
     death_date = models.DateField("Дата смерти", blank=True, null=True)
+    burial_date = models.DateField("Дата захоронения", blank=True, null=True)
     cemetery = models.ForeignKey(ImpCem)
     area = models.CharField("Участок", max_length=9)
     row = models.CharField("Ряд", max_length=9)
