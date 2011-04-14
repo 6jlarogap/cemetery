@@ -203,11 +203,14 @@ def main_page(request):
 #        if cd["death_certificate"]:
 #            burials = burials.filter(person__soul_ptr__deathcertificate__s_number=cd["death_certificate"])
         if cd["account_book_n_from"]:
-            burials = burials.filter(s2__gte=cd["account_book_n_from"])
             if not cd["account_book_n_to"]:
-                burials = burials.filter(s2__lte=cd["account_book_n_from"])
-        if cd["account_book_n_to"]:
-            burials = burials.filter(s2__lte=cd["account_book_n_to"])
+                burials = burials.filter(account_book_n__iexact=cd["account_book_n_from"])
+            else:   # account_n_book_to is true
+                burials = burials.filter(s2__gte=cd["account_book_n_from"])
+                burials = burials.filter(s2__lte=cd["account_book_n_to"])
+        else:
+            if cd["account_book_n_to"]:
+                burials = burials.filter(account_book_n__iexact=cd["account_book_n_to"])
         if cd["customer"]:
             custname = cd["customer"]
             custname = custname.capitalize()# //rd-- patch to not working iregex
