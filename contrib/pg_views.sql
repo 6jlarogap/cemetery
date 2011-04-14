@@ -1,6 +1,6 @@
 CREATE OR REPLACE VIEW common_burial1 AS
 select *, substring(account_book_n FROM '([^[:digit:]]*)[[:digit:]]*.*') AS s1,
-to_number(substring(account_book_n FROM '[^[:digit:]]*([[:digit:]]*).*'), '9999999999') AS s2,
+to_number(CASE WHEN substring(account_book_n FROM '[^[:digit:]]*([[:digit:]]*).*')='' THEN '9999999999' ELSE substring(account_book_n FROM '[^[:digit:]]*([[:digit:]]*).*') END, '9999999999') AS s2,
 substring(account_book_n FROM '[^[:digit:]]*[[:digit:]]*(.*)') AS s3
 from common_burial;
 
