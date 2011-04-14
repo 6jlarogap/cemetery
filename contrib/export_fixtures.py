@@ -45,6 +45,7 @@ for bur in burials:
     imp_bur_rec.patronymic = bur.person.patronymic
     imp_bur_rec.birth_date = bur.person.birth_date
     imp_bur_rec.death_date = bur.person.death_date
+    imp_bur_rec.burial_date = bur.person.death_date
     imp_bur_rec.cemetery = cemetery
     imp_bur_rec.area = bur.product.place.area
     imp_bur_rec.row = bur.product.place.row
