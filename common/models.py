@@ -4,7 +4,6 @@ from django.db import models
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 
-from stdimage import StdImageField
 from south.modelsinspector import add_introspection_rules
 
 import datetime
@@ -12,18 +11,6 @@ import os
 #import re
 
 from django_extensions.db.fields import UUIDField
-
-rules = [
-    (
-        (StdImageField, ),
-        [],
-        {
-            "size": ["size", {"default": None}],
-            "thumbnail_size": ["thumbnail_size", {"default": None}],
-            },
-        ),
-]
-add_introspection_rules(rules, ["^stdimage\.fields",])
 
 PER_PAGE_VALUES = (
     (5, '5'),
@@ -169,8 +156,6 @@ class Soul(models.Model):
     location = models.ForeignKey(Location, blank=True, null=True)  # Адрес орг-ии или человека (Person).
     creator = models.ForeignKey("Soul", blank=True, null=True)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
-    #death_certificate = models.CharField("Свидетельство о смерти",
-                                         #max_length=30, blank=True)  # Номер свидетельства о смерти.
     def __unicode__(self):
         if hasattr(self, "person"):
             return u"Физ. лицо: %s" % self.person
@@ -507,7 +492,6 @@ class OrderFiles(models.Model):
     uuid = UUIDField(primary_key=True)
     order = models.ForeignKey(Order)
     ofile = models.FileField("Файл", upload_to="ofiles")
-#    ofile = StdImageField("Картинка", upload_to='ofiles', thumbnail_size=(100, 75))
     comment = models.CharField(max_length=96, blank=True)
     creator = models.ForeignKey(Soul, null=True)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
@@ -632,7 +616,7 @@ class ImpBur(models.Model):
     """    
     deadman_pk = models.CharField("uuid", max_length=36, primary_key=True)
     bur_pk = models.CharField("uuid", max_length=36)
-    last_name = models.CharField("Фамилия", max_length=30)
+    last_name = models.CharField("Фамилия", max_length=128)
     first_name = models.CharField("Имя", max_length=30, blank=True)
     patronymic = models.CharField("Отчество", max_length=30, blank=True)
     birth_date = models.DateField("Дата рождения", blank=True, null=True)

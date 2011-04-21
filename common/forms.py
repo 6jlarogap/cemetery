@@ -23,7 +23,9 @@ PER_PAGE_VALUES = (
     (50, '50'),
 )
 
-GOOD_CHARS = string.ascii_letters + string.digits + "@.+-_"
+RE_CITY = u"[а-яА-Яa-zA-Z0-9\-\.\ ]"
+RE_LASTNAME = u"[а-яА-Яa-zA-Z0-9\-]"
+RE_USERNAME = r"[a-zA-Z0-9\@\.\+\-\_]"
 
 ORDER_BY_VALUES = (
     ('person__last_name', '+фамилии'),
@@ -188,11 +190,11 @@ class JournalForm(forms.Form):
         cd = self.cleaned_data
         # Проверка имен усопшего и заказчика на наличие недопустимых символов
         last_name = cd["last_name"]
-        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", last_name)
+        rest = re.sub(RE_LASTNAME, "", last_name)
         if rest:
             raise forms.ValidationError("Недопустимые символы в имени усопшего. Допускаются только буквы, цифры и тире")
 #        cust_last_name = cd["customer_last_name"]
-#        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", cust_last_name)
+#        rest = re.sub(RE_LASTNAME, "", cust_last_name)
 #        if rest:
 #            raise forms.ValidationError("Недопустимые символы в имени Заказчика.")
         # Валидация кладбища/операции.
@@ -209,7 +211,7 @@ class JournalForm(forms.Form):
         country = cd.get("country", "")
         region = cd.get("region", "")
         city = cd.get("city", "")
-        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-\.]", "", city)
+        rest = re.sub(RE_CITY, "", city)
         if rest:
             raise forms.ValidationError("Недопустимые символы в имени населенного пункта. Допускаются только буквы, цифры, тире и точка")
         street = cd.get("street", "")
@@ -341,11 +343,11 @@ class EditBurialForm(forms.Form):
         cd = self.cleaned_data
         # Проверка имен усопшего и заказчика на наличие недопустимых символов
         last_name = cd["last_name"]
-        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", last_name)
+        rest = re.sub(RE_LASTNAME, "", last_name)
         if rest:
             raise forms.ValidationError("Недопустимые символы в фамилии усопшего.")
 #        cust_last_name = cd["customer_last_name"]
-#        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-]", "", cust_last_name)
+#        rest = re.sub(RE_LASTNAME, "", cust_last_name)
 #        if rest:
 #            raise forms.ValidationError("Недопустимые символы в фамилии Заказчика.")
         # Валидация кладбища/операции.
@@ -368,9 +370,9 @@ class EditBurialForm(forms.Form):
         country = cd.get("country", "")
         region = cd.get("region", "")
         city = cd.get("city", "")
-        rest = re.sub(u"[а-яА-Яa-zA-Z0-9\-\.]", "", city)
+        rest = re.sub(RE_CITY, "", city)
         if rest:
-            raise forms.ValidationError("Недопустимые символы в имени населенного пункта. Допускаются только буквы, цифры, тире и точка")
+            raise forms.ValidationError("Недопустимые символы в имени населенного пункта. Допускаются только буквы, цифры, тире, точка и пробел")
         street = cd.get("street", "")
         house = cd.get("customer_house", "")
         block = cd.get("customer_block", "")
@@ -541,9 +543,9 @@ class InitalForm(forms.Form):
         Проверка логина на отсутствие недопустимых символов.
         """
         un = self.cleaned_data["username"]
-        for ch in un:
-            if ch not in GOOD_CHARS:
-                raise forms.ValidationError("Введены недопустимые символы.")
+        rest = re.sub(RE_USERNAME, "", un)
+        if rest:
+            raise forms.ValidationError("Недопустимые символы в имени пользователя.")
         return un
     def clean(self):
         cd = self.cleaned_data
@@ -788,7 +790,7 @@ class NewUserForm(forms.Form):
         cd = self.cleaned_data
         username = cd["username"]
         # Проверка username на наличие недопустимых символов
-        rest = re.sub(r"[a-zA-Z0-9\@\.\+\-\_]", "", username)
+        rest = re.sub(RE_USERNAME, "", username)
         if rest:
             raise forms.ValidationError("Недопустимые символы в имени пользователя.")
         try:
@@ -827,7 +829,7 @@ class EditUserForm(forms.Form):
         cd = self.cleaned_data
         username = cd["username"]
         # Проверка username на наличие недопустимых символов.
-        rest = re.sub(r"[a-zA-Z0-9\@\.\+\-\_]", "", username)
+        rest = re.sub(RE_USERNAME, "", username)
         if rest:
             raise forms.ValidationError("Недопустимые символы в имени пользователя.")
 #        try:

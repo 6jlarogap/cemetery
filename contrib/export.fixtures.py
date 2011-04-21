@@ -1,9 +1,18 @@
 # -*- coding: utf-8 -*-
 
+from constants import UNKNOWN_NAME, SYSPATH
+SYSPATH = "/home/robotd/src/cemetery"
+import sys, os
+sys.path.append(SYSPATH)
+from django.core.management import setup_environ
+import settings
+
+setup_environ(settings)
+
 from django.core import serializers
-from django.conf import settings
 
 from common.models import ImpBur, ImpCem, Env, Burial, Cemetery
+from django import db
 
 import datetime
 import socket
@@ -16,6 +25,7 @@ ImpCem.objects.all().delete()
 
 # Обрабатываем кладбища.
 cemeteries = Cemetery.objects.filter(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
+print cemeteries.count()
 for cem in cemeteries:
     imp_cem_rec = ImpCem(cem_pk=cem.uuid)
     imp_cem_rec.name = cem.name
@@ -33,8 +43,10 @@ for cem in cemeteries:
     imp_cem_rec.save()
 
 # Обрабатываем захоронения.
-burials = Burial.objects.filter(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))#[:500]
-for bur in burials:
+burials = Burial.objects.filter(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
+#burials = Burial.objects.filter(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))[:10500]
+print burials.count()
+for bur in burials.iterator():
     uuid = bur.person.uuid
     cemetery = ImpCem.objects.get(cem_pk=bur.product.place.cemetery.uuid)
 #    ImpBur.objects.filter(deadman_pk=uuid).delete()
@@ -45,7 +57,7 @@ for bur in burials:
     imp_bur_rec.patronymic = bur.person.patronymic
     imp_bur_rec.birth_date = bur.person.birth_date
     imp_bur_rec.death_date = bur.person.death_date
-    imp_bur_rec.burial_date = bur.person.death_date
+    imp_bur_rec.burial_date = bur.date_fact
     imp_bur_rec.cemetery = cemetery
     imp_bur_rec.area = bur.product.place.area
     imp_bur_rec.row = bur.product.place.row
@@ -54,6 +66,7 @@ for bur in burials:
     imp_bur_rec.gps_y = bur.product.place.gps_y
     imp_bur_rec.gps_z = bur.product.place.gps_z
     imp_bur_rec.save()
+    db.reset_queries()
 
 data = list(ImpCem.objects.all()) + list(ImpBur.objects.all())
 rez = serializers.serialize("json", data)
@@ -69,3 +82,5 @@ ImpCem.objects.all().delete()
 
 #cemeteries.update(last_sync_date=datetime.datetime.now())
 #burials.update(last_sync_date=datetime.datetime.now())
+#cemeteries.update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
+#burials.update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))

@@ -338,7 +338,7 @@ ALTER TABLE public.common_burial OWNER TO postgres;
 --
 
 CREATE VIEW common_burial1 AS
-    SELECT common_burial.order_ptr_id, common_burial.person_id, common_burial.account_book_n, common_burial.last_sync_date, "substring"((common_burial.account_book_n)::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s1, to_number("substring"((common_burial.account_book_n)::text, '[^[:digit:]]*([[:digit:]]*).*'::text), '9999999999'::text) AS s2, "substring"((common_burial.account_book_n)::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s3 FROM common_burial;
+    SELECT common_burial.order_ptr_id, common_burial.person_id, common_burial.account_book_n, common_burial.last_sync_date, "substring"((common_burial.account_book_n)::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s1, to_number(CASE WHEN substring(account_book_n FROM '[^[:digit:]]*([[:digit:]]*).*')='' THEN '9999999999' ELSE substring(account_book_n FROM '[^[:digit:]]*([[:digit:]]*).*') END, '9999999999') AS s2, "substring"((common_burial.account_book_n)::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s3 FROM common_burial;
 
 
 ALTER TABLE public.common_burial1 OWNER TO postgres;
@@ -472,7 +472,7 @@ ALTER TABLE public.common_georegion OWNER TO postgres;
 CREATE TABLE common_impbur (
     deadman_pk character varying(36) NOT NULL,
     bur_pk character varying(36) NOT NULL,
-    last_name character varying(30) NOT NULL,
+    last_name character varying(128) NOT NULL,
     first_name character varying(30) NOT NULL,
     patronymic character varying(30) NOT NULL,
     birth_date date,
@@ -706,7 +706,7 @@ ALTER TABLE public.common_place OWNER TO postgres;
 --
 
 CREATE VIEW common_place1 AS
-    SELECT common_place.product_ptr_id, common_place.cemetery_id, common_place.area, common_place."row", common_place.seat, common_place.gps_x, common_place.gps_y, common_place.gps_z, common_place.creator_id, common_place.date_of_creation, "substring"((common_place.area)::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s1, to_number("substring"((common_place.area)::text, '[^[:digit:]]*([[:digit:]]*).*'::text), '9999999999'::text) AS s2, "substring"((common_place.area)::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s3, "substring"((common_place."row")::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s4, to_number("substring"((common_place."row")::text, '[^[:digit:]]*([[:digit:]]*).*'::text), '9999999999'::text) AS s5, "substring"((common_place."row")::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s6, "substring"((common_place.seat)::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s7, to_number("substring"((common_place.seat)::text, '[^[:digit:]]*([[:digit:]]*).*'::text), '9999999999'::text) AS s8, "substring"((common_place.seat)::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s9 FROM common_place;
+    SELECT common_place.product_ptr_id, common_place.cemetery_id, common_place.area, common_place."row", common_place.seat, common_place.gps_x, common_place.gps_y, common_place.gps_z, common_place.creator_id, common_place.date_of_creation, "substring"((common_place.area)::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s1, to_number(CASE WHEN substring(area FROM '[^[:digit:]]*([[:digit:]]*).*')='' THEN '9999999999' ELSE substring(area FROM '[^[:digit:]]*([[:digit:]]*).*') END, '9999999999') AS s2, "substring"((common_place.area)::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s3, "substring"((common_place."row")::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s4, to_number(CASE WHEN substring(row FROM '[^[:digit:]]*([[:digit:]]*).*')='' THEN '9999999999' ELSE substring(row FROM '[^[:digit:]]*([[:digit:]]*).*') END, '9999999999') AS s5, "substring"((common_place."row")::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s6, "substring"((common_place.seat)::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s7, to_number(CASE WHEN substring(seat FROM '[^[:digit:]]*([[:digit:]]*).*')='' THEN '9999999999' ELSE substring(seat FROM '[^[:digit:]]*([[:digit:]]*).*') END, '9999999999') AS s8, "substring"((common_place.seat)::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s9 FROM common_place;
 
 
 ALTER TABLE public.common_place1 OWNER TO postgres;
