@@ -118,7 +118,7 @@ class JournalForm(forms.Form):
                                      widget=forms.TextInput(attrs={"tabindex": "1"}))
     burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}),
                                   initial=datetime.date.today().strftime("%d.%m.%Y"))
-    last_name = forms.CharField(max_length=30, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
+    last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
             help_text="Допускаются только буквы, цифры и символ '-'", initial=u"НЕИЗВЕСТЕН")
     first_name = forms.CharField(required=False, max_length=30, label="Имя",
                                  widget=forms.TextInput(attrs={"tabindex": "4"}))
@@ -291,7 +291,7 @@ class EditBurialForm(forms.Form):
     account_book_n = forms.CharField(max_length=16, label="Номер в книге учета*",
                                      widget=forms.TextInput(attrs={"tabindex": "1"}))
     burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}))
-    last_name = forms.CharField(max_length=30, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
+    last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
             help_text="Допускаются только буквы, цифры и символ '-'")
     first_name = forms.CharField(required=False, max_length=30, label="Имя",
                                  widget=forms.TextInput(attrs={"tabindex": "4"}))
