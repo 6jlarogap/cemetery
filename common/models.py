@@ -252,7 +252,7 @@ class Organization(Soul):
     """
     ogrn = models.CharField(u"ОГРН", max_length=13, blank=True)                                  # ОГРН
     inn = models.CharField(u"ИНН", max_length=12, blank=True)                                    # ИНН
-    kpp = models.CharField(u"ИНН", max_length=9, blank=True)                                     # КПП
+    kpp = models.CharField(u"КПП", max_length=9, blank=True)                                     # КПП
     name = models.CharField(u"Краткое название организации", max_length=99)                      # Название краткое
     full_name = models.CharField(u"Полное название организации", max_length=255, null=True)      # Название полное
     def __unicode__(self):
