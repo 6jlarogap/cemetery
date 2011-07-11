@@ -125,15 +125,16 @@ class Location(models.Model):
     Адрес.
     """
     uuid = UUIDField(primary_key=True)
-    post_index = models.CharField("Почтовый индекс", max_length=16, blank=True)  # Индекс.
-    street = models.ForeignKey(Street, verbose_name="Улица", blank=True, null=True)  # Улица.
-    house = models.CharField("Дом", max_length=16, blank=True)  # Дом.
-    block = models.CharField("Корпус", max_length=16, blank=True)  # Корпус.
-    building = models.CharField("Строение", max_length=16, blank=True)  # Строение.
-    flat = models.CharField("Квартира", max_length=16, blank=True)  # Квартира.
-    gps_x = models.FloatField("Координата X", blank=True, null=True)  # GPS X-ось.
-    gps_y = models.FloatField("Координата Y", blank=True, null=True)  # GPS Y-ось.
-    gps_z = models.FloatField("Координата Z", blank=True, null=True)  # GPS Z-ось.
+    post_index = models.CharField("Почтовый индекс", max_length=16, blank=True)             # Индекс.
+    street = models.ForeignKey(Street, verbose_name="Улица", blank=True, null=True)         # Улица.
+    house = models.CharField("Дом", max_length=16, blank=True)                              # Дом.
+    block = models.CharField("Корпус", max_length=16, blank=True)                           # Корпус.
+    building = models.CharField("Строение", max_length=16, blank=True)                      # Строение.
+    flat = models.CharField("Квартира", max_length=16, blank=True)                          # Квартира.
+    gps_x = models.FloatField("Координата X", blank=True, null=True)                        # GPS X-ось.
+    gps_y = models.FloatField("Координата Y", blank=True, null=True)                        # GPS Y-ось.
+    gps_z = models.FloatField("Координата Z", blank=True, null=True)                        # GPS Z-ось.
+    info = models.TextField("Дополнительная информация", blank=True, null=True)             # Дополнительная информация
     def __unicode__(self):
         if self.street:
             return u'%s (дом %s, корп. %s, строен. %s, кв. %s)' % (self.street,
@@ -250,14 +251,26 @@ class Organization(Soul):
     """
     Юридическое лицо.
     """
-    ogrn = models.CharField("ОГРН", max_length=15, blank=True)  # ОГРН.
-    inn = models.CharField("ИНН", max_length=15, blank=True)  # ИНН.
-    name = models.CharField("Название организации", max_length=99) #  Название.
+    ogrn = models.CharField("ОГРН", max_length=13, blank=True)                                  # ОГРН
+    inn = models.CharField("ИНН", max_length=12, blank=True)                                    # ИНН
+    kpp = models.CharField("ИНН", max_length=9, blank=True)                                     # КПП
+    name = models.CharField("Краткое название организации", max_length=99)                      # Название краткое
+    full_name = models.CharField("Полное название организации", max_length=255, null=True)      # Название полное
     def __unicode__(self):
         return self.name[:24]
     class Meta:
         verbose_name = ('юр. лицо')
         verbose_name_plural = ('юр. лица')
+
+class BankAccount(models.Model):
+    """
+    Банковские реквизиты
+    """
+    organization = models.ForeignKey(Organization, verbose_name="Организация")      # Владелец счета
+    rs = models.CharField("Рассчетный счет", max_length=20, blank=True)             # Рассчетный счет
+    ks = models.CharField("Корреспондентский счет", max_length=20, blank=True)      # Корреспондентский счет
+    bik = models.CharField("БИК", max_length=9, blank=True)                         # Банковский идентификационный код
+    bankname = models.CharField("Наименование банка", max_length=64, blank=True)    # Название банка
 
 
 class Role(models.Model):
