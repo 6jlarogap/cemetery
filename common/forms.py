@@ -115,7 +115,7 @@ class JournalForm(forms.Form):
     """
 
     account_book_n = forms.CharField(max_length=16, label="Номер в книге учета*",
-                                     widget=forms.TextInput(attrs={"tabindex": "1"}))
+                                     widget=forms.TextInput(attrs={"tabindex": "1"}), required=False)
     burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}),
                                   initial=datetime.date.today().strftime("%d.%m.%Y"))
     last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
@@ -131,7 +131,7 @@ class JournalForm(forms.Form):
     hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
     area = forms.CharField(max_length=9, label="Участок*", widget=forms.TextInput(attrs={"tabindex": "7"}))
     row = forms.CharField(max_length=9, label="Ряд*", widget=forms.TextInput(attrs={"tabindex": "8"}))
-    seat = forms.CharField(max_length=9, label="Место*", widget=forms.TextInput(attrs={"tabindex": "9"}))
+    seat = forms.CharField(max_length=9, label="Место*", widget=forms.TextInput(attrs={"tabindex": "9"}), required=False)
     customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
                                          widget=forms.TextInput(attrs={"tabindex": "10"}),
                                          help_text="Допускаются только буквы, цифры и символ '-'",

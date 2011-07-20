@@ -417,16 +417,28 @@ class Place(Product):
     gps_z = models.FloatField(u"Координата Z", blank=True, null=True)  # GPS Z-ось.
     creator = models.ForeignKey(Soul, verbose_name=u"Создатель записи")  # Создатель записи.
     date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True)  # Дата создания записи.
+
     def save(self, *args, **kwargs):
         """
         Всегда приводим area/row/seat к нижнему регистру.
         """
         self.area = self.area.lower()
         self.row = self.row.lower()
-        self.seat = self.seat.lower()
+
+        if not self.seat:
+            y = str(datetime.date.today().year)
+            max_seat = str(Place.objects.all().aggregate(models.Max('seat'))['seat__max']) or ''
+            if max_seat.startswith(y):
+                current_seat = int(float(max_seat)) + 1
+            else:
+                current_seat = y + '0001'
+            self.seat = str(current_seat)
+        else:
+            self.seat = self.seat.lower()
 
         Burial.objects.filter(product__place=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
         super(Place, self).save(*args, **kwargs)
+
     def __unicode__(self):
         return  '%s, %s, %s (%s)' % (self.area, self.row, self.seat,
                                      self.cemetery)

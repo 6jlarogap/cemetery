@@ -43,7 +43,8 @@ def is_in_group(group_name):
     def _dec(f):
         def _check_group(request, *args, **kwargs):
             try:
-                group = request.user.groups.get(name=group_name)
+                if not request.user.is_superuser:
+                    group = request.user.groups.get(name=group_name)
             except ObjectDoesNotExist:
                 return HttpResponseForbidden("Forbidden")
             else:
@@ -381,6 +382,7 @@ def journal(request):
             new_burial.responsible = cd["cemetery"].organization.soul_ptr  #ставить орг-ию кладбища
             new_burial.doer = request.user.userprofile.soul
             new_burial.operation = cd["operation"]
+            new_burial.account_book_n = place.seat
             new_burial.save()
             # Create comment.
             if cd.get("comment", ""):

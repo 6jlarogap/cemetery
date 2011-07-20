@@ -4,3 +4,6 @@ tmp\.*
 *.swp
 .tmp*
 contrib/packages/i386/samba/
+.env
+.idea
+settings_local.*
