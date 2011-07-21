@@ -425,19 +425,21 @@ class Place(Product):
         self.area = self.area.lower()
         self.row = self.row.lower()
 
-        if not self.seat:
-            y = str(datetime.date.today().year)
-            max_seat = str(Place.objects.all().aggregate(models.Max('seat'))['seat__max']) or ''
-            if max_seat.startswith(y):
-                current_seat = int(float(max_seat)) + 1
-            else:
-                current_seat = y + '0001'
-            self.seat = str(current_seat)
-        else:
+        if self.seat:
             self.seat = self.seat.lower()
 
         Burial.objects.filter(product__place=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
         super(Place, self).save(*args, **kwargs)
+
+    def generate_seat(self):
+        y = str(datetime.date.today().year)
+        max_seat = str(Place.objects.filter(cemetery=self.cemetery).aggregate(models.Max('seat'))['seat__max']) or ''
+        if max_seat.startswith(y):
+            current_seat = int(float(max_seat)) + 1
+        else:
+            current_seat = y + '0001'
+        self.seat = str(current_seat)
+        return self.seat
 
     def __unicode__(self):
         return  '%s, %s, %s (%s)' % (self.area, self.row, self.seat,
@@ -547,16 +549,29 @@ class Burial(Order):
     person = models.ForeignKey(Person, verbose_name=u"Похороненный", related_name='buried')  # Похороненный.
     account_book_n = models.CharField(u"Номер в книге учета", max_length=16)  # Номер записи к книге учета.
     last_sync_date = models.DateTimeField(u"Дата последней синхронизации", default=datetime.datetime(2000, 1, 1, 0, 0))
+
     class Meta:
         verbose_name = (u'захоронение')
         verbose_name_plural = (u'захоронения')
         #ordering = ['person__last_name',]
+
     def __unicode__(self):
         return u"захоронение: %s" % self.person.__unicode__()
+
     def save(self, *args, **kwargs):
         self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)
         super(Burial, self).save(*args, **kwargs)
 
+    def generate_account_number(self):
+        y = str(datetime.date.today().year)
+        siblings = Burial.objects.filter(product__place__cemetery=self.product.place.cemetery)
+        max_num = str(siblings.aggregate(models.Max('account_book_n'))['account_book_n__max']) or ''
+        if max_num.startswith(y):
+            current_num = int(float(max_num)) + 1
+        else:
+            current_num = y + '0001'
+        self.account_book_n = str(current_num)
+        return self.account_book_n
 
 class Burial1(Order): # Захоронения
     person = models.ForeignKey(Person)  # Похороненный.

@@ -186,6 +186,7 @@ class JournalForm(forms.Form):
 #        choices.insert(0, (0, u'----------------'))
 ##        choices = SoulProducttypeOperation.objects.filter(soul=orgsoul, p_type=settings.BURIAL_PRODUCTTYPE_ID).values_list("operation__id", "operation__op_type")
 #        self.fields["operation"].choices = choices
+
     def clean(self):
         cd = self.cleaned_data
         # Проверка имен усопшего и заказчика на наличие недопустимых символов
@@ -283,6 +284,9 @@ class JournalForm(forms.Form):
                 raise forms.ValidationError("Не все поля адреса заполнены.")
             if house or block or building or flat:
                 raise forms.ValidationError("Не выбрана улица.")
+
+        if not cd["seat"] and cd["account_book_n"]:
+            raise forms.ValidationError("При указанном номере в журнале необходимо указать и номер места")
         return cd
 
 

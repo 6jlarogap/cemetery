@@ -382,8 +382,16 @@ def journal(request):
             new_burial.responsible = cd["cemetery"].organization.soul_ptr  #ставить орг-ию кладбища
             new_burial.doer = request.user.userprofile.soul
             new_burial.operation = cd["operation"]
-            new_burial.account_book_n = place.seat
+            new_burial.account_book_n = cd["account_book_n"]
             new_burial.save()
+
+            if not new_burial.account_book_n:
+                num = new_burial.generate_account_number()
+                new_burial.save()
+                if not place.seat:
+                    place.seat = num
+                    place.save()
+
             # Create comment.
             if cd.get("comment", ""):
                 new_burial.add_comment(cd["comment"], request.user.userprofile.soul)
