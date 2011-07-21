@@ -302,16 +302,20 @@ def journal(request):
     else:
         oper = None
 
+    next_day = datetime.date.today() + datetime.timedelta(1)
+    if next_day.weekday() == 6:
+        next_day = next_day + datetime.timedelta(1)
+    initial = {
+        'burial_date': next_day.strftime('%d.%m.%Y'),
+    }
     if request.GET.get('place'):
         place = get_object_or_404(Place, pk=request.GET.get('place'))
-        initial = {
+        initial.update({
             'cemetery': place.cemetery,
             'area': place.area,
             'row': place.row,
             'seat': place.seat,
-        }
-    else:
-        initial = {}
+        })
 
     form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None, initial=initial)
     location_form = AddressForm(prefix='address', data=request.POST or None)
