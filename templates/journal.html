@@ -13,7 +13,11 @@
 
 <script type="text/javascript" charset="utf-8">
 $(function(){
-  $("#id_burial_date").focus(function(){
+    $(':input,textarea,select').each(function(i, el) {
+        $(el).attr('tabIndex', i+1);
+    })
+
+  $("#id_burial_date, #id_birth_date, #id_death_date").focus(function(){
      this.select();
      });
   
@@ -180,7 +184,7 @@ $(function(){
 {% block content %}
     <div id="free_form">
         <form enctype="multipart/form-data" action="" method="post">
-            {{ form.non_field_errors }}
+            {{ form.non_field_errors }}{{ location_form.non_field_errors }}
             <table width="800">
                 <tr>
                     <td width="33%" id="free_form">{{ form.account_book_n.label_tag }}</td>
@@ -190,6 +194,16 @@ $(function(){
                 <tr>
                     <td width="33%">{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
                     <td width="33%">{{ form.burial_date.errors }}{{ form.burial_date }}</td>
+                    <td width="33%">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td width="33%" id="free_form">{{ form.birth_date.label_tag }}</td>
+                    <td width="33%" id="free_form">{{ form.death_date.label_tag }}</td>
+                    <td width="33%">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td width="33%">{{ form.birth_date.errors }}{{ form.birth_date }}</td>
+                    <td width="33%">{{ form.death_date.errors }}{{ form.death_date }}</td>
                     <td width="33%">&nbsp;</td>
                 </tr>
                 <tr>
@@ -233,46 +247,46 @@ $(function(){
                     <td width="33%" id="free_form">{{ form.customer_patronymic.errors }}{{ form.customer_patronymic }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" id="free_form">{{ form.post_index.label_tag }}</td>
-                    <td width="33%" id="free_form">{{ form.post_index.errors }}{{ form.post_index }}</td>
+                    <td width="33%" id="free_form">{{ location_form.post_index.label_tag }}</td>
+                    <td width="33%" id="free_form">{{ location_form.post_index.errors }}{{ location_form.post_index }}</td>
                     <td width="33%">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td id="free_form">{{ form.street.label_tag }}</td>
-                    <td id="free_form">{{ form.city.label_tag }}</td>
-                    <td id="free_form">{{ form.region.label_tag }}</td>
-                    <td id="free_form">{{ form.country.label_tag }}</td>
+                    <td id="free_form">{{ location_form.street.label_tag }}</td>
+                    <td id="free_form">{{ location_form.city.label_tag }}</td>
+                    <td id="free_form">{{ location_form.region.label_tag }}</td>
+                    <td id="free_form">{{ location_form.country.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td id="free_form">{{ form.street.errors }}{{ form.street }}</td>
-                    <td id="free_form">{{ form.city.errors }}{{ form.city }}</td>
-                    <td id="free_form">{{ form.region.errors }}{{ form.region }}</td>
-                    <td id="free_form">{{ form.country.errors }}{{ form.country }}</td>
+                    <td id="free_form">{{ location_form.street.errors }}{{ location_form.street }}</td>
+                    <td id="free_form">{{ location_form.city.errors }}{{ location_form.city }}</td>
+                    <td id="free_form">{{ location_form.region.errors }}{{ location_form.region }}</td>
+                    <td id="free_form">{{ location_form.country.errors }}{{ location_form.country }}</td>
                 </tr>
                 <tr>
-                    <td id="free_form">{{ form.new_street.label_tag }}</td>
-                    <td id="free_form">{{ form.new_city.label_tag }}</td>
-                    <td id="free_form">{{ form.new_region.label_tag }}</td>
-                    <td>{{ form.new_country.label_tag }}</td>
+                    <td id="free_form">{{ location_form.new_street.label_tag }}</td>
+                    <td id="free_form">{{ location_form.new_city.label_tag }}</td>
+                    <td id="free_form">{{ location_form.new_region.label_tag }}</td>
+                    <td>{{ location_form.new_country.label_tag }}</td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td id="free_form">{{ form.new_street }}</td>
-                    <td id="free_form">{{ form.new_city }}</td>
-                    <td id="free_form">{{ form.new_region }}</td>
-                    <td>{{ form.new_country }}</td>
+                    <td id="free_form">{{ location_form.new_street }}</td>
+                    <td id="free_form">{{ location_form.new_city }}</td>
+                    <td id="free_form">{{ location_form.new_region }}</td>
+                    <td>{{ location_form.new_country }}</td>
                 </tr>
                 <tr>
-                    <td id="free_form">{{ form.customer_house.label_tag }}</td>
-                    <td id="free_form">{{ form.customer_block.label_tag }}</td>
-                    <td id="free_form">{{ form.customer_building.label_tag }}</td>
-                    <td id="free_form">{{ form.customer_flat.label_tag }}</td>
+                    <td id="free_form">{{ location_form.house.label_tag }}</td>
+                    <td id="free_form">{{ location_form.block.label_tag }}</td>
+                    <td id="free_form">{{ location_form.building.label_tag }}</td>
+                    <td id="free_form">{{ location_form.flat.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td id="free_form">{{ form.customer_house.errors }}{{ form.customer_house }}</td>
-                    <td id="free_form">{{ form.customer_block.errors }}{{ form.customer_block }}</td>
-                    <td id="free_form">{{ form.customer_building.errors }}{{ form.customer_building }}</td>
-                    <td id="free_form">{{ form.customer_flat.errors }}{{ form.customer_flat }}</td>
+                    <td id="free_form">{{ location_form.house.errors }}{{ location_form.house }}</td>
+                    <td id="free_form">{{ location_form.block.errors }}{{ location_form.block }}</td>
+                    <td id="free_form">{{ location_form.building.errors }}{{ location_form.building }}</td>
+                    <td id="free_form">{{ location_form.flat.errors }}{{ location_form.flat }}</td>
                 </tr>
             <table>
                 <tr>

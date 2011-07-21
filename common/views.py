@@ -13,7 +13,7 @@ from django.conf import settings
 #from django.utils import simplejson
 from django.utils.simplejson.encoder import JSONEncoder
 from forms import SearchForm, NewUserForm, EditUserForm, ImportForm, OrderFileCommentForm
-from forms import CemeteryForm, JournalForm, EditBurialForm, InitalForm, OrderCommentForm
+from forms import CemeteryForm, JournalForm, EditBurialForm, InitalForm, OrderCommentForm, AddressForm
 from django.forms.models import modelformset_factory
 from models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization, OrderComments
 from models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation
@@ -288,154 +288,107 @@ def journal(request):
     Страница ввода нового захоронения.
     """
     PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=4)
-    if request.method == "POST":
-        form = JournalForm(request.POST, request.FILES)
-        phoneset = PhoneFormSet(request.POST, request.FILES)
-        if form.is_valid():
-            cd = form.cleaned_data
-            # Try to get Place.
-            try:
-                place = Place.objects.get(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"])
-            except ObjectDoesNotExist:
-                # Create new Place.
-                place = Place(creator=request.user.userprofile.soul)
-                place.cemetery = cd["cemetery"]
-                place.area = cd["area"]
-                place.row = cd["row"]
-                place.seat = cd["seat"]
-                place.soul = cd["cemetery"].organization.soul_ptr
-                place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
-                place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
-                place.save()
-            # Create new Person for dead man.
-            new_person = Person(creator=request.user.userprofile.soul)
-            new_person.last_name = cd["last_name"].capitalize()
-            new_person.first_name = cd["first_name"].capitalize()
-            new_person.patronymic = cd["patronymic"].capitalize()
-            new_person.save()
-            # Create new Person for customer.
-            customer = Person(creator=request.user.userprofile.soul)
-            customer.last_name = cd["customer_last_name"].capitalize()
-            if cd.get("customer_first_name", ""):
-                customer.first_name = cd["customer_first_name"].capitalize()
-            if cd.get("customer_patronymic", ""):
-                customer.patronymic = cd["customer_patronymic"].capitalize()
-            # Create customer's location.
-            new_location = Location()
-            if cd.get("post_index", ""):
-                new_location.post_index = cd["post_index"]
-            if cd.get("country", ""):
-                # Страна.
-                try:
-                    country = GeoCountry.objects.get(name__iexact=cd["country"])
-                except ObjectDoesNotExist:
-                    country = GeoCountry(name=cd["country"].capitalize())
-                    country.save()
-                # Регион.
-                try:
-                    region = GeoRegion.objects.get(country=country, name__iexact=cd["region"])
-                except ObjectDoesNotExist:
-                    region = GeoRegion(country=country, name=cd["region"].capitalize())
-                    region.save()
-                # Нас. пункт.
-                try:
-                    city = GeoCity.objects.get(region=region, name__iexact=cd["city"])
-                except ObjectDoesNotExist:
-                    city = GeoCity(country=country, region=region, name=cd["city"].capitalize())
-                    city.save()
-                # Улица.
-                try:
-                    street = Street.objects.get(city=city, name__iexact=cd["street"])
-                except ObjectDoesNotExist:
-                    street = Street(city=city, name=cd["street"].capitalize())
-                    street.save()
-                # Сохраняем Location.
-                new_location.street = street
-                if cd.get("customer_house", ""):
-                    new_location.house = cd["customer_house"]
-                if cd.get("customer_block", ""):
-                    new_location.block = cd["customer_block"]
-                if cd.get("customer_building", ""):
-                    new_location.building = cd["customer_building"]
-                if cd.get("customer_flat", ""):
-                    new_location.flat = cd["customer_flat"]
-            new_location.save()
-            customer.location = new_location
-            customer.save()
 
-            # Customer phone
-            if phoneset.is_valid():
-                for phone in phoneset.save(commit=False):
-                    phone.soul = customer.soul_ptr
-                    phone.save()
+    if request.user.userprofile.default_cemetery:
+        cem = request.user.userprofile.default_cemetery
+    else:
+        cem = None
+    if request.user.userprofile.default_operation:
+        oper = request.user.userprofile.default_operation
+    else:
+        oper = None
 
-            # Create new Burial.
-            new_burial = Burial(creator=request.user.userprofile.soul)
-            new_burial.person = new_person
-            new_burial.product = place.product_ptr
-            new_burial.date_plan = cd["burial_date"]
-            new_burial.date_fact = cd["burial_date"]
-            new_burial.account_book_n = cd["account_book_n"]
-            new_burial.customer = customer.soul_ptr
+    form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None)
+    location_form = AddressForm(prefix='address', data=request.POST or None)
+
+    phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=Phone.objects.none())
+    if request.method == "POST" and form.is_valid() and location_form.is_valid():
+        cd = form.cleaned_data
+        # Try to get Place.
+        try:
+            place = Place.objects.get(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"])
+        except ObjectDoesNotExist:
+            # Create new Place.
+            place = Place(creator=request.user.userprofile.soul)
+            place.cemetery = cd["cemetery"]
+            place.area = cd["area"]
+            place.row = cd["row"]
+            place.seat = cd["seat"]
+            place.soul = cd["cemetery"].organization.soul_ptr
+            place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
+            place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
+            place.save()
+        # Create new Person for dead man.
+        new_person = Person(creator=request.user.userprofile.soul)
+        new_person.last_name = cd["last_name"].capitalize()
+        new_person.first_name = cd["first_name"].capitalize()
+        new_person.patronymic = cd["patronymic"].capitalize()
+        new_person.save()
+        # Create new Person for customer.
+        customer = Person(creator=request.user.userprofile.soul)
+        customer.last_name = cd["customer_last_name"].capitalize()
+        if cd.get("customer_first_name", ""):
+            customer.first_name = cd["customer_first_name"].capitalize()
+        if cd.get("customer_patronymic", ""):
+            customer.patronymic = cd["customer_patronymic"].capitalize()
+
+        customer.location = location_form.save()
+        customer.save()
+
+        # Customer phone
+        if phoneset.is_valid():
+            for phone in phoneset.save(commit=False):
+                phone.soul = customer.soul_ptr
+                phone.save()
+
+        # Create new Burial.
+        new_burial = Burial(creator=request.user.userprofile.soul)
+        new_burial.person = new_person
+        new_burial.product = place.product_ptr
+        new_burial.date_plan = cd["burial_date"]
+        new_burial.date_fact = cd["burial_date"]
+        new_burial.account_book_n = cd["account_book_n"]
+        new_burial.customer = customer.soul_ptr
 #            new_burial.name = u"Захоронение"
 #            new_burial.p_type = ProductType.objects.get(uuid=settings.BURIAL_PRODUCTTYPE_ID)
-            new_burial.responsible = cd["cemetery"].organization.soul_ptr  #ставить орг-ию кладбища
-            new_burial.doer = request.user.userprofile.soul
-            new_burial.operation = cd["operation"]
-            new_burial.account_book_n = cd["account_book_n"]
+        new_burial.responsible = cd["cemetery"].organization.soul_ptr  #ставить орг-ию кладбища
+        new_burial.doer = request.user.userprofile.soul
+        new_burial.operation = cd["operation"]
+        new_burial.account_book_n = cd["account_book_n"]
+        new_burial.save()
+
+        if not new_burial.account_book_n:
+            num = new_burial.generate_account_number()
             new_burial.save()
+            if not place.seat:
+                place.seat = num
+                place.save()
 
-            if not new_burial.account_book_n:
-                num = new_burial.generate_account_number()
-                new_burial.save()
-                if not place.seat:
-                    place.seat = num
-                    place.save()
+        # Create comment.
+        if cd.get("comment", ""):
+            new_burial.add_comment(cd["comment"], request.user.userprofile.soul)
+        # Save files.
+        for nf in request.FILES:
+            nfile = request.FILES[nf]
+            of = OrderFiles(creator=request.user.userprofile.soul)
+            of.order = new_burial.order_ptr
+            nfile.name = unicode(nfile.name)
+            of.ofile = nfile
+            if cd.get("file1_comment", ""):
+                of.comment = cd["file1_comment"]
+            of.save()
 
-            # Create comment.
-            if cd.get("comment", ""):
-                new_burial.add_comment(cd["comment"], request.user.userprofile.soul)
-            # Save files.
-            for nf in request.FILES:
-                nfile = request.FILES[nf]
-                of = OrderFiles(creator=request.user.userprofile.soul)
-                of.order = new_burial.order_ptr
-                nfile.name = unicode(nfile.name)
-                of.ofile = nfile
-                if cd.get("file1_comment", ""):
-                    of.comment = cd["file1_comment"]
-                of.save()
+        return redirect("/journal/")
 
-#            # Create new Order.
-#            new_order = Order(creator=request.user.userprofile.soul)
-#            new_order.responsible = MAIN_ORGANIZATION.soul_ptr
-##            new_order.customer = customer
-#            #new_order.doer = request.user
-#            new_order.save()
-
-#            # Create new OrderPosition.
-#            new_op = OrderPosition(creator=request.user.userprofile.soul)
-#            new_op.order = new_order
-#            new_op.product = new_burial.product_ptr
-#            new_op.operation = cd["service"].operation
-#            new_op.save()
-            return redirect("/journal/")
-    else:
-        phoneset = PhoneFormSet(queryset=Phone.objects.none())
-        if request.user.userprofile.default_cemetery:
-            cem = request.user.userprofile.default_cemetery
-        else:
-            cem = None
-        if request.user.userprofile.default_operation:
-            oper = request.user.userprofile.default_operation
-        else:
-            oper = None
-        form = JournalForm(cem=cem, oper=oper)
     today = datetime.date.today()
     burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul,
-                            date_of_creation__gte=datetime.datetime(year=today.year,
-                            month=today.month, day=today.day)).order_by('-date_of_creation')[:20]
-    return direct_to_template(request, 'journal.html', {'form': form, 'object_list': burials, 'phoneset': phoneset})
+                            date_of_creation__gte=today).order_by('-date_of_creation')[:20]
+    return direct_to_template(request, 'journal.html', {
+        'form': form,
+        'object_list': burials,
+        'phoneset': phoneset,
+        'location_form': location_form,
+    })
 
 @login_required
 @is_in_group("edit_burial")

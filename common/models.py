@@ -135,14 +135,17 @@ class Location(models.Model):
     gps_y = models.FloatField(u"Координата Y", blank=True, null=True)                        # GPS Y-ось.
     gps_z = models.FloatField(u"Координата Z", blank=True, null=True)                        # GPS Z-ось.
     info = models.TextField(u"Дополнительная информация", blank=True, null=True)             # Дополнительная информация
+
     def __unicode__(self):
         if self.street:
             return u'%s (дом %s, корп. %s, строен. %s, кв. %s)' % (self.street,
                                 self.house, self.block, self.building, self.flat)
         else:
             return u"незаполненный адрес"
+
     def save(self, *args, **kwargs):
-        Cemetery.objects.filter(location=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
+        if self.pk:
+            Cemetery.objects.filter(location=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
         super(Location, self).save(*args, **kwargs)
 
 
@@ -153,7 +156,7 @@ class Soul(models.Model):
     uuid = UUIDField(primary_key=True)
     birth_date = models.DateField(u"Дата рождения", blank=True, null=True)
     death_date = models.DateField(u"Дата смерти", blank=True, null=True)
-    location = models.ForeignKey(Location, blank=True, null=True)  # Адрес орг-ии или человека (Person).
+    location = models.OneToOneField(Location, blank=True, null=True)  # Адрес орг-ии или человека (Person).
     creator = models.ForeignKey(u"Soul", blank=True, null=True)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     def __unicode__(self):
@@ -178,10 +181,13 @@ class Phone(models.Model):
     uuid = UUIDField(primary_key=True)
     soul = models.ForeignKey(Soul)
     f_number = models.CharField(u"Номер телефона", max_length=20)  # Телефон.
+
     class Meta:
         unique_together = (("soul", "f_number"),)
+
     def __unicode__(self):
         return self.f_number
+    
     def save(self, *args, **kwargs):
         soul = self.soul
         if hasattr(soul, "organization"):
@@ -206,6 +212,8 @@ class Person(Soul):
     first_name = models.CharField(u"Имя", max_length=30, blank=True)  # Имя.
     patronymic = models.CharField(u"Отчество", max_length=30, blank=True)  # Отчество.
     roles = models.ManyToManyField(u"Role", through="PersonRole", verbose_name="Роли")
+    registration_address = models.ForeignKey(Location, verbose_name=u"Адрес прописки", blank=True, null=True)
+
     def __unicode__(self):
         if self.last_name:
             result = self.last_name
