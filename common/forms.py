@@ -264,41 +264,31 @@ class JournalForm(AutoTabIndex):
     Форма журнала - создания нового захоронения.
     """
 
-    account_book_n = forms.CharField(max_length=16, label="Номер в книге учета*",
-                                     widget=forms.TextInput(attrs={"tabindex": "1"}), required=False)
-    burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}), initial=get_today)
-    birth_date = forms.DateField(label="Дата рождения*", widget=CalendarWidget(attrs={"tabindex": "2"}), initial='')
-    death_date = forms.DateField(label="Дата смерти*", widget=CalendarWidget(attrs={"tabindex": "2"}), initial=get_yesterday)
+    account_book_n = forms.CharField(max_length=16, label="Номер в книге учета*", required=False)
+    burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget, initial=get_today)
+    birth_date = forms.DateField(label="Дата рождения*", widget=CalendarWidget, initial='')
+    death_date = forms.DateField(label="Дата смерти*", widget=CalendarWidget, initial=get_yesterday)
     last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
             help_text="Допускаются только буквы, цифры и символ '-'", initial=u"НЕИЗВЕСТЕН")
-    first_name = forms.CharField(required=False, max_length=30, label="Имя",
-                                 widget=forms.TextInput(attrs={"tabindex": "4"}))
-    patronymic = forms.CharField(required=False, max_length=30, label="Отчество",
-                                 widget=forms.TextInput(attrs={"tabindex": "5"}))
-    cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(),
-                                      label="Кладбище*", required=True)
-    operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None,
-                                       widget=forms.Select(attrs={"tabindex": "6"}), required=True)
+    first_name = forms.CharField(required=False, max_length=30, label="Имя")
+    patronymic = forms.CharField(required=False, max_length=30, label="Отчество")
+    cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(), label="Кладбище*", required=True)
+    operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None, required=True)
     hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
-    area = forms.CharField(max_length=9, label="Участок*", widget=forms.TextInput(attrs={"tabindex": "7"}))
-    row = forms.CharField(max_length=9, label="Ряд*", widget=forms.TextInput(attrs={"tabindex": "8"}))
-    seat = forms.CharField(max_length=9, label="Место*", widget=forms.TextInput(attrs={"tabindex": "9"}), required=False)
+    area = forms.CharField(max_length=9, label="Участок*")
+    row = forms.CharField(max_length=9, label="Ряд*")
+    seat = forms.CharField(max_length=9, label="Место*", required=False)
     customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
-                                         widget=forms.TextInput(attrs={"tabindex": "10"}),
                                          help_text="Допускаются только буквы, цифры и символ '-'",
                                          initial=u"НЕИЗВЕСТЕН")
-    customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика",
-                                          widget=forms.TextInput(attrs={"tabindex": "11"}))
-    customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика",
-                                          widget=forms.TextInput(attrs={"tabindex": "12"}))
-    comment = forms.CharField(required=False,
-                              widget=forms.Textarea(attrs={'rows': 4,
-                                                           'cols': 90,
-                                                           'tabindex': "22"}),
-                              label="Комментарий")
+    customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика")
+    customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика")
+    comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 90}), label="Комментарий")
     file1 = forms.FileField(required=False, label="Файл")
     file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 1, 'cols': 64}),
                                     label="Комментарий к файлу")
+
+    certificate_number = forms.CharField(max_length=32, label=u"Номер свид. о смерти")
 
     def __init__(self, *args, **kwargs):
         cem = kwargs.pop('cem', None)

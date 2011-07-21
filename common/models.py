@@ -159,6 +159,7 @@ class Soul(models.Model):
     location = models.OneToOneField(Location, blank=True, null=True)  # Адрес орг-ии или человека (Person).
     creator = models.ForeignKey(u"Soul", blank=True, null=True)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
+
     def __unicode__(self):
         if hasattr(self, "person"):
             return u"Физ. лицо: %s" % self.person
@@ -166,10 +167,12 @@ class Soul(models.Model):
             return u"Юр. лицо: %s" % self.organization
         else:
             return self.uuid
+
     def save(self, *args, **kwargs):
         if hasattr(self, "person"):
             Burial.objects.filter(person=self.person).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
         super(Soul, self).save(*args, **kwargs)
+
     class Meta:
         ordering = ['uuid']
 
@@ -212,7 +215,6 @@ class Person(Soul):
     first_name = models.CharField(u"Имя", max_length=30, blank=True)  # Имя.
     patronymic = models.CharField(u"Отчество", max_length=30, blank=True)  # Отчество.
     roles = models.ManyToManyField(u"Role", through="PersonRole", verbose_name="Роли")
-    registration_address = models.ForeignKey(Location, verbose_name=u"Адрес прописки", blank=True, null=True)
 
     def __unicode__(self):
         if self.last_name:
@@ -224,9 +226,11 @@ class Person(Soul):
         else:
             result = self.uuid
         return result
+    
     def save(self, *args, **kwargs):
         Burial.objects.filter(person=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
         super(Person, self).save(*args, **kwargs)
+        
     def get_initials(self):
         initials = u""
         if self.first_name:
@@ -245,10 +249,11 @@ class DeathCertificate(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     soul = models.OneToOneField(Soul)
-    s_number = models.CharField(u"Номер свидетельства", max_length=30,
-                                blank=True)  # Номер свидетельства о смерти.
+    s_number = models.CharField(u"Номер свидетельства", max_length=30, blank=True)  # Номер свидетельства о смерти.
+
     def __unicode__(self):
         return u"Свид. о смерти (%s)" % self.soul.__unicode__()
+
     class Meta:
         verbose_name = (u'свидетельство о смерти')
         verbose_name_plural = (u'свидетельства о смерти')

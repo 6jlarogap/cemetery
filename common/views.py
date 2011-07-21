@@ -16,7 +16,7 @@ from forms import SearchForm, NewUserForm, EditUserForm, ImportForm, OrderFileCo
 from forms import CemeteryForm, JournalForm, EditBurialForm, InitalForm, OrderCommentForm, AddressForm
 from django.forms.models import modelformset_factory
 from models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization, OrderComments
-from models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation
+from models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation, DeathCertificate
 from models import OrderFiles, Phone, Place, ProductType, SoulProducttypeOperation, Role
 from models import Env
 from django import db
@@ -300,9 +300,10 @@ def journal(request):
 
     form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None)
     location_form = AddressForm(prefix='address', data=request.POST or None)
+    registration_form = AddressForm(prefix='registration', data=request.POST or None)
 
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=Phone.objects.none())
-    if request.method == "POST" and form.is_valid() and location_form.is_valid():
+    if request.method == "POST" and form.is_valid() and location_form.is_valid() and registration_form.is_valid():
         cd = form.cleaned_data
         # Try to get Place.
         try:
@@ -349,13 +350,13 @@ def journal(request):
         new_burial.date_fact = cd["burial_date"]
         new_burial.account_book_n = cd["account_book_n"]
         new_burial.customer = customer.soul_ptr
-#            new_burial.name = u"Захоронение"
-#            new_burial.p_type = ProductType.objects.get(uuid=settings.BURIAL_PRODUCTTYPE_ID)
         new_burial.responsible = cd["cemetery"].organization.soul_ptr  #ставить орг-ию кладбища
         new_burial.doer = request.user.userprofile.soul
         new_burial.operation = cd["operation"]
         new_burial.account_book_n = cd["account_book_n"]
         new_burial.save()
+
+        new_burial.person.location = registration_form.save()
 
         if not new_burial.account_book_n:
             num = new_burial.generate_account_number()
@@ -378,6 +379,9 @@ def journal(request):
                 of.comment = cd["file1_comment"]
             of.save()
 
+        if cd.get('certificate_number'):
+            DeathCertificate.objects.create(soul_id=new_burial.person.pk, s_number=cd['certificate_number'])
+
         return redirect("/journal/")
 
     today = datetime.date.today()
@@ -388,6 +392,7 @@ def journal(request):
         'object_list': burials,
         'phoneset': phoneset,
         'location_form': location_form,
+        'registration_form': registration_form,
     })
 
 @login_required
