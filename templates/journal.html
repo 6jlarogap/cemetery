@@ -187,74 +187,74 @@ $(function(){
             {{ form.non_field_errors }}{{ location_form.non_field_errors }}{{ certificate_form.non_field_errors }}
             <table width="800">
                 <tr>
-                    <td width="33%" class="free_form">{{ form.account_book_n.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ form.burial_date.label_tag }}</td>
-                    <td width="33%">&nbsp;</td>
+                    <td class="free_form">{{ form.account_book_n.label_tag }}</td>
+                    <td class="free_form">{{ form.burial_date.label_tag }}</td>
+                    <td >{{ form.exhumated_date.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td width="33%">{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
-                    <td width="33%">{{ form.burial_date.errors }}{{ form.burial_date }}</td>
-                    <td width="33%">&nbsp;</td>
+                    <td >{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
+                    <td >{{ form.burial_date.errors }}{{ form.burial_date }}</td>
+                    <td >{{ form.exhumated_date.errors }}{{ form.exhumated_date }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ form.birth_date.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ form.death_date.label_tag }}</td>
-                    <td width="33%">{{ certificate_form.zags.label_tag }}</td>
+                    <td class="free_form">{{ form.birth_date.label_tag }}</td>
+                    <td class="free_form">{{ form.death_date.label_tag }}</td>
+                    <td >{{ certificate_form.zags.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td width="33%">{{ form.birth_date.errors }}{{ form.birth_date }}</td>
-                    <td width="33%">{{ form.death_date.errors }}{{ form.death_date }}</td>
-                    <td width="33%">{{ certificate_form.zags.errors }}{{ certificate_form.zags }}</td>
+                    <td >{{ form.birth_date.errors }}{{ form.birth_date }}</td>
+                    <td >{{ form.death_date.errors }}{{ form.death_date }}</td>
+                    <td >{{ certificate_form.zags.errors }}{{ certificate_form.zags }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ certificate_form.series.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ certificate_form.release_date.label_tag }}</td>
-                    <td width="33%">{{ certificate_form.s_number.label_tag }}</td>
+                    <td class="free_form">{{ certificate_form.series.label_tag }}</td>
+                    <td class="free_form">{{ certificate_form.release_date.label_tag }}</td>
+                    <td >{{ certificate_form.s_number.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td width="33%">{{ certificate_form.series.errors }}{{ certificate_form.series }}</td>
-                    <td width="33%">{{ certificate_form.release_date.errors }}{{ certificate_form.release_date }}</td>
-                    <td width="33%">{{ certificate_form.s_number.errors }}{{ certificate_form.s_number }}</td>
+                    <td >{{ certificate_form.series.errors }}{{ certificate_form.series }}</td>
+                    <td >{{ certificate_form.release_date.errors }}{{ certificate_form.release_date }}</td>
+                    <td >{{ certificate_form.s_number.errors }}{{ certificate_form.s_number }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ form.last_name.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ form.first_name.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ form.patronymic.label_tag }}</td>
+                    <td class="free_form">{{ form.last_name.label_tag }}</td>
+                    <td class="free_form">{{ form.first_name.label_tag }}</td>
+                    <td class="free_form">{{ form.patronymic.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ form.last_name.errors }}{{ form.last_name }}</td>
-                    <td width="33%" class="free_form">{{ form.first_name.errors }}{{ form.first_name }}</td>
-                    <td width="33%" class="free_form">{{ form.patronymic.errors }}{{ form.patronymic }}</td>
+                    <td class="free_form">{{ form.last_name.errors }}{{ form.last_name }}</td>
+                    <td class="free_form">{{ form.first_name.errors }}{{ form.first_name }}</td>
+                    <td class="free_form">{{ form.patronymic.errors }}{{ form.patronymic }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ form.cemetery.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ form.operation.label_tag }}</td>
-                    <td width="33%">&nbsp;</td>
+                    <td class="free_form">{{ form.cemetery.label_tag }}</td>
+                    <td class="free_form">{{ form.operation.label_tag }}</td>
+                    <td >&nbsp;</td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ form.cemetery.errors }}{{ form.cemetery }}</td>
-                    <td width="33%" class="free_form">{{ form.operation.errors }}{{ form.operation }}{{ form.hoperation.errors }}{{ form.hoperation }}</td>
-                    <td width="33%">&nbsp;</td>
+                    <td class="free_form">{{ form.cemetery.errors }}{{ form.cemetery }}</td>
+                    <td class="free_form">{{ form.operation.errors }}{{ form.operation }}{{ form.hoperation.errors }}{{ form.hoperation }}</td>
+                    <td >&nbsp;</td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ form.area.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ form.row.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ form.seat.label_tag }}</td>
+                    <td class="free_form">{{ form.area.label_tag }}</td>
+                    <td class="free_form">{{ form.row.label_tag }}</td>
+                    <td class="free_form">{{ form.seat.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ form.area.errors }}{{ form.area }}</td>
-                    <td width="33%" class="free_form">{{ form.row.errors }}{{ form.row }}</td>
-                    <td width="33%" class="free_form">{{ form.seat.errors }}{{ form.seat }}</td>
+                    <td class="free_form">{{ form.area.errors }}{{ form.area }}</td>
+                    <td class="free_form">{{ form.row.errors }}{{ form.row }}</td>
+                    <td class="free_form">{{ form.seat.errors }}{{ form.seat }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ form.customer_last_name.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ form.customer_first_name.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ form.customer_patronymic.label_tag }}</td>
+                    <td class="free_form">{{ form.customer_last_name.label_tag }}</td>
+                    <td class="free_form">{{ form.customer_first_name.label_tag }}</td>
+                    <td class="free_form">{{ form.customer_patronymic.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ form.customer_last_name.errors }}{{ form.customer_last_name }}</td>
-                    <td width="33%" class="free_form">{{ form.customer_first_name.errors }}{{ form.customer_first_name }}</td>
-                    <td width="33%" class="free_form">{{ form.customer_patronymic.errors }}{{ form.customer_patronymic }}</td>
+                    <td class="free_form">{{ form.customer_last_name.errors }}{{ form.customer_last_name }}</td>
+                    <td class="free_form">{{ form.customer_first_name.errors }}{{ form.customer_first_name }}</td>
+                    <td class="free_form">{{ form.customer_patronymic.errors }}{{ form.customer_patronymic }}</td>
                 </tr>
 
                 <!-- LOCATION -->
@@ -262,9 +262,9 @@ $(function(){
                     <td colspan="3"><h2>Фактический адрес</h2></td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ location_form.post_index.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ location_form.post_index.errors }}{{ location_form.post_index }}</td>
-                    <td width="33%">&nbsp;</td>
+                    <td class="free_form">{{ location_form.post_index.label_tag }}</td>
+                    <td class="free_form">{{ location_form.post_index.errors }}{{ location_form.post_index }}</td>
+                    <td >&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="free_form">{{ location_form.street.label_tag }}</td>
@@ -312,9 +312,9 @@ $(function(){
                     </td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ registration_form.post_index.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ registration_form.post_index.errors }}{{ registration_form.post_index }}</td>
-                    <td width="33%">&nbsp;</td>
+                    <td class="free_form">{{ registration_form.post_index.label_tag }}</td>
+                    <td class="free_form">{{ registration_form.post_index.errors }}{{ registration_form.post_index }}</td>
+                    <td >&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="free_form">{{ registration_form.street.label_tag }}</td>
@@ -366,22 +366,22 @@ $(function(){
                 </tr>
 
                 <tr>
-                    <td width="33%" class="free_form">{{ form.file1.label_tag }}</td>
-                    <td width="33%" class="free_form">{{ form.file1_comment.label_tag }}</td>
-                    <td width="33%">&nbsp;</td>
+                    <td class="free_form">{{ form.file1.label_tag }}</td>
+                    <td class="free_form">{{ form.file1_comment.label_tag }}</td>
+                    <td >&nbsp;</td>
                 </tr>
                 <tr>
-                    <td width="33%" class="free_form">{{ form.file1.errors }}{{ form.file1 }}</td>
-                    <td width="33%" class="free_form">{{ form.file1_comment.errors }}{{ form.file1_comment }}</td>
-                    <td width="33%">&nbsp;</td>
+                    <td class="free_form">{{ form.file1.errors }}{{ form.file1 }}</td>
+                    <td class="free_form">{{ form.file1_comment.errors }}{{ form.file1_comment }}</td>
+                    <td >&nbsp;</td>
                 </tr>
             </table>
             <table>
                 <tfoot>
                     <tr>
-                        <td width="33%">&nbsp;</td>
-                        <td width="33%"><input type="submit" value="Сохранить" tabindex="22"></td>
-                        <td width="33%"><input type="reset" value="Сброс" tabindex="23"></td>
+                        <td >&nbsp;</td>
+                        <td ><input type="submit" value="Сохранить" tabindex="22"></td>
+                        <td ><input type="reset" value="Сброс" tabindex="23"></td>
                     </tr>
                 </tfoot>
             </table>

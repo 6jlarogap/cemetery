@@ -31,6 +31,7 @@ $(function(){
          {$(this).val("НЕИЗВЕСТЕН");}
          });
 
+    var initial_operation = $("#id_operation").val();
     $.getJSON("/getoper/",{id: $("#id_cemetery").val(), ajax: 'true'}, function(j){
       var options = '';
       for (var i = 0; i < j.length; i++) {
@@ -40,6 +41,7 @@ $(function(){
         { options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>'; }
       }
       $("#id_operation").html(options);
+        $("#id_operation").val(initial_operation);
     });
     });
 $(function(){
@@ -158,102 +160,110 @@ $(function(){
         {{ form.non_field_errors }}
         <table width="800">
             <tr>
-                <td width="33%" id="free_form">{{ form.account_book_n.label_tag }}</td>
-                <td width="33%" id="free_form">{{ form.burial_date.label_tag }}</td>
-                <td width="33%">&nbsp;</td>
+                <td  id="free_form">{{ form.account_book_n.label_tag }}</td>
+                <td  id="free_form">{{ form.burial_date.label_tag }}</td>
+                <td >
+                    {{ form.exhumated_date.label_tag }}
+                </td>
             </tr>
             <tr>
                 {% if user|in_group:"edit_burial" %}
-                    <td width="33%">{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
-                    <td width="33%">{{ form.burial_date.errors }}{{ form.burial_date }}</td>
+                    <td >{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
+                    <td >{{ form.burial_date.errors }}{{ form.burial_date }}</td>
+                    <td >
+                        {{ form.exhumated_date.errors }}{{ form.exhumated_date }} <br/>
+                        {% if form.initial.exhumated_date %}
+                            <label><input type="checkbox" name="disable_exhumation" value="go" {% if request.POST.disable_exhumation %}checked="1"{% endif %} /> отменить</label>
+                        {% endif %}
+                    </td>
                 {% else %}
-                    <td width="33%">{{ burial.account_book_n }}</td>
-                    <td width="33%">{{ burial.date_fact|date:"d.m.Y" }}</td>
-                {% endif %}
-                <td width="33%">&nbsp;</td>
-            </tr>
-            <tr>
-                <td width="33%" class="free_form">{{ form.birth_date.label_tag }}</td>
-                <td width="33%" class="free_form">{{ form.death_date.label_tag }}</td>
-                <td width="33%">{{ certificate_form.zags.label_tag }}</td>
-            </tr>
-            <tr>
-                <td width="33%">{{ form.birth_date.errors }}{{ form.birth_date }}</td>
-                <td width="33%">{{ form.death_date.errors }}{{ form.death_date }}</td>
-                <td width="33%">{{ certificate_form.zags.errors }}{{ certificate_form.zags }}</td>
-            </tr>
-            <tr>
-                <td width="33%" class="free_form">{{ certificate_form.series.label_tag }}</td>
-                <td width="33%" class="free_form">{{ certificate_form.release_date.label_tag }}</td>
-                <td width="33%">{{ certificate_form.s_number.label_tag }}</td>
-            </tr>
-            <tr>
-                <td width="33%">{{ certificate_form.series.errors }}{{ certificate_form.series }}</td>
-                <td width="33%">{{ certificate_form.release_date.errors }}{{ certificate_form.release_date }}</td>
-                <td width="33%">{{ certificate_form.s_number.errors }}{{ certificate_form.s_number }}</td>
-            </tr>
-            <tr>
-                <td width="33%" id="free_form">{{ form.last_name.label_tag }}</td>
-                <td width="33%" id="free_form">{{ form.first_name.label_tag }}</td>
-                <td width="33%" id="free_form">{{ form.patronymic.label_tag }}</td>
-            </tr>
-            <tr>
-                {% if user|in_group:"edit_burial" %}
-                    <td width="33%" id="free_form">{{ form.last_name.errors }}{{ form.last_name }}</td>
-                    <td width="33%" id="free_form">{{ form.first_name.errors }}{{ form.first_name }}</td>
-                    <td width="33%" id="free_form">{{ form.patronymic.errors }}{{ form.patronymic }}</td>
-                {% else %}
-                    <td width="33%" id="free_form">{{ burial.person.last_name }}</td>
-                    <td width="33%" id="free_form">{{ burial.person.first_name }}</td>
-                    <td width="33%" id="free_form">{{ burial.person.patronymic }}</td>
+                    <td >{{ burial.account_book_n }}</td>
+                    <td >{{ burial.date_fact|date:"d.m.Y" }}</td>
+                    <td >{{ burial.exhumated_date|date:"d.m.Y" }}</td>
                 {% endif %}
             </tr>
             <tr>
-                <td width="33%" id="free_form">{{ form.cemetery.label_tag }}</td>
-                <td width="33%" id="free_form">{{ form.operation.label_tag }}</td>
-                <td width="33%">&nbsp;</td>
+                <td  class="free_form">{{ form.birth_date.label_tag }}</td>
+                <td  class="free_form">{{ form.death_date.label_tag }}</td>
+                <td >{{ certificate_form.zags.label_tag }}</td>
+            </tr>
+            <tr>
+                <td >{{ form.birth_date.errors }}{{ form.birth_date }}</td>
+                <td >{{ form.death_date.errors }}{{ form.death_date }}</td>
+                <td >{{ certificate_form.zags.errors }}{{ certificate_form.zags }}</td>
+            </tr>
+            <tr>
+                <td  class="free_form">{{ certificate_form.series.label_tag }}</td>
+                <td  class="free_form">{{ certificate_form.release_date.label_tag }}</td>
+                <td >{{ certificate_form.s_number.label_tag }}</td>
+            </tr>
+            <tr>
+                <td >{{ certificate_form.series.errors }}{{ certificate_form.series }}</td>
+                <td >{{ certificate_form.release_date.errors }}{{ certificate_form.release_date }}</td>
+                <td >{{ certificate_form.s_number.errors }}{{ certificate_form.s_number }}</td>
+            </tr>
+            <tr>
+                <td  id="free_form">{{ form.last_name.label_tag }}</td>
+                <td  id="free_form">{{ form.first_name.label_tag }}</td>
+                <td  id="free_form">{{ form.patronymic.label_tag }}</td>
             </tr>
             <tr>
                 {% if user|in_group:"edit_burial" %}
-                    <td width="33%" id="free_form">{{ form.cemetery.errors }}{{ form.cemetery }}</td>
-                    <td width="33%" id="free_form">{{ form.operation.errors }}{{ form.operation }}{{ form.hoperation.errors }}{{ form.hoperation }}</td>
-                    <td width="33%">&nbsp;</td>
+                    <td  id="free_form">{{ form.last_name.errors }}{{ form.last_name }}</td>
+                    <td  id="free_form">{{ form.first_name.errors }}{{ form.first_name }}</td>
+                    <td  id="free_form">{{ form.patronymic.errors }}{{ form.patronymic }}</td>
                 {% else %}
-                    <td width="33%" id="free_form">{{ burial.product.place.cemetery.name }}</td>
-                    <td width="33%" id="free_form">{{ burial.operation.op_type }}</td>
-                    <td width="33%">&nbsp;</td>
+                    <td  id="free_form">{{ burial.person.last_name }}</td>
+                    <td  id="free_form">{{ burial.person.first_name }}</td>
+                    <td  id="free_form">{{ burial.person.patronymic }}</td>
                 {% endif %}
             </tr>
             <tr>
-                <td width="33%" id="free_form">{{ form.area.label_tag }}</td>
-                <td width="33%" id="free_form">{{ form.row.label_tag }}</td>
-                <td width="33%" id="free_form">{{ form.seat.label_tag }}</td>
+                <td  id="free_form">{{ form.cemetery.label_tag }}</td>
+                <td  id="free_form">{{ form.operation.label_tag }}</td>
+                <td >&nbsp;</td>
             </tr>
             <tr>
                 {% if user|in_group:"edit_burial" %}
-                    <td width="33%" id="free_form">{{ form.area.errors }}{{ form.area }}</td>
-                    <td width="33%" id="free_form">{{ form.row.errors }}{{ form.row }}</td>
-                    <td width="33%" id="free_form">{{ form.seat.errors }}{{ form.seat }}</td>
+                    <td  id="free_form">{{ form.cemetery.errors }}{{ form.cemetery }}</td>
+                    <td  id="free_form">{{ form.operation.errors }}{{ form.operation }}{{ form.hoperation.errors }}{{ form.hoperation }}</td>
+                    <td >&nbsp;</td>
                 {% else %}
-                    <td width="33%" id="free_form">{{ burial.product.place.area }}</td>
-                    <td width="33%" id="free_form">{{ burial.product.place.row }}</td>
-                    <td width="33%" id="free_form">{{ burial.product.place.seat }}</td>
+                    <td  id="free_form">{{ burial.product.place.cemetery.name }}</td>
+                    <td  id="free_form">{{ burial.operation.op_type }}</td>
+                    <td >&nbsp;</td>
                 {% endif %}
             </tr>
             <tr>
-                <td width="33%" id="free_form">{{ form.customer_last_name.label_tag }}</td>
-                <td width="33%" id="free_form">{{ form.customer_first_name.label_tag }}</td>
-                <td width="33%" id="free_form">{{ form.customer_patronymic.label_tag }}</td>
+                <td  id="free_form">{{ form.area.label_tag }}</td>
+                <td  id="free_form">{{ form.row.label_tag }}</td>
+                <td  id="free_form">{{ form.seat.label_tag }}</td>
             </tr>
             <tr>
                 {% if user|in_group:"edit_burial" %}
-                    <td width="33%" id="free_form">{{ form.customer_last_name.errors }}{{ form.customer_last_name }}</td>
-                    <td width="33%" id="free_form">{{ form.customer_first_name.errors }}{{ form.customer_first_name }}</td>
-                    <td width="33%" id="free_form">{{ form.customer_patronymic.errors }}{{ form.customer_patronymic }}</td>
+                    <td  id="free_form">{{ form.area.errors }}{{ form.area }}</td>
+                    <td  id="free_form">{{ form.row.errors }}{{ form.row }}</td>
+                    <td  id="free_form">{{ form.seat.errors }}{{ form.seat }}</td>
                 {% else %}
-                    <td width="33%" id="free_form">{{ burial.customer.person.last_name }}</td>
-                    <td width="33%" id="free_form">{{ burial.customer.person.first_name }}</td>
-                    <td width="33%" id="free_form">{{ burial.customer.person.patronymic }}</td>
+                    <td  id="free_form">{{ burial.product.place.area }}</td>
+                    <td  id="free_form">{{ burial.product.place.row }}</td>
+                    <td  id="free_form">{{ burial.product.place.seat }}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td  id="free_form">{{ form.customer_last_name.label_tag }}</td>
+                <td  id="free_form">{{ form.customer_first_name.label_tag }}</td>
+                <td  id="free_form">{{ form.customer_patronymic.label_tag }}</td>
+            </tr>
+            <tr>
+                {% if user|in_group:"edit_burial" %}
+                    <td  id="free_form">{{ form.customer_last_name.errors }}{{ form.customer_last_name }}</td>
+                    <td  id="free_form">{{ form.customer_first_name.errors }}{{ form.customer_first_name }}</td>
+                    <td  id="free_form">{{ form.customer_patronymic.errors }}{{ form.customer_patronymic }}</td>
+                {% else %}
+                    <td  id="free_form">{{ burial.customer.person.last_name }}</td>
+                    <td  id="free_form">{{ burial.customer.person.first_name }}</td>
+                    <td  id="free_form">{{ burial.customer.person.patronymic }}</td>
                 {% endif %}
             </tr>
 
@@ -262,9 +272,9 @@ $(function(){
                 <td colspan="3"><h2>Фактический адрес</h2></td>
             </tr>
             <tr>
-                <td width="33%" class="free_form">{{ location_form.post_index.label_tag }}</td>
-                <td width="33%" class="free_form">{{ location_form.post_index.errors }}{{ location_form.post_index }}</td>
-                <td width="33%">&nbsp;</td>
+                <td  class="free_form">{{ location_form.post_index.label_tag }}</td>
+                <td  class="free_form">{{ location_form.post_index.errors }}{{ location_form.post_index }}</td>
+                <td >&nbsp;</td>
             </tr>
             <tr>
                 <td class="free_form">{{ location_form.street.label_tag }}</td>
@@ -312,9 +322,9 @@ $(function(){
                 </td>
             </tr>
             <tr>
-                <td width="33%" class="free_form">{{ registration_form.post_index.label_tag }}</td>
-                <td width="33%" class="free_form">{{ registration_form.post_index.errors }}{{ registration_form.post_index }}</td>
-                <td width="33%">&nbsp;</td>
+                <td  class="free_form">{{ registration_form.post_index.label_tag }}</td>
+                <td  class="free_form">{{ registration_form.post_index.errors }}{{ registration_form.post_index }}</td>
+                <td >&nbsp;</td>
             </tr>
             <tr>
                 <td class="free_form">{{ registration_form.street.label_tag }}</td>

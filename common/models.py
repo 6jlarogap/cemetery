@@ -564,6 +564,7 @@ class OrderComments(models.Model):
     comment = models.TextField()  # Комментарий.
     creator = models.ForeignKey(Soul)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
+    
     class Meta:
         ordering = ['date_of_creation']
 
@@ -572,8 +573,9 @@ class Burial(Order):
     """
     Захоронение.
     """
-    person = models.ForeignKey(Person, verbose_name=u"Похороненный", related_name='buried')  # Похороненный.
-    account_book_n = models.CharField(u"Номер в книге учета", max_length=16)  # Номер записи к книге учета.
+    person = models.ForeignKey(Person, verbose_name=u"Похороненный", related_name='buried')
+    account_book_n = models.CharField(u"Номер в книге учета", max_length=16)
+    exhumated_date = models.DateTimeField(u"Дата эксгумации", blank=True, null=True)
     last_sync_date = models.DateTimeField(u"Дата последней синхронизации", default=datetime.datetime(2000, 1, 1, 0, 0))
 
     class Meta:

@@ -91,13 +91,13 @@ def main_page(request):
     trash = bool(request.GET.get("trash", False))
     if request.GET.has_key("cemetery") or trash:
         first = False
-        burials = Burial1.objects.filter(is_trash=trash).order_by("person__last_name",
+        burials = Burial.objects.filter(is_trash=trash).order_by("person__last_name",
                                                                   "person__first_name",
                                                                   "person__patronymic")
     else:
         first = True
-        burials_nr = Burial1.objects.filter(is_trash=trash).count()
-        burials = Burial1.objects.none()
+        burials_nr = Burial.objects.filter(is_trash=trash).count()
+        burials = Burial.objects.none()
     pp = None
     if form.is_valid():
         cd = form.cleaned_data
@@ -187,6 +187,8 @@ def main_page(request):
 
         if cd["cemetery"]:
             burials = burials.filter(product__place__cemetery=cd["cemetery"])
+        if cd["no_exhumated"]:
+            burials = burials.filter(exhumated_date__isnull=True)
         if cd["birth_date_from"]:
             burials = burials.filter(person__birth_date__gte=cd["birth_date_from"])
         if cd["birth_date_to"]:
@@ -353,6 +355,7 @@ def journal(request):
         new_burial.product = place.product_ptr
         new_burial.date_plan = cd["burial_date"]
         new_burial.date_fact = cd["burial_date"]
+        new_burial.exhumated_date = cd["exhumated_date"]
         new_burial.account_book_n = cd["account_book_n"]
         new_burial.customer = customer.soul_ptr
         new_burial.responsible = cd["cemetery"].organization.soul_ptr  #ставить орг-ию кладбища
@@ -424,6 +427,7 @@ def edit_burial(request, uuid):
         'burial_date': burial.date_fact and burial.date_fact.strftime('%d.%m.%Y'),
         'birth_date': burial.person.birth_date and burial.person.birth_date.strftime('%d.%m.%Y'),
         'death_date': burial.person.death_date and burial.person.death_date.strftime('%d.%m.%Y'),
+        'exhumated_date': burial.exhumated_date and burial.exhumated_date.strftime('%d.%m.%Y'),
         'last_name': burial.person.last_name,
         'first_name': burial.person.first_name,
         'patronymic': burial.person.patronymic,
@@ -493,11 +497,16 @@ def edit_burial(request, uuid):
         new_burial.date_plan = cd["burial_date"]
         new_burial.date_fact = cd["burial_date"]
         new_burial.account_book_n = cd["account_book_n"]
+        new_burial.exhumated_date = cd["exhumated_date"]
         new_burial.customer = customer.soul_ptr
         new_burial.responsible = cd["cemetery"].organization.soul_ptr  #ставить орг-ию кладбища
         new_burial.doer = request.user.userprofile.soul
         new_burial.operation = cd["operation"]
         new_burial.account_book_n = cd["account_book_n"]
+
+        if request.POST.get('disable_exhumation'):
+            new_burial.exhumated_date = None
+
         new_burial.save()
 
         new_burial.person.location = registration_form.save()
@@ -541,6 +550,7 @@ def edit_burial(request, uuid):
         'location_form': location_form,
         'registration_form': registration_form,
         'certificate_form': cert_form,
+        'request': request,
     })
 
 

@@ -112,6 +112,7 @@ class SearchForm(forms.Form):
                                        label="Сортировка по")
     page = forms.IntegerField(required=False, widget=forms.HiddenInput, label="Страница")
     operation = forms.ModelChoiceField(required=False, queryset=Operation.objects.all(), label="Услуга", empty_label="Все")
+    no_exhumated = forms.BooleanField(required=False, initial=False)
 
 class AutoTabIndex(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -279,6 +280,7 @@ class JournalForm(AutoTabIndex):
     burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget, initial=get_today)
     birth_date = forms.DateField(label="Дата рождения*", widget=CalendarWidget, initial='')
     death_date = forms.DateField(label="Дата смерти*", widget=CalendarWidget, initial=get_yesterday)
+    exhumated_date = forms.DateField(label="Дата эксгумации*", widget=CalendarWidget)
     last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
             help_text="Допускаются только буквы, цифры и символ '-'", initial=u"НЕИЗВЕСТЕН")
     first_name = forms.CharField(required=False, max_length=30, label="Имя")
@@ -294,9 +296,9 @@ class JournalForm(AutoTabIndex):
                                          initial=u"НЕИЗВЕСТЕН")
     customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика")
     customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика")
-    comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 90}), label="Комментарий")
+    comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 60}), label="Комментарий")
     file1 = forms.FileField(required=False, label="Файл")
-    file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 1, 'cols': 64}),
+    file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 2, 'cols': 32}),
                                     label="Комментарий к файлу")
 
     def __init__(self, *args, **kwargs):
