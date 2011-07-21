@@ -12,14 +12,17 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 #from django.utils import simplejson
 from django.utils.simplejson.encoder import JSONEncoder
-from forms import SearchForm, NewUserForm, EditUserForm, ImportForm, OrderFileCommentForm
-from forms import CemeteryForm, JournalForm, EditBurialForm, InitalForm, OrderCommentForm, AddressForm
 from django.forms.models import modelformset_factory
-from models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization, OrderComments
-from models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation, DeathCertificate
-from models import OrderFiles, Phone, Place, ProductType, SoulProducttypeOperation, Role
-from models import Env
 from django import db
+
+from common.forms import SearchForm, NewUserForm, EditUserForm, ImportForm, OrderFileCommentForm, CertificateForm
+from common.forms import CemeteryForm, JournalForm, InitalForm, OrderCommentForm, AddressForm
+from common.forms import UserProfileForm
+
+from common.models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization, OrderComments
+from common.models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation, DeathCertificate
+from common.models import OrderFiles, Phone, Place, ProductType, SoulProducttypeOperation, Role
+from common.models import Env
 
 from simplepagination import paginate
 from annoying.decorators import render_to
@@ -28,7 +31,6 @@ import re
 import datetime
 import time
 import csv
-from common.forms import UserProfileForm
 from cStringIO import StringIO
 #from django.utils import datetime_safe
 
@@ -185,14 +187,14 @@ def main_page(request):
 
         if cd["cemetery"]:
             burials = burials.filter(product__place__cemetery=cd["cemetery"])
-#        if cd["birth_date_from"]:
-#            burials = burials.filter(person__birth_date__gte=cd["birth_date_from"])
-#        if cd["birth_date_to"]:
-#            burials = burials.filter(person__birth_date__lte=cd["birth_date_to"])
-#        if cd["death_date_from"]:
-#            burials = burials.filter(person__birth_date__gte=cd["death_date_from"])
-#        if cd["death_date_to"]:
-#            burials = burials.filter(person__birth_date__lte=cd["death_date_to"])
+        if cd["birth_date_from"]:
+            burials = burials.filter(person__birth_date__gte=cd["birth_date_from"])
+        if cd["birth_date_to"]:
+            burials = burials.filter(person__birth_date__lte=cd["birth_date_to"])
+        if cd["death_date_from"]:
+            burials = burials.filter(person__birth_date__gte=cd["death_date_from"])
+        if cd["death_date_to"]:
+            burials = burials.filter(person__birth_date__lte=cd["death_date_to"])
         if cd["operation"]:
             burials = burials.filter(operation=cd["operation"])
         if cd["burial_date_from"]:
@@ -301,6 +303,7 @@ def journal(request):
     form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None)
     location_form = AddressForm(prefix='address', data=request.POST or None)
     registration_form = AddressForm(prefix='registration', data=request.POST or None)
+    cert_form = CertificateForm(prefix='certificate', data=request.POST or None)
 
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=Phone.objects.none())
     if request.method == "POST" and form.is_valid() and location_form.is_valid() and registration_form.is_valid():
@@ -324,6 +327,8 @@ def journal(request):
         new_person.last_name = cd["last_name"].capitalize()
         new_person.first_name = cd["first_name"].capitalize()
         new_person.patronymic = cd["patronymic"].capitalize()
+        new_person.birth_date = cd.get("birth_date") or None
+        new_person.death_date = cd.get("birth_date") or None
         new_person.save()
         # Create new Person for customer.
         customer = Person(creator=request.user.userprofile.soul)
@@ -380,7 +385,9 @@ def journal(request):
             of.save()
 
         if cd.get('certificate_number'):
-            DeathCertificate.objects.create(soul_id=new_burial.person.pk, s_number=cd['certificate_number'])
+            ds = cert_form.save(commit=False)
+            ds.soul_id=new_burial.person.pk
+            ds.save()
 
         return redirect("/journal/")
 
@@ -393,6 +400,7 @@ def journal(request):
         'phoneset': phoneset,
         'location_form': location_form,
         'registration_form': registration_form,
+        'certificate_form': cert_form,
     })
 
 @login_required

@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from models import Organization, Role, Soul, Person, PersonRole, Burial, Place, Cemetery, Location, GeoCountry, Metro
-from models import GeoRegion, Street, ProductType, ProductComments, Order, Operation, SoulProducttypeOperation, Phone
-from models import UserProfile, ProductFiles, Product, GeoCity, DeathCertificate, OrderFiles, OrderComments
+from common.models import *
 
 class PersonAdmin(admin.ModelAdmin):
 #    exclude = ("creator", "location")
@@ -76,6 +74,7 @@ admin.site.register(ProductFiles)
 admin.site.register(Product)
 admin.site.register(GeoRegion)
 admin.site.register(DeathCertificate)
+admin.site.register(ZAGS)
 
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Burial, BurialAdmin)

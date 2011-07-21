@@ -242,6 +242,15 @@ class Person(Soul):
         verbose_name = (u'физ. лицо')
         verbose_name_plural = (u'физ. лица')
 
+class ZAGS(models.Model):
+    name = models.CharField(u"Название", max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = (u'ЗАГС')
+        verbose_name_plural = (u'ЗАГС')
 
 class DeathCertificate(models.Model):
     """
@@ -249,7 +258,11 @@ class DeathCertificate(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     soul = models.OneToOneField(Soul)
-    s_number = models.CharField(u"Номер свидетельства", max_length=30, blank=True)  # Номер свидетельства о смерти.
+
+    s_number = models.CharField(u"Номер свидетельства", max_length=30)
+    series = models.CharField(u"Серия", max_length=30, blank=True, null=True)
+    release_date = models.DateField(u"Дата выдачи", null=True)
+    zags = models.ForeignKey(ZAGS, verbose_name=u"ЗАГС", blank=True, null=True)
 
     def __unicode__(self):
         return u"Свид. о смерти (%s)" % self.soul.__unicode__()

@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.contrib.auth.models import User
 from models import Cemetery, GeoCountry, GeoRegion, Organization, GeoCity, Phone, Operation, Street, Role, OrderComments
-from models import SoulProducttypeOperation, Location
+from models import SoulProducttypeOperation, Location, DeathCertificate
 
 from annoying.decorators import autostrip
 
@@ -85,10 +85,10 @@ class SearchForm(forms.Form):
     fio = forms.CharField(required=False, max_length=100, label="ФИО")
     cemetery = forms.ModelChoiceField(required=False, queryset=Cemetery.objects.all(),
                                       empty_label="Все", label="Кладбища")
-#    birth_date_from = forms.DateField(required=False, label="Дата рождения с", widget=CalendarWidget)
-#    birth_date_to = forms.DateField(required=False, label="Дата рождения по", widget=CalendarWidget)
-#    death_date_from = forms.DateField(required=False, label="Дата смерти с", widget=CalendarWidget)
-#    death_date_to = forms.DateField(required=False, label="Дата смерти по", widget=CalendarWidget)
+    birth_date_from = forms.DateField(required=False, label="Дата рождения с", widget=CalendarWidget)
+    birth_date_to = forms.DateField(required=False, label="Дата рождения по", widget=CalendarWidget)
+    death_date_from = forms.DateField(required=False, label="Дата смерти с", widget=CalendarWidget)
+    death_date_to = forms.DateField(required=False, label="Дата смерти по", widget=CalendarWidget)
     burial_date_from = forms.DateField(required=False, label="Дата захоронения с", widget=CalendarWidget)
     burial_date_to = forms.DateField(required=False, label="Дата захоронения по", widget=CalendarWidget)
 #    death_certificate = forms.CharField(required=False, max_length=30, label="Номер свидетельства о смерти")
@@ -288,8 +288,6 @@ class JournalForm(AutoTabIndex):
     file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 1, 'cols': 64}),
                                     label="Комментарий к файлу")
 
-    certificate_number = forms.CharField(max_length=32, label=u"Номер свид. о смерти")
-
     def __init__(self, *args, **kwargs):
         cem = kwargs.pop('cem', None)
         oper = kwargs.pop('oper', None)
@@ -320,172 +318,13 @@ class JournalForm(AutoTabIndex):
             raise forms.ValidationError("При указанном номере в журнале необходимо указать и номер места")
         return cd
 
-@autostrip
-class EditBurialForm(forms.Form):
-    account_book_n = forms.CharField(max_length=16, label="Номер в книге учета*",
-                                     widget=forms.TextInput(attrs={"tabindex": "1"}))
-    burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}))
-    birth_date = forms.DateField(label="Дата рождения*", widget=CalendarWidget(attrs={"tabindex": "2"}), initial='')
-    death_date = forms.DateField(label="Дата смерти*", widget=CalendarWidget(attrs={"tabindex": "2"}))
-    last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
-            help_text="Допускаются только буквы, цифры и символ '-'")
-    first_name = forms.CharField(required=False, max_length=30, label="Имя",
-                                 widget=forms.TextInput(attrs={"tabindex": "4"}))
-    patronymic = forms.CharField(required=False, max_length=30, label="Отчество",
-                                 widget=forms.TextInput(attrs={"tabindex": "5"}))
-    cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(), label="Кладбище*", empty_label=None)
-    operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None,
-                                       widget=forms.Select(attrs={"tabindex": "6"}))
-    hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
-    area = forms.CharField(max_length=9, label="Участок*", widget=forms.TextInput(attrs={"tabindex": "7"}))
-    row = forms.CharField(max_length=9, label="Ряд*", widget=forms.TextInput(attrs={"tabindex": "8"}))
-    seat = forms.CharField(max_length=9, label="Место*", widget=forms.TextInput(attrs={"tabindex": "9"}))
-    customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
-                                         widget=forms.TextInput(attrs={"tabindex": "10"}),
-                                         help_text="Допускаются только буквы, цифры и символ '-'",
-                                         initial=u"НЕИЗВЕСТЕН")
-    customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика",
-                                          widget=forms.TextInput(attrs={"tabindex": "11"}))
-    customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика",
-                                          widget=forms.TextInput(attrs={"tabindex": "12"}))
-    post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс",
-                             widget=forms.TextInput(attrs={"tabindex": "13"}))
-    street = forms.CharField(required=False, max_length=99, label="Улица",
-                             widget=forms.TextInput(attrs={"tabindex": "14"}))
-    new_street = forms.BooleanField(required=False, label="Новая улица")
-    city = forms.CharField(required=False, max_length=36, label="Нас. пункт",
-                           widget=forms.TextInput(attrs={"tabindex": "15"}))
-    new_city = forms.BooleanField(required=False, label="Новый нас. пункт")
-    region = forms.CharField(required=False, max_length=36, label="Регион",
-                             widget=forms.TextInput(attrs={"tabindex": "16"}))
-    new_region = forms.BooleanField(required=False, label="Новый регион")
-    country = forms.CharField(required=False, max_length=24, label="Страна",
-                              widget=forms.TextInput(attrs={"tabindex": "17"}))
-    new_country = forms.BooleanField(required=False, label="Новая страна")
-    customer_house = forms.CharField(required=False, max_length=16, label="Дом",
-                                     widget=forms.TextInput(attrs={"tabindex": "19"}))
-    customer_block = forms.CharField(required=False, max_length=16, label="Корпус",
-                                     widget=forms.TextInput(attrs={"tabindex": "20"}))
-    customer_building = forms.CharField(required=False, max_length=16, label="Строение")
-    customer_flat = forms.CharField(required=False, max_length=16, label="Квартира",
-                                    widget=forms.TextInput(attrs={"tabindex": "21"}))
-    comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 90, 'tabindex': '22'}),
-                              label="Комментарий")
-    file1 = forms.FileField(required=False, label="Файл")
-    file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 1, 'cols': 64}),
-                              label="Комментарий к файлу")
-    in_trash = forms.BooleanField(required=False, label="В корзине")
-
-    def clean(self):
-        cd = self.cleaned_data
-        # Проверка имен усопшего и заказчика на наличие недопустимых символов
-        last_name = cd["last_name"]
-        rest = re.sub(RE_LASTNAME, "", last_name)
-        if rest:
-            raise forms.ValidationError("Недопустимые символы в фамилии усопшего.")
-
-        # Валидация кладбища/операции.
-        operation = cd.get("operation", None)
-        if not operation:
-            raise forms.ValidationError("Не выбрана операция.")
-        cemetery = cd["cemetery"]
-        try:
-            spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
-                                                       p_type=settings.PLACE_PRODUCTTYPE_ID)
-        except:
-            raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
-        # Коммент и файлы.
-        comment = cd.get("comment", "")
-        file1 = cd.get("file1", None)
-        file1_comment = cd.get("file1_comment", "")
-        if file1_comment and not file1:
-            raise forms.ValidationError("Не выбран файл.")
-        # Валидация полей Location (страна, регион, нас. пункт, улица).
-        country = cd.get("country", "")
-        region = cd.get("region", "")
-        city = cd.get("city", "")
-        rest = re.sub(RE_CITY, "", city)
-        if rest:
-            raise forms.ValidationError("Недопустимые символы в имени населенного пункта. Допускаются только буквы, цифры, тире, точка и пробел")
-        street = cd.get("street", "")
-        house = cd.get("customer_house", "")
-        block = cd.get("customer_block", "")
-        building = cd.get("customer_building", "")
-        flat =  cd.get("customer_flat", "")
-        if country and region and city and street:
-            # Страна.
-            try:
-                country_object = GeoCountry.objects.get(name__iexact=country)
-            except ObjectDoesNotExist:
-                if not cd.get("new_country", False):
-                    raise forms.ValidationError("Страна не найдена.")
-                else:
-                    new_country = True
-            else:
-                if not cd.get("new_country", False):
-                    new_country = False
-                else:
-                    raise forms.ValidationError("Страна с таким именем уже существует.")
-            # Регион.
-            if new_country and not cd.get("new_region", False):
-                raise forms.ValidationError("У новой страны регион должен быть тоже новым.")
-            try:
-                region_object = GeoRegion.objects.get(country=country_object, name__iexact=region)
-#                region_object = GeoRegion.objects.get(country__name__iexact=country, name__iexact=region)
-            except ObjectDoesNotExist:
-                if not cd.get("new_region", False):
-                    raise forms.ValidationError("Регион не найден.")
-                else:
-                    new_region = True
-            else:
-                if not cd.get("new_region", False):
-                    new_region = False
-                else:
-                    raise forms.ValidationError("Регион с таким именем уже существует в выбранной стране.")
-            # Нас. пункт.
-            if new_region and not cd.get("new_city", False):
-                raise forms.ValidationError("У нового региона нас. пункт должен быть тоже новым.")
-            try:
-                city_object = GeoCity.objects.get(region=region_object, name__iexact=city)
-#                city_object = GeoCity.objects.get(region__name__iexact=region, name__iexact=city)
-            except ObjectDoesNotExist:
-                if not cd.get("new_city", False):
-                    raise forms.ValidationError("Нас. пункт не найден.")
-                else:
-                    new_city = True
-            else:
-                if not cd.get("new_city", False):
-                    new_city = False
-                else:
-                    raise forms.ValidationError("Нас. пункт с таким именем уже существует в выбранном регионе.")
-            # Улица.
-            if new_city and not cd.get("new_street", False):
-                raise forms.ValidationError("У нового нас. пункта улица должна быть тоже новой.")
-            try:
-#                street_object = Street.objects.get(city__name__iexact=city, name__iexact=street)
-                street_object = Street.objects.get(city=city_object, name__iexact=street)
-            except ObjectDoesNotExist:
-                if not cd.get("new_street", False):
-                    raise forms.ValidationError("Улица не найдена.")
-            else:
-                if cd.get("new_street", False):
-                    raise forms.ValidationError("Улица с таким именем уже существует в выбранном нас. пункте.")
-            if block or building or flat:
-                if not house:
-                    raise forms.ValidationError("Не указан дом.")
-        else:
-            if country or region or city or street:  # Есть, но не все.
-                raise forms.ValidationError("Не все поля адреса заполнены.")
-            if house or block or building or flat:
-                raise forms.ValidationError("Не выбрана улица.")
-        return cd
-#    def __init__(self, *args, **kwargs):
-#        orgsoul = kwargs.pop('orgsoul')
-#        super(EditOrderForm, self).__init__(*args, **kwargs)
-#        choices = list(SoulProducttypeOperation.objects.filter(soul=orgsoul, p_type=settings.BURIAL_PRODUCTTYPE_ID).values_list("operation__id", "operation__op_type"))
-#        choices.insert(0, (0, u'----------------'))
-##        choices = SoulProducttypeOperation.objects.filter(soul=orgsoul, p_type=settings.BURIAL_PRODUCTTYPE_ID).values_list("operation__id", "operation__op_type")
-#        self.fields["operation"].choices = choices
+class CertificateForm(forms.ModelForm):
+    class Meta:
+        model = DeathCertificate
+        exclude = ['uuid', 'soul']
+        widgets = {
+            'release_date': CalendarWidget(),
+        }
 
 
 @autostrip

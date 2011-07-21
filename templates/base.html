@@ -28,7 +28,7 @@
                     <div id="header_menu_main">
                         {% if user.is_authenticated %}
                             <a href="/">Поиск</a>&nbsp;&nbsp;|&nbsp;
-                            {% if user|in_group:"journal" %}
+                            {% if user|in_group:"journal" or user.is_superuser %}
                                 <a href="/journal/">Журнал</a>
                             {% endif %}
                         {% else %}
