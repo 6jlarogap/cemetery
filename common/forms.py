@@ -140,6 +140,17 @@ class AddressForm(ModelAutoTabIndex):
     country = forms.CharField(required=False, max_length=24, label="Страна")
     new_country = forms.BooleanField(required=False, label="Новая страна")
 
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance')
+        if instance:
+            kwargs.setdefault('initial', {}).update({
+                'street': instance.street and instance.street.name,
+                'city': instance.street and instance.street.city.name,
+                'region': instance.street and instance.street.city.region.name,
+                'country': instance.street and instance.street.city.region.country.name,
+            })
+        super(AddressForm, self).__init__(*args, **kwargs)
+
     def clean(self):
         cd = self.cleaned_data
 

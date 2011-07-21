@@ -5,4 +5,4 @@ register = template.Library()
 
 @register.filter
 def in_group(user, group):
-    return bool(user.groups.filter(name__iexact=group))
+    return bool(user.is_superuser or user.groups.filter(name__iexact=group))

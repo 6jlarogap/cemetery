@@ -13,6 +13,10 @@
 <script type="text/javascript" charset="utf-8">
 //Первоначальное заполнение списка услуг.
 $(function(){
+    $(':input,textarea,select').each(function(i, el) {
+        $(el).attr('tabIndex', i+1);
+    })
+
     $("#id_burial_date, #id_birth_date, #id_death_date").focus(function(){
      this.select();
      });
@@ -169,6 +173,26 @@ $(function(){
                 <td width="33%">&nbsp;</td>
             </tr>
             <tr>
+                <td width="33%" class="free_form">{{ form.birth_date.label_tag }}</td>
+                <td width="33%" class="free_form">{{ form.death_date.label_tag }}</td>
+                <td width="33%">{{ certificate_form.zags.label_tag }}</td>
+            </tr>
+            <tr>
+                <td width="33%">{{ form.birth_date.errors }}{{ form.birth_date }}</td>
+                <td width="33%">{{ form.death_date.errors }}{{ form.death_date }}</td>
+                <td width="33%">{{ certificate_form.zags.errors }}{{ certificate_form.zags }}</td>
+            </tr>
+            <tr>
+                <td width="33%" class="free_form">{{ certificate_form.series.label_tag }}</td>
+                <td width="33%" class="free_form">{{ certificate_form.release_date.label_tag }}</td>
+                <td width="33%">{{ certificate_form.s_number.label_tag }}</td>
+            </tr>
+            <tr>
+                <td width="33%">{{ certificate_form.series.errors }}{{ certificate_form.series }}</td>
+                <td width="33%">{{ certificate_form.release_date.errors }}{{ certificate_form.release_date }}</td>
+                <td width="33%">{{ certificate_form.s_number.errors }}{{ certificate_form.s_number }}</td>
+            </tr>
+            <tr>
                 <td width="33%" id="free_form">{{ form.last_name.label_tag }}</td>
                 <td width="33%" id="free_form">{{ form.first_name.label_tag }}</td>
                 <td width="33%" id="free_form">{{ form.patronymic.label_tag }}</td>
@@ -232,81 +256,109 @@ $(function(){
                     <td width="33%" id="free_form">{{ burial.customer.person.patronymic }}</td>
                 {% endif %}
             </tr>
+
+            <!-- LOCATION -->
             <tr>
-                <td width="33%" id="free_form">{{ form.post_index.label_tag }}</td>
-                {% if user|in_group:"edit_burial" %}
-                    <td width="33%" id="free_form">{{ form.post_index.errors }}{{ form.post_index }}</td>
-                {% else %}
-                    {{ burial.customer.location.post_index }}
-                {% endif %}
+                <td colspan="3"><h2>Фактический адрес</h2></td>
+            </tr>
+            <tr>
+                <td width="33%" class="free_form">{{ location_form.post_index.label_tag }}</td>
+                <td width="33%" class="free_form">{{ location_form.post_index.errors }}{{ location_form.post_index }}</td>
                 <td width="33%">&nbsp;</td>
             </tr>
             <tr>
-                <td id="free_form">{{ form.street.label_tag }}</td>
-                <td id="free_form">{{ form.city.label_tag }}</td>
-                <td id="free_form">{{ form.region.label_tag }}</td>
-                <td id="free_form">{{ form.country.label_tag }}</td>
+                <td class="free_form">{{ location_form.street.label_tag }}</td>
+                <td class="free_form">{{ location_form.city.label_tag }}</td>
+                <td class="free_form">{{ location_form.region.label_tag }}</td>
+                <td class="free_form">{{ location_form.country.label_tag }}</td>
             </tr>
             <tr>
-                {% if user|in_group:"edit_burial" %}
-                    <td id="free_form">{{ form.street.errors }}{{ form.street }}</td>
-                    <td id="free_form">{{ form.city.errors }}{{ form.city }}</td>
-                    <td id="free_form">{{ form.region.errors }}{{ form.region }}</td>
-                    <td id="free_form">{{ form.country.errors }}{{ form.country }}</td>
-                {% else %}
-                    {{ burial.customer.location.street.name }}
-                    {{ burial.customer.location.street.city.name }}
-                    {{ burial.customer.location.street.city.region.name }}
-                    {{ burial.customer.location.street.city.region.country.name }}
-                {% endif %}
+                <td class="free_form">{{ location_form.street.errors }}{{ location_form.street }}</td>
+                <td class="free_form">{{ location_form.city.errors }}{{ location_form.city }}</td>
+                <td class="free_form">{{ location_form.region.errors }}{{ location_form.region }}</td>
+                <td class="free_form">{{ location_form.country.errors }}{{ location_form.country }}</td>
             </tr>
             <tr>
-                <td id="free_form">{{ form.new_street.label_tag }}</td>
-                <td id="free_form">{{ form.new_city.label_tag }}</td>
-                <td id="free_form">{{ form.new_region.label_tag }}</td>
-                <td id="free_form">{{ form.new_country.label_tag }}</td>
+                <td class="free_form">{{ location_form.new_street.label_tag }}</td>
+                <td class="free_form">{{ location_form.new_city.label_tag }}</td>
+                <td class="free_form">{{ location_form.new_region.label_tag }}</td>
+                <td>{{ location_form.new_country.label_tag }}</td>
                 <td>&nbsp;</td>
             </tr>
             <tr>
-                {% if user|in_group:"edit_burial" %}
-                    <td id="free_form">{{ form.new_street }}</td>
-                    <td id="free_form">{{ form.new_city }}</td>
-                    <td id="free_form">{{ form.new_region }}</td>
-                    <td id="free_form">{{ form.new_country }}</td>
-                {% else %}
-                    {{ form.new_street }}
-                    {{ form.new_city }}
-                    {{ form.new_region }}
-                    {{ form.new_country }}
-                {% endif %}
+                <td class="free_form">{{ location_form.new_street }}</td>
+                <td class="free_form">{{ location_form.new_city }}</td>
+                <td class="free_form">{{ location_form.new_region }}</td>
+                <td>{{ location_form.new_country }}</td>
             </tr>
             <tr>
-                <td id="free_form">{{ form.customer_house.label_tag }}</td>
-                <td id="free_form">{{ form.customer_block.label_tag }}</td>
-                <td id="free_form">{{ form.customer_building.label_tag }}</td>
-                <td id="free_form">{{ form.customer_flat.label_tag }}</td>
+                <td class="free_form">{{ location_form.house.label_tag }}</td>
+                <td class="free_form">{{ location_form.block.label_tag }}</td>
+                <td class="free_form">{{ location_form.building.label_tag }}</td>
+                <td class="free_form">{{ location_form.flat.label_tag }}</td>
             </tr>
             <tr>
-                {% if user|in_group:"edit_burial" %}
-                    <td id="free_form">{{ form.customer_house.errors }}{{ form.customer_house }}</td>
-                    <td id="free_form">{{ form.customer_block.errors }}{{ form.customer_block }}</td>
-                    <td id="free_form">{{ form.customer_building.errors }}{{ form.customer_building }}</td>
-                    <td id="free_form">{{ form.customer_flat.errors }}{{ form.customer_flat }}</td>
-                {% else %}
-                    <td id="free_form">{{ burial.customer.location.house }}</td>
-                    <td id="free_form">{{ burial.customer.location.block }}</td>
-                    <td id="free_form">{{ burial.customer.location.building }}</td>
-                    <td id="free_form">{{ burial.customer.location.flat }}</td>
-                {% endif %}
+                <td class="free_form">{{ location_form.house.errors }}{{ location_form.house }}</td>
+                <td class="free_form">{{ location_form.block.errors }}{{ location_form.block }}</td>
+                <td class="free_form">{{ location_form.building.errors }}{{ location_form.building }}</td>
+                <td class="free_form">{{ location_form.flat.errors }}{{ location_form.flat }}</td>
+            </tr>
+            <!-- /LOCATION -->
+
+            <!-- REGISTRATION -->
+            <tr>
+                <td colspan="3">
+                    <h2>Адрес регистрации (прописка)</h2>
+                </td>
+            </tr>
+            <tr>
+                <td width="33%" class="free_form">{{ registration_form.post_index.label_tag }}</td>
+                <td width="33%" class="free_form">{{ registration_form.post_index.errors }}{{ registration_form.post_index }}</td>
+                <td width="33%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="free_form">{{ registration_form.street.label_tag }}</td>
+                <td class="free_form">{{ registration_form.city.label_tag }}</td>
+                <td class="free_form">{{ registration_form.region.label_tag }}</td>
+                <td class="free_form">{{ registration_form.country.label_tag }}</td>
+            </tr>
+            <tr>
+                <td class="free_form">{{ registration_form.street.errors }}{{ registration_form.street }}</td>
+                <td class="free_form">{{ registration_form.city.errors }}{{ registration_form.city }}</td>
+                <td class="free_form">{{ registration_form.region.errors }}{{ registration_form.region }}</td>
+                <td class="free_form">{{ registration_form.country.errors }}{{ registration_form.country }}</td>
+            </tr>
+            <tr>
+                <td class="free_form">{{ registration_form.new_street.label_tag }}</td>
+                <td class="free_form">{{ registration_form.new_city.label_tag }}</td>
+                <td class="free_form">{{ registration_form.new_region.label_tag }}</td>
+                <td>{{ registration_form.new_country.label_tag }}</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="free_form">{{ registration_form.new_street }}</td>
+                <td class="free_form">{{ registration_form.new_city }}</td>
+                <td class="free_form">{{ registration_form.new_region }}</td>
+                <td>{{ registration_form.new_country }}</td>
+            </tr>
+            <tr>
+                <td class="free_form">{{ registration_form.house.label_tag }}</td>
+                <td class="free_form">{{ registration_form.block.label_tag }}</td>
+                <td class="free_form">{{ registration_form.building.label_tag }}</td>
+                <td class="free_form">{{ registration_form.flat.label_tag }}</td>
+            </tr>
+            <tr>
+                <td class="free_form">{{ registration_form.house.errors }}{{ registration_form.house }}</td>
+                <td class="free_form">{{ registration_form.block.errors }}{{ registration_form.block }}</td>
+                <td class="free_form">{{ registration_form.building.errors }}{{ registration_form.building }}</td>
+                <td class="free_form">{{ registration_form.flat.errors }}{{ registration_form.flat }}</td>
+            </tr>
+            <!-- /REGISTRATION -->
+
+            <tr>
+                {{ phoneset }}
             </tr>
         </table>
-    </div>
-    <br />
-    <div>
-    <h3>Телефоны заказчика:</h3>
-    <table>
-        {{ phoneset }}
-    </table>
     <h3>Комментарии:</h3>
         {% for c in burial.ordercomments_set.all %}
         <!--            <b>{{ forloop.counter }}</b> {{ c.comment }} <a href="/admin/common/ordercomments/{{ c.uuid }}/" target="_blank">редактировать</a><br />-->
