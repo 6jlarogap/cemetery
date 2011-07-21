@@ -157,7 +157,7 @@ $(function(){
 {% block content %}
     <div id="free_form">
     <form action="" method="post" enctype="multipart/form-data">
-        {{ form.non_field_errors }}
+        {{ form.non_field_errors }}{{ location_form.non_field_errors }}{{ registration_form.non_field_errors }}{{ certificate_form.non_field_errors }}
         <table width="800">
             <tr>
                 <td  id="free_form">{{ form.account_book_n.label_tag }}</td>
@@ -402,6 +402,7 @@ $(function(){
             {{ form.in_trash.label_tag }}{{ form.in_trash }}
         {% endif %}
         <br />
+        <a href="{% url add_burial %}?place={{ burial.product.place.pk }}" target="_blank">Добавить родственное</a>
         <br />
         <input type="submit" value="Сохранить"  tabindex="22">
         <button type="button" onclick="top.location.href='{{ request.path }}';" tabindex="23">Отмена</button>

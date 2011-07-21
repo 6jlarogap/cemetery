@@ -4,7 +4,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.db import transaction
 from django.http import Http404, HttpResponseForbidden, HttpResponse
 from django.views.generic.simple import direct_to_template
@@ -302,7 +302,18 @@ def journal(request):
     else:
         oper = None
 
-    form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None)
+    if request.GET.get('place'):
+        place = get_object_or_404(Place, pk=request.GET.get('place'))
+        initial = {
+            'cemetery': place.cemetery,
+            'area': place.area,
+            'row': place.row,
+            'seat': place.seat,
+        }
+    else:
+        initial = {}
+
+    form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None, initial=initial)
     location_form = AddressForm(prefix='address', data=request.POST or None)
     registration_form = AddressForm(prefix='registration', data=request.POST or None)
     cert_form = CertificateForm(prefix='certificate', data=request.POST or None)
