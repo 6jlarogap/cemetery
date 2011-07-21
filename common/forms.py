@@ -124,24 +124,24 @@ class JournalForm(forms.Form):
                                  widget=forms.TextInput(attrs={"tabindex": "4"}))
     patronymic = forms.CharField(required=False, max_length=30, label="Отчество",
                                  widget=forms.TextInput(attrs={"tabindex": "5"}))
-    cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(),
-                                      label="Кладбище*")
-    operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None,
+    cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(), label="Кладбище*",
                                        widget=forms.Select(attrs={"tabindex": "6"}))
+    operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None,
+                                       widget=forms.Select(attrs={"tabindex": "7"}))
     hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
-    area = forms.CharField(max_length=9, label="Участок*", widget=forms.TextInput(attrs={"tabindex": "7"}))
-    row = forms.CharField(max_length=9, label="Ряд*", widget=forms.TextInput(attrs={"tabindex": "8"}))
-    seat = forms.CharField(max_length=9, label="Место*", widget=forms.TextInput(attrs={"tabindex": "9"}))
+    area = forms.CharField(max_length=9, label="Участок*", widget=forms.TextInput(attrs={"tabindex": "8"}))
+    row = forms.CharField(max_length=9, label="Ряд*", widget=forms.TextInput(attrs={"tabindex": "9"}))
+    seat = forms.CharField(max_length=9, label="Место*", widget=forms.TextInput(attrs={"tabindex": "10"}))
     customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
-                                         widget=forms.TextInput(attrs={"tabindex": "10"}),
+                                         widget=forms.TextInput(attrs={"tabindex": "11"}),
                                          help_text="Допускаются только буквы, цифры и символ '-'",
                                          initial=u"НЕИЗВЕСТЕН")
     customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика",
-                                          widget=forms.TextInput(attrs={"tabindex": "11"}))
-    customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика",
                                           widget=forms.TextInput(attrs={"tabindex": "12"}))
+    customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика",
+                                          widget=forms.TextInput(attrs={"tabindex": "13"}))
     post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс",
-                             widget=forms.TextInput(attrs={"tabindex": "13"}))
+                             widget=forms.TextInput(attrs={"tabindex": "14"}))
 #    customer_phone = forms.CharField(required=False, max_length=20, label="Телефон",
 #                                     widget=forms.TextInput(attrs={"tabindex": "14"}))
     street = forms.CharField(required=False, max_length=99, label="Улица",
