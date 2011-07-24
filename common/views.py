@@ -320,10 +320,14 @@ def journal(request):
     form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None, initial=initial)
     location_form = AddressForm(prefix='address', data=request.POST or None)
     registration_form = AddressForm(prefix='registration', data=request.POST or None)
+    responsible_form = AddressForm(prefix='responsible', data=request.POST or None)
     cert_form = CertificateForm(prefix='certificate', data=request.POST or None)
 
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=Phone.objects.none())
-    if request.method == "POST" and form.is_valid() and location_form.is_valid() and registration_form.is_valid():
+
+    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid()
+    responsible_valid = request.GET.get('responsible_myself') or responsible_form.is_valid()
+    if request.method == "POST" and forms_valid and responsible_valid:
         cd = form.cleaned_data
         # Try to get Place.
         try:
@@ -377,9 +381,21 @@ def journal(request):
         new_burial.doer = request.user.userprofile.soul
         new_burial.operation = cd["operation"]
         new_burial.account_book_n = cd["account_book_n"]
-        new_burial.save()
 
         new_burial.person.location = registration_form.save()
+
+        if request.GET.get('responsible_myself'):
+            new_burial.responsible_customer = None
+        else:
+            new_burial.responsible_customer = Person.objects.create(
+                creator=request.user.userprofile.soul,
+                last_name=cd["responsible_last_name"].capitalize(),
+                first_name=cd.get("responsible_first_name", "").capitalize(),
+                patronymic=cd.get("responsible_patronymic", "").capitalize(),
+                location = responsible_form.save(),
+            )
+
+        new_burial.save()
 
         if not new_burial.account_book_n:
             num = new_burial.generate_account_number()
@@ -418,6 +434,7 @@ def journal(request):
         'phoneset': phoneset,
         'location_form': location_form,
         'registration_form': registration_form,
+        'responsible_form': responsible_form,
         'certificate_form': cert_form,
     })
 
@@ -455,10 +472,21 @@ def edit_burial(request, uuid):
         'customer_last_name': burial.customer.person.last_name,
         'customer_first_name': burial.customer.person.first_name,
         'customer_patronymic': burial.customer.person.patronymic,
+
+        'responsible_last_name': burial.responsible_customer and burial.responsible_customer.person.last_name,
+        'responsible_first_name': burial.responsible_customer and burial.responsible_customer.person.first_name,
+        'responsible_patronymic': burial.responsible_customer and burial.responsible_customer.person.patronymic,
+        'responsible_myself': not burial.responsible_customer,
+
     }
     form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None, initial=initial)
     location_form = AddressForm(prefix='address', data=request.POST or None, instance=burial.customer.location)
     registration_form = AddressForm(prefix='registration', data=request.POST or None, instance=burial.person.location)
+    responsible_form = AddressForm(
+        prefix='responsible',
+        data=request.POST or None,
+        instance=burial.responsible_customer and burial.responsible_customer.location
+    )
     try:
         dc = burial.person.deathcertificate
     except DeathCertificate.DoesNotExist:
@@ -466,7 +494,11 @@ def edit_burial(request, uuid):
     cert_form = CertificateForm(prefix='certificate', data=request.POST or None, instance=dc)
 
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=burial.customer.phone_set.all())
-    if request.method == "POST" and form.is_valid() and location_form.is_valid() and registration_form.is_valid():
+
+    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid()
+    responsible_valid = request.GET.get('responsible_myself') or responsible_form.is_valid()
+
+    if request.method == "POST" and forms_valid and responsible_valid:
         cd = form.cleaned_data
 
         place = burial.product.place
@@ -522,6 +554,25 @@ def edit_burial(request, uuid):
         if request.POST.get('disable_exhumation'):
             new_burial.exhumated_date = None
 
+        if request.GET.get('responsible_myself'):
+            new_burial.responsible_customer = None
+        else:
+            if new_burial.responsible_customer:
+                Person.objects.filter(pk=new_burial.responsible_customer).update(
+                    last_name=cd["responsible_last_name"].capitalize(),
+                    first_name=cd.get("responsible_first_name", "").capitalize(),
+                    patronymic=cd.get("responsible_patronymic", "").capitalize(),
+                    location = responsible_form.save(),
+                )
+            else:
+                new_burial.responsible_customer = Person.objects.create(
+                    creator=request.user.userprofile.soul,
+                    last_name=cd["responsible_last_name"].capitalize(),
+                    first_name=cd.get("responsible_first_name", "").capitalize(),
+                    patronymic=cd.get("responsible_patronymic", "").capitalize(),
+                    location = responsible_form.save(),
+                )
+
         new_burial.save()
 
         new_burial.person.location = registration_form.save()
@@ -565,6 +616,7 @@ def edit_burial(request, uuid):
         'location_form': location_form,
         'registration_form': registration_form,
         'certificate_form': cert_form,
+        'responsible_form': responsible_form,
         'request': request,
     })
 

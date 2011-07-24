@@ -516,6 +516,8 @@ class Order(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     responsible = models.ForeignKey(Soul, related_name='ordr_responsible')  # Ответственный.
+    responsible_customer = models.ForeignKey(Soul, related_name='ordr_responsible_customer', blank=True, null=True)
+    
     customer = models.ForeignKey(Soul, related_name='ordr_customer')  # Клиент.
     doer = models.ForeignKey(Soul, blank=True, null=True, related_name="doerorder")  # Исполнитель (работник).
     date_plan = models.DateTimeField(blank=True, null=True)  # Планируемая дата исполнения.
@@ -525,17 +527,14 @@ class Order(models.Model):
     is_trash = models.BooleanField(default=False)  # Удален.
     creator = models.ForeignKey(Soul, related_name="order")  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
-#    all_comments = models.TextField(blank=True)  # Все комментарии, собранные в одно поле.
+
     def add_comment(self, txt, creator):
         comment = OrderComments(order=self, comment=txt,
                                   creator=creator)
         comment.save()
-#        if self.all_comments:
-#            self.all_comments = "%s\n%s" % (self.all_comments, txt)
-#        else:
-#            self.all_comments = txt
-#        self.save()
 
+    def get_responsible_customer(self):
+        return self.responsible_customer or self.customer
 
 class OrderFiles(models.Model):
     """

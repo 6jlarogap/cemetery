@@ -280,7 +280,7 @@ class JournalForm(AutoTabIndex):
     burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget, initial=get_today)
     birth_date = forms.DateField(label="Дата рождения*", widget=CalendarWidget, initial='')
     death_date = forms.DateField(label="Дата смерти*", widget=CalendarWidget, initial=get_yesterday)
-    exhumated_date = forms.DateField(label="Дата эксгумации*", widget=CalendarWidget)
+    exhumated_date = forms.DateField(label="Дата эксгумации*", widget=CalendarWidget, required=False)
     last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
             help_text="Допускаются только буквы, цифры и символ '-'", initial=u"НЕИЗВЕСТЕН")
     first_name = forms.CharField(required=False, max_length=30, label="Имя")
@@ -296,6 +296,14 @@ class JournalForm(AutoTabIndex):
                                          initial=u"НЕИЗВЕСТЕН")
     customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика")
     customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика")
+
+    responsible_last_name = forms.CharField(max_length=30, label="Фамилия ответственного*",
+                                         help_text="Допускаются только буквы, цифры и символ '-'",
+                                         initial=u"НЕИЗВЕСТЕН")
+    responsible_first_name = forms.CharField(required=False, max_length=30, label="Имя ответственного")
+    responsible_patronymic = forms.CharField(required=False, max_length=30, label="Отчество ответственного")
+    responsible_myself = forms.BooleanField(required=False, label="Является ответственным", initial=True)
+
     comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 60}), label="Комментарий")
     file1 = forms.FileField(required=False, label="Файл")
     file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 2, 'cols': 32}),
@@ -320,7 +328,7 @@ class JournalForm(AutoTabIndex):
 
         # Валидация кладбища/операции.
         operation = cd.get("operation", None)
-        cemetery = cd["cemetery"]
+        cemetery = cd.get("cemetery") or Cemetery()
         try:
             spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
                                                        p_type=settings.PLACE_PRODUCTTYPE_ID)

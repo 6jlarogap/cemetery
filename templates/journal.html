@@ -12,10 +12,22 @@
 </script>
 
 <script type="text/javascript" charset="utf-8">
+
+function updateResponsible() {
+    if ($('#id_responsible_myself:checked').length == 0) {
+        $('.responsible_myself').show()
+    } else {
+        $('.responsible_myself').hide()
+    }
+}
+
 $(function(){
     $(':input,textarea,select').each(function(i, el) {
         $(el).attr('tabIndex', i+1);
     })
+
+    $('#id_responsible_myself').click(updateResponsible);
+    updateResponsible();
 
   $("#id_burial_date, #id_birth_date, #id_death_date").focus(function(){
      this.select();
@@ -184,7 +196,11 @@ $(function(){
 {% block content %}
     <div id="free_form">
         <form enctype="multipart/form-data" action="" method="post">
-            {{ form.non_field_errors }}{{ location_form.non_field_errors }}{{ certificate_form.non_field_errors }}
+            {{ form.non_field_errors }}
+            {{ location_form.non_field_errors }}
+            {{ registration_form.non_field_errors }}
+            {{ certificate_form.non_field_errors }}
+            {{ responsible_form.non_field_errors }}
             <table width="800">
                 <tr>
                     <td class="free_form">{{ form.account_book_n.label_tag }}</td>
@@ -220,12 +236,15 @@ $(function(){
                     <td class="free_form">{{ form.last_name.label_tag }}</td>
                     <td class="free_form">{{ form.first_name.label_tag }}</td>
                     <td class="free_form">{{ form.patronymic.label_tag }}</td>
+                    <td class="free_form">{{ form.responsible_myself.label_tag }}</td>
                 </tr>
                 <tr>
                     <td class="free_form">{{ form.last_name.errors }}{{ form.last_name }}</td>
                     <td class="free_form">{{ form.first_name.errors }}{{ form.first_name }}</td>
                     <td class="free_form">{{ form.patronymic.errors }}{{ form.patronymic }}</td>
+                    <td class="free_form">{{ form.responsible_myself.errors }}{{ form.responsible_myself }}</td>
                 </tr>
+
                 <tr>
                     <td class="free_form">{{ form.cemetery.label_tag }}</td>
                     <td class="free_form">{{ form.operation.label_tag }}</td>
@@ -354,6 +373,65 @@ $(function(){
                     <td class="free_form">{{ registration_form.flat.errors }}{{ registration_form.flat }}</td>
                 </tr>
                 <!-- /REGISTRATION -->
+
+                <!-- responsible -->
+                <tr class="responsible_myself">
+                    <td colspan="3"><h2>Ответственное лицо</h2></td>
+                </tr>
+                <tr class="responsible_myself">
+                    <td class="free_form">{{ form.responsible_last_name.label_tag }}</td>
+                    <td class="free_form">{{ form.responsible_first_name.label_tag }}</td>
+                    <td class="free_form">{{ form.responsible_patronymic.label_tag }}</td>
+                </tr>
+                <tr class="responsible_myself">
+                    <td class="free_form">{{ form.responsible_last_name.errors }}{{ form.responsible_last_name }}</td>
+                    <td class="free_form">{{ form.responsible_first_name.errors }}{{ form.responsible_first_name }}</td>
+                    <td class="free_form">{{ form.responsible_patronymic.errors }}{{ form.responsible_patronymic }}</td>
+                </tr>
+
+                <tr class="responsible_myself">
+                    <td class="free_form">{{ responsible_form.post_index.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.post_index.errors }}{{ responsible_form.post_index }}</td>
+                    <td >&nbsp;</td>
+                </tr>
+                <tr class="responsible_myself">
+                    <td class="free_form">{{ responsible_form.street.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.city.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.region.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.country.label_tag }}</td>
+                </tr>
+                <tr class="responsible_myself">
+                    <td class="free_form">{{ responsible_form.street.errors }}{{ responsible_form.street }}</td>
+                    <td class="free_form">{{ responsible_form.city.errors }}{{ responsible_form.city }}</td>
+                    <td class="free_form">{{ responsible_form.region.errors }}{{ responsible_form.region }}</td>
+                    <td class="free_form">{{ responsible_form.country.errors }}{{ responsible_form.country }}</td>
+                </tr>
+                <tr class="responsible_myself">
+                    <td class="free_form">{{ responsible_form.new_street.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.new_city.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.new_region.label_tag }}</td>
+                    <td>{{ responsible_form.new_country.label_tag }}</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr class="responsible_myself">
+                    <td class="free_form">{{ responsible_form.new_street }}</td>
+                    <td class="free_form">{{ responsible_form.new_city }}</td>
+                    <td class="free_form">{{ responsible_form.new_region }}</td>
+                    <td>{{ responsible_form.new_country }}</td>
+                </tr>
+                <tr class="responsible_myself">
+                    <td class="free_form">{{ responsible_form.house.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.block.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.building.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.flat.label_tag }}</td>
+                </tr>
+                <tr class="responsible_myself">
+                    <td class="free_form">{{ responsible_form.house.errors }}{{ responsible_form.house }}</td>
+                    <td class="free_form">{{ responsible_form.block.errors }}{{ responsible_form.block }}</td>
+                    <td class="free_form">{{ responsible_form.building.errors }}{{ responsible_form.building }}</td>
+                    <td class="free_form">{{ responsible_form.flat.errors }}{{ responsible_form.flat }}</td>
+                </tr>
+                <!-- /responsible -->
 
                 <tr>
                     {{ phoneset }}
