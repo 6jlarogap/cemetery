@@ -338,11 +338,20 @@ class PersonRole(models.Model):
     discharge_date = models.DateField(u"Дата увольнения", blank=True, null=True)
     creator = models.ForeignKey(Soul)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
+
     def __unicode__(self):
         return u"%s - %s" % (self.person.__unicode__(), self.role.__unicode__())
     class Meta:
         unique_together = (("person", "role"),)
 
+class Agent(models.Model):
+    uuid = UUIDField(primary_key=True)
+    person = models.ForeignKey(Person, related_name="is_agent_of", verbose_name="Персона")
+    organization = models.ForeignKey(Organization, related_name="agents", verbose_name="Организация")
+
+    dover_number = models.CharField(verbose_name="Номер доверенности", max_length=255)
+    dover_date = models.DateField(verbose_name="Дата выдачи")
+    dover_expire = models.DateField(verbose_name="Действует до")
 
 class Cemetery(models.Model):
     """

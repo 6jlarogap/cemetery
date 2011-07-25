@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.contrib.auth.models import User
 from models import Cemetery, GeoCountry, GeoRegion, Organization, GeoCity, Phone, Operation, Street, Role, OrderComments
-from models import SoulProducttypeOperation, Location, DeathCertificate
+from models import SoulProducttypeOperation, Location, DeathCertificate, Agent
 
 from annoying.decorators import autostrip
 
@@ -303,6 +303,20 @@ class JournalForm(AutoTabIndex):
     responsible_first_name = forms.CharField(required=False, max_length=30, label="Имя ответственного")
     responsible_patronymic = forms.CharField(required=False, max_length=30, label="Отчество ответственного")
     responsible_myself = forms.BooleanField(required=False, label="Является ответственным", initial=True)
+
+    opf = forms.ChoiceField(label="Орг.-пр. форма", choices=[
+        ('fizik', u"Физ. лицо"),
+        ('yurik', u"Юр. лицо"),
+    ], widget=forms.RadioSelect, initial='fizik')
+
+    organization = forms.ModelChoiceField(label="Организация", queryset=Organization.objects.all())
+    agent_director = forms.BooleanField(label="Агент - директор")
+
+    dover_number = forms.CharField(label="Номер доверенности", max_length=255)
+    dover_date = forms.DateField(label="Дата выдачи", widget=CalendarWidget)
+    dover_expire = forms.DateField(label="Действует до", widget=CalendarWidget)
+
+    agent = forms.ModelChoiceField(label="Агент", queryset=Agent.objects.all())
 
     comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 60}), label="Комментарий")
     file1 = forms.FileField(required=False, label="Файл")

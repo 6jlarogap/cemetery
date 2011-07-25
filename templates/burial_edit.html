@@ -21,6 +21,12 @@ function updateResponsible() {
     }
 }
 
+function updateOPF() {
+    var cls = 'opf_' + $('[name=opf]:checked').val();
+    $('.opf_fizik, .opf_yurik').hide();
+    $('.'+cls).show()
+}
+
 $(function(){
     $(':input,textarea,select').each(function(i, el) {
         $(el).attr('tabIndex', i+1);
@@ -28,6 +34,9 @@ $(function(){
 
     $('#id_responsible_myself').click(updateResponsible);
     updateResponsible();
+
+    $('#id_opf_0, #id_opf_1').change(updateOPF);
+    updateOPF();
 
     $("#id_burial_date, #id_birth_date, #id_death_date").focus(function(){
      this.select();
@@ -222,7 +231,6 @@ $(function(){
                 <td  id="free_form">{{ form.last_name.label_tag }}</td>
                 <td  id="free_form">{{ form.first_name.label_tag }}</td>
                 <td  id="free_form">{{ form.patronymic.label_tag }}</td>
-                <td class="free_form">{{ form.responsible_myself.label_tag }}</td>
             </tr>
             <tr>
                 {% if user|in_group:"edit_burial" %}
@@ -234,8 +242,33 @@ $(function(){
                     <td  id="free_form">{{ burial.person.first_name }}</td>
                     <td  id="free_form">{{ burial.person.patronymic }}</td>
                 {% endif %}
-                <td class="free_form">{{ form.responsible_myself.errors }}{{ form.responsible_myself }}</td>
             </tr>
+
+            <tr>
+                <td class="free_form">{{ form.opf.label_tag }}</td>
+                <td class="free_form opf_fizik">{{ form.responsible_myself.label_tag }}</td>
+                <td class="free_form opf_yurik">{{ form.organization.label_tag }}</td>
+                <td class="free_form opf_yurik">{{ form.agent_director.label_tag }}</td>
+                <td class="free_form opf_yurik">{{ form.agent.label_tag }}</td>
+            </tr>
+            <tr>
+                <td class="free_form">{{ form.opf.errors }}{{ form.opf }}</td>
+                <td class="free_form opf_fizik">{{ form.responsible_myself.errors }}{{ form.responsible_myself }}</td>
+                <td class="free_form opf_yurik">{{ form.organization.errors }}{{ form.organization }}</td>
+                <td class="free_form opf_yurik">{{ form.agent_director.errors }}{{ form.agent_director }}</td>
+                <td class="free_form opf_yurik">{{ form.agent.errors }}{{ form.agent }}</td>
+            </tr>
+            <tr class="opf_yurik">
+                <td class="free_form">{{ form.dover_number.label_tag }}</td>
+                <td class="free_form">{{ form.dover_date.label_tag }}</td>
+                <td class="free_form">{{ form.patronymic.label_tag }}</td>
+            </tr>
+            <tr class="opf_yurik">
+                <td class="free_form">{{ form.dover_number.errors }}{{ form.dover_number }}</td>
+                <td class="free_form">{{ form.dover_date.errors }}{{ form.dover_date }}</td>
+                <td class="free_form">{{ form.dover_expire.errors }}{{ form.dover_expire }}</td>
+            </tr>
+
             <tr>
                 <td  id="free_form">{{ form.cemetery.label_tag }}</td>
                 <td  id="free_form">{{ form.operation.label_tag }}</td>
