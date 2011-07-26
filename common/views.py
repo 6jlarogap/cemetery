@@ -385,16 +385,26 @@ def journal(request):
 
         new_burial.person.location = registration_form.save()
 
-        if request.GET.get('responsible_myself'):
-            new_burial.responsible_customer = None
+        if request.REQUEST.get('opf') == 'fizik':
+            if request.REQUEST.get('responsible_myself'):
+                new_burial.responsible_customer = None
+            else:
+                new_burial.responsible_customer = Person.objects.create(
+                    creator=request.user.userprofile.soul,
+                    last_name=cd["responsible_last_name"].capitalize(),
+                    first_name=cd.get("responsible_first_name", "").capitalize(),
+                    patronymic=cd.get("responsible_patronymic", "").capitalize(),
+                    location = responsible_form.save(),
+                )
         else:
-            new_burial.responsible_customer = Person.objects.create(
-                creator=request.user.userprofile.soul,
-                last_name=cd["responsible_last_name"].capitalize(),
-                first_name=cd.get("responsible_first_name", "").capitalize(),
-                patronymic=cd.get("responsible_patronymic", "").capitalize(),
-                location = responsible_form.save(),
-            )
+            agent = cd['agent']
+            agent.dover_number = cd['dover_number']
+            agent.dover_date = cd['dover_date']
+            agent.dover_expire = cd['dover_expire']
+            agent.save()
+
+            new_burial.responsible_customer = agent.person
+            new_burial.responsible_agent = agent
 
         new_burial.save()
 
@@ -479,6 +489,13 @@ def edit_burial(request, uuid):
         'responsible_patronymic': burial.responsible_customer and burial.responsible_customer.person.patronymic,
         'responsible_myself': not burial.responsible_customer,
 
+        'opf': burial.responsible_agent and 'yurik' or 'fizik',
+        'organization': burial.responsible_agent and burial.responsible_agent.organization,
+        'agent': burial.responsible_agent,
+        'agent_director': burial.responsible_agent and not burial.responsible_agent.dover_number,
+        'dover_number': burial.responsible_agent and burial.responsible_agent.dover_number or '',
+        'dover_date': burial.responsible_agent and burial.responsible_agent.dover_number or '',
+        'dover_expire': burial.responsible_agent and burial.responsible_agent.dover_number or '',
     }
     form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None, initial=initial)
     location_form = AddressForm(prefix='address', data=request.POST or None, instance=burial.customer.location)
@@ -555,24 +572,35 @@ def edit_burial(request, uuid):
         if request.POST.get('disable_exhumation'):
             new_burial.exhumated_date = None
 
-        if request.GET.get('responsible_myself'):
-            new_burial.responsible_customer = None
-        else:
-            if new_burial.responsible_customer:
-                Person.objects.filter(pk=new_burial.responsible_customer).update(
-                    last_name=cd["responsible_last_name"].capitalize(),
-                    first_name=cd.get("responsible_first_name", "").capitalize(),
-                    patronymic=cd.get("responsible_patronymic", "").capitalize(),
-                    location = responsible_form.save(),
-                )
+        if request.REQUEST.get('opf') == 'fizik':
+            if request.GET.get('responsible_myself'):
+                new_burial.responsible_customer = None
             else:
-                new_burial.responsible_customer = Person.objects.create(
-                    creator=request.user.userprofile.soul,
-                    last_name=cd["responsible_last_name"].capitalize(),
-                    first_name=cd.get("responsible_first_name", "").capitalize(),
-                    patronymic=cd.get("responsible_patronymic", "").capitalize(),
-                    location = responsible_form.save(),
-                )
+                if new_burial.responsible_customer:
+                    Person.objects.filter(pk=new_burial.responsible_customer).update(
+                        last_name=cd["responsible_last_name"].capitalize(),
+                        first_name=cd.get("responsible_first_name", "").capitalize(),
+                        patronymic=cd.get("responsible_patronymic", "").capitalize(),
+                        location = responsible_form.save(),
+                    )
+                else:
+                    new_burial.responsible_customer = Person.objects.create(
+                        creator=request.user.userprofile.soul,
+                        last_name=cd["responsible_last_name"].capitalize(),
+                        first_name=cd.get("responsible_first_name", "").capitalize(),
+                        patronymic=cd.get("responsible_patronymic", "").capitalize(),
+                        location = responsible_form.save(),
+                    )
+        else:
+            agent = cd['agent']
+            agent.dover_number = cd['dover_number']
+            agent.dover_date = cd['dover_date']
+            agent.dover_expire = cd['dover_expire']
+            agent.save()
+
+            new_burial.responsible_customer = agent.person
+            new_burial.responsible_agent = agent
+
 
         new_burial.save()
 

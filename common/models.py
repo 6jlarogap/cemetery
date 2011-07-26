@@ -349,9 +349,12 @@ class Agent(models.Model):
     person = models.ForeignKey(Person, related_name="is_agent_of", verbose_name="Персона")
     organization = models.ForeignKey(Organization, related_name="agents", verbose_name="Организация")
 
-    dover_number = models.CharField(verbose_name="Номер доверенности", max_length=255)
-    dover_date = models.DateField(verbose_name="Дата выдачи")
-    dover_expire = models.DateField(verbose_name="Действует до")
+    dover_number = models.CharField(verbose_name="Номер доверенности", max_length=255, blank=True, null=True)
+    dover_date = models.DateField(verbose_name="Дата выдачи", blank=True, null=True)
+    dover_expire = models.DateField(verbose_name="Действует до", blank=True, null=True)
+
+    def __unicode__(self):
+        return unicode(self.person)
 
 class Cemetery(models.Model):
     """
@@ -526,7 +529,8 @@ class Order(models.Model):
     uuid = UUIDField(primary_key=True)
     responsible = models.ForeignKey(Soul, related_name='ordr_responsible')  # Ответственный.
     responsible_customer = models.ForeignKey(Soul, related_name='ordr_responsible_customer', blank=True, null=True)
-    
+    responsible_agent = models.ForeignKey(Agent, blank=True, null=True)
+
     customer = models.ForeignKey(Soul, related_name='ordr_customer')  # Клиент.
     doer = models.ForeignKey(Soul, blank=True, null=True, related_name="doerorder")  # Исполнитель (работник).
     date_plan = models.DateTimeField(blank=True, null=True)  # Планируемая дата исполнения.

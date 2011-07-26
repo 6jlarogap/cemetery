@@ -327,14 +327,14 @@ class JournalForm(AutoTabIndex):
         cem = kwargs.pop('cem', None)
         oper = kwargs.pop('oper', None)
 
-        data = kwargs.get('data', {})
+        data = kwargs.get('data') or {}
         if 'dover_number' in data and not data.get('dover_number'):
             del data['dover_number']
 
         super(JournalForm, self).__init__(*args, **kwargs)
 
         if data.get('opf', 'fizik') != 'fizik':
-            for f in ['agent', 'dover_date', 'dover_expire', 'dover_number', ]:
+            for f in ['dover_date', 'dover_expire', 'dover_number', ]:
                 self.fields[f].required = not data.get('agent_director') or False
 
         if cem:
