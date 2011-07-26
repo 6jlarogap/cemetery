@@ -221,6 +221,70 @@ $(function(){
 {% block content %}
     <div id="free_form">
         <form enctype="multipart/form-data" action="" method="post">
+            {% if duplicates %}
+                <ul class="errorlist"><li>Возможно, это попытка двойной регистрации.</li></ul>
+                <p><label><input type="checkbox" name="duplicates_ok"/>игнорировать предупреждение о двойной регистрации</label></p>
+                <table width="100%" border=1>
+                    <caption style="background:#2D992D">Обнаружены дубли:</caption>
+                    <thead>
+                        <td>№ в кн</td>
+                        <td>ФИО</td>
+                        <td>Дата захор</td>
+                        <td>Уч</td>
+                        <td>Ряд</td>
+                        <td>Мог</td>
+                        <td>Кладб</td>
+                        <td>Услуга</td>
+                        <td>Заказчик</td>
+                        <td>Телефон</td>
+                        <td>Комментарий</td>
+                        <td>Опции</td>
+                    </thead>
+                            {% for b in object_list %}
+                    <tr>
+                        <td>{{ b.account_book_n }}</td>
+                        <td>
+                            <b> {{ b.person.last_name }}</b>
+                            {{ b.person.first_name }}
+                            {{ b.person.patronymic }}
+                        </td>
+                        <td>{{ b.date_fact|date:"d.m.Y" }}</td>
+                        <td>{{ b.product.place.area }}</td>
+                        <td>{{ b.product.place.row }}</td>
+                        <td>{{ b.product.place.seat }}</td>
+                        <td>{{ b.product.place.cemetery.name }}</td>
+                        <td>{{ b.operation.op_type }}</td>
+                        {% if b.customer.person.last_name %}
+                            <td>
+                                {{ b.customer.person.last_name }}
+                                {{ b.customer.person.first_name }}
+                                {{ b.customer.person.patronymic }}
+                            </td>
+                        {% else %}
+                            <td>&nbsp;</td>
+                        {% endif %}
+                        <td>
+                            {% for phone in b.customer.phone_set.all  %}
+                            {{ phone.f_number }}
+                            <br>
+                            {%endfor%}
+                        </td>
+                        <td>
+                            {% for comment in b.ordercomments_set.all %}
+                            {{ comment.comment }}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% if user|in_group:"edit_burial" %}
+                                <a title="редактировать" href='/burial/{{ b.uuid }}/'><img src="/media/edit.png"></a>
+                            {% endif %}
+                            <a title="к могиле" href='/?cemetery={{ b.product.place.cemetery.uuid }}&area={{ b.product.place.area }}&row={{ b.product.place.row }}&seat={{ b.product.place.seat }}'><img width="16" src="/media/tree.png"></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+
             {{ form.non_field_errors }}
             {{ location_form.non_field_errors }}
             {{ registration_form.non_field_errors }}

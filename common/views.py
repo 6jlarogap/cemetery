@@ -328,7 +328,22 @@ def journal(request):
     forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid()
     responsible_valid = request.GET.get('responsible_myself') or responsible_form.is_valid()
 
-    if request.method == "POST" and forms_valid and responsible_valid:
+    duplicates = []
+    if request.method == "POST" and form.is_valid() and not request.REQUEST.get('duplicates_ok'):
+        cd = form.cleaned_data
+        params = dict(
+            product__place__cemetery = cd["cemetery"],
+            person__birth_date = cd["birth_date"],
+            person__death_date = cd["death_date"],
+            date_fact = cd["burial_date"],
+        )
+        if cd["last_name"].lower() != u'неизвестен':
+            params['person__last_name__iexact'] = cd["last_name"]
+        duplicates = Burial.objects.filter(**params)
+
+    duplicates_ok = not duplicates or request.REQUEST.get('duplicates_ok')
+
+    if request.method == "POST" and forms_valid and responsible_valid and duplicates_ok:
         cd = form.cleaned_data
         # Try to get Place.
         try:
@@ -447,6 +462,7 @@ def journal(request):
         'registration_form': registration_form,
         'responsible_form': responsible_form,
         'certificate_form': cert_form,
+        'duplicates': duplicates,
     })
 
 @login_required

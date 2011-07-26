@@ -309,7 +309,7 @@ class JournalForm(AutoTabIndex):
         ('yurik', u"Юр. лицо"),
     ], widget=forms.RadioSelect, initial='fizik')
 
-    organization = forms.ModelChoiceField(label="Организация", queryset=Organization.objects.all())
+    organization = forms.ModelChoiceField(label="Организация", queryset=Organization.objects.all(), required=False)
     agent_director = forms.BooleanField(label="Агент - директор", required=False)
 
     dover_number = forms.CharField(label="Номер доверенности", max_length=255, required=False)
