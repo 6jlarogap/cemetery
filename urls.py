@@ -49,6 +49,8 @@ urlpatterns = patterns('',
     (r'^getdeadman/$', 'common.views.get_deadman'),
     # Список доступных операций для выбранного кладбища.
     (r'^getoper/$', 'common.views.get_oper'),
+    # Список доступных агентов для выбранной организации.
+    (r'^getagents/$', 'common.views.get_agents'),
 
     (r'^orderfile/delete/(.{36})/(.{36})/$',
      'common.views.delete_orderfile'),

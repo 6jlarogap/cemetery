@@ -22,7 +22,7 @@ from common.forms import UserProfileForm
 from common.models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization, OrderComments
 from common.models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation, DeathCertificate
 from common.models import OrderFiles, Phone, Place, ProductType, SoulProducttypeOperation, Role
-from common.models import Env
+from common.models import Env, Agent
 
 from simplepagination import paginate
 from annoying.decorators import render_to
@@ -327,6 +327,7 @@ def journal(request):
 
     forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid()
     responsible_valid = request.GET.get('responsible_myself') or responsible_form.is_valid()
+
     if request.method == "POST" and forms_valid and responsible_valid:
         cd = form.cleaned_data
         # Try to get Place.
@@ -1625,6 +1626,24 @@ def get_oper(request):
             orgsoul=cemetery.organization.soul_ptr
             choices = SoulProducttypeOperation.objects.filter(soul=orgsoul,
                               p_type=settings.PLACE_PRODUCTTYPE_ID).values_list("operation__uuid", "operation__op_type")
+            for c in choices:
+                rez.append({"optionValue": c[0], "optionDisplay": c[1]})
+            rez.insert(0, {"optionValue": 0, "optionDisplay": u'---------'})
+    return HttpResponse(JSONEncoder().encode(rez))
+
+def get_agents(request):
+    """
+    Список доступных агентов для выбранной организации.
+    """
+    rez = []
+    if request.method == "GET" and request.GET.get("id", False):
+        try:
+            org = Organization.objects.get(uuid=request.GET["id"])
+        except:
+            pass
+        else:
+            orgsoul = cemetery.organization.soul_ptr
+            choices = Agent.objects.filter(organization=org).values_list("uuid", "person")
             for c in choices:
                 rez.append({"optionValue": c[0], "optionDisplay": c[1]})
             rez.insert(0, {"optionValue": 0, "optionDisplay": u'---------'})

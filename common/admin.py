@@ -52,7 +52,19 @@ class OCAdmin(admin.ModelAdmin):
 #            self.exclude = ("creator")
 #        return super(RoleAdmin, self).get_form(request, obj=None, **kwargs)
 
-admin.site.register(Organization)
+class OrganizationAgentInline(admin.StackedInline):
+    model = Agent
+    raw_id_fields = ['person', ]
+
+class OrganizationPhoneInline(admin.StackedInline):
+    model = Phone
+
+class OrganizationAdmin(admin.ModelAdmin):
+    raw_id_fields = ['location', 'creator', ]
+
+    inlines = [OrganizationPhoneInline, OrganizationAgentInline, ]
+
+admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Role)
 admin.site.register(Soul)
 admin.site.register(PersonRole)

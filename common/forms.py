@@ -310,13 +310,13 @@ class JournalForm(AutoTabIndex):
     ], widget=forms.RadioSelect, initial='fizik')
 
     organization = forms.ModelChoiceField(label="Организация", queryset=Organization.objects.all())
-    agent_director = forms.BooleanField(label="Агент - директор")
+    agent_director = forms.BooleanField(label="Агент - директор", required=False)
 
-    dover_number = forms.CharField(label="Номер доверенности", max_length=255)
-    dover_date = forms.DateField(label="Дата выдачи", widget=CalendarWidget)
-    dover_expire = forms.DateField(label="Действует до", widget=CalendarWidget)
+    dover_number = forms.CharField(label="Номер доверенности", max_length=255, required=False)
+    dover_date = forms.DateField(label="Дата выдачи", widget=CalendarWidget, required=False)
+    dover_expire = forms.DateField(label="Действует до", widget=CalendarWidget, required=False)
 
-    agent = forms.ModelChoiceField(label="Агент", queryset=Agent.objects.all())
+    agent = forms.ModelChoiceField(label="Агент", queryset=Agent.objects.all(), required=False)
 
     comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 60}), label="Комментарий")
     file1 = forms.FileField(required=False, label="Файл")
@@ -326,7 +326,17 @@ class JournalForm(AutoTabIndex):
     def __init__(self, *args, **kwargs):
         cem = kwargs.pop('cem', None)
         oper = kwargs.pop('oper', None)
+
+        data = kwargs.get('data', {})
+        if 'dover_number' in data and not data.get('dover_number'):
+            del data['dover_number']
+
         super(JournalForm, self).__init__(*args, **kwargs)
+
+        if data.get('opf', 'fizik') != 'fizik':
+            for f in ['agent', 'dover_date', 'dover_expire', 'dover_number', ]:
+                self.fields[f].required = not data.get('agent_director') or False
+
         if cem:
             self.fields["cemetery"].initial = cem
         if oper:
@@ -334,6 +344,7 @@ class JournalForm(AutoTabIndex):
 
     def clean(self):
         cd = self.cleaned_data
+
         # Проверка имен усопшего и заказчика на наличие недопустимых символов
         last_name = cd["last_name"]
         rest = re.sub(RE_LASTNAME, "", last_name)

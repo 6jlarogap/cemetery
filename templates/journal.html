@@ -7,6 +7,7 @@
 <script type="text/javascript" src="/media/js/jquery-1.4.4.min.js"></script>
 <script type="text/javascript" src="/media/js/jquery-ui-1.8.6.custom.min.js"></script>
 <script type="text/javascript" src="/media/js/jquery.query-2.1.7.js"></script>
+<script type="text/javascript" src="/admin_media/js/admin/RelatedObjectLookups.js"></script>
 <script type="text/javascript">
     window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";
 </script>
@@ -120,20 +121,35 @@ $(function(){
         if (j[i].optionValue == $("#id_hoperation").val())
         {
             options += '<option selected value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
-//            alert("yes");
         }
         else
         {
             options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
-//            alert("no "+j[i].optionValue+" "+$("#id_hoperation").val());
         }
       }
       $("#id_operation").html(options);
-//      $("#id_area").val("");
-//      $("#id_row").val("");
-//      $("#id_seat").val("");
     });
   });
+    
+  // Обработчик изменения выбранного кладбища.
+  $("#id_organization").change(function(){
+    $.getJSON("/getagents/", {id: $(this).val(), ajax: 'true'}, function(j){
+      var options = '';
+      for (var i = 0; i < j.length; i++) {
+        if (j[i].optionValue == $("#id_hoperation").val())
+        {
+            options += '<option selected value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
+        }
+        else
+        {
+            options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
+        }
+      }
+      $("#id_operation").html(options);
+    });
+  });
+
+    $("#id_organization").after('<a href="/admin/common/organization/add/" class="add-another" id="add_id_organization" onclick="return showAddAnotherPopup(this);">создать</a>')
 
    //автодополнение страны.
    $("#id_country").autocomplete({
@@ -269,7 +285,7 @@ $(function(){
                 <tr class="opf_yurik">
                     <td class="free_form">{{ form.dover_number.label_tag }}</td>
                     <td class="free_form">{{ form.dover_date.label_tag }}</td>
-                    <td class="free_form">{{ form.patronymic.label_tag }}</td>
+                    <td class="free_form">{{ form.dover_expire.label_tag }}</td>
                 </tr>
                 <tr class="opf_yurik">
                     <td class="free_form">{{ form.dover_number.errors }}{{ form.dover_number }}</td>
