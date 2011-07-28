@@ -725,12 +725,25 @@ def print_burial(request, uuid):
 
         positions = get_positions(burial)
 
+        if print_form.cleaned_data.get('receipt'):
+            return direct_to_template(request, 'reports/spravka.html', {
+                'burial': burial,
+                'now': datetime.datetime.now(),
+            })
+
+        if print_form.cleaned_data.get('dogovor'):
+            return direct_to_template(request, 'reports/dogovor.html', {
+                'burial': burial,
+                'now': datetime.datetime.now(),
+            })
+
         return direct_to_template(request, 'reports/act.html', {
             'burial': burial,
             'positions': positions,
             'total': float(sum([p['sum'] for p in positions])),
             'catafalque': print_form.cleaned_data.get('catafalque'),
             'graving': print_form.cleaned_data.get('graving'),
+            'now': datetime.datetime.now(),
         })
 
     return direct_to_template(request, 'burial_print.html', {

@@ -60,22 +60,42 @@
                 </tr>
             {% endfor %}
             <tr>
-                <td colspan="2">
+                <td colspan="6">
                     {{ payment_form.payment_type.label_tag }}
                     {{ payment_form.payment_type }}{{ payment_form.payment_type.errors }}
                 </td>
-                <td colspan="2">
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <h2>Наряды</h2>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
                     {{ print_form.catafalque }}{{ print_form.catafalque.errors }}
                     {{ print_form.catafalque.label_tag }}
                 </td>
-                <td colspan="2">
+                <td colspan="3">
                     {{ print_form.graving }}{{ print_form.graving.errors }}
                     {{ print_form.graving.label_tag }}
                 </td>
             </tr>
+        <!--
+            <tr>
+                <td colspan="6">
+                    <h2>Справка</h2>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                </td>
+            </tr>
+        -->
         </table>
         <br />
-        <input type="submit" value="Распечатать">
+        <input type="submit" value="Распечатать документы">
+        <input type="submit" name="receipt" value="Распечатать справку">
+        <input type="submit" name="dogovor" value="Распечатать договор отв.">
         <input type="reset" value="Отмена">
     </form>
     </div>
