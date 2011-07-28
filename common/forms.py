@@ -806,4 +806,6 @@ class OrderPaymentForm(forms.ModelForm):
             'payment_type': forms.RadioSelect,
         }
 
-
+class PrintOptionsForm(forms.Form):
+    catafalque = forms.BooleanField(label=u"наряд на автокатафалк", required=False, initial=False)
+    graving = forms.BooleanField(label=u"наряд на рытье могилы", required=False, initial=True)

@@ -695,10 +695,9 @@ def print_burial(request, uuid):
 
     payment_form = OrderPaymentForm(instance=burial, data=request.POST or None, )
     positions_fs = OrderPositionsFormset(initial=positions, data=request.POST or None, )
+    print_form = PrintOptionsForm(data=request.POST or None, )
 
-    print 'valid', positions_fs.is_valid(), payment_form.is_valid(), positions_fs.errors, payment_form.errors
-
-    if request.POST and positions_fs.is_valid() and payment_form.is_valid():
+    if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
         for f in positions_fs.forms:
             if f.cleaned_data['active']:
                 try:
@@ -730,12 +729,15 @@ def print_burial(request, uuid):
             'burial': burial,
             'positions': positions,
             'total': float(sum([p['sum'] for p in positions])),
+            'catafalque': print_form.cleaned_data.get('catafalque'),
+            'graving': print_form.cleaned_data.get('graving'),
         })
 
     return direct_to_template(request, 'burial_print.html', {
         'burial': burial,
         'positions_fs': positions_fs,
         'payment_form': payment_form,
+        'print_form': print_form,
     })
 
 @login_required

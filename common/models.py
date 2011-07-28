@@ -238,6 +238,11 @@ class Person(Soul):
             if self.patronymic:
                 initials = u"%s%s." % (initials, self.patronymic[:1].upper())
         return initials
+
+    def full_name(self):
+        fio = u"%s %s" % (self.last_name, self.get_initials())
+        return fio.strip()
+
     class Meta:
         verbose_name = (u'физ. лицо')
         verbose_name_plural = (u'физ. лица')
