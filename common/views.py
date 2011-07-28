@@ -444,6 +444,8 @@ def journal(request):
             ds.soul_id=new_burial.person.pk
             ds.save()
 
+        if request.POST.get('and_print'):
+            return redirect("print_burial", new_burial.pk)
         return redirect("/journal/")
 
     today = datetime.date.today()
