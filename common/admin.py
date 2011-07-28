@@ -94,3 +94,4 @@ admin.site.register(OrderFiles, OFAdmin)
 admin.site.register(OrderComments, OCAdmin)
 #admin.site.register(Role, RoleAdmin)
 
+admin.site.register(OrderProduct)

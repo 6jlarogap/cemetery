@@ -384,8 +384,10 @@ class ProductType(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     name = models.CharField(u"Имя типа продукта", max_length=24)
+
     def __unicode__(self):
         return self.name
+
     class Meta:
         verbose_name = (u'тип продукта')
         verbose_name_plural = (u'типы продуктов')
@@ -400,23 +402,13 @@ class Product(models.Model):
     name = models.CharField(u"Название", max_length=50)  # Название продукта.
     measure = models.CharField(u"Единицы измерения", max_length=50, blank=True)  # Размерность.
     p_type = models.ForeignKey(ProductType, verbose_name=u"Тип продукта")
-#    all_comments = models.TextField("Все комментарии", blank=True)  # Все комментарии, собранные в одно поле.
+
     def add_comment(self, txt, creator):
         comment = ProductComments(product=self, comment=txt,
                                   creator=creator)
         comment.save()
-#        if self.all_comments:
-#            self.all_comments = "%s\n%s" % (self.all_comments, txt)
-#        else:
-#            self.all_comments = txt
-#        self.save()
     def __unicode__(self):
-#        if hasattr(self, "place"):
-#            return u"уч%sряд%sместо%s" % (self.place.area, self.place.row, self.place.seat)
-#        else:
-#            return self.name
         return self.name
-
 
 class ProductFiles(models.Model):
     """
@@ -540,6 +532,10 @@ class Order(models.Model):
     is_trash = models.BooleanField(default=False)  # Удален.
     creator = models.ForeignKey(Soul, related_name="order")  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
+    payment_type = models.CharField(u"Платеж", max_length=16, choices=[
+        ('nal', u"Нал"),
+        ('beznal', u"Безнал"),
+    ], default='nal', blank=False)
 
     def add_comment(self, txt, creator):
         comment = OrderComments(order=self, comment=txt,
@@ -719,3 +715,42 @@ class Media(models.Model):
     url = models.URLField(blank=True, verify_exists=False)
     comment = models.TextField(blank=True)
     timestamp = models.DateTimeField(blank=True, null=True)
+
+class OrderProduct(models.Model):
+    """
+    Продукт в заказе.
+    """
+    uuid = UUIDField(primary_key=True)
+    name = models.CharField(u"Название продукта", max_length=255)
+    default = models.BooleanField(u"Вкл. по умолчанию", default=False, blank=True)
+    measure = models.CharField(u"Единицы измерения", max_length=50, blank=True)
+    price = models.DecimalField(u"Цена", decimal_places=2, max_digits=10)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = (u'тип продукта для счет-заказа')
+        verbose_name_plural = (u'типы продуктов для счет-заказа')
+
+class OrderPosition(models.Model):
+    """
+    Позиция в заказе.
+    """
+    uuid = UUIDField(primary_key=True)
+    order = models.ForeignKey(Order)
+    order_product = models.ForeignKey(OrderProduct)
+    count = models.DecimalField(u"Кол-во", decimal_places=2, max_digits=10)
+    price = models.DecimalField(u"Цена", decimal_places=2, max_digits=10)
+
+    @property
+    def sum(self):
+        return self.count * self.price
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = (u'позиция счет-заказа')
+        verbose_name_plural = (u'позиция счет-заказа')
+

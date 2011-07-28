@@ -15,14 +15,9 @@ from django.utils.simplejson.encoder import JSONEncoder
 from django.forms.models import modelformset_factory
 from django import db
 
-from common.forms import SearchForm, NewUserForm, EditUserForm, ImportForm, OrderFileCommentForm, CertificateForm
-from common.forms import CemeteryForm, JournalForm, InitalForm, OrderCommentForm, AddressForm
-from common.forms import UserProfileForm
+from common.forms import *
 
-from common.models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization, OrderComments
-from common.models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation, DeathCertificate
-from common.models import OrderFiles, Phone, Place, ProductType, SoulProducttypeOperation, Role
-from common.models import Env, Agent
+from common.models import *
 
 from simplepagination import paginate
 from annoying.decorators import render_to
@@ -472,10 +467,7 @@ def edit_burial(request, uuid):
     """
     Страница редактирования существующего захоронения.
     """
-    try:
-        burial = Burial.objects.get(uuid=uuid)
-    except ObjectDoesNotExist:
-        raise Http404
+    burial = get_object_or_404(Burial, uuid=uuid)
     PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=4)
 
     cem = burial.product.place.cemetery
@@ -666,6 +658,83 @@ def edit_burial(request, uuid):
     })
 
 
+def get_positions(burial):
+    positions = []
+    for product in OrderProduct.objects.all():
+        try:
+            pos = OrderPosition.objects.get(order_product=product, order=burial)
+        except OrderPosition.DoesNotExist:
+            positions.append({
+                'active': product.default,
+                'order_product': product,
+                'price': product.price,
+                'count': 1,
+                'sum': product.price * 1,
+            })
+        else:
+            positions.append({
+                'active': True,
+                'order_product': product,
+                'price': pos.price,
+                'count': pos.count,
+                'sum': pos.price * pos.count,
+            })
+    return positions
+
+@login_required
+@is_in_group("edit_burial")
+@transaction.commit_on_success
+def print_burial(request, uuid):
+    """
+    Страница печати документов захоронения.
+    """
+    burial = get_object_or_404(Burial, uuid=uuid)
+    positions = get_positions(burial)
+
+    payment_form = OrderPaymentForm(instance=burial, data=request.POST or None, )
+    positions_fs = OrderPositionsFormset(initial=positions, data=request.POST or None, )
+
+    print 'valid', positions_fs.is_valid(), payment_form.is_valid(), positions_fs.errors, payment_form.errors
+
+    if request.POST and positions_fs.is_valid() and payment_form.is_valid():
+        for f in positions_fs.forms:
+            if f.cleaned_data['active']:
+                try:
+                    pos = OrderPosition.objects.get(order_product=f.initial['order_product'], order=burial)
+                except OrderPosition.DoesNotExist:
+                    OrderPosition.objects.create(
+                        order_product=f.initial['order_product'],
+                        order=burial,
+                        price=f.cleaned_data['price'],
+                        count=f.cleaned_data['count'],
+                    )
+                else:
+                    pos.price = pos.price
+                    pos.count = pos.count
+                    pos.save()
+            else:
+                try:
+                    pos = OrderPosition.objects.get(order_product=f.initial['order_product'], order=burial)
+                except OrderPosition.DoesNotExist:
+                    pass
+                else:
+                    pos.delete()
+
+        payment_form.save()
+
+        positions = get_positions(burial)
+
+        return direct_to_template(request, 'reports/act.html', {
+            'burial': burial,
+            'positions': positions,
+            'total': float(sum([p['sum'] for p in positions])),
+        })
+
+    return direct_to_template(request, 'burial_print.html', {
+        'burial': burial,
+        'positions_fs': positions_fs,
+        'payment_form': payment_form,
+    })
 
 @login_required
 #@permission_required('common.change_ordercomment')

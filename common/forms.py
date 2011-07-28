@@ -4,8 +4,7 @@ from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.contrib.auth.models import User
-from models import Cemetery, GeoCountry, GeoRegion, Organization, GeoCity, Phone, Operation, Street, Role, OrderComments
-from models import SoulProducttypeOperation, Location, DeathCertificate, Agent
+from models import *
 
 from annoying.decorators import autostrip
 
@@ -786,5 +785,25 @@ class UserProfileForm(forms.Form):
             except:
                 raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
         return cd
+
+class OrderPositionForm(forms.ModelForm):
+    active = forms.BooleanField(required=False)
+
+    class Meta:
+        model = OrderPosition
+        fields = ['order_product', 'count', 'price']
+        widgets = {
+            'order_product': forms.HiddenInput,
+        }
+
+OrderPositionsFormset = forms.formsets.formset_factory(OrderPositionForm, extra=0)
+
+class OrderPaymentForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['payment_type', ]
+        widgets = {
+            'payment_type': forms.RadioSelect,
+        }
 
 
