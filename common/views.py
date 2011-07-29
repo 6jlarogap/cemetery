@@ -1772,13 +1772,25 @@ def get_agents(request):
         except:
             pass
         else:
-            orgsoul = cemetery.organization.soul_ptr
-            choices = Agent.objects.filter(organization=org).values_list("uuid", "person")
+            orgsoul = org.soul_ptr
+            choices = Agent.objects.filter(organization=org)
             for c in choices:
-                rez.append({"optionValue": c[0], "optionDisplay": c[1]})
+                rez.append({"optionValue": c.uuid, "optionDisplay": c.person.full_name()})
             rez.insert(0, {"optionValue": 0, "optionDisplay": u'---------'})
     return HttpResponse(JSONEncoder().encode(rez))
 
+def get_dover(request):
+    try:
+        agent = Agent.objects.get(pk=request.GET.get('agent'))
+    except Agent.DoesNotExist:
+        rez = {}
+    else:
+        rez = {
+            'number': agent.dover_number,
+            'date': agent.dover_date and agent.dover_date.strftime('%d.%m.%Y') or '',
+            'expire': agent.dover_expire and agent.dover_expire.strftime('%d.%m.%Y') or '',
+        }
+    return HttpResponse(JSONEncoder().encode(rez))
 
 def get_street(request):
     """

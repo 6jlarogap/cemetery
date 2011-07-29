@@ -28,6 +28,17 @@
         $('.'+cls).show()
     }
 
+    function updateDover() {
+        var agent = $('#id_agent').val();
+        if (!agent) return;
+        $.getJSON('{% url get_dover %}?agent=' + agent, function(data){
+            if (!data) return
+            $('#id_dover_number').val(data.number || '');
+            $('#id_dover_date').val(data.date || '');
+            $('#id_dover_expire    ').val(data.expire || '');
+        })
+    }
+
 $(function(){
     $(':input,textarea,select').each(function(i, el) {
         $(el).attr('tabIndex', i+1);
@@ -136,7 +147,7 @@ $(function(){
     $.getJSON("/getagents/", {id: $(this).val(), ajax: 'true'}, function(j){
       var options = '';
       for (var i = 0; i < j.length; i++) {
-        if (j[i].optionValue == $("#id_hoperation").val())
+        if (j[i].optionValue == $("#id_agent").val())
         {
             options += '<option selected value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
         }
@@ -145,9 +156,12 @@ $(function(){
             options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
         }
       }
-      $("#id_operation").html(options);
+      $("#id_agent").html(options);
     });
   });
+
+    $('#id_agent').change(updateDover);
+    updateDover();
 
     $("#id_organization").after('<a href="/admin/common/organization/add/" class="add-another" id="add_id_organization" onclick="return showAddAnotherPopup(this);">создать</a>')
 

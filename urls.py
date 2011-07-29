@@ -10,42 +10,47 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^admin/jsi18n/', 'django.views.i18n.javascript_catalog'),
     url(r'^admin/', include(admin.site.urls)),
+)
 
-    url(r'^$', 'common.views.main_page'),
-    url(r'^init/$', 'common.views.init'),
-    url(r'^login/$', 'common.views.ulogin'),
-    url(r'^logout/$', 'common.views.ulogout'),
-    url(r'^profile/$', 'common.views.profile'),
+urlpatterns += patterns('common.views',
+    url(r'^$', 'main_page'),
+    url(r'^init/$', 'init'),
+    url(r'^login/$', 'ulogin'),
+    url(r'^logout/$', 'ulogout'),
+    url(r'^profile/$', 'profile'),
 
-    url(r'^journal/$', 'common.views.journal', name="add_burial"),
-    url(r'^burial/(.{36})/$', 'common.views.edit_burial'),
-    url(r'^burial/(.{36})/print/$', 'common.views.print_burial', name='print_burial'),
+    url(r'^journal/$', 'journal', name="add_burial"),
+    url(r'^burial/(.{36})/$', 'edit_burial'),
+    url(r'^burial/(.{36})/print/$', 'print_burial', name='print_burial'),
 
-    url(r'^ordercomment/(.{36})/$', 'common.views.order_comment_edit'),
-    url(r'^orderfilecomment/(.{36})/$', 'common.views.order_filecomment_edit'),
-    url(r'^management/$', 'common.views.management'),
-    url(r'^management/import/$', 'common.views.import_csv'),
-    url(r'^management/user/$', 'common.views.management_user'),
-    url(r'^management/user/edit/(.{36})/$', 'common.views.management_edit_user'),
-    url(r'^management/cemetery/$', 'common.views.management_cemetery'),
-    url(r'^management/cemetery/edit/(.{36})/$', 'common.views.management_edit_cemetery'),
+    url(r'^ordercomment/(.{36})/$', 'order_comment_edit'),
+    url(r'^orderfilecomment/(.{36})/$', 'order_filecomment_edit'),
+    url(r'^management/$', 'management'),
+    url(r'^management/import/$', 'import_csv'),
+    url(r'^management/user/$', 'management_user'),
+    url(r'^management/user/edit/(.{36})/$', 'management_edit_user'),
+    url(r'^management/cemetery/$', 'management_cemetery'),
+    url(r'^management/cemetery/edit/(.{36})/$', 'management_edit_cemetery'),
 
     # ajax.
-    url(r'^getcountries/$', 'common.views.get_countries'),
-    url(r'^getregions/$', 'common.views.get_regions'),
-    url(r'^getcities/$', 'common.views.get_cities'),
-    url(r'^getstreets/$', 'common.views.get_street'),
+    url(r'^getcountries/$', 'get_countries'),
+    url(r'^getregions/$', 'get_regions'),
+    url(r'^getcities/$', 'get_cities'),
+    url(r'^getstreets/$', 'get_street'),
+
+    # доверенности
+    url(r'^getdover/$', 'get_dover', name='get_dover'),
 
     # Уникальный список фамилий заказчиков.
-    url(r'^getpersonunln/$', 'common.views.get_customer_ln'),
+    url(r'^getpersonunln/$', 'get_customer_ln'),
     # Уникальный список фамилий захороненных.
-    url(r'^getdeadman/$', 'common.views.get_deadman'),
+    url(r'^getdeadman/$', 'get_deadman'),
     # Список доступных операций для выбранного кладбища.
-    url(r'^getoper/$', 'common.views.get_oper'),
+    url(r'^getoper/$', 'get_oper'),
     # Список доступных агентов для выбранной организации.
-    url(r'^getagents/$', 'common.views.get_agents'),
+    url(r'^getagents/$', 'get_agents'),
 
-    url(r'^orderfile/delete/(.{36})/(.{36})/$', 'common.views.delete_orderfile'),
+    url(r'^orderfile/delete/(.{36})/(.{36})/$', 'delete_orderfile'),
 )
 
 if settings.DEBUG:
