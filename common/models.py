@@ -445,7 +445,7 @@ class Place(Product):
     """
     cemetery = models.ForeignKey(Cemetery, verbose_name=u"Кладбище")  # Связь с кладбищем.
     area = models.CharField(u"Участок", max_length=9)  # Участок.
-    row = models.CharField(u"Ряд", max_length=9)  # Ряд.
+    row = models.CharField(u"Ряд", max_length=9, blank=True, null=True)  # Ряд.
     seat = models.CharField(u"Место", max_length=9)  # Место.
     gps_x = models.FloatField(u"Координата X", blank=True, null=True)  # GPS X-ось.
     gps_y = models.FloatField(u"Координата Y", blank=True, null=True)  # GPS Y-ось.
@@ -479,9 +479,6 @@ class Place(Product):
     def __unicode__(self):
         return  '%s, %s, %s (%s)' % (self.area, self.row, self.seat,
                                      self.cemetery)
-    class Meta:
-        unique_together = (("cemetery", "area", "row", "seat"),)
-
 
 class Place1(Product): # Места
     cemetery = models.ForeignKey(Cemetery)  # Связь с кладбищем.
