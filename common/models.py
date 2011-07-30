@@ -207,6 +207,12 @@ class Email(models.Model):
     e_addr = models.EmailField()  # e-mail.
 
 
+class IDDocumentType(models.Model):
+    name = models.CharField(u"Тип документа", max_length=255)
+
+    def __unicode__(self):
+        return self.name
+    
 class Person(Soul):
     """
     Физическое лицо (клиент, сотрудник, кто угодно).
@@ -246,6 +252,14 @@ class Person(Soul):
     class Meta:
         verbose_name = (u'физ. лицо')
         verbose_name_plural = (u'физ. лица')
+
+class PersonID(models.Model):
+    person = models.OneToOneField(Person)
+    id_type = models.ForeignKey(IDDocumentType, verbose_name=u"Тип документа")
+    series = models.CharField(u"Серия", max_length=4, blank=True, null=True)
+    number = models.CharField(u"Номер", max_length=16)
+    who = models.CharField(u"Кем выдан", max_length=255, blank=True, null=True)
+    when = models.DateField(u"Дата выдачи")
 
 class ZAGS(models.Model):
     name = models.CharField(u"Название", max_length=255)

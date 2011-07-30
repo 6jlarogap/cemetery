@@ -279,6 +279,24 @@ $(function(){
                 <td class="free_form opf_yurik">{{ form.agent_director.errors }}{{ form.agent_director }}</td>
                 <td class="free_form opf_yurik">{{ form.agent.errors }}{{ form.agent }}</td>
             </tr>
+            <tr class="opf_fizik">
+                <td class="free_form">{{ id_form.id_type.label_tag }}</td>
+                <td class="free_form">{{ id_form.series.label_tag }}</td>
+                <td class="free_form">{{ id_form.number.label_tag }}</td>
+            </tr>
+            <tr class="opf_fizik">
+                <td class="free_form">{{ id_form.id_type.errors }}{{ id_form.id_type }}</td>
+                <td class="free_form">{{ id_form.series.errors }}{{ id_form.series }}</td>
+                <td class="free_form">{{ id_form.number.errors }}{{ id_form.number }}</td>
+            </tr>
+            <tr class="opf_fizik">
+                <td class="free_form">{{ id_form.who.label_tag }}</td>
+                <td class="free_form">{{ id_form.when.label_tag }}</td>
+            </tr>
+            <tr class="opf_fizik">
+                <td class="free_form">{{ id_form.who.errors }}{{ id_form.who }}</td>
+                <td class="free_form">{{ id_form.when.errors }}{{ id_form.when }}</td>
+            </tr>
             <tr class="opf_yurik">
                 <td class="free_form">{{ form.dover_number.label_tag }}</td>
                 <td class="free_form">{{ form.dover_date.label_tag }}</td>

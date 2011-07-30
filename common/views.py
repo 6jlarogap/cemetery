@@ -317,10 +317,12 @@ def journal(request):
     registration_form = AddressForm(prefix='registration', data=request.POST or None)
     responsible_form = AddressForm(prefix='responsible', data=request.POST or None)
     cert_form = CertificateForm(prefix='certificate', data=request.POST or None)
+    id_form = IDForm(prefix='id', data=request.POST or None)
 
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=Phone.objects.none())
 
-    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid()
+    id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
+    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid() and id_valid
     responsible_valid = request.GET.get('responsible_myself') or responsible_form.is_valid()
 
     duplicates = []
@@ -362,6 +364,12 @@ def journal(request):
         new_person.birth_date = cd.get("birth_date") or None
         new_person.death_date = cd.get("birth_date") or None
         new_person.save()
+
+        if id_form.is_valid():
+            personid = id_form.save(commit=False)
+            personid.person = new_person
+            personid.save()
+
         # Create new Person for customer.
         customer = Person(creator=request.user.userprofile.soul)
         customer.last_name = cd["customer_last_name"].capitalize()
@@ -459,6 +467,7 @@ def journal(request):
         'registration_form': registration_form,
         'responsible_form': responsible_form,
         'certificate_form': cert_form,
+        'id_form': id_form,
         'duplicates': duplicates,
     })
 
@@ -521,9 +530,16 @@ def edit_burial(request, uuid):
         dc = None
     cert_form = CertificateForm(prefix='certificate', data=request.POST or None, instance=dc)
 
+    try:
+        id = burial.person.personid
+    except PersonID.DoesNotExist:
+        id = None
+    id_form = IDForm(prefix='id', data=request.POST or None, instance=id)
+
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=burial.customer.phone_set.all())
 
-    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid()
+    id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
+    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid() and id_valid
     responsible_valid = request.GET.get('responsible_myself') or responsible_form.is_valid()
 
     if request.method == "POST" and forms_valid and responsible_valid:
@@ -547,6 +563,11 @@ def edit_burial(request, uuid):
         new_person.birth_date = cd.get("birth_date") or None
         new_person.death_date = cd.get("birth_date") or None
         new_person.save()
+
+        if id_form.is_valid():
+            id = id_form.save(commit=False)
+            id.person = new_person
+            id.save()
 
         # Create new Person for customer.
         customer = burial.customer.person
@@ -657,6 +678,7 @@ def edit_burial(request, uuid):
         'certificate_form': cert_form,
         'responsible_form': responsible_form,
         'request': request,
+        'id_form': id_form,
     })
 
 

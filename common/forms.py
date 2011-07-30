@@ -815,3 +815,13 @@ class PrintOptionsForm(forms.Form):
     graving = forms.BooleanField(label=u"наряд на рытье могилы", required=False, initial=True)
     receipt = forms.BooleanField(label=u"справка о захоронении", required=False, initial=False)
     dogovor = forms.BooleanField(label=u"договор ответственного", required=False, initial=False)
+
+class IDForm(forms.ModelForm):
+    class Meta:
+        model = PersonID
+        exclude = ['person', ]
+        widgets = {
+            'when': CalendarWidget,
+        }
+
+

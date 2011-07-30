@@ -87,6 +87,7 @@ admin.site.register(Product)
 admin.site.register(GeoRegion)
 admin.site.register(DeathCertificate)
 admin.site.register(ZAGS)
+admin.site.register(IDDocumentType)
 
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Burial, BurialAdmin)
