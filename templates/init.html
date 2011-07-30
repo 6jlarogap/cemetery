@@ -23,7 +23,12 @@
     <div id="forms">
         <form action="" method="post">
             <table>
+                {{ bank_formset.management_form }}
                 {{ form.as_table }}
+                <tr><td colspan="2">Банк</td></tr>
+                {% for f in bank_formset.forms %}
+                    {{ f.as_table }}
+                {% endfor %}
             </table>
             <input type="submit" value="Сохранить" />
             <input type="reset" value="Очистить" />

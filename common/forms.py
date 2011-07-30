@@ -454,8 +454,10 @@ class InitalForm(forms.Form):
                                  widget=forms.TextInput())
     password1 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="*Пароль")
     password2 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="*Пароль(еще раз)")
-    phone = forms.CharField(required=False, max_length=20, label="Телефон директора",
-                                     widget=forms.TextInput())
+    phone = forms.CharField(required=False, max_length=20, label="Телефон директора", widget=forms.TextInput())
+
+    kpp = forms.CharField(required=False, max_length=9, label="КПП")
+
     def clean_username(self):
         """
         Проверка логина на отсутствие недопустимых символов.
@@ -465,6 +467,7 @@ class InitalForm(forms.Form):
         if rest:
             raise forms.ValidationError("Недопустимые символы в имени пользователя.")
         return un
+
     def clean(self):
         cd = self.cleaned_data
         # Страна/регион/нас. пункт/улица орг-ии.
@@ -598,6 +601,7 @@ class InitalForm(forms.Form):
             raise forms.ValidationError("Пароли не совпадают.")
         return cd
 
+InitBankFormset = forms.models.inlineformset_factory(Organization, BankAccount)
 
 class ImportForm(forms.Form):
     """

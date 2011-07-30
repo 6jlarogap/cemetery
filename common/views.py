@@ -1260,16 +1260,37 @@ def init(request):
     user = request.user
     if not user.is_superuser:
         return HttpResponseForbidden("Forbidden")
+
+    try:
+        env = Env.objects.get()
+        organization = Organization.objects.get(uuid=env.uuid)
+    except:
+        organization = None
+        env = None
+
+    bank_formset = InitBankFormset(instance=organization, data=request.POST or None)
+
     if request.method == "POST":
         form = InitalForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and bank_formset.is_valid():
             cd = form.cleaned_data
             # Создаем уникальный uuid сервера.
             env = Env()
             env.save()
             # Создаем организацию.
-            organization = Organization(creator=request.user.userprofile.soul, name=cd["org_name"])
+            if not organization:
+                organization = Organization(
+                    creator=request.user.userprofile.soul,
+                )
+            organization.name = cd["org_name"]
+            organization.kpp = cd["kpp"]
             organization.save()
+
+            bank_formset = InitBankFormset(instance=organization, data=request.POST or None)
+            for f in bank_formset.forms:
+                if f.is_valid():
+                    f.save()
+
             # Создаем объект Phone для организации.
             org_phone = cd.get("org_phone", "")
             if org_phone:
@@ -1408,16 +1429,6 @@ def init(request):
             if phone:
                 dir_phone = Phone(soul=person.soul_ptr, f_number=phone)
                 dir_phone.save()
-#            # Роль директора
-#            role = Role(creator=request.user.userprofile.soul, name="Директор", organization=organization)
-#            role.save()
-#            person_role = PersonRole(person=person, role=role, creator=request.user.userprofile.soul)
-#            person_role.save()
-#            # Роль работника
-#            role = Role(creator=request.user.userprofile.soul, name="Работник", organization=organization)
-#            role.save()
-#            person_role = PersonRole(person=person, role=role, creator=request.user.userprofile.soul)
-#            person_role.save()
             # Системный пользователь django.
             user = User.objects.create_user(username=cd["username"], email="", password=cd["password1"])
 #            user.is_staff = True
@@ -1433,10 +1444,83 @@ def init(request):
             dgroups = Group.objects.all()
             for dgr in dgroups:
                 user.groups.add(dgr)
+
+            try:
+                env = Env.objects.get()
+            except Env.MultipleObjectsReturned:
+                Env.objects.all().delete()
+                env = Env.objects.create()
+            env.uuid = organization.uuid
+            env.save()
+
             return redirect("/management/")
     else:
-        form = InitalForm()
-    return direct_to_template(request, "init.html", {"form": form})
+        try:
+            env = Env.objects.get()
+            org = Organization.objects.get(uuid=env.uuid)
+        except:
+            initial = None
+        else:
+            phones = org.phone_set.all()
+            cemeteries = org.cemetery.all()
+            cemetery = cemeteries and cemeteries[0] or None
+            profile = UserProfile.objects.get(user=user)
+            try:
+                person = request.user.userprofile.soul.person
+            except Person.DoesNotExist:
+                person = None
+            initial = dict(
+                org_name = org.name,
+                org_phone = phones and phones[0] or None,
+                post_index = org.location.post_index,
+                new_street = False,
+                new_city = False,
+                new_region = False,
+                new_country = False,
+                house = org.location.house,
+                block = org.location.block,
+                building = org.location.building,
+                flat = org.location.flat,
+                cemetery = cemetery,
+                cem_post_index = cemetery and cemetery.location.post_index,
+                cem_new_street = False,
+                cem_new_city = False,
+                cem_new_region = False,
+                cem_new_country = False,
+                cem_house = cemetery and cemetery.location.house,
+                cem_block = cemetery and cemetery.location.block,
+                cem_building = cemetery and cemetery.location.building,
+                username = request.user.username,
+                last_name = request.user.last_name,
+                first_name = request.user.first_name,
+                patronymic = person and person.patronymic,
+                password1 = '',
+                password2 = '',
+                phone = len(phones) > 1 and phones[1] or None,
+                kpp = org.kpp,
+            )
+            if cemetery and cemetery.location and cemetery.location.street:
+                initial['cem_street'] = cemetery.location.street.name
+                if cemetery.location.street and cemetery.location.street.city:
+                    initial['cem_city'] = cemetery.location.street.city.name
+                    if cemetery.location.street.city and cemetery.location.street.city.region:
+                        initial['cem_region'] = cemetery.location.street.city.region.name
+                        if cemetery.location.street.city.region and cemetery.location.street.city.region.country:
+                            initial['cem_country'] = cemetery.location.street.city.region.country.name
+            if org and org.location and org.location.street:
+                initial['street'] = org.location.street.name
+                if org.location.street and org.location.street.city:
+                    initial['city'] = org.location.street.city.name
+                    if org.location.street.city and org.location.street.city.region:
+                        initial['region'] = org.location.street.city.region.name
+                        if org.location.street.city.region and org.location.street.city.region.country:
+                            initial['country'] = org.location.street.city.region.country.name
+
+        form = InitalForm(initial = initial)
+    return direct_to_template(request, "init.html", {
+        "form": form,
+        "bank_formset": bank_formset,
+    })
 
 
 @login_required

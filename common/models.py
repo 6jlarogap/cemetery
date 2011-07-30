@@ -286,8 +286,10 @@ class Organization(Soul):
     kpp = models.CharField(u"КПП", max_length=9, blank=True)                                     # КПП
     name = models.CharField(u"Краткое название организации", max_length=99)                      # Название краткое
     full_name = models.CharField(u"Полное название организации", max_length=255, null=True)      # Название полное
+
     def __unicode__(self):
         return self.name[:24]
+
     class Meta:
         verbose_name = (u'юр. лицо')
         verbose_name_plural = (u'юр. лица')
@@ -372,12 +374,15 @@ class Cemetery(models.Model):
     creator = models.ForeignKey(Soul)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     last_sync_date = models.DateTimeField(u"Дата последней синхронизации", default=datetime.datetime(2000, 1, 1, 0, 0))
+
     class Meta:
         #ordering = ['name']
         verbose_name = (u'кладбище')
         verbose_name_plural = (u'кладбища')
+
     def __unicode__(self):
         return "%s(%s)" % (self.name[:24], self.organization.name[:24])
+
     def save(self, *args, **kwargs):
         self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)
         super(Cemetery, self).save(*args, **kwargs)
