@@ -696,6 +696,11 @@ def print_burial(request, uuid):
     payment_form = OrderPaymentForm(instance=burial, data=request.POST or None, )
     positions_fs = OrderPositionsFormset(initial=positions, data=request.POST or None, )
     print_form = PrintOptionsForm(data=request.POST or None, )
+    try:
+        env = Env.objects.get()
+        org = Organization.objects.get(uuid=env.uuid)
+    except (Env.DoesNotExist, Organization.DoesNotExist):
+        org = None
 
     if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
         for f in positions_fs.forms:
@@ -729,12 +734,14 @@ def print_burial(request, uuid):
             return direct_to_template(request, 'reports/spravka.html', {
                 'burial': burial,
                 'now': datetime.datetime.now(),
+                'org': org,
             })
 
         if print_form.cleaned_data.get('dogovor'):
             return direct_to_template(request, 'reports/dogovor.html', {
                 'burial': burial,
                 'now': datetime.datetime.now(),
+                'org': org,
             })
 
         return direct_to_template(request, 'reports/act.html', {
@@ -744,6 +751,7 @@ def print_burial(request, uuid):
             'catafalque': print_form.cleaned_data.get('catafalque'),
             'graving': print_form.cleaned_data.get('graving'),
             'now': datetime.datetime.now(),
+            'org': org,
         })
 
     return direct_to_template(request, 'burial_print.html', {
