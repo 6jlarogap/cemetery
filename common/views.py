@@ -322,7 +322,7 @@ def journal(request):
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=Phone.objects.none())
 
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
-    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid() and id_valid
+    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid() and cert_form.is_valid() and id_valid
     responsible_valid = request.GET.get('responsible_myself') or responsible_form.is_valid()
 
     duplicates = []
@@ -352,6 +352,10 @@ def journal(request):
             place.area = cd["area"]
             place.row = cd["row"]
             place.seat = cd["seat"]
+            if cd["burial_date"] < datetime.date.today() and (not cd["rooms"] or cd["rooms"] == 1):
+                place.rooms = place.count_burials() + 1
+            else:
+                place.rooms = cd["rooms"]
             place.soul = cd["cemetery"].organization.soul_ptr
             place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
             place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
@@ -447,7 +451,7 @@ def journal(request):
                 of.comment = cd["file1_comment"]
             of.save()
 
-        if cd.get('certificate_number'):
+        if cert_form.cleaned_data.get('s_number'):
             ds = cert_form.save(commit=False)
             ds.soul_id=new_burial.person.pk
             ds.save()
@@ -499,6 +503,8 @@ def edit_burial(request, uuid):
         'area': burial.product.place.area,
         'row': burial.product.place.row,
         'seat': burial.product.place.seat,
+        'rooms': burial.product.place.rooms,
+        'rooms_free': burial.product.place.rooms_free,
         'customer_last_name': burial.customer.person.last_name,
         'customer_first_name': burial.customer.person.first_name,
         'customer_patronymic': burial.customer.person.patronymic,
@@ -539,7 +545,7 @@ def edit_burial(request, uuid):
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=burial.customer.phone_set.all())
 
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
-    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid() and id_valid
+    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid() and cert_form.is_valid() and id_valid
     responsible_valid = request.GET.get('responsible_myself') or responsible_form.is_valid()
 
     if request.method == "POST" and forms_valid and responsible_valid:
@@ -550,6 +556,7 @@ def edit_burial(request, uuid):
         place.area = cd["area"]
         place.row = cd["row"]
         place.seat = cd["seat"]
+        place.rooms = cd["rooms"]
         place.soul = cd["cemetery"].organization.soul_ptr
         place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
         place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
@@ -658,7 +665,7 @@ def edit_burial(request, uuid):
                 of.comment = cd["file1_comment"]
             of.save()
 
-        if cd.get('certificate_number'):
+        if cert_form.cleaned_data.get('s_number'):
             ds = cert_form.save(commit=False)
             ds.soul_id = new_burial.person.pk
             ds.save()

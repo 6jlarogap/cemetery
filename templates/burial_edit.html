@@ -328,12 +328,17 @@ $(function(){
                 <td  id="free_form">{{ form.area.label_tag }}</td>
                 <td  id="free_form">{{ form.row.label_tag }}</td>
                 <td  id="free_form">{{ form.seat.label_tag }}</td>
+                <td  id="free_form">{{ form.rooms.label_tag }}</td>
             </tr>
             <tr>
                 {% if user|in_group:"edit_burial" %}
                     <td  id="free_form">{{ form.area.errors }}{{ form.area }}</td>
                     <td  id="free_form">{{ form.row.errors }}{{ form.row }}</td>
                     <td  id="free_form">{{ form.seat.errors }}{{ form.seat }}</td>
+                    <td  id="free_form">
+                        {{ form.rooms.errors }}{{ form.rooms }}<br/>
+                        {{ burial.product.place.rooms_occupied }} занято/{{ burial.product.place.rooms_free }} своб.
+                    </td>
                 {% else %}
                     <td  id="free_form">{{ burial.product.place.area }}</td>
                     <td  id="free_form">{{ burial.product.place.row }}</td>

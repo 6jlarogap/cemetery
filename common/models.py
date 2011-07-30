@@ -469,6 +469,10 @@ class Place(Product):
     gps_x = models.FloatField(u"Координата X", blank=True, null=True)  # GPS X-ось.
     gps_y = models.FloatField(u"Координата Y", blank=True, null=True)  # GPS Y-ось.
     gps_z = models.FloatField(u"Координата Z", blank=True, null=True)  # GPS Z-ось.
+
+    rooms = models.PositiveIntegerField(u"Мест в ограде", default=1, blank=True)
+    rooms_free = models.PositiveIntegerField(u"Мест в ограде свободно", default=1, blank=True)
+    
     creator = models.ForeignKey(Soul, verbose_name=u"Создатель записи")  # Создатель записи.
     date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True)  # Дата создания записи.
 
@@ -494,6 +498,21 @@ class Place(Product):
             current_seat = y + '0001'
         self.seat = str(current_seat)
         return self.seat
+
+    @property
+    def rooms_occupied(self):
+        return (self.rooms or 0) - (self.rooms_free or 0)
+
+    def count_burials(self):
+        siblings = Burial.objects.filter(
+            product__place__cemetery = self.cemetery,
+            product__place__area = self.area,
+            product__place__row = self.row,
+            product__place__seat = self.seat,
+            exhumated_date__isnull = True,
+            is_trash = False,
+        )
+        return siblings.count()
 
     def __unicode__(self):
         return  '%s, %s, %s (%s)' % (self.area, self.row, self.seat,
@@ -627,9 +646,14 @@ class Burial(Order):
             current_num = int(float(max_num)) + 1
         else:
             current_num = y + '0001'
-        print 'generate_account_number', y, max_num, max_num.startswith(y), current_num
         self.account_book_n = str(current_num)
         return self.account_book_n
+
+def recount_free_rooms(sender, instance, **kwargs):
+    place = instance.product.place
+    place.rooms_free = max(0, place.rooms - place.count_burials())
+    place.save()
+models.signals.post_save.connect(recount_free_rooms, sender=Burial)
 
 class Burial1(Order): # Захоронения
     person = models.ForeignKey(Person)  # Похороненный.
