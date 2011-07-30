@@ -55,7 +55,12 @@
 //        highlight: false,
         max: 16
     });
+
+    $('input[name=print]').click(function() {
+        $('#mainform').attr('target', '_blank');
+        window.setTimeout("$('#mainform').attr('target', '');", 100);
     })
+})
 
 </script>
 {% endblock %}
@@ -155,7 +160,9 @@
     </tr>
     -->
 </table>
-<input type="submit" value="Искать" />&nbsp;&nbsp;<input type="button" value="Сброс" onClick="parent.location='/'" />
+<input type="submit" value="Искать" />&nbsp;&nbsp;
+<input type="submit" name="print" value="Распечатать все" />&nbsp;&nbsp;
+<input type="button" value="Сброс" onClick="parent.location='/'" />&nbsp;&nbsp;
 <table width="100%" border="1">
     <caption style="background:#2D992D;">
         <font color="#FFD700">&nbsp;{{ obj_nr }}</font> записей&nbsp;&nbsp;|&nbsp;&nbsp;по {{ form.per_page }} записей на странице&nbsp;&nbsp;|&nbsp;&nbsp;сортировка по {{ form.records_order_by }}&nbsp;&nbsp;|

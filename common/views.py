@@ -257,13 +257,12 @@ def main_page(request):
                 redirect_str = "%s&records_order_by=%s" % (redirect_str, ob)
             return redirect(redirect_str)
 
-    to_print = request.GET.get("print", "")
-    if to_print == u"1":
+    if request.GET.get("print"):
         result = {"form": form,
-                  "object_list": burials,
-                  "obj_nr": len(burials),
-                  "TEMPLATE": "burials_print.html",
-                  }
+          "object_list": burials,
+          "obj_nr": len(burials),
+          "TEMPLATE": "burials_print.html",
+        }
     else:
         result = {"form": form,
                   "object_list": burials,
@@ -369,11 +368,6 @@ def journal(request):
         new_person.death_date = cd.get("birth_date") or None
         new_person.save()
 
-        if id_form.is_valid():
-            personid = id_form.save(commit=False)
-            personid.person = new_person
-            personid.save()
-
         # Create new Person for customer.
         customer = Person(creator=request.user.userprofile.soul)
         customer.last_name = cd["customer_last_name"].capitalize()
@@ -384,6 +378,11 @@ def journal(request):
 
         customer.location = location_form.save()
         customer.save()
+
+        if id_form.is_valid():
+            personid = id_form.save(commit=False)
+            personid.person = customer
+            personid.save()
 
         # Customer phone
         if phoneset.is_valid():
@@ -537,8 +536,8 @@ def edit_burial(request, uuid):
     cert_form = CertificateForm(prefix='certificate', data=request.POST or None, instance=dc)
 
     try:
-        id = burial.person.personid
-    except PersonID.DoesNotExist:
+        id = burial.customer.person.personid
+    except (Person.DoesNotExist, PersonID.DoesNotExist):
         id = None
     id_form = IDForm(prefix='id', data=request.POST or None, instance=id)
 
@@ -571,11 +570,6 @@ def edit_burial(request, uuid):
         new_person.death_date = cd.get("birth_date") or None
         new_person.save()
 
-        if id_form.is_valid():
-            id = id_form.save(commit=False)
-            id.person = new_person
-            id.save()
-
         # Create new Person for customer.
         customer = burial.customer.person
         customer.last_name = cd["customer_last_name"].capitalize()
@@ -586,6 +580,11 @@ def edit_burial(request, uuid):
 
         customer.location = location_form.save()
         customer.save()
+
+        if id_form.is_valid():
+            id = id_form.save(commit=False)
+            id.person = customer
+            id.save()
 
         # Customer phone
         if phoneset.is_valid():
@@ -643,6 +642,7 @@ def edit_burial(request, uuid):
         new_burial.save()
 
         new_burial.person.location = registration_form.save()
+        print 'new_burial.person.location', new_burial.person.location, registration_form.cleaned_data
 
         if not new_burial.account_book_n:
             num = new_burial.generate_account_number()

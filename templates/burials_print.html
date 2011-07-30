@@ -2,28 +2,25 @@
     <head>
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Печать</title>
+        <style>
+            table, td { border: 1px #ccc solid; border-collapse: collapse; }
+        </style>
     </head>
     <body>
-        <table width="100%" border="1">
+        <table width="100%" style="">
             <thead>
                 <td>N в кн</td>
                 <td>ФИО</td>
-<!--
-                <td>Имя</td>
-                <td>Отч</td>
--->
-                <td>Дата захор</td>
+                <td>Даты</td>
+                <td>Св-во</td>
+                <td>Время</td>
                 <td>Уч</td>
                 <td>Ряд</td>
                 <td>Мог</td>
                 <td>Кладб</td>
-                <td>Услуга</td>
+                <td>Резерв (зан/св)</td>
+                <td>Адрес</td>
                 <td>Заказчик</td>
-                <td>Телефон</td>
-                <td>Комментарий</td>
-{#                <td>#}
-{#                    Опции#}
-{#                </td>#}
             </thead>
     	{% for b in object_list %}
 	    <tr>
@@ -33,34 +30,49 @@
 	            {{ b.person.first_name }}
 	            {{ b.person.patronymic }}
 	        </td>
-	        <td>{{ b.date_fact|date:"d.m.Y" }}</td>
-	        <td>{{ b.product.place.area }}</td>
+	        <td>
+                {{ b.person.birth_date|date:"d.m.Y"|default:"н.д." }} &ndash; {{ b.person.death_date|date:"d.m.Y"|default:"н.д." }}<br/>
+                {{ b.date_fact|date:"d.m.Y" }}
+            </td>
+            <td>
+                {% if b.person.deathcertificate %}
+                    {{ b.person.deathcertificate.series }}
+                    {{ b.person.deathcertificate.s_number }}
+                    {{ b.person.deathcertificate.release_date|date:"d.m.Y" }}
+                    {{ b.person.deathcertificate.zags|default:"" }}
+                {% endif %}
+            </td>
+            <td>{{ b.date_fact|date:"H:i" }}</td>
+            <td>{{ b.product.place.area }}</td>
 	        <td>{{ b.product.place.row }}</td>
 	        <td>{{ b.product.place.seat }}</td>
 	        <td>{{ b.product.place.cemetery.name }}</td>
-	        <td>{{ b.operation.op_type }}</td>
-	        {% if b.customer.person.last_name %}
-		        <td>
-		            {{ b.customer.person.last_name }}
+	        <td>{{ b.product.place.rooms_occupied|default:1 }}/{{ b.product.place.rooms_free }}</td>
+            <td>{{ b.customer.person.location }}</td>
+	        {% if b.responsible_agent %}
+                <td>
+                    {{ b.responsible_agent.organization }}<br/>
+                    {{ b.responsible_agent.person }}
+                </td>
+	        {% else %}
+                <td>
+                    {{ b.customer.person.last_name }}
                     {{ b.customer.person.first_name }}
                     {{ b.customer.person.patronymic }}
-		        </td>
-	        {% else %}
-    	        <td>&nbsp;</td>
-	        {% endif %}
-            <td>
-                {% for phone in b.customer.phone_set.all  %}
-                {{ phone.f_number }}
-                <br>
-                {%endfor%}
-            </td>
-	        <td>
-                {% for comment in b.ordercomments_set.all %}
-                    {{ comment.comment }}
-                {% endfor %}
-	        </td>
+                    {% if b.customer.person.personid %}
+                        <br/>
+                        {{ b.customer.person.personid.id_type }}
+                        {{ b.customer.person.personid.series }}
+                        {{ b.customer.person.personid.number }}
+                    {% endif %}
+                 </td>
+ 	        {% endif %}
             </tr>
             {% endfor %}
         </table>
     </body>
+
+    <script type="text/javascript">
+        window.print();
+    </script>
 </html>
