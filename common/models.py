@@ -607,12 +607,13 @@ class Burial(Order):
 
     def generate_account_number(self):
         y = str(datetime.date.today().year)
-        siblings = Burial.objects.filter(product__place__cemetery=self.product.place.cemetery)
+        siblings = Burial.objects.filter(product__place__cemetery=self.product.place.cemetery, account_book_n__istartswith=y)
         max_num = str(siblings.aggregate(models.Max('account_book_n'))['account_book_n__max']) or ''
         if max_num.startswith(y):
             current_num = int(float(max_num)) + 1
         else:
             current_num = y + '0001'
+        print 'generate_account_number', y, max_num, max_num.startswith(y), current_num
         self.account_book_n = str(current_num)
         return self.account_book_n
 
