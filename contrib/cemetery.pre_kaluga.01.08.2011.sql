@@ -9,6 +9,15 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
 
+--
+-- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: postgres
+--
+
+CREATE OR REPLACE PROCEDURAL LANGUAGE plpgsql;
+
+
+ALTER PROCEDURAL LANGUAGE plpgsql OWNER TO postgres;
+
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -34,8 +43,8 @@ ALTER TABLE public.auth_group OWNER TO postgres;
 CREATE SEQUENCE auth_group_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -75,8 +84,8 @@ ALTER TABLE public.auth_group_permissions OWNER TO postgres;
 CREATE SEQUENCE auth_group_permissions_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -116,8 +125,8 @@ ALTER TABLE public.auth_message OWNER TO postgres;
 CREATE SEQUENCE auth_message_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -158,8 +167,8 @@ ALTER TABLE public.auth_permission OWNER TO postgres;
 CREATE SEQUENCE auth_permission_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -220,8 +229,8 @@ ALTER TABLE public.auth_user_groups OWNER TO postgres;
 CREATE SEQUENCE auth_user_groups_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -248,8 +257,8 @@ SELECT pg_catalog.setval('auth_user_groups_id_seq', 1, false);
 CREATE SEQUENCE auth_user_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -289,8 +298,8 @@ ALTER TABLE public.auth_user_user_permissions OWNER TO postgres;
 CREATE SEQUENCE auth_user_user_permissions_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -311,66 +320,6 @@ SELECT pg_catalog.setval('auth_user_user_permissions_id_seq', 1, false);
 
 
 --
--- Name: common_agent; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE common_agent (
-    uuid character varying(36) NOT NULL,
-    person_id character varying(36) NOT NULL,
-    organization_id character varying(36) NOT NULL,
-    dover_number character varying(255),
-    dover_date date,
-    dover_expire date
-);
-
-
-ALTER TABLE public.common_agent OWNER TO postgres;
-
---
--- Name: common_bankaccount; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE common_bankaccount (
-    id integer NOT NULL,
-    organization_id character varying(36) NOT NULL,
-    rs character varying(20) NOT NULL,
-    ks character varying(20) NOT NULL,
-    bik character varying(9) NOT NULL,
-    bankname character varying(64) NOT NULL
-);
-
-
-ALTER TABLE public.common_bankaccount OWNER TO postgres;
-
---
--- Name: common_bankaccount_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE common_bankaccount_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_bankaccount_id_seq OWNER TO postgres;
-
---
--- Name: common_bankaccount_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE common_bankaccount_id_seq OWNED BY common_bankaccount.id;
-
-
---
--- Name: common_bankaccount_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('common_bankaccount_id_seq', 1, false);
-
-
---
 -- Name: common_burial; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -378,8 +327,7 @@ CREATE TABLE common_burial (
     order_ptr_id character varying(36) NOT NULL,
     person_id character varying(36) NOT NULL,
     account_book_n character varying(16) NOT NULL,
-    last_sync_date timestamp with time zone NOT NULL,
-    exhumated_date timestamp with time zone
+    last_sync_date timestamp with time zone NOT NULL
 );
 
 
@@ -390,7 +338,7 @@ ALTER TABLE public.common_burial OWNER TO postgres;
 --
 
 CREATE VIEW common_burial1 AS
-    SELECT common_burial.order_ptr_id, common_burial.person_id, common_burial.account_book_n, common_burial.last_sync_date, "substring"((common_burial.account_book_n)::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s1, to_number(CASE WHEN ("substring"((common_burial.account_book_n)::text, '[^[:digit:]]*([[:digit:]]*).*'::text) = ''::text) THEN '9999999999'::text ELSE "substring"((common_burial.account_book_n)::text, '[^[:digit:]]*([[:digit:]]*).*'::text) END, '9999999999'::text) AS s2, "substring"((common_burial.account_book_n)::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s3 FROM common_burial;
+    SELECT common_burial.order_ptr_id, common_burial.person_id, common_burial.account_book_n, common_burial.last_sync_date, "substring"((common_burial.account_book_n)::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s1, to_number(CASE WHEN substring(account_book_n FROM '[^[:digit:]]*([[:digit:]]*).*')='' THEN '9999999999' ELSE substring(account_book_n FROM '[^[:digit:]]*([[:digit:]]*).*') END, '9999999999') AS s2, "substring"((common_burial.account_book_n)::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s3 FROM common_burial;
 
 
 ALTER TABLE public.common_burial1 OWNER TO postgres;
@@ -419,10 +367,7 @@ ALTER TABLE public.common_cemetery OWNER TO postgres;
 CREATE TABLE common_deathcertificate (
     uuid character varying(36) NOT NULL,
     soul_id character varying(36) NOT NULL,
-    s_number character varying(30) NOT NULL,
-    series character varying(30),
-    release_date date,
-    zags_id integer
+    s_number character varying(30) NOT NULL
 );
 
 
@@ -460,8 +405,8 @@ ALTER TABLE public.common_env OWNER TO postgres;
 CREATE SEQUENCE common_env_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -519,46 +464,6 @@ CREATE TABLE common_georegion (
 
 
 ALTER TABLE public.common_georegion OWNER TO postgres;
-
---
--- Name: common_iddocumenttype; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE common_iddocumenttype (
-    id integer NOT NULL,
-    name character varying(255) NOT NULL
-);
-
-
-ALTER TABLE public.common_iddocumenttype OWNER TO postgres;
-
---
--- Name: common_iddocumenttype_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE common_iddocumenttype_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_iddocumenttype_id_seq OWNER TO postgres;
-
---
--- Name: common_iddocumenttype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE common_iddocumenttype_id_seq OWNED BY common_iddocumenttype.id;
-
-
---
--- Name: common_iddocumenttype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('common_iddocumenttype_id_seq', 1, false);
-
 
 --
 -- Name: common_impbur; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -620,8 +525,7 @@ CREATE TABLE common_location (
     flat character varying(16) NOT NULL,
     gps_x double precision,
     gps_y double precision,
-    gps_z double precision,
-    info text
+    gps_z double precision
 );
 
 
@@ -682,10 +586,7 @@ CREATE TABLE common_order (
     operation_id character varying(36) NOT NULL,
     is_trash boolean NOT NULL,
     creator_id character varying(36) NOT NULL,
-    date_of_creation timestamp with time zone NOT NULL,
-    responsible_customer_id character varying(36),
-    responsible_agent_id character varying(36),
-    payment_type character varying(16) NOT NULL
+    date_of_creation timestamp with time zone NOT NULL
 );
 
 
@@ -723,46 +624,14 @@ CREATE TABLE common_orderfiles (
 ALTER TABLE public.common_orderfiles OWNER TO postgres;
 
 --
--- Name: common_orderposition; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE common_orderposition (
-    uuid character varying(36) NOT NULL,
-    order_id character varying(36) NOT NULL,
-    order_product_id character varying(36) NOT NULL,
-    count numeric(10,2) NOT NULL,
-    price numeric(10,2) NOT NULL
-);
-
-
-ALTER TABLE public.common_orderposition OWNER TO postgres;
-
---
--- Name: common_orderproduct; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE common_orderproduct (
-    uuid character varying(36) NOT NULL,
-    name character varying(255) NOT NULL,
-    "default" boolean DEFAULT false NOT NULL,
-    measure character varying(50) NOT NULL,
-    price numeric(10,2) NOT NULL
-);
-
-
-ALTER TABLE public.common_orderproduct OWNER TO postgres;
-
---
 -- Name: common_organization; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE common_organization (
     soul_ptr_id character varying(36) NOT NULL,
-    ogrn character varying(13) NOT NULL,
-    inn character varying(12) NOT NULL,
-    name character varying(99) NOT NULL,
-    kpp character varying(9) NOT NULL,
-    full_name character varying(255)
+    ogrn character varying(15) NOT NULL,
+    inn character varying(15) NOT NULL,
+    name character varying(99) NOT NULL
 );
 
 
@@ -781,51 +650,6 @@ CREATE TABLE common_person (
 
 
 ALTER TABLE public.common_person OWNER TO postgres;
-
---
--- Name: common_personid; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE common_personid (
-    id integer NOT NULL,
-    person_id character varying(36) NOT NULL,
-    id_type_id integer NOT NULL,
-    series character varying(4),
-    number character varying(16) NOT NULL,
-    who character varying(255),
-    "when" date NOT NULL
-);
-
-
-ALTER TABLE public.common_personid OWNER TO postgres;
-
---
--- Name: common_personid_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE common_personid_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_personid_id_seq OWNER TO postgres;
-
---
--- Name: common_personid_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE common_personid_id_seq OWNED BY common_personid.id;
-
-
---
--- Name: common_personid_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('common_personid_id_seq', 1, false);
-
 
 --
 -- Name: common_personrole; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -865,21 +689,27 @@ CREATE TABLE common_place (
     product_ptr_id character varying(36) NOT NULL,
     cemetery_id character varying(36) NOT NULL,
     area character varying(9) NOT NULL,
-    "row" character varying(9),
+    "row" character varying(9) NOT NULL,
     seat character varying(9) NOT NULL,
     gps_x double precision,
     gps_y double precision,
     gps_z double precision,
     creator_id character varying(36) NOT NULL,
-    date_of_creation timestamp with time zone NOT NULL,
-    rooms integer NOT NULL,
-    rooms_free integer NOT NULL,
-    CONSTRAINT common_place_rooms_check CHECK ((rooms >= 0)),
-    CONSTRAINT common_place_rooms_free_check CHECK ((rooms_free >= 0))
+    date_of_creation timestamp with time zone NOT NULL
 );
 
 
 ALTER TABLE public.common_place OWNER TO postgres;
+
+--
+-- Name: common_place1; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW common_place1 AS
+    SELECT common_place.product_ptr_id, common_place.cemetery_id, common_place.area, common_place."row", common_place.seat, common_place.gps_x, common_place.gps_y, common_place.gps_z, common_place.creator_id, common_place.date_of_creation, "substring"((common_place.area)::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s1, to_number(CASE WHEN substring(area FROM '[^[:digit:]]*([[:digit:]]*).*')='' THEN '9999999999' ELSE substring(area FROM '[^[:digit:]]*([[:digit:]]*).*') END, '9999999999') AS s2, "substring"((common_place.area)::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s3, "substring"((common_place."row")::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s4, to_number(CASE WHEN substring(row FROM '[^[:digit:]]*([[:digit:]]*).*')='' THEN '9999999999' ELSE substring(row FROM '[^[:digit:]]*([[:digit:]]*).*') END, '9999999999') AS s5, "substring"((common_place."row")::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s6, "substring"((common_place.seat)::text, '([^[:digit:]]*)[[:digit:]]*.*'::text) AS s7, to_number(CASE WHEN substring(seat FROM '[^[:digit:]]*([[:digit:]]*).*')='' THEN '9999999999' ELSE substring(seat FROM '[^[:digit:]]*([[:digit:]]*).*') END, '9999999999') AS s8, "substring"((common_place.seat)::text, '[^[:digit:]]*[[:digit:]]*(.*)'::text) AS s9 FROM common_place;
+
+
+ALTER TABLE public.common_place1 OWNER TO postgres;
 
 --
 -- Name: common_product; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -973,8 +803,8 @@ ALTER TABLE public.common_role_djgroups OWNER TO postgres;
 CREATE SEQUENCE common_role_djgroups_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1071,46 +901,6 @@ CREATE TABLE common_userprofile (
 ALTER TABLE public.common_userprofile OWNER TO postgres;
 
 --
--- Name: common_zags; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE common_zags (
-    id integer NOT NULL,
-    name character varying(255) NOT NULL
-);
-
-
-ALTER TABLE public.common_zags OWNER TO postgres;
-
---
--- Name: common_zags_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE common_zags_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_zags_id_seq OWNER TO postgres;
-
---
--- Name: common_zags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE common_zags_id_seq OWNED BY common_zags.id;
-
-
---
--- Name: common_zags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('common_zags_id_seq', 1, false);
-
-
---
 -- Name: django_admin_log; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -1136,8 +926,8 @@ ALTER TABLE public.django_admin_log OWNER TO postgres;
 CREATE SEQUENCE django_admin_log_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1178,8 +968,8 @@ ALTER TABLE public.django_content_type OWNER TO postgres;
 CREATE SEQUENCE django_content_type_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1232,8 +1022,8 @@ ALTER TABLE public.django_site OWNER TO postgres;
 CREATE SEQUENCE django_site_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1274,8 +1064,8 @@ ALTER TABLE public.south_migrationhistory OWNER TO postgres;
 CREATE SEQUENCE south_migrationhistory_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MAXVALUE
     NO MINVALUE
+    NO MAXVALUE
     CACHE 1;
 
 
@@ -1292,7 +1082,7 @@ ALTER SEQUENCE south_migrationhistory_id_seq OWNED BY south_migrationhistory.id;
 -- Name: south_migrationhistory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('south_migrationhistory_id_seq', 18, true);
+SELECT pg_catalog.setval('south_migrationhistory_id_seq', 2, true);
 
 
 --
@@ -1348,13 +1138,6 @@ ALTER TABLE auth_user_user_permissions ALTER COLUMN id SET DEFAULT nextval('auth
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE common_bankaccount ALTER COLUMN id SET DEFAULT nextval('common_bankaccount_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
 ALTER TABLE common_env ALTER COLUMN id SET DEFAULT nextval('common_env_id_seq'::regclass);
 
 
@@ -1362,28 +1145,7 @@ ALTER TABLE common_env ALTER COLUMN id SET DEFAULT nextval('common_env_id_seq'::
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE common_iddocumenttype ALTER COLUMN id SET DEFAULT nextval('common_iddocumenttype_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE common_personid ALTER COLUMN id SET DEFAULT nextval('common_personid_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
 ALTER TABLE common_role_djgroups ALTER COLUMN id SET DEFAULT nextval('common_role_djgroups_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE common_zags ALTER COLUMN id SET DEFAULT nextval('common_zags_id_seq'::regclass);
 
 
 --
@@ -1686,27 +1448,6 @@ COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
 127	Can add media	43	add_media
 128	Can change media	43	change_media
 129	Can delete media	43	delete_media
-130	Can add ЗАГС	44	add_zags
-131	Can change ЗАГС	44	change_zags
-132	Can delete ЗАГС	44	delete_zags
-133	Can add bank account	45	add_bankaccount
-134	Can change bank account	45	change_bankaccount
-135	Can delete bank account	45	delete_bankaccount
-136	Can add agent	46	add_agent
-137	Can change agent	46	change_agent
-138	Can delete agent	46	delete_agent
-139	Can add тип продукта для счет-заказа	47	add_orderproduct
-140	Can change тип продукта для счет-заказа	47	change_orderproduct
-141	Can delete тип продукта для счет-заказа	47	delete_orderproduct
-142	Can add позиция счет-заказа	48	add_orderposition
-143	Can change позиция счет-заказа	48	change_orderposition
-144	Can delete позиция счет-заказа	48	delete_orderposition
-145	Can add id document type	49	add_iddocumenttype
-146	Can change id document type	49	change_iddocumenttype
-147	Can delete id document type	49	delete_iddocumenttype
-148	Can add person id	50	add_personid
-149	Can change person id	50	change_personid
-150	Can delete person id	50	delete_personid
 \.
 
 
@@ -1715,11 +1456,7 @@ COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY auth_user (id, username, first_name, last_name, email, password, is_staff, is_active, is_superuser, last_login, date_joined) FROM stdin;
-3	irina	Ирина	Тушинская		sha1$65725$91ff9b646bf4582cdd6bf8dd2b0a9d31596db519	f	t	f	2011-03-02 12:33:30.859265+03	2011-03-02 12:33:30.859265+03
-1	soul			pythonprogrammer@mail.ru	sha1$4577d$f5939aa4345e986d4b0d2cb9ab3799d032720636	t	t	t	2011-03-02 13:52:42.442178+03	2011-01-28 15:43:24.389277+03
-2	anna	Анна	Гриб		sha1$e78b1$88d3c27077ffbea0126607f8666e73123edd2447	f	t	f	2011-03-02 14:08:07.619695+03	2011-03-02 12:25:52.429637+03
-4	admin			ilvar@mail.ru	sha1$01bdd$bb841b56e79421462383a1e4af621ce89888b2d7	t	t	t	2011-07-30 11:42:40.319889+04	2011-07-23 15:57:02.544172+04
-6	ilvar	Ilvar	Ilvar		sha1$ec69b$857c59efef2e586134d3ba5a854d8686e3f4cf70	f	t	f	2011-07-30 22:09:12.718339+04	2011-07-30 22:09:12.718339+04
+1	soul			pythonprogrammer@mail.ru	sha1$4577d$f5939aa4345e986d4b0d2cb9ab3799d032720636	t	t	t	2011-02-04 20:34:13.612313+03	2011-01-28 15:43:24.389277+03
 \.
 
 
@@ -1728,42 +1465,6 @@ COPY auth_user (id, username, first_name, last_name, email, password, is_staff, 
 --
 
 COPY auth_user_groups (id, user_id, group_id) FROM stdin;
-1	2	2
-2	2	3
-3	2	4
-4	2	5
-5	2	6
-6	2	7
-7	2	8
-8	2	9
-9	2	10
-10	2	11
-11	2	12
-12	2	1
-13	3	2
-14	3	3
-15	3	4
-16	3	5
-17	3	6
-18	3	7
-19	3	8
-20	3	9
-21	3	10
-22	3	11
-23	3	12
-24	3	1
-37	6	2
-38	6	3
-39	6	4
-40	6	5
-41	6	6
-42	6	7
-43	6	8
-44	6	9
-45	6	10
-46	6	11
-47	6	12
-48	6	1
 \.
 
 
@@ -1776,26 +1477,10 @@ COPY auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 
 
 --
--- Data for Name: common_agent; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY common_agent (uuid, person_id, organization_id, dover_number, dover_date, dover_expire) FROM stdin;
-\.
-
-
---
--- Data for Name: common_bankaccount; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY common_bankaccount (id, organization_id, rs, ks, bik, bankname) FROM stdin;
-\.
-
-
---
 -- Data for Name: common_burial; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_burial (order_ptr_id, person_id, account_book_n, last_sync_date, exhumated_date) FROM stdin;
+COPY common_burial (order_ptr_id, person_id, account_book_n, last_sync_date) FROM stdin;
 \.
 
 
@@ -1811,7 +1496,7 @@ COPY common_cemetery (uuid, organization_id, location_id, name, creator_id, date
 -- Data for Name: common_deathcertificate; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_deathcertificate (uuid, soul_id, s_number, series, release_date, zags_id) FROM stdin;
+COPY common_deathcertificate (uuid, soul_id, s_number) FROM stdin;
 \.
 
 
@@ -13838,14 +13523,6 @@ a86c7b8a-303c-11e0-b70a-485b39c96dfe	a76178bc-303c-11e0-b70a-485b39c96dfe	Яма
 
 
 --
--- Data for Name: common_iddocumenttype; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY common_iddocumenttype (id, name) FROM stdin;
-\.
-
-
---
 -- Data for Name: common_impbur; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -13865,7 +13542,7 @@ COPY common_impcem (cem_pk, name, country, region, city, street, post_index, hou
 -- Data for Name: common_location; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_location (uuid, post_index, street_id, house, block, building, flat, gps_x, gps_y, gps_z, info) FROM stdin;
+COPY common_location (uuid, post_index, street_id, house, block, building, flat, gps_x, gps_y, gps_z) FROM stdin;
 \.
 
 
@@ -13903,7 +13580,7 @@ c9b7a6b5-12a5-4da5-8242-b9e556bcc6e3	Захоронение детское
 -- Data for Name: common_order; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_order (uuid, responsible_id, customer_id, doer_id, date_plan, date_fact, product_id, operation_id, is_trash, creator_id, date_of_creation, responsible_customer_id, responsible_agent_id, payment_type) FROM stdin;
+COPY common_order (uuid, responsible_id, customer_id, doer_id, date_plan, date_fact, product_id, operation_id, is_trash, creator_id, date_of_creation) FROM stdin;
 \.
 
 
@@ -13924,26 +13601,10 @@ COPY common_orderfiles (uuid, order_id, ofile, comment, creator_id, date_of_crea
 
 
 --
--- Data for Name: common_orderposition; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY common_orderposition (uuid, order_id, order_product_id, count, price) FROM stdin;
-\.
-
-
---
--- Data for Name: common_orderproduct; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY common_orderproduct (uuid, name, "default", measure, price) FROM stdin;
-\.
-
-
---
 -- Data for Name: common_organization; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_organization (soul_ptr_id, ogrn, inn, name, kpp, full_name) FROM stdin;
+COPY common_organization (soul_ptr_id, ogrn, inn, name) FROM stdin;
 \.
 
 
@@ -13952,14 +13613,6 @@ COPY common_organization (soul_ptr_id, ogrn, inn, name, kpp, full_name) FROM std
 --
 
 COPY common_person (soul_ptr_id, last_name, first_name, patronymic) FROM stdin;
-\.
-
-
---
--- Data for Name: common_personid; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY common_personid (id, person_id, id_type_id, series, number, who, "when") FROM stdin;
 \.
 
 
@@ -13983,7 +13636,7 @@ COPY common_phone (uuid, soul_id, f_number) FROM stdin;
 -- Data for Name: common_place; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_place (product_ptr_id, cemetery_id, area, "row", seat, gps_x, gps_y, gps_z, creator_id, date_of_creation, rooms, rooms_free) FROM stdin;
+COPY common_place (product_ptr_id, cemetery_id, area, "row", seat, gps_x, gps_y, gps_z, creator_id, date_of_creation) FROM stdin;
 \.
 
 
@@ -14080,14 +13733,6 @@ COPY common_userprofile (user_id, soul_id, default_cemetery_id, default_operatio
 
 
 --
--- Data for Name: common_zags; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY common_zags (id, name) FROM stdin;
-\.
-
-
---
 -- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -14116,14 +13761,6 @@ COPY django_admin_log (id, action_time, user_id, content_type_id, object_id, obj
 22	2011-01-28 15:52:22.923654+03	1	32	732795d6-2add-11e0-8b17-485b39c96dfe	Подзахоронение	1	
 23	2011-01-28 15:52:31.72944+03	1	32	78672a34-2add-11e0-8b17-485b39c96dfe	Захоронение в существующ	1	
 24	2011-01-28 15:52:40.024929+03	1	32	7d58e9ec-2add-11e0-8b17-485b39c96dfe	Захоронение	1	
-25	2011-07-26 17:58:57.003446+04	4	21	67bd84e6-b78f-11e0-ad13-b338c665b496	Нет Аркадий	1	
-26	2011-07-26 18:29:30.661344+04	4	21	67bd84e6-b78f-11e0-ad13-b338c665b496	Нет Аркадий	2	Добавлен agent "Agent object". Добавлен agent "Agent object".
-27	2011-07-28 17:17:52.001017+04	4	47	ff528ae4-b91b-11e0-a1a8-e10d9e11254b	Оформление документов для погребения	1	
-28	2011-07-28 17:18:12.375223+04	4	47	0b77755a-b91c-11e0-a1a8-e10d9e11254b	Рытье могилы	1	
-29	2011-07-28 17:18:47.294529+04	4	47	2047b4c2-b91c-11e0-a1a8-e10d9e11254b	Благоустройство захоронения	1	
-30	2011-07-28 17:19:06.847274+04	4	47	2bef3dea-b91c-11e0-a1a8-e10d9e11254b	Установка венков	1	
-31	2011-07-28 17:19:31.63187+04	4	47	3ab5081e-b91c-11e0-a1a8-e10d9e11254b	Надмогильная табличка	1	
-32	2011-07-30 22:46:12.451472+04	4	49	1	IDDocumentType object	1	
 \.
 
 
@@ -14175,13 +13812,6 @@ COPY django_content_type (id, name, app_label, model) FROM stdin;
 41	imp cem	common	impcem
 42	imp bur	common	impbur
 43	media	common	media
-44	ЗАГС	common	zags
-45	bank account	common	bankaccount
-46	agent	common	agent
-47	тип продукта для счет-заказа	common	orderproduct
-48	позиция счет-заказа	common	orderposition
-49	id document type	common	iddocumenttype
-50	person id	common	personid
 \.
 
 
@@ -14193,13 +13823,6 @@ COPY django_session (session_key, session_data, expire_date) FROM stdin;
 75ee9389679f9db4e9ee5857785c33c1	gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjViYTdhMWYyYzY5ZmNjMTI0ZWYx\nNzc1NjNjNWRmMDUy\n	2011-02-11 15:44:50.499785+03
 13ab3eba13f8071d1e42b90311d4ff8c	gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjViYTdhMWYyYzY5ZmNjMTI0ZWYx\nNzc1NjNjNWRmMDUy\n	2011-02-18 11:56:45.997297+03
 c96909c92e5fb09e5ef4bafa71dc3998	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLAXUu\nZTE5YWE2ZDU4MGYzYzdjOTU2ZjJiOTc5ZGQ0MWMxMjk=\n	2011-02-18 20:34:13.637365+03
-f872a9b356cffe75f091fb87b5031b54	gAJ9cQEoVQp0ZXN0Y29va2llcQJVBndvcmtlZHEDVRJfYXV0aF91c2VyX2JhY2tlbmRxBFUpZGph\nbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxBVUNX2F1dGhfdXNlcl9pZHEG\nSwJ1LjNlNjRlN2MzZDU1ZTg3YzYyN2M4M2MzOTA1NDljY2Fj\n	2011-03-16 14:08:07.70228+03
-58cf4d2111c1de3cba25fd8df0529419	gAJ9cQEuOGU1OTlkODdmZTY3ZjI0YzU4ZTQ2ZDYyZjk1NGI2ZTc=\n	2011-08-06 15:57:10.961702+04
-70664eb33f8ba03d22b21a2808da228b	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLBHUu\nYmJhMTg2NThjMDgyMzYyYzMxNTZmOGM2NjMzMzNlMTI=\n	2011-08-08 00:02:09.204077+04
-46244a445cba02954d40c4a2d1375394	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLBHUu\nYmJhMTg2NThjMDgyMzYyYzMxNTZmOGM2NjMzMzNlMTI=\n	2011-08-08 23:49:09.692741+04
-a2e9a932ebccf04e353ef91ec0426b68	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLBHUu\nYmJhMTg2NThjMDgyMzYyYzMxNTZmOGM2NjMzMzNlMTI=\n	2011-08-11 17:14:35.321806+04
-0a5934b54a7590782a751105e5736ff0	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLBHUu\nYmJhMTg2NThjMDgyMzYyYzMxNTZmOGM2NjMzMzNlMTI=\n	2011-08-12 23:58:28.665218+04
-8b125878d9ce06612ec7a9947ab5b5f4	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLBHUu\nYmJhMTg2NThjMDgyMzYyYzMxNTZmOGM2NjMzMzNlMTI=\n	2011-08-13 11:42:40.443038+04
 \.
 
 
@@ -14218,22 +13841,7 @@ COPY django_site (id, domain, name) FROM stdin;
 
 COPY south_migrationhistory (id, app_name, migration, applied) FROM stdin;
 1	common	0001_initial	2011-02-04 17:32:49.205802+03
-3	common	0002_auto__add_bankaccount__add_field_location_info__add_field_organization	2011-08-01 07:45:15.085983+04
-4	common	0003_auto__chg_field_soul_location__add_unique_soul_location	2011-08-01 07:45:15.600508+04
-5	common	0004_auto__add_field_person_registration_address	2011-08-01 07:45:15.967551+04
-6	common	0005_auto__del_field_person_registration_address	2011-08-01 07:45:16.178499+04
-7	common	0006_death_cert_update	2011-08-01 07:45:16.580045+04
-8	common	0007_zags	2011-08-01 07:45:17.013807+04
-9	common	0008_exhumation	2011-08-01 07:45:17.380589+04
-10	common	0009_responsible_customer	2011-08-01 07:45:18.173972+04
-11	common	0010_agents	2011-08-01 07:45:18.626161+04
-12	common	0011_burial_agents	2011-08-01 07:45:19.653842+04
-13	common	0012_burial_agents_null	2011-08-01 07:45:20.605167+04
-14	common	0013_order_products	2011-08-01 07:45:22.350324+04
-15	common	0014_order_products	2011-08-01 07:45:22.674924+04
-16	common	0015_row_blank	2011-08-01 07:45:23.222861+04
-17	common	0016_person_id	2011-08-01 07:45:23.744223+04
-18	common	0017_free_room	2011-08-01 07:45:25.273061+04
+2	common	0002_auto__chg_field_person_last_name	2011-02-04 17:33:12.734982+03
 \.
 
 
@@ -14342,22 +13950,6 @@ ALTER TABLE ONLY auth_user
 
 
 --
--- Name: common_agent_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY common_agent
-    ADD CONSTRAINT common_agent_pkey PRIMARY KEY (uuid);
-
-
---
--- Name: common_bankaccount_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY common_bankaccount
-    ADD CONSTRAINT common_bankaccount_pkey PRIMARY KEY (id);
-
-
---
 -- Name: common_burial_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -14454,14 +14046,6 @@ ALTER TABLE ONLY common_georegion
 
 
 --
--- Name: common_iddocumenttype_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY common_iddocumenttype
-    ADD CONSTRAINT common_iddocumenttype_pkey PRIMARY KEY (id);
-
-
---
 -- Name: common_impbur_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -14534,22 +14118,6 @@ ALTER TABLE ONLY common_orderfiles
 
 
 --
--- Name: common_orderposition_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY common_orderposition
-    ADD CONSTRAINT common_orderposition_pkey PRIMARY KEY (uuid);
-
-
---
--- Name: common_orderproduct_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY common_orderproduct
-    ADD CONSTRAINT common_orderproduct_pkey PRIMARY KEY (uuid);
-
-
---
 -- Name: common_organization_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -14563,22 +14131,6 @@ ALTER TABLE ONLY common_organization
 
 ALTER TABLE ONLY common_person
     ADD CONSTRAINT common_person_pkey PRIMARY KEY (soul_ptr_id);
-
-
---
--- Name: common_personid_person_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY common_personid
-    ADD CONSTRAINT common_personid_person_id_key UNIQUE (person_id);
-
-
---
--- Name: common_personid_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY common_personid
-    ADD CONSTRAINT common_personid_pkey PRIMARY KEY (id);
 
 
 --
@@ -14611,6 +14163,14 @@ ALTER TABLE ONLY common_phone
 
 ALTER TABLE ONLY common_phone
     ADD CONSTRAINT common_phone_soul_id_f_number_key UNIQUE (soul_id, f_number);
+
+
+--
+-- Name: common_place_cemetery_id_area_row_seat_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY common_place
+    ADD CONSTRAINT common_place_cemetery_id_area_row_seat_key UNIQUE (cemetery_id, area, "row", seat);
 
 
 --
@@ -14670,14 +14230,6 @@ ALTER TABLE ONLY common_role_djgroups
 
 
 --
--- Name: common_role_djgroups_role_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY common_role_djgroups
-    ADD CONSTRAINT common_role_djgroups_role_id_key UNIQUE (role_id, group_id);
-
-
---
 -- Name: common_role_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -14691,14 +14243,6 @@ ALTER TABLE ONLY common_role
 
 ALTER TABLE ONLY common_roletree
     ADD CONSTRAINT common_roletree_pkey PRIMARY KEY (uuid);
-
-
---
--- Name: common_soul_location_id_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY common_soul
-    ADD CONSTRAINT common_soul_location_id_uniq UNIQUE (location_id);
 
 
 --
@@ -14755,14 +14299,6 @@ ALTER TABLE ONLY common_userprofile
 
 ALTER TABLE ONLY common_userprofile
     ADD CONSTRAINT common_userprofile_soul_id_key UNIQUE (soul_id);
-
-
---
--- Name: common_zags_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY common_zags
-    ADD CONSTRAINT common_zags_pkey PRIMARY KEY (id);
 
 
 --
@@ -14870,48 +14406,6 @@ CREATE INDEX auth_user_user_permissions_user_id ON auth_user_user_permissions US
 
 
 --
--- Name: common_agent_organization_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_agent_organization_id ON common_agent USING btree (organization_id);
-
-
---
--- Name: common_agent_organization_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_agent_organization_id_like ON common_agent USING btree (organization_id varchar_pattern_ops);
-
-
---
--- Name: common_agent_person_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_agent_person_id ON common_agent USING btree (person_id);
-
-
---
--- Name: common_agent_person_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_agent_person_id_like ON common_agent USING btree (person_id varchar_pattern_ops);
-
-
---
--- Name: common_bankaccount_organization_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_bankaccount_organization_id ON common_bankaccount USING btree (organization_id);
-
-
---
--- Name: common_bankaccount_organization_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_bankaccount_organization_id_like ON common_bankaccount USING btree (organization_id varchar_pattern_ops);
-
-
---
 -- Name: common_burial_person_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -14965,13 +14459,6 @@ CREATE INDEX common_cemetery_organization_id ON common_cemetery USING btree (org
 --
 
 CREATE INDEX common_cemetery_organization_id_like ON common_cemetery USING btree (organization_id varchar_pattern_ops);
-
-
---
--- Name: common_deathcertificate_zags_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_deathcertificate_zags_id ON common_deathcertificate USING btree (zags_id);
 
 
 --
@@ -15185,34 +14672,6 @@ CREATE INDEX common_order_product_id_like ON common_order USING btree (product_i
 
 
 --
--- Name: common_order_responsible_agent_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_order_responsible_agent_id ON common_order USING btree (responsible_agent_id);
-
-
---
--- Name: common_order_responsible_agent_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_order_responsible_agent_id_like ON common_order USING btree (responsible_agent_id varchar_pattern_ops);
-
-
---
--- Name: common_order_responsible_customer_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_order_responsible_customer_id ON common_order USING btree (responsible_customer_id);
-
-
---
--- Name: common_order_responsible_customer_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_order_responsible_customer_id_like ON common_order USING btree (responsible_customer_id varchar_pattern_ops);
-
-
---
 -- Name: common_order_responsible_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -15280,41 +14739,6 @@ CREATE INDEX common_orderfiles_order_id ON common_orderfiles USING btree (order_
 --
 
 CREATE INDEX common_orderfiles_order_id_like ON common_orderfiles USING btree (order_id varchar_pattern_ops);
-
-
---
--- Name: common_orderposition_order_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_orderposition_order_id ON common_orderposition USING btree (order_id);
-
-
---
--- Name: common_orderposition_order_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_orderposition_order_id_like ON common_orderposition USING btree (order_id varchar_pattern_ops);
-
-
---
--- Name: common_orderposition_order_product_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_orderposition_order_product_id ON common_orderposition USING btree (order_product_id);
-
-
---
--- Name: common_orderposition_order_product_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_orderposition_order_product_id_like ON common_orderposition USING btree (order_product_id varchar_pattern_ops);
-
-
---
--- Name: common_personid_id_type_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_personid_id_type_id ON common_personid USING btree (id_type_id);
 
 
 --
@@ -16129,6 +15553,14 @@ ALTER TABLE ONLY common_roletree
 
 
 --
+-- Name: common_soul_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY common_soul
+    ADD CONSTRAINT common_soul_location_id_fkey FOREIGN KEY (location_id) REFERENCES common_location(uuid) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
 -- Name: common_soulproducttypeoperation_operation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -16257,86 +15689,6 @@ ALTER TABLE ONLY auth_group_permissions
 
 
 --
--- Name: id_type_id_refs_id_3e9e064a215bad53; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_personid
-    ADD CONSTRAINT id_type_id_refs_id_3e9e064a215bad53 FOREIGN KEY (id_type_id) REFERENCES common_iddocumenttype(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: location_id_refs_uuid_5a337de9bf1a29db; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_soul
-    ADD CONSTRAINT location_id_refs_uuid_5a337de9bf1a29db FOREIGN KEY (location_id) REFERENCES common_location(uuid) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: order_id_refs_uuid_78023d7ac89c3a2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_orderposition
-    ADD CONSTRAINT order_id_refs_uuid_78023d7ac89c3a2 FOREIGN KEY (order_id) REFERENCES common_order(uuid) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: order_product_id_refs_uuid_2512f1d9c2aad998; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_orderposition
-    ADD CONSTRAINT order_product_id_refs_uuid_2512f1d9c2aad998 FOREIGN KEY (order_product_id) REFERENCES common_orderproduct(uuid) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: organization_id_refs_soul_ptr_id_2957395863df14ae; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_agent
-    ADD CONSTRAINT organization_id_refs_soul_ptr_id_2957395863df14ae FOREIGN KEY (organization_id) REFERENCES common_organization(soul_ptr_id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: organization_id_refs_soul_ptr_id_3e0bbe92796cbbc; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_bankaccount
-    ADD CONSTRAINT organization_id_refs_soul_ptr_id_3e0bbe92796cbbc FOREIGN KEY (organization_id) REFERENCES common_organization(soul_ptr_id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: person_id_refs_soul_ptr_id_1f069bedc0879de2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_agent
-    ADD CONSTRAINT person_id_refs_soul_ptr_id_1f069bedc0879de2 FOREIGN KEY (person_id) REFERENCES common_person(soul_ptr_id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: person_id_refs_soul_ptr_id_5ea561ceb4128dda; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_personid
-    ADD CONSTRAINT person_id_refs_soul_ptr_id_5ea561ceb4128dda FOREIGN KEY (person_id) REFERENCES common_person(soul_ptr_id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: responsible_agent_id_refs_uuid_2b741d90abca697e; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_order
-    ADD CONSTRAINT responsible_agent_id_refs_uuid_2b741d90abca697e FOREIGN KEY (responsible_agent_id) REFERENCES common_agent(uuid) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: responsible_customer_id_refs_uuid_136fce8d14d49dbd; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_order
-    ADD CONSTRAINT responsible_customer_id_refs_uuid_136fce8d14d49dbd FOREIGN KEY (responsible_customer_id) REFERENCES common_soul(uuid) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: role_id_refs_uuid_7648cce5; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -16358,14 +15710,6 @@ ALTER TABLE ONLY auth_user_groups
 
 ALTER TABLE ONLY auth_user_user_permissions
     ADD CONSTRAINT user_id_refs_id_f2045483 FOREIGN KEY (user_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: zags_id_refs_id_682415ea8e470ae3; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_deathcertificate
-    ADD CONSTRAINT zags_id_refs_id_682415ea8e470ae3 FOREIGN KEY (zags_id) REFERENCES common_zags(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
