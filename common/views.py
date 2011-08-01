@@ -394,15 +394,21 @@ def journal(request):
         new_burial = Burial(creator=request.user.userprofile.soul)
         new_burial.person = new_person
         new_burial.product = place.product_ptr
-        new_burial.date_plan = cd["burial_date"]
-        new_burial.date_fact = cd["burial_date"]
+
+        d = cd["burial_date"]
+        if cd["burial_time"]:
+            t = cd["burial_time"]
+            d = datetime.datetime(*d.timetuple()[:3]) + datetime.timedelta(0, t.hour*3600 + t.minute*60 + t.second)
+
+        new_burial.date_plan = d
+        new_burial.date_fact = d
+
         new_burial.exhumated_date = cd["exhumated_date"]
         new_burial.account_book_n = cd["account_book_n"]
         new_burial.customer = customer.soul_ptr
         new_burial.responsible = cd["cemetery"].organization.soul_ptr  #ставить орг-ию кладбища
         new_burial.doer = request.user.userprofile.soul
         new_burial.operation = cd["operation"]
-        new_burial.account_book_n = cd["account_book_n"]
 
         new_burial.person.location = registration_form.save()
 
@@ -596,8 +602,15 @@ def edit_burial(request, uuid):
         new_burial = burial
         new_burial.person = new_person
         new_burial.product = place.product_ptr
-        new_burial.date_plan = cd["burial_date"]
-        new_burial.date_fact = cd["burial_date"]
+
+        d = cd["burial_date"]
+        if cd["burial_time"]:
+            t = cd["burial_time"]
+            d = datetime.datetime(*d.timetuple()[:3]) + datetime.timedelta(0, t.hour*3600 + t.minute*60 + t.second)
+
+        new_burial.date_plan = d
+        new_burial.date_fact = d
+        
         new_burial.account_book_n = cd["account_book_n"]
         new_burial.exhumated_date = cd["exhumated_date"]
         new_burial.customer = customer.soul_ptr
@@ -642,7 +655,6 @@ def edit_burial(request, uuid):
         new_burial.save()
 
         new_burial.person.location = registration_form.save()
-        print 'new_burial.person.location', new_burial.person.location, registration_form.cleaned_data
 
         if not new_burial.account_book_n:
             num = new_burial.generate_account_number()

@@ -44,7 +44,7 @@ $(function(){
         $(el).attr('tabIndex', i+1);
     })
 
-    $('#id_responsible_myself').click(updateResponsible);
+    $('#id_responsible_myself').change(updateResponsible);
     updateResponsible();
 
     $('#id_opf_0, #id_opf_1').change(updateOPF);
@@ -312,7 +312,7 @@ $(function(){
                 </tr>
                 <tr>
                     <td >{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
-                    <td >{{ form.burial_date.errors }}{{ form.burial_date }}</td>
+                    <td >{{ form.burial_date.errors }}{{ form.burial_date }}<br/>{{ form.burial_time.errors }}{{ form.burial_time }}</td>
                     <td >{{ form.exhumated_date.errors }}{{ form.exhumated_date }}</td>
                 </tr>
                 <tr>

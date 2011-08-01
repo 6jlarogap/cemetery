@@ -33,7 +33,7 @@ $(function(){
         $(el).attr('tabIndex', i+1);
     })
 
-    $('#id_responsible_myself').click(updateResponsible);
+    $('#id_responsible_myself').change(updateResponsible);
     updateResponsible();
 
     $('#id_opf_0, #id_opf_1').change(updateOPF);
@@ -199,6 +199,7 @@ $(function(){
 {% block content %}
     <div id="free_form">
     <form action="" method="post" enctype="multipart/form-data">
+        {{ form.errors }}
         {{ form.non_field_errors }}
         {{ location_form.non_field_errors }}
         {{ registration_form.non_field_errors }}
@@ -215,7 +216,7 @@ $(function(){
             <tr>
                 {% if user|in_group:"edit_burial" %}
                     <td >{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
-                    <td >{{ form.burial_date.errors }}{{ form.burial_date }}</td>
+                    <td >{{ form.burial_date.errors }}{{ form.burial_date }}<br/>{{ form.burial_time.errors }}{{ form.burial_time }}</td>
                     <td >
                         {{ form.exhumated_date.errors }}{{ form.exhumated_date }} <br/>
                         {% if form.initial.exhumated_date %}

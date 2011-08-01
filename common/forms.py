@@ -4,6 +4,7 @@ from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.admin.widgets import AdminTimeWidget
 from models import *
 
 from annoying.decorators import autostrip
@@ -74,6 +75,26 @@ class CalendarWidget(forms.TextInput):
     def __init__(self, attrs={}):
         attrs.update({'class': 'vDateField', 'size': '10'})
         super(CalendarWidget, self).__init__(attrs=attrs)
+
+class ClockWidget(forms.TextInput):
+    '''
+    Виджет времени.
+    '''
+    class Media:
+        js = ('/admin/jsi18n/',
+              settings.ADMIN_MEDIA_PREFIX + 'js/core.js',
+              settings.ADMIN_MEDIA_PREFIX + "js/calendar.js",
+              settings.ADMIN_MEDIA_PREFIX + "js/admin/DateTimeShortcuts.js")
+        css = {
+            'all': (
+                settings.ADMIN_MEDIA_PREFIX + 'css/forms.css',
+                settings.ADMIN_MEDIA_PREFIX + 'css/base.css',
+                settings.ADMIN_MEDIA_PREFIX + 'css/widgets.css',)
+        }
+
+    def __init__(self, attrs={}):
+        attrs.update({'class': 'vTimeField', 'size': '8'})
+        super(ClockWidget, self).__init__(attrs=attrs)
 
 
 @autostrip
@@ -276,7 +297,10 @@ class JournalForm(AutoTabIndex):
     """
 
     account_book_n = forms.CharField(max_length=16, label="Номер в книге учета*", required=False)
+
     burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget, initial=get_today)
+    burial_time = forms.TimeField(label="Время захоронения", widget=ClockWidget, required=False)
+
     birth_date = forms.DateField(label="Дата рождения*", widget=CalendarWidget, initial='')
     death_date = forms.DateField(label="Дата смерти*", widget=CalendarWidget, initial=get_yesterday)
     exhumated_date = forms.DateField(label="Дата эксгумации*", widget=CalendarWidget, required=False)
