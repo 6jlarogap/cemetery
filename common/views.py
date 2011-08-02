@@ -250,7 +250,7 @@ def main_page(request):
         if request.user.is_authenticated() and not form_data:
             pp = request.user.userprofile.records_per_page
             ob = request.user.userprofile.records_order_by
-            redirect_str = "/?print=0"
+            redirect_str = "/?print="
             if pp:
                 redirect_str = "%s&per_page=%d" % (redirect_str, pp)
             if ob:
