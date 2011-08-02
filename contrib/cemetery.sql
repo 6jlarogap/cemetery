@@ -1715,11 +1715,7 @@ COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY auth_user (id, username, first_name, last_name, email, password, is_staff, is_active, is_superuser, last_login, date_joined) FROM stdin;
-3	irina	Ирина	Тушинская		sha1$65725$91ff9b646bf4582cdd6bf8dd2b0a9d31596db519	f	t	f	2011-03-02 12:33:30.859265+03	2011-03-02 12:33:30.859265+03
 1	soul			pythonprogrammer@mail.ru	sha1$4577d$f5939aa4345e986d4b0d2cb9ab3799d032720636	t	t	t	2011-03-02 13:52:42.442178+03	2011-01-28 15:43:24.389277+03
-2	anna	Анна	Гриб		sha1$e78b1$88d3c27077ffbea0126607f8666e73123edd2447	f	t	f	2011-03-02 14:08:07.619695+03	2011-03-02 12:25:52.429637+03
-4	admin			ilvar@mail.ru	sha1$01bdd$bb841b56e79421462383a1e4af621ce89888b2d7	t	t	t	2011-07-30 11:42:40.319889+04	2011-07-23 15:57:02.544172+04
-6	ilvar	Ilvar	Ilvar		sha1$ec69b$857c59efef2e586134d3ba5a854d8686e3f4cf70	f	t	f	2011-07-30 22:09:12.718339+04	2011-07-30 22:09:12.718339+04
 \.
 
 
@@ -1728,42 +1724,6 @@ COPY auth_user (id, username, first_name, last_name, email, password, is_staff, 
 --
 
 COPY auth_user_groups (id, user_id, group_id) FROM stdin;
-1	2	2
-2	2	3
-3	2	4
-4	2	5
-5	2	6
-6	2	7
-7	2	8
-8	2	9
-9	2	10
-10	2	11
-11	2	12
-12	2	1
-13	3	2
-14	3	3
-15	3	4
-16	3	5
-17	3	6
-18	3	7
-19	3	8
-20	3	9
-21	3	10
-22	3	11
-23	3	12
-24	3	1
-37	6	2
-38	6	3
-39	6	4
-40	6	5
-41	6	6
-42	6	7
-43	6	8
-44	6	9
-45	6	10
-46	6	11
-47	6	12
-48	6	1
 \.
 
 
@@ -14092,38 +14052,6 @@ COPY common_zags (id, name) FROM stdin;
 --
 
 COPY django_admin_log (id, action_time, user_id, content_type_id, object_id, object_repr, action_flag, change_message) FROM stdin;
-1	2011-01-28 15:45:07.040404+03	1	16	6f5832e0-2adc-11e0-8b17-485b39c96dfe	6f5832e0-2adc-11e0-8b17-485b39c96dfe	1	
-2	2011-01-28 15:45:12.942314+03	1	38	1	soul	1	
-3	2011-01-28 15:46:07.857479+03	1	10	9398d222-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН	1	
-4	2011-01-28 15:48:34.244386+03	1	11	ead988d8-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН	1	
-5	2011-01-28 15:48:43.805609+03	1	12	f08c6f20-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН	1	
-6	2011-01-28 15:48:55.090532+03	1	14	f74670f4-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН	1	
-7	2011-01-28 15:49:54.727965+03	1	2	1	adminka	1	
-8	2011-01-28 15:50:01.053803+03	1	2	2	delete_orderfile	1	
-9	2011-01-28 15:50:07.454203+03	1	2	3	edit_burial	1	
-10	2011-01-28 15:50:17.015851+03	1	2	4	edit_bur_in_adm	1	
-11	2011-01-28 15:50:23.612979+03	1	2	5	import_csv	1	
-12	2011-01-28 15:50:29.041387+03	1	2	6	journal	1	
-13	2011-01-28 15:50:34.03621+03	1	2	7	management	1	
-14	2011-01-28 15:50:39.953935+03	1	2	8	management_cemetery	1	
-15	2011-01-28 15:50:46.142822+03	1	2	9	management_edit_cemetery	1	
-16	2011-01-28 15:50:56.389525+03	1	2	10	management_edit_user	1	
-17	2011-01-28 15:51:03.753634+03	1	2	11	management_user	1	
-18	2011-01-28 15:51:10.839738+03	1	2	12	profile	1	
-19	2011-01-28 15:51:28.266722+03	1	2	1	adminka	2	Изменен permissions.
-20	2011-01-28 15:51:51.747794+03	1	26	60925a32-2add-11e0-8b17-485b39c96dfe	Место захоронения	1	
-21	2011-01-28 15:52:14.306345+03	1	32	6e0492ac-2add-11e0-8b17-485b39c96dfe	Подзахоронение урны	1	
-22	2011-01-28 15:52:22.923654+03	1	32	732795d6-2add-11e0-8b17-485b39c96dfe	Подзахоронение	1	
-23	2011-01-28 15:52:31.72944+03	1	32	78672a34-2add-11e0-8b17-485b39c96dfe	Захоронение в существующ	1	
-24	2011-01-28 15:52:40.024929+03	1	32	7d58e9ec-2add-11e0-8b17-485b39c96dfe	Захоронение	1	
-25	2011-07-26 17:58:57.003446+04	4	21	67bd84e6-b78f-11e0-ad13-b338c665b496	Нет Аркадий	1	
-26	2011-07-26 18:29:30.661344+04	4	21	67bd84e6-b78f-11e0-ad13-b338c665b496	Нет Аркадий	2	Добавлен agent "Agent object". Добавлен agent "Agent object".
-27	2011-07-28 17:17:52.001017+04	4	47	ff528ae4-b91b-11e0-a1a8-e10d9e11254b	Оформление документов для погребения	1	
-28	2011-07-28 17:18:12.375223+04	4	47	0b77755a-b91c-11e0-a1a8-e10d9e11254b	Рытье могилы	1	
-29	2011-07-28 17:18:47.294529+04	4	47	2047b4c2-b91c-11e0-a1a8-e10d9e11254b	Благоустройство захоронения	1	
-30	2011-07-28 17:19:06.847274+04	4	47	2bef3dea-b91c-11e0-a1a8-e10d9e11254b	Установка венков	1	
-31	2011-07-28 17:19:31.63187+04	4	47	3ab5081e-b91c-11e0-a1a8-e10d9e11254b	Надмогильная табличка	1	
-32	2011-07-30 22:46:12.451472+04	4	49	1	IDDocumentType object	1	
 \.
 
 
@@ -14188,18 +14116,6 @@ COPY django_content_type (id, name, app_label, model) FROM stdin;
 --
 -- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: postgres
 --
-
-COPY django_session (session_key, session_data, expire_date) FROM stdin;
-75ee9389679f9db4e9ee5857785c33c1	gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjViYTdhMWYyYzY5ZmNjMTI0ZWYx\nNzc1NjNjNWRmMDUy\n	2011-02-11 15:44:50.499785+03
-13ab3eba13f8071d1e42b90311d4ff8c	gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjViYTdhMWYyYzY5ZmNjMTI0ZWYx\nNzc1NjNjNWRmMDUy\n	2011-02-18 11:56:45.997297+03
-c96909c92e5fb09e5ef4bafa71dc3998	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLAXUu\nZTE5YWE2ZDU4MGYzYzdjOTU2ZjJiOTc5ZGQ0MWMxMjk=\n	2011-02-18 20:34:13.637365+03
-f872a9b356cffe75f091fb87b5031b54	gAJ9cQEoVQp0ZXN0Y29va2llcQJVBndvcmtlZHEDVRJfYXV0aF91c2VyX2JhY2tlbmRxBFUpZGph\nbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxBVUNX2F1dGhfdXNlcl9pZHEG\nSwJ1LjNlNjRlN2MzZDU1ZTg3YzYyN2M4M2MzOTA1NDljY2Fj\n	2011-03-16 14:08:07.70228+03
-58cf4d2111c1de3cba25fd8df0529419	gAJ9cQEuOGU1OTlkODdmZTY3ZjI0YzU4ZTQ2ZDYyZjk1NGI2ZTc=\n	2011-08-06 15:57:10.961702+04
-70664eb33f8ba03d22b21a2808da228b	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLBHUu\nYmJhMTg2NThjMDgyMzYyYzMxNTZmOGM2NjMzMzNlMTI=\n	2011-08-08 00:02:09.204077+04
-46244a445cba02954d40c4a2d1375394	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLBHUu\nYmJhMTg2NThjMDgyMzYyYzMxNTZmOGM2NjMzMzNlMTI=\n	2011-08-08 23:49:09.692741+04
-a2e9a932ebccf04e353ef91ec0426b68	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLBHUu\nYmJhMTg2NThjMDgyMzYyYzMxNTZmOGM2NjMzMzNlMTI=\n	2011-08-11 17:14:35.321806+04
-0a5934b54a7590782a751105e5736ff0	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLBHUu\nYmJhMTg2NThjMDgyMzYyYzMxNTZmOGM2NjMzMzNlMTI=\n	2011-08-12 23:58:28.665218+04
-8b125878d9ce06612ec7a9947ab5b5f4	gAJ9cQEoVQp0ZXN0Y29va2llVQZ3b3JrZWRVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28u\nY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLBHUu\nYmJhMTg2NThjMDgyMzYyYzMxNTZmOGM2NjMzMzNlMTI=\n	2011-08-13 11:42:40.443038+04
 \.
 
 
