@@ -1715,7 +1715,7 @@ COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY auth_user (id, username, first_name, last_name, email, password, is_staff, is_active, is_superuser, last_login, date_joined) FROM stdin;
-1	soul			pythonprogrammer@mail.ru	sha1$4577d$f5939aa4345e986d4b0d2cb9ab3799d032720636	t	t	t	2011-03-02 13:52:42.442178+03	2011-01-28 15:43:24.389277+03
+1	soul			soul@youmemory.org	sha1$4577d$f5939aa4345e986d4b0d2cb9ab3799d032720636	t	t	t	2011-03-02 13:52:42.442178+03	2011-01-28 15:43:24.389277+03
 \.
 
 
