@@ -47,6 +47,7 @@ $(function(){
 
     $.datepicker.setDefaults($.datepicker.regional['']);
     $('input[name$=date],input[name$=expire]').css('width', '100px').datepicker({
+        dateFormat: 'dd.mm.yy',
         changeMonth: true,
         changeYear: true,
         monthNamesShort: ['Янв','Фев','Март','Апрель','Май','Июнь','Июль','Авг','Сен','Окт','Ноя','Дек'],

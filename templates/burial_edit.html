@@ -36,9 +36,11 @@ $(function(){
 
     $.datepicker.setDefaults($.datepicker.regional['ru']);
     $('input[name$=date],input[name$=expire]').css('width', '100px').datepicker({
+        dateFormat: 'dd.mm.yy',
         changeMonth: true,
         changeYear: true,
-        monthNames: ['Янв','Фев','Март','Апрель','Май','Июнь','Июль','Авг','Сен','Окт','Ноя','Дек'],
+        monthNamesShort: ['Янв','Фев','Март','Апрель','Май','Июнь','Июль','Авг','Сен','Окт','Ноя','Дек'],
+        dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
         showOn: "both",
         buttonImage: CALENDAR_ICON,
         buttonImageOnly: true
@@ -57,6 +59,11 @@ $(function(){
                 ends: 45,
                 interval: 15
             },
+            hours: {
+                starts: 8,
+                ends: 19,
+                interval: 1
+            }
         });
     });
 
