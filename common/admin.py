@@ -4,7 +4,8 @@ from django.contrib import admin
 from common.models import *
 
 class PersonAdmin(admin.ModelAdmin):
-#    exclude = ("creator", "location")
+    raw_id_fields = ['location', 'creator', ]
+    
     def get_form(self, request, obj=None, **kwargs):
         if request.user.is_superuser:
             self.exclude = ()
@@ -14,7 +15,8 @@ class PersonAdmin(admin.ModelAdmin):
 
 
 class BurialAdmin(admin.ModelAdmin):
-#    fields = ("account_book_n",)
+    raw_id_fields = ['responsible', 'responsible_customer', 'responsible_agent', 'customer', 'doer', 'product', 'creator', 'person', ]
+    
     def get_form(self, request, obj=None, **kwargs):
         if request.user.is_superuser:
             self.exclude = ()
@@ -25,7 +27,8 @@ class BurialAdmin(admin.ModelAdmin):
 
 
 class OFAdmin(admin.ModelAdmin):
-#    exclude = ("order",)
+    raw_id_fields = ['order', 'creator', ]
+
     def get_form(self, request, obj=None, **kwargs):
         if request.user.is_superuser:
 #            self.exclude = ()
@@ -36,7 +39,8 @@ class OFAdmin(admin.ModelAdmin):
 
 
 class OCAdmin(admin.ModelAdmin):
-#    exclude = ("order",)
+    raw_id_fields = ['order', 'creator', ]
+
     def get_form(self, request, obj=None, **kwargs):
         if request.user.is_superuser:
             self.exclude = ()
@@ -64,28 +68,82 @@ class OrganizationAdmin(admin.ModelAdmin):
 
     inlines = [OrganizationPhoneInline, OrganizationAgentInline, ]
 
+class SoulAdmin(admin.ModelAdmin):
+    raw_id_fields = ['location', 'creator', ]
+
+class RoleAdmin(admin.ModelAdmin):
+    raw_id_fields = ['organization', 'creator', ]
+
+class PersonRoleAdmin(admin.ModelAdmin):
+    raw_id_fields = ['person', 'creator', ]
+
+class PlaceAdmin(admin.ModelAdmin):
+    raw_id_fields = ['cemetery', 'creator', ]
+
+class CemeteryAdmin(admin.ModelAdmin):
+    raw_id_fields = ['organization', 'location', 'creator', ]
+
+class LocationAdmin(admin.ModelAdmin):
+    raw_id_fields = ['street', ]
+
+class StreetAdmin(admin.ModelAdmin):
+    raw_id_fields = ['city', ]
+
+class MetroAdmin(admin.ModelAdmin):
+    raw_id_fields = ['city', ]
+
+class ProductCommentsAdmin(admin.ModelAdmin):
+    raw_id_fields = ['product', 'creator', ]
+
+class OrderAdmin(admin.ModelAdmin):
+    raw_id_fields = ['responsible', 'responsible_customer', 'responsible_agent', 'customer', 'doer', 'product', 'creator', ]
+
+class OperationAdmin(admin.ModelAdmin):
+    pass
+
+class ProductCommentsAdmin(admin.ModelAdmin):
+    raw_id_fields = ['product', 'creator', ]
+
+class PhoneAdmin(admin.ModelAdmin):
+    raw_id_fields = ['soul', ]
+
+class UserProfileAdmin(admin.ModelAdmin):
+    raw_id_fields = ['user', 'soul', 'default_cemetery', 'default_city', ]
+
+class SoulProducttypeOperationAdmin(admin.ModelAdmin):
+    raw_id_fields = ['soul', ]
+
+class ProductFilesAdmin(admin.ModelAdmin):
+    raw_id_fields = ['product', 'creator', ]
+
+class ProductAdmin(admin.ModelAdmin):
+    raw_id_fields = ['soul', ]
+
+class DeathCertificateAdmin(admin.ModelAdmin):
+    raw_id_fields = ['soul', ]
+
 admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(Role)
-admin.site.register(Soul)
-admin.site.register(PersonRole)
+admin.site.register(Role, RoleAdmin)
+admin.site.register(Soul, SoulAdmin)
+admin.site.register(PersonRole, PersonRoleAdmin)
 admin.site.register(ProductType)
-admin.site.register(Place)
-admin.site.register(Cemetery)
-admin.site.register(Location)
+admin.site.register(Place, PlaceAdmin)
+admin.site.register(Cemetery, CemeteryAdmin)
+admin.site.register(Location, LocationAdmin)
 admin.site.register(GeoCountry)
 admin.site.register(GeoCity)
-admin.site.register(Street)
-admin.site.register(Metro)
-admin.site.register(ProductComments)
-admin.site.register(Order)
-admin.site.register(Operation)
-admin.site.register(SoulProducttypeOperation)
-admin.site.register(Phone)
-admin.site.register(UserProfile)
-admin.site.register(ProductFiles)
-admin.site.register(Product)
+admin.site.register(Street, StreetAdmin)
+admin.site.register(Metro, MetroAdmin)
+admin.site.register(ProductComments, ProductCommentsAdmin)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(Operation, OperationAdmin)
+admin.site.register(SoulProducttypeOperation, SoulProducttypeOperationAdmin)
+admin.site.register(Phone, PhoneAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(ProductFiles, ProductFilesAdmin)
+admin.site.register(Product, ProductAdmin)
 admin.site.register(GeoRegion)
-admin.site.register(DeathCertificate)
+admin.site.register(DeathCertificate, DeathCertificateAdmin)
 admin.site.register(ZAGS)
 admin.site.register(IDDocumentType)
 
