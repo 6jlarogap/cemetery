@@ -298,12 +298,12 @@ class JournalForm(AutoTabIndex):
 
     account_book_n = forms.CharField(max_length=16, label="Номер в книге учета*", required=False)
 
-    burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget, initial=get_today)
-    burial_time = forms.TimeField(label="Время захоронения", widget=ClockWidget, required=False)
+    burial_date = forms.DateField(label="Дата захоронения*", initial=get_today)
+    burial_time = forms.TimeField(label="Время захоронения", required=False)
 
-    birth_date = forms.DateField(label="Дата рождения*", widget=CalendarWidget, initial='')
-    death_date = forms.DateField(label="Дата смерти*", widget=CalendarWidget, initial=get_yesterday)
-    exhumated_date = forms.DateField(label="Дата эксгумации*", widget=CalendarWidget, required=False)
+    birth_date = forms.DateField(label="Дата рождения*", initial='')
+    death_date = forms.DateField(label="Дата смерти*", initial=get_yesterday)
+    exhumated_date = forms.DateField(label="Дата эксгумации", required=False)
     last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
             help_text="Допускаются только буквы, цифры и символ '-'", initial=u"НЕИЗВЕСТЕН")
     first_name = forms.CharField(required=False, max_length=30, label="Имя")
@@ -337,8 +337,8 @@ class JournalForm(AutoTabIndex):
     agent_director = forms.BooleanField(label="Агент - директор", required=False)
 
     dover_number = forms.CharField(label="Номер доверенности", max_length=255, required=False)
-    dover_date = forms.DateField(label="Дата выдачи", widget=CalendarWidget, required=False)
-    dover_expire = forms.DateField(label="Действует до", widget=CalendarWidget, required=False)
+    dover_date = forms.DateField(label="Дата выдачи", required=False)
+    dover_expire = forms.DateField(label="Действует до", required=False)
 
     agent = forms.ModelChoiceField(label="Агент", queryset=Agent.objects.all(), required=False)
 
