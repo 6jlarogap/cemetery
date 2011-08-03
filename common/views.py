@@ -75,12 +75,19 @@ def ulogout(request):
     next_url = request.GET.get("next", "/")
     return redirect(next_url)
 
+@login_required
 @render_to()
 @paginate(style='digg')
 def main_page(request):
     """
     Главная страница.
     """
+
+    try:
+        profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        UserProfile.objects.create(user=request.user, soul=Soul.objects.create())
+
     form_data = request.GET or None
     form = SearchForm(form_data)
     trash = bool(request.GET.get("trash", False))
@@ -701,6 +708,7 @@ def edit_burial(request, uuid):
     })
 
 
+@login_required
 def get_positions(burial):
     positions = []
     for product in OrderProduct.objects.all():
@@ -1849,6 +1857,7 @@ def delete_orderfile(request, ouuid, fuuid):
     return redirect("/burial/%s/" % ouuid)
 
 
+@login_required
 def get_customer_ln(request):
     """
     Получение уникального списка фамилий всех заказчиков.
@@ -1862,6 +1871,7 @@ def get_customer_ln(request):
     return direct_to_template(request, 'ajax.html', {'objects': person_lns,})
 
 
+@login_required
 def get_deadman(request):
     """
     Получение уникального списка ФИО захороненных.
@@ -1875,6 +1885,7 @@ def get_deadman(request):
     return direct_to_template(request, 'ajax.html', {'objects': persons,})
 
 
+@login_required
 def get_oper(request):
     """
     Получение списка доступных операций для выбранного кладбища.
@@ -1894,6 +1905,7 @@ def get_oper(request):
             rez.insert(0, {"optionValue": 0, "optionDisplay": u'---------'})
     return HttpResponse(JSONEncoder().encode(rez))
 
+@login_required
 def get_agents(request):
     """
     Список доступных агентов для выбранной организации.
@@ -1912,6 +1924,7 @@ def get_agents(request):
             rez.insert(0, {"optionValue": 0, "optionDisplay": u'---------'})
     return HttpResponse(JSONEncoder().encode(rez))
 
+@login_required
 def get_dover(request):
     try:
         agent = Agent.objects.get(pk=request.GET.get('agent'))
@@ -1925,6 +1938,7 @@ def get_dover(request):
         }
     return HttpResponse(JSONEncoder().encode(rez))
 
+@login_required
 def get_street(request):
     """
     Получение улицы с городом, регионом и страной.
@@ -1939,6 +1953,7 @@ def get_street(request):
     return HttpResponse(JSONEncoder().encode(streets))
 
 
+@login_required
 def get_countries(request):
     """
     Получение списка стран с пом. AJAX-запроса.
@@ -1952,6 +1967,7 @@ def get_countries(request):
     return HttpResponse(JSONEncoder().encode(countries))
 
 
+@login_required
 def get_cities(request):
     """
     Получение списка нас. пунктов с пом. AJAX-запроса.
@@ -1966,6 +1982,7 @@ def get_cities(request):
     return HttpResponse(JSONEncoder().encode(cities))
 
 
+@login_required
 def get_regions(request):
     """
     Получение списка регионов с пом. AJAX-запроса.
