@@ -636,7 +636,7 @@ class InitalForm(forms.Form):
             raise forms.ValidationError("Пароли не совпадают.")
         return cd
 
-InitBankFormset = forms.models.inlineformset_factory(Organization, BankAccount)
+InitBankFormset = forms.models.inlineformset_factory(Organization, BankAccount, extra=2)
 
 class ImportForm(forms.Form):
     """

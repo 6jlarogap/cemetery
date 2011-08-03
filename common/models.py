@@ -313,10 +313,10 @@ class BankAccount(models.Model):
     Банковские реквизиты
     """
     organization = models.ForeignKey(Organization, verbose_name=u"Организация")      # Владелец счета
-    rs = models.CharField(u"Расчетный счет", max_length=20, blank=True)              # Расчетный счет
+    rs = models.CharField(u"Расчетный счет", max_length=20)              # Расчетный счет
     ks = models.CharField(u"Корреспондентский счет", max_length=20, blank=True)      # Корреспондентский счет
     bik = models.CharField(u"БИК", max_length=9, blank=True)                         # Банковский идентификационный код
-    bankname = models.CharField(u"Наименование банка", max_length=64, blank=True)    # Название банка
+    bankname = models.CharField(u"Наименование банка", max_length=64)    # Название банка
 
 
 class Role(models.Model):

@@ -1325,6 +1325,8 @@ def init(request):
         organization = None
         env = None
 
+    print 'organization', organization.bankaccount_set.all()
+
     bank_formset = InitBankFormset(instance=organization, data=request.POST or None)
 
     if request.method == "POST":
