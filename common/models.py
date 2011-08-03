@@ -616,6 +616,27 @@ class OrderComments(models.Model):
     class Meta:
         ordering = ['date_of_creation']
 
+class BurialSortedManager(models.Manager):
+    def prepared(self):
+        return self.select_related().extra(
+            tables=['common_place', ],
+            where=['common_place.product_ptr_id = common_order.product_id', ],
+            select={
+                's1': '"substring"((common_burial.account_book_n)::text, \'([^[:digit:]]*)[[:digit:]]*.*\'::text)',
+                's2': 'to_number("substring"((common_burial.account_book_n)::text, \'[^[:digit:]]*([[:digit:]]*).*\'::text), \'9999999999\'::text)',
+                's3': '"substring"((common_burial.account_book_n)::text, \'[^[:digit:]]*[[:digit:]]*(.*)\'::text)',
+
+                'place_s1': '"substring"((common_place.area)::text, \'([^[:digit:]]*)[[:digit:]]*.*\'::text)',
+                'place_s2': 'to_number("substring"((common_place.area)::text, \'[^[:digit:]]*([[:digit:]]*).*\'::text), \'9999999999\'::text)',
+                'place_s3': '"substring"((common_place.area)::text, \'[^[:digit:]]*[[:digit:]]*(.*)\'::text)',
+                'place_s4': '"substring"((common_place."row")::text, \'([^[:digit:]]*)[[:digit:]]*.*\'::text)',
+                'place_s5': 'to_number("substring"((common_place."row")::text, \'[^[:digit:]]*([[:digit:]]*).*\'::text), \'9999999999\'::text)',
+                'place_s6': '"substring"((common_place."row")::text, \'[^[:digit:]]*[[:digit:]]*(.*)\'::text)',
+                'place_s7': '"substring"((common_place.seat)::text, \'([^[:digit:]]*)[[:digit:]]*.*\'::text)',
+                'place_s8': 'to_number("substring"((common_place.seat)::text, \'[^[:digit:]]*([[:digit:]]*).*\'::text), \'9999999999\'::text)',
+                'place_s9': '"substring"((common_place.seat)::text, \'[^[:digit:]]*[[:digit:]]*(.*)\'::text)',
+            }
+        )
 
 class Burial(Order):
     """
@@ -625,6 +646,8 @@ class Burial(Order):
     account_book_n = models.CharField(u"Номер в книге учета", max_length=16)
     exhumated_date = models.DateTimeField(u"Дата эксгумации", blank=True, null=True)
     last_sync_date = models.DateTimeField(u"Дата последней синхронизации", default=datetime.datetime(2000, 1, 1, 0, 0))
+
+    objects = BurialSortedManager()
 
     class Meta:
         verbose_name = (u'захоронение')

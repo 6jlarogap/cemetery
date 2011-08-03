@@ -86,12 +86,12 @@ def main_page(request):
     trash = bool(request.GET.get("trash", False))
     if request.GET.has_key("cemetery") or trash:
         first = False
-        burials = Burial.objects.filter(is_trash=trash).order_by("person__last_name",
+        burials = Burial.objects.prepared().filter(is_trash=trash).order_by("person__last_name",
                                                                   "person__first_name",
                                                                   "person__patronymic")
     else:
         first = True
-        burials_nr = Burial.objects.filter(is_trash=trash).count()
+        burials_nr = Burial.objects.prepared().filter(is_trash=trash).count()
         burials = Burial.objects.none()
     pp = None
     if form.is_valid():
@@ -110,23 +110,23 @@ def main_page(request):
             elif cd["records_order_by"] == u'-account_book_n':
                 burials = burials.order_by('-s1', '-s2', '-s3')
             elif cd["records_order_by"] == u'product__place__area':
-                burials = burials.order_by('product__place1__s1', 'product__place1__s2',
-                                           'product__place1__s3')
+                burials = burials.order_by('place_s1', 'place_s2',
+                                           'place_s3')
             elif cd["records_order_by"] == u'-product__place__area':
-                burials = burials.order_by('-product__place1__s1', '-product__place1__s2',
-                                           '-product__place1__s3')
+                burials = burials.order_by('-place_s1', '-place_s2',
+                                           '-place_s3')
             elif cd["records_order_by"] == u'product__place__row':
-                burials = burials.order_by('product__place1__s4', 'product__place1__s5',
-                                           'product__place1__s6')
+                burials = burials.order_by('place_s4', 'place_s5',
+                                           'place_s6')
             elif cd["records_order_by"] == u'-product__place__row':
-                burials = burials.order_by('-product__place1__s4', '-product__place1__s5',
-                                           '-product__place1__s6')
+                burials = burials.order_by('-place_s4', '-place_s5',
+                                           '-place_s6')
             elif cd["records_order_by"] == u'product__place__seat':
-                burials = burials.order_by('product__place1__s7', 'product__place1__s8',
-                                           'product__place1__s9')
+                burials = burials.order_by('place_s7', 'place_s8',
+                                           'place_s9')
             elif cd["records_order_by"] == u'-product__place__seat':
-                burials = burials.order_by('-product__place1__s7', '-product__place1__s8',
-                                           '-product__place1__s9')
+                burials = burials.order_by('-place_s7', '-place_s8',
+                                           '-place_s9')
             else:
                 burials = burials.order_by(cd["records_order_by"])
         if cd.get("fio", ""):
