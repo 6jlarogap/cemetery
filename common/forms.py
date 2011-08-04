@@ -222,8 +222,8 @@ class JournalForm(forms.Form):
         if country and region and city and street:
             # Страна.
             try:
-                country_object = GeoCountry.objects.get(name__iexact=country)
-            except ObjectDoesNotExist:
+                country_object = GeoCountry.objects.filter(name__iexact=country)[0]
+            except IndexError:
                 if not cd.get("new_country", False):
                     raise forms.ValidationError("Страна не найдена.")
                 else:
@@ -237,8 +237,8 @@ class JournalForm(forms.Form):
             if new_country and not cd.get("new_region", False):
                 raise forms.ValidationError("У новой страны регион должен быть тоже новым.")
             try:
-                region_object = GeoRegion.objects.get(country__name__iexact=country, name__iexact=region)
-            except ObjectDoesNotExist:
+                region_object = GeoRegion.objects.filter(country__name__iexact=country, name__iexact=region)[0]
+            except IndexError:
                 if not cd.get("new_region", False):
                     raise forms.ValidationError("Регион не найден.")
                 else:
@@ -252,8 +252,8 @@ class JournalForm(forms.Form):
             if new_region and not cd.get("new_city", False):
                 raise forms.ValidationError("У нового региона нас. пункт должен быть тоже новым.")
             try:
-                city_object = GeoCity.objects.get(region__name__iexact=region, name__iexact=city)
-            except ObjectDoesNotExist:
+                city_object = GeoCity.objects.filter(region__name__iexact=region, name__iexact=city)[0]
+            except IndexError:
                 if not cd.get("new_city", False):
                     raise forms.ValidationError("Нас. пункт не найден.")
                 else:
@@ -267,8 +267,8 @@ class JournalForm(forms.Form):
             if new_city and not cd.get("new_street", False):
                 raise forms.ValidationError("У нового нас. пункта улица должна быть тоже новой.")
             try:
-                street_object = Street.objects.get(city__name__iexact=city, name__iexact=street)
-            except ObjectDoesNotExist:
+                street_object = Street.objects.filter(city__name__iexact=city, name__iexact=street)[0]
+            except IndexError:
                 if not cd.get("new_street", False):
                     raise forms.ValidationError("Улица не найдена.")
             else:
@@ -381,8 +381,8 @@ class EditBurialForm(forms.Form):
         if country and region and city and street:
             # Страна.
             try:
-                country_object = GeoCountry.objects.get(name__iexact=country)
-            except ObjectDoesNotExist:
+                country_object = GeoCountry.objects.filter(name__iexact=country)[0]
+            except IndexError:
                 if not cd.get("new_country", False):
                     raise forms.ValidationError("Страна не найдена.")
                 else:
@@ -396,9 +396,9 @@ class EditBurialForm(forms.Form):
             if new_country and not cd.get("new_region", False):
                 raise forms.ValidationError("У новой страны регион должен быть тоже новым.")
             try:
-                region_object = GeoRegion.objects.get(country=country_object, name__iexact=region)
+                region_object = GeoRegion.objects.filter(country=country_object, name__iexact=region)[0]
 #                region_object = GeoRegion.objects.get(country__name__iexact=country, name__iexact=region)
-            except ObjectDoesNotExist:
+            except IndexError:
                 if not cd.get("new_region", False):
                     raise forms.ValidationError("Регион не найден.")
                 else:
@@ -412,9 +412,9 @@ class EditBurialForm(forms.Form):
             if new_region and not cd.get("new_city", False):
                 raise forms.ValidationError("У нового региона нас. пункт должен быть тоже новым.")
             try:
-                city_object = GeoCity.objects.get(region=region_object, name__iexact=city)
+                city_object = GeoCity.objects.filter(region=region_object, name__iexact=city)[0]
 #                city_object = GeoCity.objects.get(region__name__iexact=region, name__iexact=city)
-            except ObjectDoesNotExist:
+            except IndexError:
                 if not cd.get("new_city", False):
                     raise forms.ValidationError("Нас. пункт не найден.")
                 else:
@@ -429,8 +429,8 @@ class EditBurialForm(forms.Form):
                 raise forms.ValidationError("У нового нас. пункта улица должна быть тоже новой.")
             try:
 #                street_object = Street.objects.get(city__name__iexact=city, name__iexact=street)
-                street_object = Street.objects.get(city=city_object, name__iexact=street)
-            except ObjectDoesNotExist:
+                street_object = Street.objects.filter(city=city_object, name__iexact=street)[0]
+            except IndexError:
                 if not cd.get("new_street", False):
                     raise forms.ValidationError("Улица не найдена.")
             else:

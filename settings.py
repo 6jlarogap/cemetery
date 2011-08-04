@@ -136,3 +136,8 @@ CSV_ENCODING = "utf8"
 # Настройки пэйджинации.
 PAGINATION_USER_PER_PAGE_MAX = 50
 PAGINATION_PER_PAGE = 5
+
+try:
+    from settings_local import *
+except ImportError:
+    pass
