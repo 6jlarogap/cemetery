@@ -93,34 +93,25 @@ $(function(){
      });
   
  $("#id_last_name").focus(function(){
-     if ($(this).val()=="НЕИЗВЕСТЕН")
+     if ($(this).val()=="{{ UNKNOWN_NAME }}")
      {$(this).val("");}
      });
 
  $("#id_last_name").focusout(function(){
      if ($(this).val()=="")
-     { $(this).val("НЕИЗВЕСТЕН");}
+     { $(this).val("{{ UNKNOWN_NAME }}");}
      });
 
  $("#id_customer_last_name").focus(function(){
-     if ($(this).val()=="НЕИЗВЕСТЕН")
+     if ($(this).val()=="{{ UNKNOWN_NAME }}")
      {$(this).val("");}
      });
 
  $("#id_customer_last_name").focusout(function(){
      if ($(this).val()=="")
-     {$(this).val("НЕИЗВЕСТЕН");}
+     {$(this).val("{{ UNKNOWN_NAME }}");}
      });
 
- $("#id_street").focus(function(){
-     if ($(this).val()=="НЕИЗВЕСТЕН")
-     {$(this).val("");}
-     });
-
- $("#id_street").focusout(function(){
-     if ($(this).val()=="")
-     {$(this).val("НЕИЗВЕСТЕН");}
-     });
 });
 
 //Первоначальное заполнение списка услуг.

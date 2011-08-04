@@ -16,7 +16,7 @@ from django.forms.models import modelformset_factory
 from django import db
 
 from common.forms import *
-
+from contrib.constants import UNKNOWN_NAME
 from common.models import *
 
 from simplepagination import paginate
@@ -340,7 +340,7 @@ def journal(request):
             person__death_date = cd["death_date"],
             date_fact = cd["burial_date"],
         )
-        if cd["last_name"].lower() != u'неизвестен':
+        if cd["last_name"].lower() != UNKNOWN_NAME.lower():
             params['person__last_name__iexact'] = cd["last_name"]
         duplicates = Burial.objects.filter(**params)
 
@@ -1665,7 +1665,7 @@ def import_csv(request):
                             seat = seat.decode(settings.CSV_ENCODING).strip()
                         # Фамилия заказчика.
                         if cust_ln == "N":
-                            cust_ln = u"НЕИЗВЕСТЕН"  # Если в базе был Null
+                            cust_ln = UNKNOWN_NAME  # Если в базе был Null
                         else:
                             cust_ln = cust_ln.decode(settings.CSV_ENCODING).strip().capitalize()
                             cust_ln = re.sub(r'ё', r'е', cust_ln)
@@ -1687,11 +1687,11 @@ def import_csv(request):
                             cust_initials = cust_initials.decode(settings.CSV_ENCODING).strip().upper()
                         # Город.
                         if city == "N":
-                            city = u"НЕИЗВЕСТЕН"  # Если в базе был Null.
+                            city = UNKNOWN_NAME  # Если в базе был Null.
                         else:
                             city = city.decode(settings.CSV_ENCODING).strip().capitalize()
                         if not city:
-                            city = u"НЕИЗВЕСТЕН"  # Если в базе была пустая строка.
+                            city = UNKNOWN_NAME  # Если в базе была пустая строка.
                         if street == "N":
                             street = u""
                         else:
@@ -1745,8 +1745,8 @@ def import_csv(request):
                                 cust_city = cities[0]
                             else:
                                 cust_city = GeoCity()
-                                cust_city.country = GeoCountry.objects.get(name__iexact="НЕИЗВЕСТЕН")
-                                cust_city.region = GeoRegion.objects.get(name__iexact="НЕИЗВЕСТЕН")
+                                cust_city.country = GeoCountry.objects.get(name__iexact=UNKNOWN_NAME)
+                                cust_city.region = GeoRegion.objects.get(name__iexact=UNKNOWN_NAME)
                                 cust_city.name = city
                                 cust_city.save()
                             try:

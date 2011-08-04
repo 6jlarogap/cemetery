@@ -7,6 +7,6 @@ EXPORT2TERMINAL_VOST_FILE = "/var/cemetery/terminal/export_vost.csv"
 INBOX_DIR = "/var/cemetery/inbox/"
 OUTBOX_DIR = "/var/cemetery/outbox/"
 DUMPS_DIR = "/var/cemetery/dumps/"
-UNKNOWN_NAME =  u"НЕИЗВЕСТЕН"
+UNKNOWN_NAME =  u"***"
 
 STORE_DUMPS = 10  # Храним резервные копии базы за столько дней.

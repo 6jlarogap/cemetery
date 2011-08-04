@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminTimeWidget
 from models import *
+from contrib.constants import UNKNOWN_NAME
 
 from annoying.decorators import autostrip
 
@@ -305,7 +306,7 @@ class JournalForm(AutoTabIndex):
     death_date = forms.DateField(label="Дата смерти*", initial=get_yesterday)
     exhumated_date = forms.DateField(label="Дата эксгумации", required=False)
     last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
-            help_text="Допускаются только буквы, цифры и символ '-'", initial=u"НЕИЗВЕСТЕН")
+            help_text="Допускаются только буквы, цифры и символ '-'", initial=UNKNOWN_NAME)
     first_name = forms.CharField(required=False, max_length=30, label="Имя")
     patronymic = forms.CharField(required=False, max_length=30, label="Отчество")
     cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(), label="Кладбище*", required=True)
@@ -317,13 +318,13 @@ class JournalForm(AutoTabIndex):
     rooms = forms.IntegerField(label="Мест в ограде", required=False)
     customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
                                          help_text="Допускаются только буквы, цифры и символ '-'",
-                                         initial=u"НЕИЗВЕСТЕН")
+                                         initial=UNKNOWN_NAME)
     customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика")
     customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика")
 
     responsible_last_name = forms.CharField(max_length=30, label="Фамилия ответственного*",
                                          help_text="Допускаются только буквы, цифры и символ '-'",
-                                         initial=u"НЕИЗВЕСТЕН")
+                                         initial=UNKNOWN_NAME)
     responsible_first_name = forms.CharField(required=False, max_length=30, label="Имя ответственного")
     responsible_patronymic = forms.CharField(required=False, max_length=30, label="Отчество ответственного")
     responsible_myself = forms.BooleanField(required=False, label="Является ответственным", initial=True)

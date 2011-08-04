@@ -82,13 +82,13 @@ $(function(){
      });
 
      $("#id_customer_last_name").focus(function(){
-         if ($(this).val()=="НЕИЗВЕСТЕН")
+         if ($(this).val()=="{{ UNKNOWN_NAME }}")
          {$(this).val("");}
          });
 
      $("#id_customer_last_name").focusout(function(){
          if ($(this).val()=="")
-         {$(this).val("НЕИЗВЕСТЕН");}
+         {$(this).val("{{ UNKNOWN_NAME }}");}
          });
 
     var initial_operation = $("#id_operation").val();
