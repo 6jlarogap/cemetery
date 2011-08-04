@@ -156,6 +156,8 @@ PAGINATION_PER_PAGE = 5
 
 SENTRY_TESTING = True
 
+DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False}
+
 try:
     from settings_local import *
 except ImportError:
