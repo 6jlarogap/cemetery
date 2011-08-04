@@ -84,6 +84,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     #'pagination.middleware.PaginationMiddleware',
     'common.middleware.NoCacheMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'cemetery.urls'
@@ -118,11 +119,14 @@ INSTALLED_APPS = (
     'pytils',
     'sentry',
     'sentry.client',
+    'debug_toolbar',
     
     # Наши приложения
     'common',
 
 )
+
+INTERNAL_IPS = ['127.0.0.1',] + ['80.70.236.%s' % i for i in range(1, 255)]
 
 LOGIN_URL = "/login/"
 LOGOUT_URL = "/logout/"
