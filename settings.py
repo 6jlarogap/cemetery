@@ -116,6 +116,8 @@ INSTALLED_APPS = (
     'annoying',
     'simplepagination',
     'pytils',
+    'sentry',
+    'sentry.client',
     
     # Наши приложения
     'common',
@@ -147,3 +149,10 @@ CSV_ENCODING = "utf8"
 # Настройки пэйджинации.
 PAGINATION_USER_PER_PAGE_MAX = 50
 PAGINATION_PER_PAGE = 5
+
+SENTRY_TESTING = True
+
+try:
+    from settings_local import *
+except ImportError:
+    pass

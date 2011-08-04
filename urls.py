@@ -53,6 +53,11 @@ urlpatterns += patterns('common.views',
     url(r'^orderfile/delete/(.{36})/(.{36})/$', 'delete_orderfile'),
 )
 
+urlpatterns += patterns('',
+    (r'^sentry/', include('sentry.web.urls')),
+)
+
+
 if settings.DEBUG:
     urlpatterns += patterns('',
         url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
