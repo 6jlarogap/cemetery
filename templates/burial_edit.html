@@ -166,7 +166,32 @@ $(function(){
     });
   });
 
+  // Обработчик изменения выбранного кладбища.
+  $("#id_organization").change(function(){
+    $.getJSON("/getagents/", {id: $(this).val(), ajax: 'true'}, function(j){
+      var options = '';
+      for (var i = 0; i < j.length; i++) {
+        if (j[i].optionValue == $("#id_agent").val())
+        {
+            options += '<option selected value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
+        }
+        else
+        {
+            options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
+        }
+      }
+      $("#id_agent").html(options);
+        $("#id_agent").next('a').attr('href', "/admin/common/organization/"+$("#id_organization").val()+"/");
+    });
+  });
+
+    $('#id_agent').change(updateDover);
+    updateDover();
+
     $("#id_organization").after('<a href="/admin/common/organization/add/" class="add-another" id="add_id_organization" onclick="return showAddAnotherPopup(this);">создать</a>')
+    $("#id_certificate-zags").after('<a href="/admin/common/zags/add/" class="add-another" id="add_id_certificate-zags" onclick="return showAddAnotherPopup(this);">создать</a>')
+    $("#id_id-id_type").after('<a href="/admin/common/iddocumenttype/add/" class="add-another" id="add_id_id-id_type" onclick="return showAddAnotherPopup(this);">создать</a>')
+    $("#id_agent").after('<a href="/admin/common/organization/"+$("#id_organization").val()+"/" target="_blank">создать</a>')
 
    //автодополнение страны.
    $("#id_country").autocomplete({
