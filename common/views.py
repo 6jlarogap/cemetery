@@ -432,10 +432,11 @@ def journal(request):
                 )
         else:
             agent = cd['agent']
-            agent.dover_number = cd['dover_number']
-            agent.dover_date = cd['dover_date']
-            agent.dover_expire = cd['dover_expire']
-            agent.save()
+            if agent:
+                agent.dover_number = cd['dover_number']
+                agent.dover_date = cd['dover_date']
+                agent.dover_expire = cd['dover_expire']
+                agent.save()
 
             new_burial.responsible_customer = agent.person
             new_burial.responsible_agent = agent
@@ -650,10 +651,11 @@ def edit_burial(request, uuid):
                     )
         else:
             agent = cd['agent']
-            agent.dover_number = cd['dover_number']
-            agent.dover_date = cd['dover_date']
-            agent.dover_expire = cd['dover_expire']
-            agent.save()
+            if agent:
+                agent.dover_number = cd['dover_number']
+                agent.dover_date = cd['dover_date']
+                agent.dover_expire = cd['dover_expire']
+                agent.save()
 
             new_burial.responsible_customer = agent.person
             new_burial.responsible_agent = agent
@@ -708,7 +710,6 @@ def edit_burial(request, uuid):
     })
 
 
-@login_required
 def get_positions(burial):
     positions = []
     for product in OrderProduct.objects.all():
