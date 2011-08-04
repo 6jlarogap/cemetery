@@ -906,27 +906,6 @@ def profile(request):
                 up.records_order_by = cd["records_order_by"]
             else:
                 up.records_order_by = ""
-#            if cd.get("default_country", ""):
-#                up.default_country = cd["default_country"]
-#                if cd.get("default_region", ""):
-#                    try:
-#                        region = GeoRegion.objects.get(country=cd["default_country"], name__iexact=cd["default_region"])
-#                    except ObjectDoesNotExist:
-#                        region = GeoRegion()
-#                        region.country = cd["default_country"]
-#                        region.name = cd["default_region"].capitalize()
-#                        region.save()
-#                    up.default_region = region
-#                    if cd.get("default_city", ""):
-#                        try:
-#                            city = GeoCity.objects.get(region=region, name__iexact=cd["default_city"])
-#                        except ObjectDoesNotExist:
-#                            city = GeoCity()
-#                            city.country = cd["default_country"]
-#                            city.region = region
-#                            city.name = cd["default_city"].capitalize()
-#                            city.save()
-#                        up.default_city = city
             up.save()
             return redirect("/profile/")
     else:
@@ -938,12 +917,6 @@ def profile(request):
             if profile.default_operation:
                 initial_data["operation"] = profile.default_operation
                 initial_data["hoperation"] = profile.default_operation.uuid
-#            if profile.default_country:
-#                initial_data["default_country"]= profile.default_country
-#            if profile.default_region:
-#                initial_data["default_region"]= profile.default_region.name
-#            if profile.default_city:
-#                initial_data["default_city"]= profile.default_city.name
             if profile.records_per_page:
                 initial_data["records_per_page"]= profile.records_per_page
             if profile.records_order_by:
@@ -1163,27 +1136,27 @@ def management_cemetery(request):
                 # Есть все для создания непустого Location.
                 # Страна.
                 try:
-                    country = GeoCountry.objects.get(name__iexact=location_country)
+                    country = GeoCountry.objects.get(name__exact=location_country)
                 except ObjectDoesNotExist:
                     country = GeoCountry(name=location_country.capitalize())
                     country.save()
                 # Регион.
                 try:
-                    region = GeoRegion.objects.get(name__iexact=location_region,
+                    region = GeoRegion.objects.get(name__exact=location_region,
                                                    country=country)
                 except ObjectDoesNotExist:
                     region = GeoRegion(name=location_region.capitalize(), country=country)
                     region.save()
                 # Нас. пункт.
                 try:
-                    city = GeoCity.objects.get(name__iexact=location_city, region=region)
+                    city = GeoCity.objects.get(name__exact=location_city, region=region)
                 except ObjectDoesNotExist:
                     city = GeoCity(name=location_city.capitalize(), country=country,
                                    region=region)
                     city.save()
                 # Улица.
                 try:
-                    street = Street.objects.get(name__iexact=location_street, city=city)
+                    street = Street.objects.get(name__exact=location_street, city=city)
                 except ObjectDoesNotExist:
                     street = Street(name=location_street.capitalize(), city=city)
                     street.save()
@@ -1249,27 +1222,27 @@ def management_edit_cemetery(request, uuid):
                 # Есть все для создания непустого Location.
                 # Страна.
                 try:
-                    country = GeoCountry.objects.get(name__iexact=location_country)
+                    country = GeoCountry.objects.get(name__exact=location_country)
                 except ObjectDoesNotExist:
                     country = GeoCountry(name=location_country.capitalize())
                     country.save()
                 # Регион.
                 try:
-                    region = GeoRegion.objects.get(name__iexact=location_region,
+                    region = GeoRegion.objects.get(name__exact=location_region,
                                                    country=country)
                 except ObjectDoesNotExist:
                     region = GeoRegion(name=location_region.capitalize(), country=country)
                     region.save()
                 # Нас. пункт.
                 try:
-                    city = GeoCity.objects.get(name__iexact=location_city, region=region)
+                    city = GeoCity.objects.get(name__exact=location_city, region=region)
                 except ObjectDoesNotExist:
                     city = GeoCity(name=location_city.capitalize(), country=country,
                                    region=region)
                     city.save()
                 # Улица.
                 try:
-                    street = Street.objects.get(name__iexact=location_street, city=city)
+                    street = Street.objects.get(name__exact=location_street, city=city)
                 except ObjectDoesNotExist:
                     street = Street(name=location_street.capitalize(), city=city)
                     street.save()
@@ -1378,27 +1351,27 @@ def init(request):
                 # Есть все для создания непустого Location.
                 # Страна.
                 try:
-                    country = GeoCountry.objects.get(name__iexact=org_location_country)
+                    country = GeoCountry.objects.get(name__exact=org_location_country)
                 except ObjectDoesNotExist:
                     country = GeoCountry(name=org_location_country.capitalize())
                     country.save()
                 # Регион.
                 try:
-                    region = GeoRegion.objects.get(name__iexact=org_location_region,
+                    region = GeoRegion.objects.get(name__exact=org_location_region,
                                                    country=country)
                 except ObjectDoesNotExist:
                     region = GeoRegion(name=org_location_region.capitalize(), country=country)
                     region.save()
                 # Нас. пункт.
                 try:
-                    city = GeoCity.objects.get(name__iexact=org_location_city, region=region)
+                    city = GeoCity.objects.get(name__exact=org_location_city, region=region)
                 except ObjectDoesNotExist:
                     city = GeoCity(name=org_location_city.capitalize(), country=country,
                                    region=region)
                     city.save()
                 # Улица.
                 try:
-                    street = Street.objects.get(name__iexact=org_location_street, city=city)
+                    street = Street.objects.get(name__exact=org_location_street, city=city)
                 except ObjectDoesNotExist:
                     street = Street(name=org_location_street.capitalize(), city=city)
                     street.save()
@@ -1434,27 +1407,27 @@ def init(request):
                 # Есть все для создания непустого Location.
                 # Страна.
                 try:
-                    country = GeoCountry.objects.get(name__iexact=cem_location_country)
+                    country = GeoCountry.objects.get(name__exact=cem_location_country)
                 except ObjectDoesNotExist:
                     country = GeoCountry(name=cem_location_country.capitalize())
                     country.save()
                 # Регион.
                 try:
-                    region = GeoRegion.objects.get(name__iexact=cem_location_region,
+                    region = GeoRegion.objects.get(name__exact=cem_location_region,
                                                    country=country)
                 except ObjectDoesNotExist:
                     region = GeoRegion(name=cem_location_region.capitalize(), country=country)
                     region.save()
                 # Нас. пункт.
                 try:
-                    city = GeoCity.objects.get(name__iexact=cem_location_city, region=region)
+                    city = GeoCity.objects.get(name__exact=cem_location_city, region=region)
                 except ObjectDoesNotExist:
                     city = GeoCity(name=cem_location_city.capitalize(), country=country,
                                    region=region)
                     city.save()
                 # Улица.
                 try:
-                    street = Street.objects.get(name__iexact=cem_location_street, city=city)
+                    street = Street.objects.get(name__exact=cem_location_street, city=city)
                 except ObjectDoesNotExist:
                     street = Street(name=cem_location_street.capitalize(), city=city)
                     street.save()
@@ -1740,17 +1713,17 @@ def import_csv(request):
                         location = Location()
                         if street:
                             # Присутствуют город и улица - будем создавать Location.
-                            cities = GeoCity.objects.filter(name__iexact=city)
+                            cities = GeoCity.objects.filter(name__exact=city)
                             if cities:
                                 cust_city = cities[0]
                             else:
                                 cust_city = GeoCity()
-                                cust_city.country = GeoCountry.objects.get(name__iexact=UNKNOWN_NAME)
-                                cust_city.region = GeoRegion.objects.get(name__iexact=UNKNOWN_NAME)
+                                cust_city.country = GeoCountry.objects.get(name__exact=UNKNOWN_NAME)
+                                cust_city.region = GeoRegion.objects.get(name__exact=UNKNOWN_NAME)
                                 cust_city.name = city
                                 cust_city.save()
                             try:
-                                cust_street = Street.objects.get(city=cust_city, name__iexact=street)
+                                cust_street = Street.objects.get(city=cust_city, name__exact=street)
                             except ObjectDoesNotExist:
                                 cust_street = Street(city=cust_city, name=street)
                                 cust_street.save()
@@ -1768,8 +1741,7 @@ def import_csv(request):
                         # Место.
                         cemetery = cd["cemetery"]
                         try:
-                            place = Place.objects.get(cemetery=cemetery, area__iexact=area, row__iexact=row,
-                                                      seat__iexact=seat)
+                            place = Place.objects.get(cemetery=cemetery, area__exact=area, row__exact=row, seat__exact=seat)
                         except ObjectDoesNotExist:
                             place = Place(creator=creator)
                             place.cemetery = cemetery
