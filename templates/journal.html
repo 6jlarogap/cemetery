@@ -24,6 +24,14 @@
         }
     }
 
+    function updateAgent() {
+        if ($('#id_agent_director:checked').length == 0) {
+            $('.agent').show()
+        } else {
+            $('.agent').hide()
+        }
+    }
+
     function updateOPF() {
         var cls = 'opf_' + $('[name=opf]:checked').val();
         $('.opf_fizik, .opf_yurik').hide();
@@ -84,6 +92,9 @@ $(function(){
 
     $('#id_responsible_myself').change(updateResponsible);
     updateResponsible();
+
+    $('#id_agent_director').change(updateAgent);
+    updateAgent();
 
     $('#id_opf_0, #id_opf_1').change(updateOPF);
     updateOPF();
@@ -339,6 +350,12 @@ $(function(){
             {{ certificate_form.non_field_errors }}
             {{ responsible_form.non_field_errors }}
             <table width="800">
+                <!-- burial  -->
+                <tr>
+                    <td colspan="3">
+                        <h2>Данные Заказа</h2>
+                    </td>
+                </tr>
                 <tr>
                     <td class="free_form">{{ form.account_book_n.label_tag }}</td>
                     <td class="free_form">{{ form.burial_date.label_tag }}</td>
@@ -349,25 +366,13 @@ $(function(){
                     <td >{{ form.burial_date.errors }}{{ form.burial_date }}<br/>{{ form.burial_time.errors }}{{ form.burial_time }}</td>
                     <td >{{ form.exhumated_date.errors }}{{ form.exhumated_date }}</td>
                 </tr>
+                <!-- /burial  -->
+                
+                <!-- deadman -->
                 <tr>
-                    <td class="free_form">{{ form.birth_date.label_tag }}</td>
-                    <td class="free_form">{{ form.death_date.label_tag }}</td>
-                    <td >{{ certificate_form.zags.label_tag }}</td>
-                </tr>
-                <tr>
-                    <td >{{ form.birth_date.errors }}{{ form.birth_date }}</td>
-                    <td >{{ form.death_date.errors }}{{ form.death_date }}</td>
-                    <td >{{ certificate_form.zags.errors }}{{ certificate_form.zags }}</td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ certificate_form.series.label_tag }}</td>
-                    <td class="free_form">{{ certificate_form.release_date.label_tag }}</td>
-                    <td >{{ certificate_form.s_number.label_tag }}</td>
-                </tr>
-                <tr>
-                    <td >{{ certificate_form.series.errors }}{{ certificate_form.series }}</td>
-                    <td >{{ certificate_form.release_date.errors }}{{ certificate_form.release_date }}</td>
-                    <td >{{ certificate_form.s_number.errors }}{{ certificate_form.s_number }}</td>
+                    <td colspan="3">
+                        <h2>Данные усопшего</h2>
+                    </td>
                 </tr>
                 <tr>
                     <td class="free_form">{{ form.last_name.label_tag }}</td>
@@ -379,132 +384,27 @@ $(function(){
                     <td class="free_form">{{ form.first_name.errors }}{{ form.first_name }}</td>
                     <td class="free_form">{{ form.patronymic.errors }}{{ form.patronymic }}</td>
                 </tr>
-
                 <tr>
-                    <td class="free_form">{{ form.opf.label_tag }}</td>
-                    <td class="free_form opf_fizik">{{ form.responsible_myself.label_tag }}</td>
-                    <td class="free_form opf_yurik">{{ form.organization.label_tag }}</td>
-                    <td class="free_form opf_yurik">{{ form.agent_director.label_tag }}</td>
-                    <td class="free_form opf_yurik">{{ form.agent.label_tag }}</td>
+                    <td class="free_form">{{ form.birth_date.label_tag }}</td>
+                    <td class="free_form">{{ form.death_date.label_tag }}</td>
+                    <td >{{ certificate_form.zags.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td class="free_form">{{ form.opf.errors }}{{ form.opf }}</td>
-                    <td class="free_form opf_fizik">{{ form.responsible_myself.errors }}{{ form.responsible_myself }}</td>
-                    <td class="free_form opf_yurik">{{ form.organization.errors }}{{ form.organization }}</td>
-                    <td class="free_form opf_yurik">{{ form.agent_director.errors }}{{ form.agent_director }}</td>
-                    <td class="free_form opf_yurik">{{ form.agent.errors }}{{ form.agent }}</td>
+                    <td >{{ form.birth_date.errors }}{{ form.birth_date }}</td>
+                    <td >{{ form.death_date.errors }}{{ form.death_date }}</td>
+                    <td >{{ certificate_form.zags.errors }}{{ certificate_form.zags }}</td>
                 </tr>
-                <tr class="opf_fizik">
-                    <td class="free_form">{{ id_form.id_type.label_tag }}</td>
-                    <td class="free_form">{{ id_form.series.label_tag }}</td>
-                    <td class="free_form">{{ id_form.number.label_tag }}</td>
-                </tr>
-                <tr class="opf_fizik">
-                    <td class="free_form">{{ id_form.id_type.errors }}{{ id_form.id_type }}</td>
-                    <td class="free_form">{{ id_form.series.errors }}{{ id_form.series }}</td>
-                    <td class="free_form">{{ id_form.number.errors }}{{ id_form.number }}</td>
-                </tr>
-                <tr class="opf_fizik">
-                    <td class="free_form">{{ id_form.who.label_tag }}</td>
-                    <td class="free_form">{{ id_form.when.label_tag }}</td>
-                </tr>
-                <tr class="opf_fizik">
-                    <td class="free_form">{{ id_form.who.errors }}{{ id_form.who }}</td>
-                    <td class="free_form">{{ id_form.when.errors }}{{ id_form.when }}</td>
-                </tr>
-                <tr class="opf_yurik">
-                    <td class="free_form">{{ form.dover_number.label_tag }}</td>
-                    <td class="free_form">{{ form.dover_date.label_tag }}</td>
-                    <td class="free_form">{{ form.dover_expire.label_tag }}</td>
-                </tr>
-                <tr class="opf_yurik">
-                    <td class="free_form">{{ form.dover_number.errors }}{{ form.dover_number }}</td>
-                    <td class="free_form">{{ form.dover_date.errors }}{{ form.dover_date }}</td>
-                    <td class="free_form">{{ form.dover_expire.errors }}{{ form.dover_expire }}</td>
-                </tr>
-
+                <!-- deadman's certificate -->
                 <tr>
-                    <td class="free_form">{{ form.cemetery.label_tag }}</td>
-                    <td class="free_form">{{ form.operation.label_tag }}</td>
-                    <td >&nbsp;</td>
+                    <td class="free_form">{{ certificate_form.series.label_tag }}</td>
+                    <td >{{ certificate_form.s_number.label_tag }}</td>
+                    <td class="free_form">{{ certificate_form.release_date.label_tag }}</td>
                 </tr>
                 <tr>
-                    <td class="free_form">{{ form.cemetery.errors }}{{ form.cemetery }}</td>
-                    <td class="free_form">{{ form.operation.errors }}{{ form.operation }}{{ form.hoperation.errors }}{{ form.hoperation }}</td>
-                    <td >&nbsp;</td>
+                    <td >{{ certificate_form.series.errors }}{{ certificate_form.series }}</td>
+                    <td >{{ certificate_form.s_number.errors }}{{ certificate_form.s_number }}</td>
+                    <td >{{ certificate_form.release_date.errors }}{{ certificate_form.release_date }}</td>
                 </tr>
-                <tr>
-                    <td class="free_form">{{ form.area.label_tag }}</td>
-                    <td class="free_form">{{ form.row.label_tag }}</td>
-                    <td class="free_form">{{ form.seat.label_tag }}</td>
-                    <td class="free_form">{{ form.rooms.label_tag }}</td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ form.area.errors }}{{ form.area }}</td>
-                    <td class="free_form">{{ form.row.errors }}{{ form.row }}</td>
-                    <td class="free_form">{{ form.seat.errors }}{{ form.seat }}</td>
-                    <td class="free_form">{{ form.rooms.errors }}{{ form.rooms }}</td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ form.customer_last_name.label_tag }}</td>
-                    <td class="free_form">{{ form.customer_first_name.label_tag }}</td>
-                    <td class="free_form">{{ form.customer_patronymic.label_tag }}</td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ form.customer_last_name.errors }}{{ form.customer_last_name }}</td>
-                    <td class="free_form">{{ form.customer_first_name.errors }}{{ form.customer_first_name }}</td>
-                    <td class="free_form">{{ form.customer_patronymic.errors }}{{ form.customer_patronymic }}</td>
-                </tr>
-
-                <!-- LOCATION -->
-                <tr>
-                    <td colspan="3"><h2>Адрес проживания заказчика (для связи)</h2></td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ location_form.post_index.label_tag }}</td>
-                    <td class="free_form">{{ location_form.post_index.errors }}{{ location_form.post_index }}</td>
-                    <td >&nbsp;</td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ location_form.street.label_tag }}</td>
-                    <td class="free_form">{{ location_form.city.label_tag }}</td>
-                    <td class="free_form">{{ location_form.region.label_tag }}</td>
-                    <td class="free_form">{{ location_form.country.label_tag }}</td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ location_form.street.errors }}{{ location_form.street }}</td>
-                    <td class="free_form">{{ location_form.city.errors }}{{ location_form.city }}</td>
-                    <td class="free_form">{{ location_form.region.errors }}{{ location_form.region }}</td>
-                    <td class="free_form">{{ location_form.country.errors }}{{ location_form.country }}</td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ location_form.new_street.label_tag }}</td>
-                    <td class="free_form">{{ location_form.new_city.label_tag }}</td>
-                    <td class="free_form">{{ location_form.new_region.label_tag }}</td>
-                    <td>{{ location_form.new_country.label_tag }}</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ location_form.new_street }}</td>
-                    <td class="free_form">{{ location_form.new_city }}</td>
-                    <td class="free_form">{{ location_form.new_region }}</td>
-                    <td>{{ location_form.new_country }}</td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ location_form.house.label_tag }}</td>
-                    <td class="free_form">{{ location_form.block.label_tag }}</td>
-                    <td class="free_form">{{ location_form.building.label_tag }}</td>
-                    <td class="free_form">{{ location_form.flat.label_tag }}</td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ location_form.house.errors }}{{ location_form.house }}</td>
-                    <td class="free_form">{{ location_form.block.errors }}{{ location_form.block }}</td>
-                    <td class="free_form">{{ location_form.building.errors }}{{ location_form.building }}</td>
-                    <td class="free_form">{{ location_form.flat.errors }}{{ location_form.flat }}</td>
-                </tr>
-                <!-- /LOCATION -->
-
-                <!-- REGISTRATION -->
                 <tr>
                     <td colspan="3">
                         <h2>Адрес прописки усопшего</h2>
@@ -528,17 +428,10 @@ $(function(){
                     <td class="free_form">{{ registration_form.country.errors }}{{ registration_form.country }}</td>
                 </tr>
                 <tr>
-                    <td class="free_form">{{ registration_form.new_street.label_tag }}</td>
-                    <td class="free_form">{{ registration_form.new_city.label_tag }}</td>
-                    <td class="free_form">{{ registration_form.new_region.label_tag }}</td>
-                    <td>{{ registration_form.new_country.label_tag }}</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td class="free_form">{{ registration_form.new_street }}</td>
-                    <td class="free_form">{{ registration_form.new_city }}</td>
-                    <td class="free_form">{{ registration_form.new_region }}</td>
-                    <td>{{ registration_form.new_country }}</td>
+                    <td class="free_form">{{ registration_form.new_street.label_tag }}{{ registration_form.new_street }}</td>
+                    <td class="free_form">{{ registration_form.new_city.label_tag }}{{ registration_form.new_city }}</td>
+                    <td class="free_form">{{ registration_form.new_region.label_tag }}{{ registration_form.new_region }}</td>
+                    <td>{{ registration_form.new_country.label_tag }}{{ registration_form.new_country }}</td>
                 </tr>
                 <tr>
                     <td class="free_form">{{ registration_form.house.label_tag }}</td>
@@ -552,13 +445,157 @@ $(function(){
                     <td class="free_form">{{ registration_form.building.errors }}{{ registration_form.building }}</td>
                     <td class="free_form">{{ registration_form.flat.errors }}{{ registration_form.flat }}</td>
                 </tr>
-                <!-- /REGISTRATION -->
+                <!-- /deadman -->
+
+                <!-- cemetery -->
+                <tr>
+                    <td colspan="3">
+                        <h2>Данные кладбища</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="free_form">{{ form.cemetery.label_tag }}</td>
+                    <td class="free_form">{{ form.operation.label_tag }}</td>
+                    <td >&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="free_form">{{ form.cemetery.errors }}{{ form.cemetery }}</td>
+                    <td class="free_form">{{ form.operation.errors }}{{ form.operation }}{{ form.hoperation.errors }}{{ form.hoperation }}</td>
+                    <td >&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="free_form">{{ form.area.label_tag }}</td>
+                    <td class="free_form">{{ form.row.label_tag }}</td>
+                    <td class="free_form">{{ form.seat.label_tag }}</td>
+                    <td class="free_form">{{ form.rooms.label_tag }}</td>
+                </tr>
+                <tr>
+                    <td class="free_form">{{ form.area.errors }}{{ form.area }}</td>
+                    <td class="free_form">{{ form.row.errors }}{{ form.row }}</td>
+                    <td class="free_form">{{ form.seat.errors }}{{ form.seat }}</td>
+                    <td class="free_form">{{ form.rooms.errors }}{{ form.rooms }}</td>
+                </tr>
+                <!-- -->
+
+                <tr>
+                    <td colspan="3">
+                        <h2>Данные Заказчика</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="free_form">{{ form.opf.label_tag }}</td>
+                </tr>
+                <tr>
+                    <td class="free_form">{{ form.opf.errors }}{{ form.opf }}</td>
+                </tr>
+                <tr class="opf_yurik">
+                    <td class="free_form opf_yurik">{{ form.organization.label_tag }}</td>
+                    <td class="free_form opf_yurik">{{ form.agent_director.label_tag }}</td>
+                    <td class="free_form opf_yurik">{{ form.agent.label_tag }}</td>
+                <tr>
+                <tr class="opf_yurik">
+                    <td class="free_form opf_yurik">{{ form.organization.errors }}{{ form.organization }}</td>
+                    <td class="free_form opf_yurik">{{ form.agent_director.errors }}{{ form.agent_director }}</td>
+                    <td class="free_form opf_yurik agent">{{ form.agent.errors }}{{ form.agent }}</td>
+                <tr>
+                <tr class="opf_yurik">
+                    <td colspan="3">
+                        <h2>Данные Агента</h2>
+                    </td>
+                </tr>
+                <tr class="opf_yurik">
+                    <td class="free_form">{{ form.dover_number.label_tag }}</td>
+                    <td class="free_form">{{ form.dover_date.label_tag }}</td>
+                    <td class="free_form">{{ form.dover_expire.label_tag }}</td>
+                </tr>
+                <tr class="opf_yurik">
+                    <td class="free_form">{{ form.dover_number.errors }}{{ form.dover_number }}</td>
+                    <td class="free_form">{{ form.dover_date.errors }}{{ form.dover_date }}</td>
+                    <td class="free_form">{{ form.dover_expire.errors }}{{ form.dover_expire }}</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ form.customer_last_name.label_tag }}</td>
+                    <td class="free_form">{{ form.customer_first_name.label_tag }}</td>
+                    <td class="free_form">{{ form.customer_patronymic.label_tag }}</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ form.customer_last_name.errors }}{{ form.customer_last_name }}</td>
+                    <td class="free_form">{{ form.customer_first_name.errors }}{{ form.customer_first_name }}</td>
+                    <td class="free_form">{{ form.customer_patronymic.errors }}{{ form.customer_patronymic }}</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ id_form.id_type.label_tag }}</td>
+                    <td class="free_form">{{ id_form.series.label_tag }}</td>
+                    <td class="free_form">{{ id_form.number.label_tag }}</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ id_form.id_type.errors }}{{ id_form.id_type }}</td>
+                    <td class="free_form">{{ id_form.series.errors }}{{ id_form.series }}</td>
+                    <td class="free_form">{{ id_form.number.errors }}{{ id_form.number }}</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ id_form.who.label_tag }}</td>
+                    <td class="free_form">{{ id_form.when.label_tag }}</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ id_form.who.errors }}{{ id_form.who }}</td>
+                    <td class="free_form">{{ id_form.when.errors }}{{ id_form.when }}</td>
+                </tr>
+
+
+                <!-- LOCATION -->
+                <tr class="opf_fizik">
+                    <td colspan="3"><h2>Адрес проживания заказчика-физлица (для связи)</h2></td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ location_form.post_index.label_tag }}</td>
+                    <td class="free_form">{{ location_form.post_index.errors }}{{ location_form.post_index }}</td>
+                    <td >&nbsp;</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ location_form.street.label_tag }}</td>
+                    <td class="free_form">{{ location_form.city.label_tag }}</td>
+                    <td class="free_form">{{ location_form.region.label_tag }}</td>
+                    <td class="free_form">{{ location_form.country.label_tag }}</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ location_form.street.errors }}{{ location_form.street }}</td>
+                    <td class="free_form">{{ location_form.city.errors }}{{ location_form.city }}</td>
+                    <td class="free_form">{{ location_form.region.errors }}{{ location_form.region }}</td>
+                    <td class="free_form">{{ location_form.country.errors }}{{ location_form.country }}</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ location_form.new_street.label_tag }}{{ location_form.new_street }}</td>
+                    <td class="free_form">{{ location_form.new_city.label_tag }}{{ location_form.new_city }}</td>
+                    <td class="free_form">{{ location_form.new_region.label_tag }}{{ location_form.new_region }}</td>
+                    <td>{{ location_form.new_country.label_tag }}{{ location_form.new_country }}</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ location_form.house.label_tag }}</td>
+                    <td class="free_form">{{ location_form.block.label_tag }}</td>
+                    <td class="free_form">{{ location_form.building.label_tag }}</td>
+                    <td class="free_form">{{ location_form.flat.label_tag }}</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ location_form.house.errors }}{{ location_form.house }}</td>
+                    <td class="free_form">{{ location_form.block.errors }}{{ location_form.block }}</td>
+                    <td class="free_form">{{ location_form.building.errors }}{{ location_form.building }}</td>
+                    <td class="free_form">{{ location_form.flat.errors }}{{ location_form.flat }}</td>
+                </tr>
+                <!-- /LOCATION -->
+
 
                 <!-- responsible -->
-                <tr class="responsible_myself">
+                <tr class="free_form">
                     <td colspan="3"><h2>Ответственное лицо</h2></td>
                 </tr>
-                <tr class="responsible_myself">
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ form.responsible_myself.label_tag }}</td>
+                </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ form.responsible_myself.errors }}{{ form.responsible_myself }}</td>
+                </tr>
+                <tr class="responsible_myself ">
                     <td class="free_form">{{ form.responsible_last_name.label_tag }}</td>
                     <td class="free_form">{{ form.responsible_first_name.label_tag }}</td>
                     <td class="free_form">{{ form.responsible_patronymic.label_tag }}</td>
@@ -587,17 +624,10 @@ $(function(){
                     <td class="free_form">{{ responsible_form.country.errors }}{{ responsible_form.country }}</td>
                 </tr>
                 <tr class="responsible_myself">
-                    <td class="free_form">{{ responsible_form.new_street.label_tag }}</td>
-                    <td class="free_form">{{ responsible_form.new_city.label_tag }}</td>
-                    <td class="free_form">{{ responsible_form.new_region.label_tag }}</td>
-                    <td>{{ responsible_form.new_country.label_tag }}</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr class="responsible_myself">
-                    <td class="free_form">{{ responsible_form.new_street }}</td>
-                    <td class="free_form">{{ responsible_form.new_city }}</td>
-                    <td class="free_form">{{ responsible_form.new_region }}</td>
-                    <td>{{ responsible_form.new_country }}</td>
+                    <td class="free_form">{{ responsible_form.new_street.label_tag }}{{ responsible_form.new_street }}</td>
+                    <td class="free_form">{{ responsible_form.new_city.label_tag }}{{ responsible_form.new_city }}</td>
+                    <td class="free_form">{{ responsible_form.new_region.label_tag }}{{ responsible_form.new_region }}</td>
+                    <td>{{ responsible_form.new_country.label_tag }}{{ responsible_form.new_country }}</td>
                 </tr>
                 <tr class="responsible_myself">
                     <td class="free_form">{{ responsible_form.house.label_tag }}</td>
@@ -613,6 +643,9 @@ $(function(){
                 </tr>
                 <!-- /responsible -->
 
+                <tr class="free_form">
+                    <td colspan="3"><h2>Телефоны ответственного лица</h2></td>
+                </tr>
                 <tr>
                     {{ phoneset }}
                 </tr>

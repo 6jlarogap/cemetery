@@ -327,7 +327,7 @@ class JournalForm(AutoTabIndex):
                                          initial=UNKNOWN_NAME)
     responsible_first_name = forms.CharField(required=False, max_length=30, label="Имя ответственного")
     responsible_patronymic = forms.CharField(required=False, max_length=30, label="Отчество ответственного")
-    responsible_myself = forms.BooleanField(required=False, label="Является ответственным", initial=True)
+    responsible_myself = forms.BooleanField(required=False, label="Заказчик является ответственным", initial=True)
 
     opf = forms.ChoiceField(label="Орг.-пр. форма", choices=[
         ('fizik', u"Физ. лицо"),
@@ -335,7 +335,7 @@ class JournalForm(AutoTabIndex):
     ], widget=forms.RadioSelect, initial='fizik')
 
     organization = forms.ModelChoiceField(label="Организация", queryset=Organization.objects.all(), required=False)
-    agent_director = forms.BooleanField(label="Агент - директор", required=False)
+    agent_director = forms.BooleanField(label="Директор - агент", required=False)
 
     dover_number = forms.CharField(label="Номер доверенности", max_length=255, required=False)
     dover_date = forms.DateField(label="Дата выдачи", required=False)
