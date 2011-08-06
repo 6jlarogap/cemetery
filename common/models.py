@@ -559,11 +559,11 @@ class Order(models.Model):
     Заказ.
     """
     uuid = UUIDField(primary_key=True)
-    responsible = models.ForeignKey(Soul, related_name='ordr_responsible')  # Ответственный.
-    responsible_customer = models.ForeignKey(Soul, related_name='ordr_responsible_customer', blank=True, null=True)
-    responsible_agent = models.ForeignKey(Agent, blank=True, null=True)
+    responsible = models.ForeignKey(Soul, related_name='ordr_responsible')          # Исполнитель. Ответственный за исполнение Заказа. Организация кладбища
+    customer = models.ForeignKey(Soul, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)
+    responsible_agent = models.ForeignKey(Agent, blank=True, null=True)             # Агент Заказчика-юрлица
+    responsible_customer = models.ForeignKey(Soul, related_name='ordr_responsible_customer', blank=True, null=True) # Ответственный за захоронением
 
-    customer = models.ForeignKey(Soul, related_name='ordr_customer')  # Клиент.
     doer = models.ForeignKey(Soul, blank=True, null=True, related_name="doerorder")  # Исполнитель (работник).
     date_plan = models.DateTimeField(blank=True, null=True)  # Планируемая дата исполнения.
     date_fact = models.DateTimeField(u"Фактическая дата исполнения", blank=True, null=True)  # Фактическая дата исполнения.

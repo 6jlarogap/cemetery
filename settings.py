@@ -84,7 +84,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     #'pagination.middleware.PaginationMiddleware',
     'common.middleware.NoCacheMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'cemetery.urls'
@@ -119,7 +119,7 @@ INSTALLED_APPS = (
     'pytils',
     'sentry',
     'sentry.client',
-    'debug_toolbar',
+#    'debug_toolbar',
     
     # Наши приложения
     'common',
@@ -156,7 +156,7 @@ PAGINATION_PER_PAGE = 5
 
 SENTRY_TESTING = True
 
-DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False}
+#DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False}
 
 try:
     from settings_local import *

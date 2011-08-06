@@ -407,7 +407,7 @@ $(function(){
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <h2>Адрес прописки усопшего</h2>
+                        <h2>Адрес усопшего</h2>
                     </td>
                 </tr>
                 <tr>
@@ -491,24 +491,24 @@ $(function(){
                 <tr class="opf_yurik">
                     <td class="free_form opf_yurik">{{ form.organization.label_tag }}</td>
                     <td class="free_form opf_yurik">{{ form.agent_director.label_tag }}</td>
-                    <td class="free_form opf_yurik">{{ form.agent.label_tag }}</td>
                 <tr>
                 <tr class="opf_yurik">
                     <td class="free_form opf_yurik">{{ form.organization.errors }}{{ form.organization }}</td>
                     <td class="free_form opf_yurik">{{ form.agent_director.errors }}{{ form.agent_director }}</td>
-                    <td class="free_form opf_yurik agent">{{ form.agent.errors }}{{ form.agent }}</td>
                 <tr>
-                <tr class="opf_yurik">
+                <tr class="opf_yurik agent">
                     <td colspan="3">
                         <h2>Данные Агента</h2>
                     </td>
                 </tr>
-                <tr class="opf_yurik">
+                <tr class="opf_yurik agent">
+                    <td class="free_form">{{ form.agent.label_tag }}</td>
                     <td class="free_form">{{ form.dover_number.label_tag }}</td>
                     <td class="free_form">{{ form.dover_date.label_tag }}</td>
                     <td class="free_form">{{ form.dover_expire.label_tag }}</td>
                 </tr>
-                <tr class="opf_yurik">
+                <tr class="opf_yurik agent">
+                    <td class="free_form">{{ form.agent.errors }}{{ form.agent }}</td>
                     <td class="free_form">{{ form.dover_number.errors }}{{ form.dover_number }}</td>
                     <td class="free_form">{{ form.dover_date.errors }}{{ form.dover_date }}</td>
                     <td class="free_form">{{ form.dover_expire.errors }}{{ form.dover_expire }}</td>

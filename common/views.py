@@ -292,7 +292,7 @@ def journal(request):
     """
     Страница ввода нового захоронения.
     """
-    PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=4)
+    PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=3)
 
     if request.user.userprofile.default_cemetery:
         cem = request.user.userprofile.default_cemetery
