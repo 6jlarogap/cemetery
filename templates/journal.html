@@ -211,14 +211,14 @@ $(function(){
 
 
    //автодополнение страны.
-   $("#id_country").autocomplete({
+   $("input:text[id$=country]").autocomplete({
         source: "/getcountries/",
         minLength: 1,
         delay: 100,
     });
 
    //автодополнение региона.
-   $("#id_region").autocomplete({
+   $("input:text[id$=region]").autocomplete({
         source: "/getregions/",
         minLength: 2,
         delay: 100,
@@ -234,7 +234,7 @@ $(function(){
        }
    });
    //автодополнение нас. пункта.
-   $("#id_city").autocomplete({
+   $("input:text[id$=city]").autocomplete({
         source: "/getcities/",
         minLength: 2,
         delay: 100,
@@ -253,7 +253,7 @@ $(function(){
 
     });
    //автодополнение улицы.
-   $("#id_street").autocomplete({
+   $("input:text[id$=street]").autocomplete({
         source: "/getstreets/",
         minLength: 2,
         delay: 100,
