@@ -54,6 +54,9 @@ class OCAdmin(admin.ModelAdmin):
 #            self.exclude = ("creator")
 #        return super(RoleAdmin, self).get_form(request, obj=None, **kwargs)
 
+class StreetAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
 admin.site.register(Organization)
 admin.site.register(Role)
 admin.site.register(Soul)
@@ -64,7 +67,7 @@ admin.site.register(Cemetery)
 admin.site.register(Location)
 admin.site.register(GeoCountry)
 admin.site.register(GeoCity)
-admin.site.register(Street)
+admin.site.register(Street, StreetAdmin)
 admin.site.register(Metro)
 admin.site.register(ProductComments)
 admin.site.register(Order)
