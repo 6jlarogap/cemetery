@@ -468,9 +468,9 @@ def split_number(s):
     except (IndexError, ValueError):
         p2 = 1999999999
     try:
-        p3 = re.findall('^([^\d]*)(\d+)(.+)', s, re.I)[0][2]
+        p3 = re.findall('^([^\d]*)(\d+)(.*)', s, re.I)[0][2]
     except IndexError:
-        p3 = ''
+        p3 = s
     return p1, p2, p3
 
 class Place(Product):
