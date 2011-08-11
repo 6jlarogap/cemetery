@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load adminmedia %}
-{%  load my_filters %}
+{% load my_filters %}
 {% block scripts %}
 {{ form.media }}
 <link rel="stylesheet" href="/media/css/ui-lightness/jquery-ui-1.8.6.custom.css" type="text/css" />
@@ -353,7 +353,7 @@ $(function(){
                 <!-- burial  -->
                 <tr>
                     <td colspan="3">
-                        <h2>Данные Заказа</h2>
+                        <h2>{% block title_h2 %}Данные Заказа{% endblock %}</h2>
                     </td>
                 </tr>
                 <tr>
@@ -667,6 +667,7 @@ $(function(){
                     <td >&nbsp;</td>
                 </tr>
             </table>
+            {% block buttons %}
             <table>
                 <tfoot>
                     <tr>
@@ -677,6 +678,7 @@ $(function(){
                     </tr>
                 </tfoot>
             </table>
+            {% endblock %}
         </form>
 
     {% if object_list %}

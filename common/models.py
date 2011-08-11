@@ -8,7 +8,7 @@ from south.modelsinspector import add_introspection_rules
 
 import datetime
 import os
-#import re
+import re
 
 from django_extensions.db.fields import UUIDField
 
@@ -458,6 +458,21 @@ class ProductComments(models.Model):
         ordering = ['date_of_creation']
 
 
+def split_number(s):
+    try:
+        p1 = re.findall('^([^\d]+)(\d+)', s, re.I)[0][0]
+    except IndexError:
+        p1 = ''
+    try:
+        p2 = int(re.findall('^([^\d]+)(\d+)', s, re.I)[0][1])
+    except (IndexError, ValueError):
+        p2 = 1999999999
+    try:
+        p3 = re.findall('^([^\d]+)(\d+)(.+)', s, re.I)[0][2]
+    except IndexError:
+        p3 = ''
+    return p1, p2, p3
+
 class Place(Product):
     """
     Место.
@@ -476,6 +491,28 @@ class Place(Product):
     creator = models.ForeignKey(Soul, verbose_name=u"Создатель записи")  # Создатель записи.
     date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True)  # Дата создания записи.
 
+    area_str1 = models.CharField(editable=False, null=True, max_length=9)
+    area_num = models.PositiveIntegerField(editable=False, null=True)
+    area_str2 = models.CharField(editable=False, null=True, max_length=9)
+
+    row_str1 = models.CharField(editable=False, null=True, max_length=9)
+    row_num = models.PositiveIntegerField(editable=False, null=True)
+    row_str2 = models.CharField(editable=False, null=True, max_length=9)
+
+    seat_str1 = models.CharField(editable=False, null=True, max_length=9)
+    seat_num = models.PositiveIntegerField(editable=False, null=True)
+    seat_str2 = models.CharField(editable=False, null=True, max_length=9)
+
+    @staticmethod
+    def split_parts(self):
+        for f in ['area', 'row', 'seat']:
+            p1, p2, p3 = split_number(getattr(self, f))
+            setattr(self, f+'_str1', p1)
+            setattr(self, f+'_num', p2)
+            setattr(self, f+'_str2', p3)
+
+            print 'place:', p1, '-', p2, '-', p3
+
     def save(self, *args, **kwargs):
         """
         Всегда приводим area/row/seat к нижнему регистру.
@@ -485,6 +522,8 @@ class Place(Product):
 
         if self.seat:
             self.seat = self.seat.lower()
+
+        self.split_parts()
 
         Burial.objects.filter(product__place=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
         super(Place, self).save(*args, **kwargs)
@@ -517,29 +556,6 @@ class Place(Product):
     def __unicode__(self):
         return  '%s, %s, %s (%s)' % (self.area, self.row, self.seat,
                                      self.cemetery)
-
-class Place1(Product): # Места
-    cemetery = models.ForeignKey(Cemetery)  # Связь с кладбищем.
-    area = models.CharField(max_length=9)  # Участок.
-    row = models.CharField(max_length=9)  # Ряд.
-    seat = models.CharField(max_length=9)  # Место.
-    gps_x = models.FloatField(blank=True, null=True)  # GPS X-ось.
-    gps_y = models.FloatField(blank=True, null=True)  # GPS Y-ось.
-    gps_z = models.FloatField(blank=True, null=True)  # GPS Z-ось.
-    creator = models.ForeignKey(Soul)  # Создатель записи.
-    date_of_creation = models.DateTimeField()  # Дата создания записи.
-    s1 = models.TextField(blank=True)
-    s2 = models.FloatField(blank=True, null=True)
-    s3 = models.TextField(blank=True)
-    s4 = models.TextField(blank=True)
-    s5 = models.FloatField(blank=True, null=True)
-    s6 = models.TextField(blank=True)
-    s7 = models.TextField(blank=True)
-    s8 = models.FloatField(blank=True, null=True)
-    s9 = models.TextField(blank=True)
-    class Meta:
-        managed = False
-
 
 class Operation(models.Model):
     """
@@ -616,28 +632,6 @@ class OrderComments(models.Model):
     class Meta:
         ordering = ['date_of_creation']
 
-class BurialSortedManager(models.Manager):
-    def prepared(self):
-        return self.select_related().extra(
-            tables=['common_place', ],
-            where=['common_place.product_ptr_id = common_order.product_id', ],
-            select={
-                's1': '"substring"((common_burial.account_book_n)::text, \'([^[:digit:]]*)[[:digit:]]*.*\'::text)',
-                's2': 'to_number("substring"((common_burial.account_book_n)::text, \'[^[:digit:]]*([[:digit:]]*).*\'::text), \'9999999999\'::text)',
-                's3': '"substring"((common_burial.account_book_n)::text, \'[^[:digit:]]*[[:digit:]]*(.*)\'::text)',
-
-                'place_s1': '"substring"((common_place.area)::text, \'([^[:digit:]]*)[[:digit:]]*.*\'::text)',
-                'place_s2': 'to_number("substring"((common_place.area)::text, \'[^[:digit:]]*([[:digit:]]*).*\'::text), \'9999999999\'::text)',
-                'place_s3': '"substring"((common_place.area)::text, \'[^[:digit:]]*[[:digit:]]*(.*)\'::text)',
-                'place_s4': '"substring"((common_place."row")::text, \'([^[:digit:]]*)[[:digit:]]*.*\'::text)',
-                'place_s5': 'to_number("substring"((common_place."row")::text, \'[^[:digit:]]*([[:digit:]]*).*\'::text), \'9999999999\'::text)',
-                'place_s6': '"substring"((common_place."row")::text, \'[^[:digit:]]*[[:digit:]]*(.*)\'::text)',
-                'place_s7': '"substring"((common_place.seat)::text, \'([^[:digit:]]*)[[:digit:]]*.*\'::text)',
-                'place_s8': 'to_number("substring"((common_place.seat)::text, \'[^[:digit:]]*([[:digit:]]*).*\'::text), \'9999999999\'::text)',
-                'place_s9': '"substring"((common_place.seat)::text, \'[^[:digit:]]*[[:digit:]]*(.*)\'::text)',
-            }
-        )
-
 class Burial(Order):
     """
     Захоронение.
@@ -647,7 +641,9 @@ class Burial(Order):
     exhumated_date = models.DateTimeField(u"Дата эксгумации", blank=True, null=True)
     last_sync_date = models.DateTimeField(u"Дата последней синхронизации", default=datetime.datetime(2000, 1, 1, 0, 0))
 
-    objects = BurialSortedManager()
+    acct_num_str1 = models.CharField(editable=False, null=True, max_length=16)
+    acct_num_num = models.PositiveIntegerField(editable=False, null=True)
+    acct_num_str2 = models.CharField(editable=False, null=True, max_length=16)
 
     class Meta:
         verbose_name = (u'захоронение')
@@ -657,8 +653,18 @@ class Burial(Order):
     def __unicode__(self):
         return u"захоронение: %s" % self.person.__unicode__()
 
+    @staticmethod
+    def split_parts(self):
+        p1, p2, p3 = split_number(self.account_book_n)
+        self.acct_num_str1 = p1
+        self.acct_num_num = p2
+        self.acct_num_str2 = p3
+
+        print 'burial:', p1, '-', p2, '-', p3
+
     def save(self, *args, **kwargs):
         self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)
+        self.split_parts()
         super(Burial, self).save(*args, **kwargs)
 
     def generate_account_number(self):
@@ -677,16 +683,6 @@ def recount_free_rooms(sender, instance, **kwargs):
     place.rooms_free = max(0, place.rooms - place.count_burials())
     place.save()
 models.signals.post_save.connect(recount_free_rooms, sender=Burial)
-
-class Burial1(Order): # Захоронения
-    person = models.ForeignKey(Person)  # Похороненный.
-    account_book_n = models.CharField(max_length=16, unique=True)  # Номер записи к книге учета.
-    s1 = models.TextField(blank=True, null=True)
-    s2 = models.FloatField(blank=True, null=True)
-    s3 = models.TextField(blank=True, null=True)
-    class Meta:
-        managed = False
-
 
 class UserProfile(models.Model):
     """
