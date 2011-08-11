@@ -460,15 +460,15 @@ class ProductComments(models.Model):
 
 def split_number(s):
     try:
-        p1 = re.findall('^([^\d]+)(\d+)', s, re.I)[0][0]
+        p1 = re.findall('^([^\d]*)(\d+)', s, re.I)[0][0]
     except IndexError:
         p1 = ''
     try:
-        p2 = int(re.findall('^([^\d]+)(\d+)', s, re.I)[0][1])
+        p2 = int(re.findall('^([^\d]*)(\d+)', s, re.I)[0][1])
     except (IndexError, ValueError):
         p2 = 1999999999
     try:
-        p3 = re.findall('^([^\d]+)(\d+)(.+)', s, re.I)[0][2]
+        p3 = re.findall('^([^\d]*)(\d+)(.+)', s, re.I)[0][2]
     except IndexError:
         p3 = ''
     return p1, p2, p3
