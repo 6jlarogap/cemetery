@@ -58,10 +58,12 @@ $(function(){
     var CLOCK_IMAGE = '/admin_media/img/admin/icon_clock.gif';
 
     $.datepicker.setDefaults($.datepicker.regional['']);
+    var now = Date();
     $('input[name$=date],input[name$=expire],input[name$=when]').css('width', '100px').datepicker({
         dateFormat: 'dd.mm.yy',
         changeMonth: true,
         changeYear: true,
+        yearRange: '1900:' + now.year,
         firstDay: 1,
         monthNamesShort: ['Янв','Фев','Март','Апрель','Май','Июнь','Июль','Авг','Сен','Окт','Ноя','Дек'],
         dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
