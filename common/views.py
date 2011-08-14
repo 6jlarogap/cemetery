@@ -422,7 +422,7 @@ def journal(request):
 
 
         if request.REQUEST.get('responsible_myself'):
-            new_burial.responsible_customer = None
+            new_burial.responsible_customer = new_burial.customer
         else:
             new_burial.responsible_customer = Person.objects.create(
                 creator=request.user.userprofile.soul,
@@ -526,7 +526,7 @@ def edit_burial(request, uuid):
         'responsible_last_name': burial.responsible_customer and burial.responsible_customer.person.last_name,
         'responsible_first_name': burial.responsible_customer and burial.responsible_customer.person.first_name,
         'responsible_patronymic': burial.responsible_customer and burial.responsible_customer.person.patronymic,
-        'responsible_myself': not burial.responsible_customer,
+        'responsible_myself': burial.responsible_customer == burial.customer,
 
         'opf': burial.responsible_agent and 'yurik' or 'fizik',
         'organization': burial.responsible_agent and burial.responsible_agent.organization,
@@ -632,7 +632,7 @@ def edit_burial(request, uuid):
             new_burial.exhumated_date = None
 
         if request.GET.get('responsible_myself'):
-            new_burial.responsible_customer = None
+            new_burial.responsible_customer = new_burial.customer
         else:
             if new_burial.responsible_customer:
                 Person.objects.filter(pk=new_burial.responsible_customer).update(

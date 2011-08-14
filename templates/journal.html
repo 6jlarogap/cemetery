@@ -32,12 +32,14 @@
         }
     }
 
-    function updateOPF() {
+    function updateOPF(el) {
         var cls = 'opf_' + $('[name=opf]:checked').val();
         $('.opf_fizik, .opf_yurik').hide();
         $('.'+cls).show();
-        $('#id_responsible_myself').removeAttr('checked');
-        updateResponsible();
+        if (el) {
+            $('#id_responsible_myself').removeAttr('checked');
+            updateResponsible();
+        }
     }
 
     function updateDover() {
