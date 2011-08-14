@@ -419,18 +419,18 @@ def journal(request):
 
         new_burial.person.location = registration_form.save()
 
-        if request.REQUEST.get('opf') == 'fizik':
-            if request.REQUEST.get('responsible_myself'):
-                new_burial.responsible_customer = None
-            else:
-                new_burial.responsible_customer = Person.objects.create(
-                    creator=request.user.userprofile.soul,
-                    last_name=cd["responsible_last_name"].capitalize(),
-                    first_name=cd.get("responsible_first_name", "").capitalize(),
-                    patronymic=cd.get("responsible_patronymic", "").capitalize(),
-                    location = responsible_form.save(),
-                )
+        if request.REQUEST.get('responsible_myself'):
+            new_burial.responsible_customer = None
         else:
+            new_burial.responsible_customer = Person.objects.create(
+                creator=request.user.userprofile.soul,
+                last_name=cd["responsible_last_name"].capitalize(),
+                first_name=cd.get("responsible_first_name", "").capitalize(),
+                patronymic=cd.get("responsible_patronymic", "").capitalize(),
+                location = responsible_form.save(),
+            )
+
+        if not request.REQUEST.get('opf') == 'fizik':
             agent = cd['agent']
             if agent:
                 agent.dover_number = cd['dover_number']
@@ -438,7 +438,6 @@ def journal(request):
                 agent.dover_expire = cd['dover_expire']
                 agent.save()
 
-            new_burial.responsible_customer = agent.person
             new_burial.responsible_agent = agent
 
         new_burial.save()
