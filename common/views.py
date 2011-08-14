@@ -308,6 +308,7 @@ def journal(request):
         next_day = next_day + datetime.timedelta(1)
     initial = {
         'burial_date': next_day.strftime('%d.%m.%Y'),
+        'rooms': 1,
     }
     if request.GET.get('place'):
         place = get_object_or_404(Place, pk=request.GET.get('place'))
