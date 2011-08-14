@@ -551,7 +551,7 @@ class Place(Product):
             exhumated_date__isnull = True,
             is_trash = False,
         )
-        return siblings.count()
+        return siblings.distinct().count()
 
     def __unicode__(self):
         return  '%s, %s, %s (%s)' % (self.area, self.row, self.seat,
