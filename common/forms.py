@@ -57,7 +57,7 @@ def get_yesterday():
 def get_today():
     return datetime.date.today().strftime("%d.%m.%Y")
 
-class CalendarWidget(forms.TextInput):
+class CalendarWidget(forms.DateInput):
     '''
     Виджет календаря.
     '''
@@ -76,6 +76,9 @@ class CalendarWidget(forms.TextInput):
     def __init__(self, attrs={}):
         attrs.update({'class': 'vDateField', 'size': '10'})
         super(CalendarWidget, self).__init__(attrs=attrs)
+
+    def __init__(self, attrs=None, format="%d.%m.%Y", *args, **kwargs):
+        super(CalendarWidget, self).__init__(attrs={'class': 'vDateField', 'size': '10'}, format=format, *args, **kwargs)
 
 class ClockWidget(forms.TextInput):
     '''

@@ -372,7 +372,7 @@ def journal(request):
         new_person.first_name = cd["first_name"].capitalize()
         new_person.patronymic = cd["patronymic"].capitalize()
         new_person.birth_date = cd.get("birth_date") or None
-        new_person.death_date = cd.get("birth_date") or None
+        new_person.death_date = cd.get("death_date") or None
         new_person.save()
 
         # Create new Person for customer.
@@ -581,7 +581,7 @@ def edit_burial(request, uuid):
         new_person.first_name = cd["first_name"].capitalize()
         new_person.patronymic = cd["patronymic"].capitalize()
         new_person.birth_date = cd.get("birth_date") or None
-        new_person.death_date = cd.get("birth_date") or None
+        new_person.death_date = cd.get("death_date") or None
         new_person.save()
 
         # Create new Person for customer.
