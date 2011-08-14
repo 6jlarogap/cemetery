@@ -361,7 +361,7 @@ def journal(request):
             if cd["burial_date"] < datetime.date.today() and (not cd["rooms"] or cd["rooms"] == 1):
                 place.rooms = place.count_burials() + 1
             else:
-                place.rooms = cd["rooms"] or 0
+                place.rooms = cd["rooms"] or 1
             place.soul = cd["cemetery"].organization.soul_ptr
             place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
             place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
@@ -569,7 +569,7 @@ def edit_burial(request, uuid):
         place.area = cd["area"]
         place.row = cd["row"]
         place.seat = cd["seat"]
-        place.rooms = cd["rooms"] or 0
+        place.rooms = cd["rooms"] or 1
         place.soul = cd["cemetery"].organization.soul_ptr
         place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
         place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
