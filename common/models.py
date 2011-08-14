@@ -367,7 +367,9 @@ class PersonRole(models.Model):
 
 class Agent(models.Model):
     uuid = UUIDField(primary_key=True)
-    person = models.ForeignKey(Person, related_name="is_agent_of", verbose_name="Персона")
+    person = models.ForeignKey(Person, related_name="is_agent_of", verbose_name="Персона", limit_choices_to={
+        'is_agent_of__pk__isnull': False,
+    })
     organization = models.ForeignKey(Organization, related_name="agents", verbose_name="Организация")
 
     dover_number = models.CharField(verbose_name="Номер доверенности", max_length=255, blank=True, null=True)
