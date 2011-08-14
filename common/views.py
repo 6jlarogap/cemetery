@@ -418,6 +418,8 @@ def journal(request):
         new_burial.operation = cd["operation"]
 
         new_burial.person.location = registration_form.save()
+        new_burial.person.save()
+
 
         if request.REQUEST.get('responsible_myself'):
             new_burial.responsible_customer = None
@@ -661,6 +663,7 @@ def edit_burial(request, uuid):
         new_burial.save()
 
         new_burial.person.location = registration_form.save()
+        new_burial.person.save()
 
         if not new_burial.account_book_n:
             num = new_burial.generate_account_number()

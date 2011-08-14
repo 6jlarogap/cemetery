@@ -25,7 +25,7 @@ PER_PAGE_VALUES = (
 )
 
 RE_CITY = u"[а-яА-Яa-zA-Z0-9\-\.\ ]"
-RE_LASTNAME = u"[а-яА-Яa-zA-Z0-9\-]"
+RE_LASTNAME = u"[а-яА-Яa-zA-Z0-9\-\*]"
 RE_USERNAME = r"[a-zA-Z0-9\@\.\+\-\_]"
 
 ORDER_BY_VALUES = (
@@ -167,6 +167,7 @@ class AddressForm(ModelAutoTabIndex):
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance')
+        print 'instance', instance
         if instance:
             kwargs.setdefault('initial', {}).update({
                 'street': instance.street and instance.street.name,
@@ -291,6 +292,8 @@ class AddressForm(ModelAutoTabIndex):
             # Сохраняем Location.
             location.street = street
 
+        print 'cd.get("country"', cd.get("country"), location.street, location, cd
+
         location.save()
         return location
 
@@ -374,7 +377,7 @@ class JournalForm(AutoTabIndex):
         cd = self.cleaned_data
 
         # Проверка имен усопшего и заказчика на наличие недопустимых символов
-        last_name = cd["last_name"]
+        last_name = cd.get("last_name", UNKNOWN_NAME)
         rest = re.sub(RE_LASTNAME, "", last_name)
         if rest:
             raise forms.ValidationError("Недопустимые символы в имени усопшего. Допускаются только буквы, цифры и тире")

@@ -523,7 +523,7 @@ class Place(Product):
         if self.seat:
             self.seat = self.seat.lower()
 
-        self.split_parts()
+        self.split_parts(self)
 
         Burial.objects.filter(product__place=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
         super(Place, self).save(*args, **kwargs)
@@ -664,7 +664,7 @@ class Burial(Order):
 
     def save(self, *args, **kwargs):
         self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)
-        self.split_parts()
+        self.split_parts(self)
         super(Burial, self).save(*args, **kwargs)
 
     def generate_account_number(self):
