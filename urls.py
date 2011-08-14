@@ -20,7 +20,7 @@ urlpatterns += patterns('common.views',
     url(r'^profile/$', 'profile'),
 
     url(r'^journal/$', 'journal', name="add_burial"),
-    url(r'^burial/(.{36})/$', 'edit_burial'),
+    url(r'^burial/(.{36})/$', 'edit_burial', name='edit_burial'),
     url(r'^burial/(.{36})/print/$', 'print_burial', name='print_burial'),
 
     url(r'^ordercomment/(.{36})/$', 'order_comment_edit'),

@@ -29,7 +29,7 @@
 
 {% block content %}
     <div id="free_form">
-    <form action="" method="post" enctype="multipart/form-data">
+    <form action="" method="post" enctype="multipart/form-data" target="_blank">
         {{ form.non_field_errors }}
         <table width="800">
             <tr>
@@ -97,6 +97,7 @@
         <input type="submit" name="receipt" value="Распечатать справку">
         <input type="submit" name="dogovor" value="Распечатать договор отв.">
         <input type="reset" value="Отмена">
+        <a href="{% url edit_burial burial.pk %}"></a>
     </form>
     </div>
 
