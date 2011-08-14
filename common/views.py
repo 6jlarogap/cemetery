@@ -475,8 +475,7 @@ def journal(request):
         return redirect("/journal/")
 
     today = datetime.date.today()
-    burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul,
-                            date_of_creation__gte=today).order_by('-date_of_creation')[:20]
+    burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul).order_by('-date_of_creation')[:15]
     return direct_to_template(request, 'journal.html', {
         'form': form,
         'object_list': burials,
