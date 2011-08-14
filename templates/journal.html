@@ -230,13 +230,13 @@ $(function(){
         minLength: 2,
         delay: 100,
         select: function(event, ui) {
-            $("#id_region").val(ui.item.value.split("/")[0]);
-            $("#id_country").val(ui.item.value.split("/")[1]);
+            $(this).val(ui.item.value.split("/")[0]);
+            $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[1]);
             return false;
        },
        focus: function(event, ui) {
-            $("#id_region").val(ui.item.value.split("/")[0]);
-//            $("#id_country").val(ui.item.value.split("/")[1]);
+            $(this).val(ui.item.value.split("/")[0]);
+            $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[1]);
             return false;
        }
    });
@@ -246,16 +246,16 @@ $(function(){
         minLength: 2,
         delay: 100,
         select: function(event, ui) {
-            $("#id_city").val(ui.item.value.split("/")[0]);
-            $("#id_region").val(ui.item.value.split("/")[1]);
-            $("#id_country").val(ui.item.value.split("/")[2]);
+            $(this).val(ui.item.value.split("/")[0]);
+            $(this).parents('tr').find('input:text[id$=region]').val(ui.item.value.split("/")[1]);
+            $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[2]);
             return false;
        },
        focus: function(event, ui) {
-            $("#id_city").val(ui.item.value.split("/")[0]);
-//            $("#id_region").val(ui.item.value.split("/")[1]);
-//            $("#id_country").val(ui.item.value.split("/")[2]);
-            return false;
+           $(this).val(ui.item.value.split("/")[0]);
+           $(this).parents('tr').find('input:text[id$=region]').val(ui.item.value.split("/")[1]);
+           $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[2]);
+           return false;
        }
 
     });
@@ -265,17 +265,17 @@ $(function(){
         minLength: 2,
         delay: 100,
         select: function(event, ui) {
-            $("#id_street").val(ui.item.value.split("/")[0]);
-            $("#id_city").val(ui.item.value.split("/")[1]);
-            $("#id_region").val(ui.item.value.split("/")[2]);
-            $("#id_country").val(ui.item.value.split("/")[3]);
+            $(this).val(ui.item.value.split("/")[0]);
+            $(this).parents('tr').find('input:text[id$=city]').val(ui.item.value.split("/")[1]);
+            $(this).parents('tr').find('input:text[id$=region]').val(ui.item.value.split("/")[2]);
+            $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[3]);
             return false;
        },
        focus: function(event, ui) {
-            $("#id_street").val(ui.item.value.split("/")[0]);
-//            $("#id_city").val(ui.item.value.split("/")[1]);
-//            $("#id_region").val(ui.item.value.split("/")[2]);
-//            $("#id_country").val(ui.item.value.split("/")[3]);
+           $(this).val(ui.item.value.split("/")[0]);
+           $(this).parents('tr').find('input:text[id$=city]').val(ui.item.value.split("/")[1]);
+           $(this).parents('tr').find('input:text[id$=region]').val(ui.item.value.split("/")[2]);
+           $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[3]);
             return false;
        }
 
