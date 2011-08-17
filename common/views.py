@@ -505,6 +505,7 @@ def edit_burial(request, uuid):
     initial = {
         'account_book_n': burial.account_book_n,
         'burial_date': burial.date_fact and burial.date_fact.strftime('%d.%m.%Y'),
+        'burial_time': burial.date_fact and burial.date_fact.strftime('%H:%M'),
         'birth_date': burial.person.birth_date and burial.person.birth_date.strftime('%d.%m.%Y'),
         'death_date': burial.person.death_date and burial.person.death_date.strftime('%d.%m.%Y'),
         'exhumated_date': burial.exhumated_date and burial.exhumated_date.strftime('%d.%m.%Y'),

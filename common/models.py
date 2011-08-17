@@ -302,7 +302,13 @@ class Organization(Soul):
     full_name = models.CharField(u"Полное название организации", max_length=255, null=True)      # Название полное
 
     def __unicode__(self):
-        return self.name[:24]
+        return self.name
+
+    def phone(self):
+        try:
+            return self.phone_set.all()[0]
+        except IndexError:
+            return
 
     class Meta:
         verbose_name = (u'юр. лицо')

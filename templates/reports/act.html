@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
 {% load pytils_numeral %}
+{% load pytils_dt %}
 <HTML>
 <HEAD>
 	
@@ -47,38 +48,38 @@
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
-			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">&quot;____&quot;___________________20___г.</FONT></TD>
+			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ now|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD COLSPAN=2 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000">Телефон 55-70-83</FONT></TD>
+			<TD COLSPAN=2 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000">Телефон {{ org.phone }}</FONT></TD>
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Заказчик</FONT></TD>
-			<TD STYLE="border-bottom: 1px solid #000000" COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-bottom: 1px solid #000000" COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.customer }}</FONT></TD>
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Адрес</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.customer.location }}</FONT></TD>
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Фамилия, имя, отчество умершего</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.person }}</FONT></TD>
 			</TR>
 		<TR>
-			<TD STYLE="border-left: 1px solid #000000" COLSPAN=5 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Возраст_____________________________________________________</FONT></TD>
+			<TD STYLE="border-left: 1px solid #000000" COLSPAN=5 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Возраст {{ burial.person.age }}</FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000" ALIGN=RIGHT VALIGN=BOTTOM><FONT COLOR="#000000">Дата смерти</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" COLSPAN=3 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" COLSPAN=3 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000">{{ burial.person.death_date|ru_strftime:"%d %B %Y"|safe }}</FONT></TD>
 			</TR>
 		<TR>
-			<TD STYLE="border-left: 1px solid #000000" COLSPAN=5 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Свидетельство о смерти №____________________________________</FONT></TD>
+			<TD STYLE="border-left: 1px solid #000000" COLSPAN=5 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Свидетельство о смерти №{{ burial.person.deathcertificate.s_number }}</FONT></TD>
 			<TD ALIGN=RIGHT VALIGN=BOTTOM><FONT COLOR="#000000">серия</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" COLSPAN=3 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" COLSPAN=3 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000">{{ burial.person.deathcertificate.series }}</FONT></TD>
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Наименование ЗАГСа</FONT></TD>
-			<TD STYLE="border-bottom: 1px solid #000000" COLSPAN=6 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-bottom: 1px solid #000000" COLSPAN=6 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.person.deathcertificate.zags }}</FONT></TD>
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000"><BR></FONT></TD>
@@ -93,11 +94,11 @@
 		</TR>
 		<TR>
 			<TD COLSPAN="3" STYLE="border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Похороны состоятся </FONT></TD>
-			<TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> &quot;___&quot;________20__г.   </FONT></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> {{ burial.date_fact|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.   </FONT></TD>
 			<TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">в</FONT></TD>
-			<TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">____ч_____мин. </FONT></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">{{ burial.date_fact|date:"H" }}ч {{ burial.date_fact|date:"i" }}мин. </FONT></TD>
 			<TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">на кладбище:</FONT></TD>
-			<TD STYLE="border-bottom: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-bottom: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.product.place.cemetery }}</FONT></TD>
 			</TR>
 		<TR>
 			<TD COLSPAN="9" STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Маршрут движения с/транспорта</FONT></TD>
@@ -110,8 +111,8 @@
 			<TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000" COLSPAN=9 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время отпуска с/транспорта клиентом   в _____ ч______мин.</FONT></TD>
 			</TR>
 		<TR>
-			<TD COLSPAN="4" STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP BGCOLOR="#CCFFFF"><FONT COLOR="#000000">Время заезда а/к на кладбище     _____ ч______мин.</FONT></TD>
-			<TD COLSPAN="5" STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#CCFFFF"><FONT COLOR="#000000">Время захоронения умершего    _____ ч______мин.</FONT></TD>
+			<TD COLSPAN="4" STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время заезда а/к на кладбище     _____ ч______мин.</FONT></TD>
+			<TD COLSPAN="5" STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время захоронения умершего    _____ ч______мин.</FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=40 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">№ п/п</FONT></TD>
@@ -125,12 +126,12 @@
         {% for p in positions %}
 		<TR>
 			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=19 ALIGN=CENTER VALIGN=TOP SDVAL="1" SDNUM="1033;"><FONT COLOR="#000000">{{ forloop.counter }}</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=3 ALIGN=LEFT VALIGN=MIDDLE BGCOLOR="#CCFFCC" SDNUM="1033;0;@"><FONT COLOR="#000000">{{ p.order_product }}</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM BGCOLOR="#CCFFCC"><FONT SIZE=1 COLOR="#000000">{{ p.order_product.measure }}</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM BGCOLOR="#CCFFCC"><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM BGCOLOR="#CCFFCC"><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM BGCOLOR="#CCFFCC"><FONT COLOR="#000000">{{ p.price|floatformat:"-2" }}</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM BGCOLOR="#CCFFCC"><FONT COLOR="#000000">{{ p.sum|floatformat:"-2" }}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=3 ALIGN=LEFT VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ p.order_product }}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM ><FONT SIZE=1 COLOR="#000000">{{ p.order_product.measure }}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM ><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.price|floatformat:"-2" }}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.sum|floatformat:"-2" }}</FONT></TD>
 		</TR>
         {% endfor %}
 		<TR>
@@ -210,7 +211,7 @@
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">г. {{ org.location.street.city.name }}</FONT></TD>
-			<TD COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">&quot;___&quot;_____________________20___г.</FONT></TD>
+			<TD COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">{{ now|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.</FONT></TD>
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"><BR></FONT></TD>
@@ -232,7 +233,7 @@
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=19 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">_______________________________________________________________________________ представитель Заказчика, -</FONT></TD>
 			</TR>
 		<TR>
-			<TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=62 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">составили настоящий акт о том, что на &quot;_____&quot;_____________________20___г. подтверждаем, что Исполнителем были выполнены качественно и в полном объеме работы согласно счета-заказа №_____ по захоронению умершего ____________________________________________________________________________________________________________</FONT></TD>
+			<TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=62 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">составили настоящий акт о том, что на {{ now|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г. подтверждаем, что Исполнителем были выполнены качественно и в полном объеме работы согласно счета-заказа №_____ по захоронению умершего ____________________________________________________________________________________________________________</FONT></TD>
 			</TR>
 		<TR>
 			<TD STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" COLSPAN=9 HEIGHT=29 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">на кладбище _________________________________________</FONT></TD>
@@ -246,9 +247,9 @@
         {% for p in positions %}
 		<TR>
 			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=19 ALIGN=CENTER VALIGN=TOP SDVAL="1" SDNUM="1033;"><FONT COLOR="#000000">{{ forloop.counter }}</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=LEFT VALIGN=MIDDLE BGCOLOR="#CCFFCC" SDNUM="1033;0;@"><FONT COLOR="#000000">{{ p.order_product }}</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM BGCOLOR="#CCFFCC"><FONT SIZE=1 COLOR="#000000">{{ p.order_product.measure }}</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM BGCOLOR="#CCFFCC"><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=LEFT VALIGN=MIDDLE  SDNUM="1033;0;@"><FONT COLOR="#000000">{{ p.order_product }}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM ><FONT SIZE=1 COLOR="#000000">{{ p.order_product.measure }}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
 		</TR>
         {% endfor %}
 		<TR>
@@ -321,19 +322,19 @@
 			<TD STYLE="border-top: 1px solid #000000" WIDTH=160 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000" WIDTH=105 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000" WIDTH=77 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-right: 1px solid #000000" WIDTH=114 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; " WIDTH=114 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD WIDTH=120 ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD WIDTH=120 ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD WIDTH=120 ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
-			<TD STYLE="border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=9 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><B><FONT COLOR="#000000">{{ org.name }}</FONT></B></TD>
+			<TD STYLE="border-left: 1px solid #000000; " COLSPAN=9 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><B><FONT COLOR="#000000">{{ org.name }}</FONT></B></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
-			<TD STYLE="border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=9 HEIGHT=25 ALIGN=CENTER VALIGN=TOP><B><FONT SIZE=4 COLOR="#000000">Ритуальная служба</FONT></B></TD>
+			<TD STYLE="border-left: 1px solid #000000; " COLSPAN=9 HEIGHT=25 ALIGN=CENTER VALIGN=TOP><B><FONT SIZE=4 COLOR="#000000">Ритуальная служба</FONT></B></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -343,18 +344,18 @@
 			<TD ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000">________</FONT></I></B></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000"><BR></FONT></I></B></TD>
+			<TD STYLE="" ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000"><BR></FONT></I></B></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
-			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">&quot;{% now "d" %}&quot;{% now "F Y" %}г.</FONT></TD>
+			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ now|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="border-right: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000">Телефон 55-70-83</FONT></TD>
+			<TD STYLE="" COLSPAN=2 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000">Телефон {{ org.phone }}</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -368,46 +369,46 @@
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="" ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Фамилия, имя, отчество умершего</FONT></TD>
-			<TD STYLE="border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.person.full_name }}</FONT></TD>
+			<TD STYLE="border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.person.full_name }}</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Даты</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Номер могилы</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Похороны состоятся </FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> &quot;___&quot;________20__г.   </FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> {{ burial.date_fact|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.   </FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">в</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">____ч_____мин. </FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">{{ burial.date_fact|date:"H" }}ч {{ burial.date_fact|date:"M" }}мин. </FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">на кладбище:</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.product.place.cemetery }}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.product.place.cemetery }}</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Заказ принял {{ user.last_name }} {{ user.first_name }}</FONT></TD>
-			<TD STYLE="border-right: 1px solid #000000" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">(________________________________)</FONT></TD>
+			<TD STYLE="" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">(________________________________)</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -417,7 +418,7 @@
 			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT SIZE=1 COLOR="#000000"><BR></FONT></TD>
 			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT SIZE=1 COLOR="#000000"><BR></FONT></TD>
 			<TD STYLE="border-bottom: 1px solid #000000" COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(подпись приемщика заказа)</FONT></TD>
-			<TD STYLE="border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(расшифровка подписи)</FONT></TD>
+			<TD STYLE="border-bottom: 1px solid #000000; " COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(расшифровка подписи)</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -441,19 +442,19 @@
 			<TD STYLE="border-top: 1px solid #000000" WIDTH=160 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000" WIDTH=93 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000" WIDTH=77 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-right: 1px solid #000000" WIDTH=114 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; " WIDTH=114 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD WIDTH=120 ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD WIDTH=120 ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD WIDTH=120 ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
-			<TD STYLE="border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=9 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><B><FONT COLOR="#000000">{{ org.name }}</FONT></B></TD>
+			<TD STYLE="border-left: 1px solid #000000; " COLSPAN=9 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><B><FONT COLOR="#000000">{{ org.name }}</FONT></B></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
-			<TD STYLE="border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=9 HEIGHT=25 ALIGN=CENTER VALIGN=TOP><B><FONT SIZE=4 COLOR="#000000">Ритуальная служба</FONT></B></TD>
+			<TD STYLE="border-left: 1px solid #000000; " COLSPAN=9 HEIGHT=25 ALIGN=CENTER VALIGN=TOP><B><FONT SIZE=4 COLOR="#000000">Ритуальная служба</FONT></B></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -463,18 +464,18 @@
 			<TD ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000">________</FONT></I></B></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000"><BR></FONT></I></B></TD>
+			<TD STYLE="" ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000"><BR></FONT></I></B></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
-			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">&quot;{% now "d" %}&quot;{% now "F Y" %}г.</FONT></TD>
+			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.date_fact|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="border-right: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000">Телефон 55-70-83</FONT></TD>
+			<TD STYLE="" COLSPAN=2 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000">Телефон {{ org.phone }}</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -488,46 +489,46 @@
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="" ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Фамилия, имя, отчество умершего</FONT></TD>
-			<TD STYLE="border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.person.full_name }}</FONT></TD>
+			<TD STYLE="border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.person.full_name }}</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Маршрут</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время использования</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Похороны состоятся </FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> &quot;___&quot;________20__г.   </FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> {{ burial.date_fact|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.   </FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">в</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">____ч_____мин. </FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">{{ burial.date_fact|date:"H" }}ч {{ burial.date_fact|date:"M" }}мин. </FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">на кладбище:</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.product.place.cemetery }}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.product.place.cemetery }}</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Заказ принял ________________________________________________________________</FONT></TD>
-			<TD STYLE="border-right: 1px solid #000000" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">(________________________________)</FONT></TD>
+			<TD STYLE="" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">(________________________________)</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -537,7 +538,7 @@
 			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT SIZE=1 COLOR="#000000"><BR></FONT></TD>
 			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT SIZE=1 COLOR="#000000"><BR></FONT></TD>
 			<TD STYLE="border-bottom: 1px solid #000000" COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(подпись приемщика заказа)</FONT></TD>
-			<TD STYLE="border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(расшифровка подписи)</FONT></TD>
+			<TD STYLE="border-bottom: 1px solid #000000; " COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(расшифровка подписи)</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -551,7 +552,7 @@
 			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -576,19 +577,19 @@
                 <TD STYLE="border-top: 1px solid #000000" WIDTH=160 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000" WIDTH=105 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000" WIDTH=77 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-right: 1px solid #000000" WIDTH=114 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; " WIDTH=114 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD WIDTH=120 ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD WIDTH=120 ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD WIDTH=120 ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             </TR>
             <TR>
-                <TD STYLE="border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=9 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><B><FONT COLOR="#000000">{{ org.name }}</FONT></B></TD>
+                <TD STYLE="border-left: 1px solid #000000; " COLSPAN=9 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><B><FONT COLOR="#000000">{{ org.name }}</FONT></B></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             </TR>
             <TR>
-                <TD STYLE="border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=9 HEIGHT=25 ALIGN=CENTER VALIGN=TOP><B><FONT SIZE=4 COLOR="#000000">Ритуальная служба</FONT></B></TD>
+                <TD STYLE="border-left: 1px solid #000000; " COLSPAN=9 HEIGHT=25 ALIGN=CENTER VALIGN=TOP><B><FONT SIZE=4 COLOR="#000000">Ритуальная служба</FONT></B></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -598,18 +599,18 @@
                 <TD ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000">________</FONT></I></B></TD>
                 <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000"><BR></FONT></I></B></TD>
+                <TD STYLE="" ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000"><BR></FONT></I></B></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             </TR>
             <TR>
-                <TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">&quot;{% now "d" %}&quot;{% now "F Y" %}г.</FONT></TD>
+                <TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ now|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-right: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000">Телефон 55-70-83</FONT></TD>
+                <TD STYLE="" COLSPAN=2 ALIGN=CENTER VALIGN=BOTTOM><FONT COLOR="#000000">Телефон {{ org.phone }}</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -623,21 +624,21 @@
                 <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
+                <TD STYLE="" ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             </TR>
             <TR>
                 <TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Фамилия, имя, отчество умершего</FONT></TD>
-                <TD STYLE="border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.person.full_name }}</FONT></TD>
+                <TD STYLE="border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.person.full_name }}</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             </TR>
             <TR>
                 <TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Адрес</FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -650,7 +651,7 @@
                 <TD STYLE="border-top: 1px solid #000000" ALIGN=RIGHT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">№</FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -663,7 +664,7 @@
                 <TD ALIGN=RIGHT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">размер гроба</FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -674,25 +675,25 @@
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD COLSPAN=2 ALIGN=RIGHT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">благоустройство захор.</FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             </TR>
             <TR>
                 <TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Похороны состоятся </FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> &quot;___&quot;________20__г.   </FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> {{ burial.date_fact|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.   </FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">в</FONT></TD>
-                <TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">____ч_____мин. </FONT></TD>
+                <TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">{{ burial.date_fact|date:"H" }}ч {{ burial.date_fact|date:"M" }}мин. </FONT></TD>
                 <TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">на кладбище:</FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.product.place.cemetery }}</FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.product.place.cemetery }}</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             </TR>
             <TR>
                 <TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=BOTTOM><B><FONT COLOR="#000000">Все условия заказа подтверждаю______________________________________________</FONT></B></TD>
-                <TD STYLE="border-right: 1px solid #000000" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">(________________________________)</FONT></TD>
+                <TD STYLE="" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">(________________________________)</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -702,14 +703,14 @@
                 <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(подпись заказчика)</FONT></TD>
-                <TD STYLE="border-right: 1px solid #000000" COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(расшифровка подписи)</FONT></TD>
+                <TD STYLE="" COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(расшифровка подписи)</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             </TR>
             <TR>
                 <TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Заказ принял ________________________________________________________________</FONT></TD>
-                <TD STYLE="border-right: 1px solid #000000" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">(________________________________)</FONT></TD>
+                <TD STYLE="" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">(________________________________)</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -719,7 +720,7 @@
                 <TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT SIZE=1 COLOR="#000000"><BR></FONT></TD>
                 <TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT SIZE=1 COLOR="#000000"><BR></FONT></TD>
                 <TD STYLE="border-bottom: 1px solid #000000" COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(подпись приемщика заказа)</FONT></TD>
-                <TD STYLE="border-bottom: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(расшифровка подписи)</FONT></TD>
+                <TD STYLE="border-bottom: 1px solid #000000; " COLSPAN=3 ALIGN=CENTER VALIGN=TOP><FONT SIZE=1 COLOR="#000000">(расшифровка подписи)</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
