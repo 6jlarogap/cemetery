@@ -411,7 +411,7 @@ def journal(request):
         new_burial.date_plan = d
         new_burial.date_fact = d
 
-        new_burial.exhumated_date = cd["exhumated_date"]
+        new_burial.exhumated_date = cd.get("exhumated_date")
         new_burial.account_book_n = cd["account_book_n"]
         new_burial.customer = customer.soul_ptr
         new_burial.responsible = cd["cemetery"].organization.soul_ptr  #ставить орг-ию кладбища
