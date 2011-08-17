@@ -2,7 +2,7 @@
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User, Group
 from django.shortcuts import redirect, get_object_or_404
 from django.db import transaction
@@ -995,109 +995,27 @@ def management_user(request):
                               {'form': form, "users": users})
 
 
-@login_required
-#@is_in_group("management_edit_user")
+@user_passes_test(lambda u: u.is_superuser)
 @transaction.commit_on_success
 def management_edit_user(request, uuid):
     """
     Редактирование данных исполнителя.
     """
-    user = request.user
-    if not user.is_superuser:
-        return HttpResponseForbidden("Forbidden")
-    try:
-        person = Person.objects.get(uuid=uuid)
-    except ObjectDoesNotExist:
-        raise Http404
+    person = get_object_or_404(Person, uuid=uuid)
     user = person.userprofile.user
     PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=3)
     if request.method == "POST":
         phoneset = PhoneFormSet(request.POST, request.FILES, queryset=Phone.objects.filter(soul=person.soul_ptr))
-        form = EditUserForm(request.POST)
+        form = EditUserForm(data=request.POST, instance=user)
         if phoneset.is_valid() and form.is_valid():
-            cd = form.cleaned_data
-            person.last_name = cd["last_name"].capitalize()
-            if cd.get("first_name", ""):
-                person.first_name = cd['first_name'].capitalize()
-            if cd.get("patronymic", ""):
-                person.patronymic = cd['patronymic'].capitalize()
-            person.save()
-            user.username = cd["username"]
-#            if cd.get("phone", ""):
-#                try:
-#                    phone = Phone.objects.filter(soul=person.soul_ptr)[0]
-#                except KeyError:
-#                    phone = Phone(soul=person.soul_ptr)
-#                phone.f_number = cd["phone"]
-#                phone.save()
+            form.save()
             for phone in phoneset.save(commit=False):
                 phone.soul = person.soul_ptr
                 phone.save()
-            if cd.get("password1", ""):
-                user.set_password(cd['password1'])
-#            is_staff = cd.get("is_staff", None)
-#            if is_staff is not None:
-#                user.is_staff = is_staff
-            # Roles processing.
-#            if cd.get("default_rights", False):
-                # Если сбрасываем все права на дефолтные.
-#                user.groups.clear()
-#                for r in person.roles.all():
-#                    for djgr in r.djgroups.all():
-#                        user.groups.add(djgr)
-#            # Если оставляем кастомные наборы прав.
-#            roles = cd["role"]
-#            groups_to_remove = set()
-#            groups_to_remain = set()
-#            # Удаление удаленных ролей исполнителя.
-#            for r in person.roles.all():
-#                if r not in roles:
-#                    # Роль удалена.
-#                    old_pr = PersonRole.objects.get(person=person, role=r)
-#                    old_pr.delete()
-#                    # удаление исполнителя из соответствующих django-групп.
-#                    for djgr in r.djgroups.all():
-#                        groups_to_remove.add(djgr)
-#                else:
-#                    for djgr in r.djgroups.all():
-#                        groups_to_remain.add(djgr)
-#            # Безопасное удаление django-групп.
-#            safe_gr_to_remove = groups_to_remove - groups_to_remain
-#            for djgr in safe_gr_to_remove:
-#                user.groups.remove(djgr)
-#            # Назначение Исполнителя на новые роли.
-#            for r in roles:
-#                if r not in person.roles.all():
-#                    # Новая роль.
-#                    new_pr = PersonRole(creator=request.user.userprofile.soul, hire_date=datetime.date.today())
-#                    new_pr.person = person
-#                    new_pr.role = r
-#                    new_pr.save()
-#                    # добавление исполнителя в соответствующие django-группы.
-#                    for djgr in r.djgroups.all():
-#                        user.groups.add(djgr)
-            user.save()
             return redirect('/management/user/')
     else:
         phoneset = PhoneFormSet(queryset=Phone.objects.filter(soul=person.soul_ptr))
-        initial_data = {"last_name": person.last_name,
-                        "username": user.username
-#                        "is_staff": user.is_staff,
-                        }
-#        phones = Phone.objects.filter(soul=person.soul_ptr)
-#        if phones:
-#            initial_data["phone"] = phones[0]
-#        if person.personrole_set.all():
-#            prs = PersonRole.objects.filter(person=person)
-#            roles = []
-#            for pr in prs:
-#                roles.append(pr.role)
-#            initial_data["role"] = roles
-        if person.first_name:
-            initial_data["first_name"] = person.first_name
-        if person.patronymic:
-            initial_data["patronymic"] = person.patronymic
-        form = EditUserForm(initial=initial_data)
+        form = EditUserForm(instance=user)
     return direct_to_template(request, 'management_edit_user.html', {'form': form, 'phoneset': phoneset})
 
 

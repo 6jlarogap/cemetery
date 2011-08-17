@@ -769,41 +769,38 @@ class NewUserForm(forms.Form):
 
 
 @autostrip
-class EditUserForm(forms.Form):
+class EditUserForm(forms.ModelForm):
     """
     Форма редактирования пользователя системы.
     """
-    username = forms.CharField(label="Имя пользователя", max_length=30,
-                               help_text="Допускаются только латинские буквы, цифры и знаки @ . + - _")
-    last_name = forms.CharField(max_length=30, label="Фамилия")
-    first_name = forms.CharField(max_length=30, label="Имя", required=False)
+
+    class Meta:
+        model = User
+        fields = ['username', 'last_name', 'first_name', 'is_active', ]
+
     patronymic = forms.CharField(max_length=30, label="Отчество", required=False)
-#    role = forms.ModelMultipleChoiceField(queryset=Role.objects.all(), label="Роль")
-#    is_staff = forms.BooleanField(required=False, label="Доступ в админку")
-#    default_rights = forms.BooleanField(required=False, label="Поставить права по умолчанию")
-#    phone = forms.CharField(max_length=20, label="Телефон", required=False)
     password1 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
                                 label="Пароль")
     password2 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
                                 label="Пароль (еще раз)")
     def clean(self):
         cd = self.cleaned_data
-        username = cd["username"]
-        # Проверка username на наличие недопустимых символов.
-        rest = re.sub(RE_USERNAME, "", username)
-        if rest:
-            raise forms.ValidationError("Недопустимые символы в имени пользователя.")
-#        try:
-#            user = User.objects.get(username=username)
-#        except ObjectDoesNotExist:
-#            pass
-#        else:
-#            raise forms.ValidationError("Имя пользователя уже зарегистрировано за другим сотрудником.")
-        if cd.get("password1", "") == cd.get("password2", ""):
+        if cd.get("password1") == cd.get("password2"):
             return cd
         else:
             raise forms.ValidationError("Пароли не совпадают.")
 
+    def save(self, *args, **kwargs):
+        user = super(EditUserForm, self).save(*args, **kwargs)
+
+        user.userprofile.soul.person.first_name = self.cleaned_data['first_name']
+        user.userprofile.soul.person.last_name = self.cleaned_data['last_name']
+        user.userprofile.soul.person.patronymic = self.cleaned_data['patronymic']
+        user.userprofile.soul.person.save()
+
+        if self.cleaned_data.get('password1'):
+            user.set_password(self.cleaned_data['password1'])
+        return user
         
 @autostrip
 class UserProfileForm(forms.Form):
