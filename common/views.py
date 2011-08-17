@@ -557,6 +557,8 @@ def edit_burial(request, uuid):
         id = None
     id_form = IDForm(prefix='id', data=request.POST or None, instance=id)
 
+    burial.customer.phone_set.filter(f_number='').delete()
+    burial.customer.phone_set.filter(f_number__isnull=True).delete()
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=burial.customer.phone_set.all())
 
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
@@ -603,10 +605,13 @@ def edit_burial(request, uuid):
             id.save()
 
         # Customer phone
-        if phoneset.is_valid():
-            for phone in phoneset.save(commit=False):
+        for pf in phoneset.forms:
+            if pf.is_valid() and pf.cleaned_data.get('f_number'):
+                phone = pf.save(commit=False)
                 phone.soul = customer.soul_ptr
                 phone.save()
+            elif pf.instance:
+                pf.instance.delete()
 
         # Create new Burial.
         new_burial = burial

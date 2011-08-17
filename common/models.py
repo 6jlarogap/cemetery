@@ -546,7 +546,6 @@ class Place(Product):
 
     @property
     def rooms_occupied(self):
-        print 'self.rooms', self.rooms, 'self.rooms_free', self.rooms_free, 'count_burials', self.count_burials()
         return (self.rooms or 0) - (self.rooms_free or 0)
 
     def count_burials(self):
