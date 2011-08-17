@@ -1217,6 +1217,8 @@ def init(request):
         organization = None
         env = None
 
+    organization.bankaccount_set.filter(rs='').delete()
+    organization.bankaccount_set.filter(rs__isnull=True).delete()
     bank_formset = InitBankFormset(instance=organization, data=request.POST or None)
 
     if request.method == "POST":
@@ -1224,8 +1226,8 @@ def init(request):
         if form.is_valid() and bank_formset.is_valid():
             cd = form.cleaned_data
             # Создаем уникальный uuid сервера.
-            env = Env()
-            env.save()
+            env = env or Env.objects.create()
+
             # Создаем организацию.
             if not organization:
                 organization = Organization(
@@ -1243,19 +1245,22 @@ def init(request):
             # Создаем объект Phone для организации.
             org_phone = cd.get("org_phone", "")
             if org_phone:
-                org_phone_obj = Phone(soul=organization.soul_ptr, f_number=org_phone)
+                org_phone_obj, created = Phone.objects.get_or_create(soul=organization.soul_ptr)
+                org_phone_obj.f_number = org_phone
                 org_phone_obj.save()
+            else:
+                Phone.objects.filter(soul=organization.soul_ptr).delete()
             # Создаем объекты SoulProducttypeOperation.
             operations = Operation.objects.all()
             p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
             for op in operations:
-                spo = SoulProducttypeOperation()
-                spo.soul = organization.soul_ptr
-                spo.p_type = p_type
-                spo.operation = op
-                spo.save()
+                spo = SoulProducttypeOperation.objects.get_or_create(
+                    soul = organization.soul_ptr,
+                    p_type = p_type,
+                    operation = op,
+                )
             # Создаем Location для организации.
-            org_location = Location()
+            org_location = organization.location or Location()
             org_location_country = cd.get("country", "")
             org_location_region = cd.get("region", "")
             org_location_city = cd.get("city", "")
@@ -1309,91 +1314,6 @@ def init(request):
             organization.location = org_location
             organization.save()
 
-            # Кладбище.
-            cemetery = Cemetery(creator=request.user.userprofile.soul, organization=organization, name=cd["cemetery"])
-            # Создаем Location для организации.
-            cem_location = Location()
-            cem_location_country = cd.get("cem_country", "")
-            cem_location_region = cd.get("cem_region", "")
-            cem_location_city = cd.get("cem_city", "")
-            cem_location_street = cd.get("cem_street", "")
-            cem_location_house = cd.get("cem_house", "")
-            cem_location_block = cd.get("cem_block", "")
-            cem_location_building = cd.get("cem_building", "")
-            cem_location_post_index = cd.get("cem_post_index", "")
-            if cem_location_country and cem_location_region and cem_location_city and cem_location_street:
-                # Есть все для создания непустого Location.
-                # Страна.
-                try:
-                    country = GeoCountry.objects.get(name__exact=cem_location_country)
-                except ObjectDoesNotExist:
-                    country = GeoCountry(name=cem_location_country.capitalize())
-                    country.save()
-                # Регион.
-                try:
-                    region = GeoRegion.objects.get(name__exact=cem_location_region,
-                                                   country=country)
-                except ObjectDoesNotExist:
-                    region = GeoRegion(name=cem_location_region.capitalize(), country=country)
-                    region.save()
-                # Нас. пункт.
-                try:
-                    city = GeoCity.objects.get(name__exact=cem_location_city, region=region)
-                except ObjectDoesNotExist:
-                    city = GeoCity(name=cem_location_city.capitalize(), country=country,
-                                   region=region)
-                    city.save()
-                # Улица.
-                try:
-                    street = Street.objects.get(name__exact=cem_location_street, city=city)
-                except ObjectDoesNotExist:
-                    street = Street(name=cem_location_street.capitalize(), city=city)
-                    street.save()
-                # Продолжаем с Location.
-                cem_location.street = street
-                if cem_location_house:
-                    cem_location.house = cem_location_house
-                    if cem_location_block:
-                        cem_location.block = cem_location_block
-                    if cem_location_building:
-                        cem_location.building = cem_location_building
-            if cem_location_post_index:
-                cem_location.post_index = cem_location_post_index
-            cem_location.save()
-            cemetery.location = cem_location
-            cemetery.save()
-            
-            # Директор.
-            # Создаем объект Person.
-            person = Person(creator=request.user.userprofile.soul, last_name=cd["last_name"].capitalize())
-            first_name = cd.get("first_name", "")
-            patronymic = cd.get("patronymic", "")
-            phone = cd.get("phone", "")
-            if first_name:
-                person.first_name = first_name.capitalize()
-                if patronymic:
-                    person.patronymic = patronymic.capitalize()
-            person.save()
-            # Создаем объект Phone.
-            if phone:
-                dir_phone = Phone(soul=person.soul_ptr, f_number=phone)
-                dir_phone.save()
-            # Системный пользователь django.
-            user = User.objects.create_user(username=cd["username"], email="", password=cd["password1"])
-#            user.is_staff = True
-            user.last_name = cd["last_name"].capitalize()
-            if first_name:
-                user.first_name = first_name.capitalize()
-            user.save()
-            # Создаем объект UserProfile.
-            profile = UserProfile(user=user, soul=person.soul_ptr)
-            profile.save()
-
-            # Добавление пользователя во все существующие django-группы.
-            dgroups = Group.objects.all()
-            for dgr in dgroups:
-                user.groups.add(dgr)
-
             try:
                 env = Env.objects.get()
             except Env.MultipleObjectsReturned:
@@ -1411,13 +1331,6 @@ def init(request):
             initial = None
         else:
             phones = org.phone_set.all()
-            cemeteries = org.cemetery.all()
-            cemetery = cemeteries and cemeteries[0] or None
-            profile = UserProfile.objects.get(user=user)
-            try:
-                person = request.user.userprofile.soul.person
-            except Person.DoesNotExist:
-                person = None
             initial = dict(
                 org_name = org.name,
                 org_phone = phones and phones[0] or None,
@@ -1430,32 +1343,8 @@ def init(request):
                 block = org.location.block,
                 building = org.location.building,
                 flat = org.location.flat,
-                cemetery = cemetery,
-                cem_post_index = cemetery and cemetery.location.post_index,
-                cem_new_street = False,
-                cem_new_city = False,
-                cem_new_region = False,
-                cem_new_country = False,
-                cem_house = cemetery and cemetery.location.house,
-                cem_block = cemetery and cemetery.location.block,
-                cem_building = cemetery and cemetery.location.building,
-                username = request.user.username,
-                last_name = request.user.last_name,
-                first_name = request.user.first_name,
-                patronymic = person and person.patronymic,
-                password1 = '',
-                password2 = '',
-                phone = len(phones) > 1 and phones[1] or None,
                 kpp = org.kpp,
             )
-            if cemetery and cemetery.location and cemetery.location.street:
-                initial['cem_street'] = cemetery.location.street.name
-                if cemetery.location.street and cemetery.location.street.city:
-                    initial['cem_city'] = cemetery.location.street.city.name
-                    if cemetery.location.street.city and cemetery.location.street.city.region:
-                        initial['cem_region'] = cemetery.location.street.city.region.name
-                        if cemetery.location.street.city.region and cemetery.location.street.city.region.country:
-                            initial['cem_country'] = cemetery.location.street.city.region.country.name
             if org and org.location and org.location.street:
                 initial['street'] = org.location.street.name
                 if org.location.street and org.location.street.city:

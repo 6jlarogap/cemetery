@@ -1,25 +1,15 @@
 {% extends "base.html" %}
 {% block title %}Инициализация{% endblock %}
 {% block scripts %}
+<link rel="stylesheet" href="/media/css/ui-lightness/jquery-ui-1.8.6.custom.css" type="text/css" />
 <script type="text/javascript" src="/media/js/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" charset="utf-8">
-    var copyOrgToCem = function(){
-        $("#id_cemetery").val($("#id_org_name").val());
-        $("#id_cem_post_index").val($("#id_post_index").val());
-        $("#id_cem_street").val($("#id_street").val());
-        $("#id_cem_city").val($("#id_city").val());
-        $("#id_cem_region").val($("#id_region").val());
-        $("#id_cem_country").val($("#id_country").val());
-        $("#id_cem_house").val($("#id_house").val());
-        $("#id_cem_block").val($("#id_block").val());
-        $("#id_cem_building").val($("#id_building").val());
-    };
-</script>
+<script type="text/javascript" src="/media/js/jquery-ui-1.8.6.custom.min.js"></script>
+<script type="text/javascript" src="/media/js/jquery.query-2.1.7.js"></script>
+<script type="text/javascript" src="/media/js/address.js"></script>
 {% endblock %}
 {% block content %}
     <h1>Инициализация</h1>
     <h3>Создание стартовой конфигурации</h3>
-    <button onClick="copyOrgToCem();">Копировать данные организации в данные кладбища</button>
     <div id="forms">
         <form action="" method="post">
             <table>

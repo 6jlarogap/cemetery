@@ -10,6 +10,7 @@
 <script type="text/javascript" src="/media/js/jquery.query-2.1.7.js"></script>
 <script type="text/javascript" src="/admin_media/js/admin/RelatedObjectLookups.js"></script>
 <script type="text/javascript" src="/media/js/jquery.ui.timepicker.js?v=0.2.3"></script>
+<script type="text/javascript" src="/media/js/address.js"></script>
 <script type="text/javascript">
     window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";
 </script>
@@ -215,71 +216,6 @@ $(function(){
     $("#id_certificate-zags").after('<a href="/admin/common/zags/add/" class="add-another" id="add_id_certificate-zags" onclick="return showAddAnotherPopup(this);">создать</a>')
     $("#id_id-id_type").after('<a href="/admin/common/iddocumenttype/add/" class="add-another" id="add_id_id-id_type" onclick="return showAddAnotherPopup(this);">создать</a>')
     $("#id_agent").after('<a href="/admin/common/organization/"+$("#id_organization").val()+"/" target="_blank">создать</a>')
-
-
-  //автодополнение страны.
-  $("input:text[id$=country]").autocomplete({
-        source: "/getcountries/",
-        minLength: 1,
-        delay: 100,
-  });
-
-  //автодополнение региона.
-  $("input:text[id$=region]").autocomplete({
-        source: "/getregions/",
-        minLength: 2,
-        delay: 100,
-        select: function(event, ui) {
-            $(this).val(ui.item.value.split("/")[0]);
-            $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[1]);
-            return false;
-       },
-       focus: function(event, ui) {
-            $(this).val(ui.item.value.split("/")[0]);
-            $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[1]);
-            return false;
-       }
-  });
-  //автодополнение нас. пункта.
-  $("input:text[id$=city]").autocomplete({
-        source: "/getcities/",
-        minLength: 2,
-        delay: 100,
-        select: function(event, ui) {
-            $(this).val(ui.item.value.split("/")[0]);
-            $(this).parents('tr').find('input:text[id$=region]').val(ui.item.value.split("/")[1]);
-            $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[2]);
-            return false;
-       },
-       focus: function(event, ui) {
-           $(this).val(ui.item.value.split("/")[0]);
-           $(this).parents('tr').find('input:text[id$=region]').val(ui.item.value.split("/")[1]);
-           $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[2]);
-           return false;
-       }
-
-  });
-  //автодополнение улицы.
-  $("input:text[id$=street]").autocomplete({
-        source: "/getstreets/",
-        minLength: 2,
-        delay: 100,
-        select: function(event, ui) {
-            $(this).val(ui.item.value.split("/")[0]);
-            $(this).parents('tr').find('input:text[id$=city]').val(ui.item.value.split("/")[1]);
-            $(this).parents('tr').find('input:text[id$=region]').val(ui.item.value.split("/")[2]);
-            $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[3]);
-            return false;
-       },
-       focus: function(event, ui) {
-           $(this).val(ui.item.value.split("/")[0]);
-           $(this).parents('tr').find('input:text[id$=city]').val(ui.item.value.split("/")[1]);
-           $(this).parents('tr').find('input:text[id$=region]').val(ui.item.value.split("/")[2]);
-           $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[3]);
-            return false;
-       }
-
-    });
 
 })
 </script>
