@@ -167,7 +167,6 @@ class AddressForm(ModelAutoTabIndex):
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance')
-        print 'instance', instance
         if instance:
             kwargs.setdefault('initial', {}).update({
                 'street': instance.street and instance.street.name,
@@ -291,8 +290,6 @@ class AddressForm(ModelAutoTabIndex):
                 street.save()
             # Сохраняем Location.
             location.street = street
-
-        print 'cd.get("country"', cd.get("country"), location.street, location, cd
 
         location.save()
         return location

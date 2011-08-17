@@ -513,8 +513,6 @@ class Place(Product):
             setattr(self, f+'_num', p2)
             setattr(self, f+'_str2', p3)
 
-            print 'place:', p1, '-', p2, '-', p3
-
     def save(self, *args, **kwargs):
         """
         Всегда приводим area/row/seat к нижнему регистру.
@@ -661,8 +659,6 @@ class Burial(Order):
         self.acct_num_str1 = p1
         self.acct_num_num = p2
         self.acct_num_str2 = p3
-
-        print 'burial:', p1, '-', p2, '-', p3
 
     def save(self, *args, **kwargs):
         self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)
