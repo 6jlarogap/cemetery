@@ -397,7 +397,7 @@ class Cemetery(models.Model):
         verbose_name_plural = (u'кладбища')
 
     def __unicode__(self):
-        return "%s(%s)" % (self.name[:24], self.organization.name[:24])
+        return self.name
 
     def save(self, *args, **kwargs):
         self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)

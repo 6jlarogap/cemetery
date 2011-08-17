@@ -441,29 +441,22 @@ class InitalForm(forms.Form):
     Форма ввода данных для инициализации системы.
     """
     org_name = forms.CharField(label="*Название организации", max_length=99)
-    org_phone = forms.CharField(required=False, max_length=20, label="Телефон организации",
-                                widget=forms.TextInput())
+    org_phone = forms.CharField(required=False, max_length=20, label="Телефон организации", widget=forms.TextInput())
     post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс")
-    street = forms.CharField(required=False, max_length=99, label="Улица",
-                             widget=forms.TextInput())
+    street = forms.CharField(required=False, max_length=99, label="Улица", widget=forms.TextInput())
     new_street = forms.BooleanField(required=False, label="Новая улица")
-    city = forms.CharField(required=False, max_length=36, label="Нас. пункт",
-                           widget=forms.TextInput())
-    new_city = forms.BooleanField(required=False, label="Новый нас. пункт")
-    region = forms.CharField(required=False, max_length=36, label="Регион",
-                             widget=forms.TextInput())
-    new_region = forms.BooleanField(required=False, label="Новый регион")
-    country = forms.CharField(required=False, max_length=24, label="Страна",
-                              widget=forms.TextInput())
-    new_country = forms.BooleanField(required=False, label="Новая страна")
-    house = forms.CharField(required=False, max_length=16, label="Дом",
-                                     widget=forms.TextInput())
-    block = forms.CharField(required=False, max_length=16, label="Корпус",
-                                     widget=forms.TextInput())
+    house = forms.CharField(required=False, max_length=16, label="Дом", widget=forms.TextInput())
+    block = forms.CharField(required=False, max_length=16, label="Корпус", widget=forms.TextInput())
     building = forms.CharField(required=False, max_length=16, label="Строение")
-    flat = forms.CharField(required=False, max_length=16, label="Квартира",
-                                    widget=forms.TextInput())
+    flat = forms.CharField(required=False, max_length=16, label="Квартира", widget=forms.TextInput())
+    city = forms.CharField(required=False, max_length=36, label="Нас. пункт", widget=forms.TextInput())
+    new_city = forms.BooleanField(required=False, label="Новый нас. пункт")
+    region = forms.CharField(required=False, max_length=36, label="Регион", widget=forms.TextInput())
+    new_region = forms.BooleanField(required=False, label="Новый регион")
+    country = forms.CharField(required=False, max_length=24, label="Страна", widget=forms.TextInput())
+    new_country = forms.BooleanField(required=False, label="Новая страна")
     kpp = forms.CharField(required=False, max_length=9, label="КПП")
+    inn = forms.CharField(required=False, max_length=20, label="ИНН")
 
     def clean_username(self):
         """
