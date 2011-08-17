@@ -1712,7 +1712,8 @@ def get_agents(request):
 @login_required
 def get_dover(request):
     try:
-        agent = Agent.objects.get(pk=request.GET.get('agent'))
+        agents = Agent.objects.exclude(dover_expire__isnull=True).exclude(dover_expire__lt=datetime.datetime.now())
+        agent = agents.get(pk=request.GET.get('agent'))
     except Agent.DoesNotExist:
         rez = {}
     else:
