@@ -1235,6 +1235,7 @@ def init(request):
                     creator=request.user.userprofile.soul,
                 )
             organization.name = cd["org_name"]
+            organization.full_name = cd["org_full_name"]
             organization.kpp = cd["kpp"]
             organization.inn = cd["inn"]
             organization.save()
@@ -1335,6 +1336,7 @@ def init(request):
             phones = org.phone_set.all()
             initial = dict(
                 org_name = org.name,
+                org_full_name = org.full_name,
                 org_phone = phones and phones[0] or None,
                 post_index = org.location.post_index,
                 new_street = False,
