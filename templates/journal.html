@@ -217,15 +217,15 @@ $(function(){
     $("#id_agent").after('<a href="/admin/common/organization/"+$("#id_organization").val()+"/" target="_blank">создать</a>')
 
 
-   //автодополнение страны.
-   $("input:text[id$=country]").autocomplete({
+  //автодополнение страны.
+  $("input:text[id$=country]").autocomplete({
         source: "/getcountries/",
         minLength: 1,
         delay: 100,
-    });
+  });
 
-   //автодополнение региона.
-   $("input:text[id$=region]").autocomplete({
+  //автодополнение региона.
+  $("input:text[id$=region]").autocomplete({
         source: "/getregions/",
         minLength: 2,
         delay: 100,
@@ -239,9 +239,9 @@ $(function(){
             $(this).parents('tr').find('input:text[id$=country]').val(ui.item.value.split("/")[1]);
             return false;
        }
-   });
-   //автодополнение нас. пункта.
-   $("input:text[id$=city]").autocomplete({
+  });
+  //автодополнение нас. пункта.
+  $("input:text[id$=city]").autocomplete({
         source: "/getcities/",
         minLength: 2,
         delay: 100,
@@ -258,9 +258,9 @@ $(function(){
            return false;
        }
 
-    });
-   //автодополнение улицы.
-   $("input:text[id$=street]").autocomplete({
+  });
+  //автодополнение улицы.
+  $("input:text[id$=street]").autocomplete({
         source: "/getstreets/",
         minLength: 2,
         delay: 100,
@@ -280,6 +280,7 @@ $(function(){
        }
 
     });
+
 })
 </script>
 {% endblock %}
