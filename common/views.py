@@ -473,7 +473,7 @@ def journal(request):
 
         if request.POST.get('and_print'):
             return redirect("print_burial", new_burial.pk)
-        return redirect("edit_burial", new_burial.pk)
+        return redirect("/")
 
     today = datetime.date.today()
     burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul).order_by('-date_of_creation')[:15]
