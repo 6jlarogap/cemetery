@@ -396,8 +396,7 @@ class EditBurialForm(forms.Form):
             if new_country and not cd.get("new_region", False):
                 raise forms.ValidationError("У новой страны регион должен быть тоже новым.")
             try:
-                region_object = GeoRegion.objects.filter(country=country_object, name__exact=region)[0]
-#                region_object = GeoRegion.objects.get(country__name__exact=country, name__exact=region)
+                region_object = GeoRegion.objects.filter(country__name__exact=country, name__exact=region)[0]
             except IndexError:
                 if not cd.get("new_region", False):
                     raise forms.ValidationError("Регион не найден.")
@@ -412,8 +411,7 @@ class EditBurialForm(forms.Form):
             if new_region and not cd.get("new_city", False):
                 raise forms.ValidationError("У нового региона нас. пункт должен быть тоже новым.")
             try:
-                city_object = GeoCity.objects.filter(region=region_object, name__exact=city)[0]
-#                city_object = GeoCity.objects.get(region__name__exact=region, name__exact=city)
+                city_object = GeoCity.objects.filter(region__name__exact=region, name__exact=city)[0]
             except IndexError:
                 if not cd.get("new_city", False):
                     raise forms.ValidationError("Нас. пункт не найден.")
@@ -428,8 +426,7 @@ class EditBurialForm(forms.Form):
             if new_city and not cd.get("new_street", False):
                 raise forms.ValidationError("У нового нас. пункта улица должна быть тоже новой.")
             try:
-#                street_object = Street.objects.get(city__name__exact=city, name__exact=street)
-                street_object = Street.objects.filter(city=city_object, name__exact=street)[0]
+                street_object = Street.objects.filter(city__name__exact=city, name__exact=street)[0]
             except IndexError:
                 if not cd.get("new_street", False):
                     raise forms.ValidationError("Улица не найдена.")
