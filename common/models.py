@@ -546,6 +546,7 @@ class Place(Product):
 
     @property
     def rooms_occupied(self):
+        print 'self.rooms', self.rooms, 'self.rooms_free', self.rooms_free, 'count_burials', self.count_burials()
         return (self.rooms or 0) - (self.rooms_free or 0)
 
     def count_burials(self):
@@ -682,11 +683,15 @@ class Burial(Order):
         self.account_book_n = str(current_num)
         return self.account_book_n
 
-def recount_free_rooms(sender, instance, **kwargs):
+def recount_free_rooms_burial(sender, instance, **kwargs):
     place = instance.product.place
     place.rooms_free = max(0, place.rooms - place.count_burials())
     place.save()
-models.signals.post_save.connect(recount_free_rooms, sender=Burial)
+models.signals.post_save.connect(recount_free_rooms_burial, sender=Burial)
+
+def recount_free_rooms_place(sender, instance, **kwargs):
+    instance.rooms_free = max(0, instance.rooms - instance.count_burials())
+models.signals.pre_save.connect(recount_free_rooms_place, sender=Place)
 
 class UserProfile(models.Model):
     """
