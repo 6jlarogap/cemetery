@@ -1248,7 +1248,10 @@ def init(request):
             bank_formset = InitBankFormset(instance=organization, data=request.POST or None)
             for f in bank_formset.forms:
                 if f.is_valid():
-                    f.save()
+                    if f.cleaned_data.get('DELETE'):
+                        f.instance.delete()
+                    else:
+                        f.save()
 
             # Создаем объект Phone для организации.
             org_phone = cd.get("org_phone", "")
