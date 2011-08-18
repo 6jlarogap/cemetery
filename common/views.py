@@ -440,14 +440,20 @@ def edit_burial(request, uuid):
         raise Http404
     PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=2)
     if request.method == "POST":
-        phoneset = PhoneFormSet(request.POST, request.FILES,
-                               queryset=Phone.objects.filter(soul=burial.customer.person.soul_ptr))
+        phones = Phone.objects.filter(soul=burial.customer.person.soul_ptr)
+        phones.filter(f_number='').delete()
+ 	    phones.filter(f_number__isnull=True).delete()
+        phoneset = PhoneFormSet(request.POST, request.FILES, queryset=phones)
         form = EditBurialForm(request.POST, request.FILES)
         if form.is_valid():
-            if phoneset.is_valid(): 
-                for phone in phoneset.save(commit=False):
+            for pf in phoneset.forms:
+ 	            if pf.is_valid() and pf.cleaned_data.get('f_number'):
+                    phone = pf.save(commit=False)
                     phone.soul = burial.customer.person.soul_ptr
                     phone.save()
+                elif pf.instance:
+                    pf.instance.delete()
+
             cd = form.cleaned_data
             burial.account_book_n = cd["account_book_n"]
             burial.date_fact = cd["burial_date"]
