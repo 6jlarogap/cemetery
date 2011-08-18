@@ -6,7 +6,7 @@ from common.models import *
 class PersonAdmin(admin.ModelAdmin):
     raw_id_fields = ['location', 'creator', ]
 
-    lookup_allowed = lambda self, key: True
+    lookup_allowed = lambda *args: True
 
     def get_form(self, request, obj=None, **kwargs):
         if request.user.is_superuser:

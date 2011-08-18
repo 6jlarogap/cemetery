@@ -741,10 +741,9 @@ class EditUserForm(forms.ModelForm):
         fields = ['username', 'last_name', 'first_name', 'is_active', ]
 
     patronymic = forms.CharField(max_length=30, label="Отчество", required=False)
-    password1 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
-                                label="Пароль")
-    password2 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
-                                label="Пароль (еще раз)")
+    password1 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль")
+    password2 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль (еще раз)")
+
     def clean(self):
         cd = self.cleaned_data
         if cd.get("password1") == cd.get("password2"):
