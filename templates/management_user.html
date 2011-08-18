@@ -21,15 +21,15 @@
             <thead>
                 <td width="15%">Логин</td>
                 <td width="15%">Фамилия</td>
-                <td width="15%">Активен</td>
+                <td width="5%">Активен</td>
                 <td width="10%" align="center">Опции</td>
             </thead>
             {% for u in users %}
             <tr>
-                <td width="20%">{{ u.username }}</td>
-                <td width="20%">{{ u.last_name }}</td>
-                <td width="20%">{{ u.is_active|yesno }}</td>
-                <td width="20%" align="center">
+                <td>{{ u.username }}</td>
+                <td>{{ u.last_name }}</td>
+                <td>{{ u.is_active|yesno }}</td>
+                <td align="center">
                     <button title="Редактировать" onclick="top.location.href='/management/user/edit/{{ u.userprofile.soul.uuid }}/';"><img src="/media/edit.png"></button>
                     &nbsp;
             </tr>

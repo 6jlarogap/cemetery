@@ -744,6 +744,16 @@ class EditUserForm(forms.ModelForm):
     password1 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль")
     password2 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль (еще раз)")
 
+    def __init__(self, *args, **kwargs):
+        if kwargs.get('instance'):
+            kwargs.setdefault('initial', {}).update({
+                'patronymic': kwargs['instance'].userprofile.soul.person.patronymic,
+            })
+        super(EditUserForm, self).__init__(*args, **kwargs)
+        kp = self.fields.keyOrder.index('patronymic')
+        ka = self.fields.keyOrder.index('is_active')
+        self.fields.keyOrder[kp], self.fields.keyOrder[ka] = self.fields.keyOrder[ka], self.fields.keyOrder[kp]
+
     def clean(self):
         cd = self.cleaned_data
         if cd.get("password1") == cd.get("password2"):

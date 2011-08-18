@@ -332,14 +332,14 @@ class Role(models.Model):
     uuid = UUIDField(primary_key=True)
     organization = models.ForeignKey(Organization, verbose_name=u"Организация", related_name="orgrole")  # Связь с юр. лицом.
     name = models.CharField(u"Роль", max_length=50, blank=True)  # Название.
-    djgroups = models.ManyToManyField(Group, verbose_name=u"Django-группы",
-                                      blank=True, null=True)
+    djgroups = models.ManyToManyField(Group, verbose_name=u"Django-группы", blank=True, null=True)
     creator = models.ForeignKey(Soul, verbose_name=u"Автор")  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
+
     def __unicode__(self):
         return u"%s - %s" % (self.organization, self.name)
+
     class Meta:
-        #ordering = ['organization', 'date_of_creation']
         verbose_name = (u'роль в организации')
         verbose_name_plural = (u'роли в организациях')
 
