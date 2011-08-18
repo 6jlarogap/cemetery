@@ -393,9 +393,9 @@ class JournalForm(AutoTabIndex):
 
         place = Place()
         place.cemetery = cd["cemetery"]
-        place.area = cd["area"]
-        place.row = cd["row"]
-        place.seat = cd["seat"]
+        place.area = cd.get("area")
+        place.row = cd.get("row")
+        place.seat = cd.get("seat")
         if not self.initial and cd["burial_date"] >= datetime.date.today():
             if cd["rooms"] <= place.count_burials():
                 raise forms.ValidationError("Нет свободного места в ограде")
