@@ -283,6 +283,7 @@ def main_page(request):
         if pp:
             result["per_page"] = pp
 
+        result['close'] = request.GET.get('close')
     return result
 
 
@@ -498,6 +499,12 @@ def edit_burial(request, uuid):
     Страница редактирования существующего захоронения.
     """
     burial = get_object_or_404(Burial, uuid=uuid)
+
+    if request.REQUEST.get('delete'):
+        burial.is_trash = True
+        burial.save()
+        return HttpResponseRedirect(reverse("main_page") + '?close=1')
+
     PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=4)
 
     cem = burial.product.place.cemetery

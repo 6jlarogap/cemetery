@@ -15,8 +15,15 @@
         <a href="{% url print_burial burial.pk %}" target="_blank">Документы</a>
         <br />
         <input type="submit" value="Сохранить"  tabindex="22">
+        <input type="submit" name="delete" value="Удалить"  tabindex="22">
         <button type="reset" onclick="top.location.href='{{ request.path }}';" tabindex="23">Отмена</button>
     <a href="/journal/">Назад</a>
 
-    {% if close %} <script type="text/javascript">top.close();</script> {% endif %}
+    <script type="text/javascript">
+        $(function() {
+            $('input[name=delete]').click(function(){
+                return confirm('Точно удалить?');
+            })
+        })
+    </script>
 {% endblock %}
