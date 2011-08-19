@@ -1261,7 +1261,7 @@ def init(request):
 
             bank_formset = InitBankFormset(instance=organization, data=request.POST or None)
             for i,f in enumerate(bank_formset.forms):
-                if f.instance and f.data.get('bankaccount_set-%s-DELETE' % i):
+                if f.instance and f.instance.pk and f.data.get('bankaccount_set-%s-DELETE' % i):
                     f.instance.delete()
                 elif f.is_valid():
                     f.save()
