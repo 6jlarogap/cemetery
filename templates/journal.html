@@ -355,11 +355,6 @@ $(function(){
                     </td>
                 </tr>
                 <tr>
-                    <td class="free_form">{{ registration_form.post_index.label_tag }}</td>
-                    <td class="free_form">{{ registration_form.post_index.errors }}{{ registration_form.post_index }}</td>
-                    <td >&nbsp;</td>
-                </tr>
-                <tr>
                     <td class="free_form">{{ registration_form.street.label_tag }}</td>
                     <td class="free_form">{{ registration_form.house.label_tag }}</td>
                     <td class="free_form">{{ registration_form.block.label_tag }}</td>
@@ -390,6 +385,12 @@ $(function(){
                     <td class="free_form">{{ registration_form.new_city.label_tag }}{{ registration_form.new_city }}</td>
                     <td class="free_form">{{ registration_form.new_region.label_tag }}{{ registration_form.new_region }}</td>
                     <td>{{ registration_form.new_country.label_tag }}{{ registration_form.new_country }}</td>
+                </tr>
+                <tr>
+                    <td class="free_form">{{ registration_form.post_index.label_tag }}</td>
+                    <td class="free_form">{{ registration_form.post_index.errors }}{{ registration_form.post_index }}</td>
+                    <td class="free_form">{{ registration_form.info.label_tag }}</td>
+                    <td class="free_form">{{ registration_form.info.errors }}{{ registration_form.info }}</td>
                 </tr>
                 <!-- /deadman -->
 
@@ -500,11 +501,6 @@ $(function(){
                     <td colspan="3"><h2>Адрес проживания заказчика-физлица (для связи)</h2></td>
                 </tr>
                 <tr class="opf_fizik">
-                    <td class="free_form">{{ location_form.post_index.label_tag }}</td>
-                    <td class="free_form">{{ location_form.post_index.errors }}{{ location_form.post_index }}</td>
-                    <td >&nbsp;</td>
-                </tr>
-                <tr class="opf_fizik">
                     <td class="free_form">
                         {{ location_form.street.label_tag }}
                     </td>
@@ -538,6 +534,12 @@ $(function(){
                     <td class="free_form">{{ location_form.new_region.label_tag }}{{ location_form.new_region }}</td>
                     <td>{{ location_form.new_country.label_tag }}{{ location_form.new_country }}</td>
                 </tr>
+                <tr class="opf_fizik">
+                    <td class="free_form">{{ location_form.post_index.label_tag }}</td>
+                    <td class="free_form">{{ location_form.post_index.errors }}{{ location_form.post_index }}</td>
+                    <td class="free_form">{{ location_form.info.label_tag }}</td>
+                    <td class="free_form">{{ location_form.info.errors }}{{ location_form.info }}</td>
+                </tr>
                 <!-- /LOCATION -->
 
 
@@ -562,11 +564,6 @@ $(function(){
                     <td class="free_form">{{ form.responsible_patronymic.errors }}{{ form.responsible_patronymic }}</td>
                 </tr>
 
-                <tr class="responsible_myself">
-                    <td class="free_form">{{ responsible_form.post_index.label_tag }}</td>
-                    <td class="free_form">{{ responsible_form.post_index.errors }}{{ responsible_form.post_index }}</td>
-                    <td >&nbsp;</td>
-                </tr>
                 <tr class="responsible_myself">
                     <td class="free_form">{{ responsible_form.street.label_tag }}</td>
                     <td class="free_form">{{ responsible_form.house.label_tag }}</td>
@@ -598,6 +595,12 @@ $(function(){
                     <td class="free_form">{{ responsible_form.new_city.label_tag }}{{ responsible_form.new_city }}</td>
                     <td class="free_form">{{ responsible_form.new_region.label_tag }}{{ responsible_form.new_region }}</td>
                     <td>{{ responsible_form.new_country.label_tag }}{{ responsible_form.new_country }}</td>
+                </tr>
+                <tr class="responsible_myself">
+                    <td class="free_form">{{ responsible_form.post_index.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.post_index.errors }}{{ responsible_form.post_index }}</td>
+                    <td class="free_form">{{ responsible_form.info.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.info.errors }}{{ responsible_form.info }}</td>
                 </tr>
                 <!-- /responsible -->
 

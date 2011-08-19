@@ -111,11 +111,13 @@ class Street(models.Model):
     uuid = UUIDField(primary_key=True)
     city = models.ForeignKey(GeoCity)  # Город.
     name = models.CharField(max_length=99, db_index=True)  # Название.
+
     class Meta:
         ordering = ['city', 'name']
         unique_together = (("city", "name"),)
         verbose_name = (u'улица')
         verbose_name_plural = (u'улицы')
+
     def __unicode__(self):
         return self.name
 
@@ -126,7 +128,10 @@ class Location(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     post_index = models.CharField(u"Почтовый индекс", max_length=16, blank=True)             # Индекс.
-    street = models.ForeignKey(Street, verbose_name=u"Улица", blank=True, null=True)         # Улица.
+    street = models.ForeignKey(Street, verbose_name=u"Улица", blank=True, null=True)
+    city = models.ForeignKey(GeoCity, verbose_name=u"Город", blank=True, null=True)
+    region = models.ForeignKey(GeoRegion, verbose_name=u"Регион", blank=True, null=True)
+    country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", blank=True, null=True)
     house = models.CharField(u"Дом", max_length=16, blank=True)                              # Дом.
     block = models.CharField(u"Корпус", max_length=16, blank=True)                           # Корпус.
     building = models.CharField(u"Строение", max_length=16, blank=True)                      # Строение.

@@ -15,7 +15,14 @@ $(function() {
 
   //автодополнение региона.
   $("input:text[id$=region]").autocomplete({
-       source: "/getregions/",
+       source: function(term, callback) {
+           var id = $(this.element).attr('id').replace(/region/g, '');
+           var url = "/getregions/?term="+term.term;
+           if ($('#'+id+'country').val()) {
+               url += "&country=" + $('#'+id+'country').val();
+           }
+           $.getJSON(url, callback);
+       },
        minLength: 2,
        delay: 100,
        select: function(event, ui) {
@@ -25,14 +32,25 @@ $(function() {
             return false;
        },
        focus: function(event, ui) {
-            $(this).val(ui.item.value.split("/")[0]);
-            $('#'+id+'country').val(ui.item.value.split("/")[1]);
-            return false;
+           var id = $(this).attr('id').replace(/region/g, '');
+           $(this).val(ui.item.value.split("/")[0]);
+           $('#'+id+'country').val(ui.item.value.split("/")[1]);
+           return false;
        }
   });
   //автодополнение нас. пункта.
   $("input:text[id$=city]").autocomplete({
-       source: "/getcities/",
+      source: function(term, callback) {
+          var id = $(this.element).attr('id').replace(/city/g, '');
+          var url = "/getcities/?term="+term.term;
+          if ($('#'+id+'country').val()) {
+              url += "&country=" + $('#'+id+'country').val();
+          }
+          if ($('#'+id+'region').val()) {
+              url += "&region=" + $('#'+id+'region').val();
+          }
+          $.getJSON(url, callback);
+       },
        minLength: 2,
        delay: 100,
        select: function(event, ui) {
@@ -53,7 +71,20 @@ $(function() {
   });
   //автодополнение улицы.
   $("input:text[id$=street]").autocomplete({
-       source: "/getstreets/",
+      source: function(term, callback) {
+          var id = $(this.element).attr('id').replace(/street/g, '');
+          var url = "/getstreets/?term="+term.term;
+          if ($('#'+id+'country').val()) {
+              url += "&country=" + $('#'+id+'country').val();
+          }
+          if ($('#'+id+'region').val()) {
+              url += "&region=" + $('#'+id+'region').val();
+          }
+          if ($('#'+id+'city').val()) {
+              url += "&city=" + $('#'+id+'city').val();
+          }
+          $.getJSON(url, callback);
+       },
        minLength: 2,
        delay: 100,
        select: function(event, ui) {

@@ -154,7 +154,7 @@ class ModelAutoTabIndex(forms.ModelForm):
 class AddressForm(ModelAutoTabIndex):
     class Meta:
         model = Location
-        fields = ['post_index', 'house', 'block', 'building', 'flat',  ]
+        fields = ['post_index', 'house', 'block', 'building', 'flat', 'info', ]
 
     street = forms.CharField(required=False, max_length=99, label="Улица")
     new_street = forms.BooleanField(required=False, label="Новая улица")
@@ -170,9 +170,9 @@ class AddressForm(ModelAutoTabIndex):
         if instance:
             kwargs.setdefault('initial', {}).update({
                 'street': instance.street and instance.street.name,
-                'city': instance.street and instance.street.city.name,
-                'region': instance.street and instance.street.city.region.name,
-                'country': instance.street and instance.street.city.region.country.name,
+                'city': instance.city and instance.city.name or instance.street and instance.street.city.name,
+                'region': instance.region and instance.region.name or instance.street and instance.street.city.region.name,
+                'country': instance.country and instance.country.name or instance.street and instance.street.city.region.country.name,
             })
         super(AddressForm, self).__init__(*args, **kwargs)
 
@@ -191,7 +191,10 @@ class AddressForm(ModelAutoTabIndex):
         block = cd.get("block", "")
         building = cd.get("building", "")
         flat = cd.get("flat", "")
-        if country and region and city and street:
+
+        new_country = new_region = new_city = new_street = False
+
+        if country:
             # Страна.
             try:
                 country_object = GeoCountry.objects.get(name__exact=country)
@@ -205,7 +208,10 @@ class AddressForm(ModelAutoTabIndex):
                     new_country = False
                 else:
                     raise forms.ValidationError("Страна с таким именем уже существует.")
-                
+        else:
+            raise forms.ValidationError("Не все поля адреса заполнены.")
+
+        if region:
             # Регион.
             if new_country and not cd.get("new_region", False):
                 raise forms.ValidationError("У новой страны регион должен быть тоже новым.")
@@ -221,7 +227,10 @@ class AddressForm(ModelAutoTabIndex):
                     new_region = False
                 else:
                     raise forms.ValidationError("Регион с таким именем уже существует в выбранной стране.")
-                
+        else:
+            raise forms.ValidationError("Не все поля адреса заполнены.")
+
+        if city:
             # Нас. пункт.
             if new_region and not cd.get("new_city"):
                 raise forms.ValidationError("У нового региона нас. пункт должен быть тоже новым.")
@@ -237,7 +246,8 @@ class AddressForm(ModelAutoTabIndex):
                     new_city = False
                 else:
                     raise forms.ValidationError("Нас. пункт с таким именем уже существует в выбранном регионе.")
-                
+
+        if street:
             # Улица.
             if new_city and not cd.get("new_street"):
                 raise forms.ValidationError("У нового нас. пункта улица должна быть тоже новой.")
@@ -253,8 +263,6 @@ class AddressForm(ModelAutoTabIndex):
                 if not house:
                     raise forms.ValidationError("Не указан дом.")
         else:
-            if country or region or city:  # Есть, но не все.
-                raise forms.ValidationError("Не все поля адреса заполнены.")
             if house or block or building or flat:
                 raise forms.ValidationError("Не выбрана улица.")
         return cd
@@ -290,6 +298,9 @@ class AddressForm(ModelAutoTabIndex):
                 street.save()
             # Сохраняем Location.
             location.street = street
+            location.country = country
+            location.region = region
+            location.city = city
 
         location.save()
         return location

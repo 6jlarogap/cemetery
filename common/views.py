@@ -1311,6 +1311,10 @@ def init(request):
                     street.save()
                 # Продолжаем с Location.
                 org_location.street = street
+                org_location.country = country
+                org_location.region = region
+                org_location.city = city
+
                 if org_location_house:
                     org_location.house = org_location_house
                     if org_location_block:
@@ -1740,7 +1744,14 @@ def get_street(request):
     streets = []
     q = request.GET.get('term', None)
     if q is not None:
-        rezult = Street.objects.filter(name__istartswith=q).order_by("name", "city__name", "city__region__name",
+        kwargs = dict(name__istartswith=q)
+        if request.GET.get('country'):
+            kwargs['city__region__country__name'] = request.GET['country']
+        if request.GET.get('region'):
+            kwargs['city__region__name'] = request.GET['region']
+        if request.GET.get('city'):
+            kwargs['city__name'] = request.GET['city']
+        rezult = Street.objects.filter(**kwargs).order_by("name", "city__name", "city__region__name",
                                                                      "city__region__country__name")[:24]
         for s in rezult:
             streets.append(u"%s/%s/%s/%s" % (s.name, s.city.name, s.city.region.name, s.city.region.country.name))
@@ -1769,8 +1780,12 @@ def get_cities(request):
     cities = []
     q = request.GET.get('term', None)
     if q is not None:
-        rezult = GeoCity.objects.filter(name__istartswith=q).order_by("name", "region__name",
-                                                                      "region__country__name")[:24]
+        kwargs = dict(name__istartswith=q)
+        if request.GET.get('country'):
+            kwargs['region__country__name'] = request.GET['country']
+        if request.GET.get('region'):
+            kwargs['region__name'] = request.GET['region']
+        rezult = GeoCity.objects.filter(**kwargs).order_by("name", "region__name", "region__country__name")[:24]
         for s in rezult:
             cities.append(u"%s/%s/%s" % (s.name, s.region.name, s.region.country.name))
     return HttpResponse(JSONEncoder().encode(cities))
@@ -1784,7 +1799,10 @@ def get_regions(request):
     regions = []
     q = request.GET.get('term', None)
     if q is not None:
-        rezult = GeoRegion.objects.filter(name__istartswith=q).order_by("name", "country__name")[:24]
+        kwargs = dict(name__istartswith=q)
+        if request.GET.get('country'):
+            kwargs['country__name'] = request.GET['country']
+        rezult = GeoRegion.objects.filter(**kwargs).order_by("name", "country__name")[:24]
         for s in rezult:
             regions.append(u"%s/%s" % (s.name, s.country.name))
     return HttpResponse(JSONEncoder().encode(regions))

@@ -289,6 +289,7 @@ thead td {
     border-top: 1px dotted #CCCCCC;
     border-bottom: 0px dotted #CCCCCC;
     padding: 4px 4px;
+    vertical-align: top;
 }
 
 #forms label {
