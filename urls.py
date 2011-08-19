@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('common.views',
-    url(r'^$', 'main_page'),
+    url(r'^$', 'main_page', name='main_page'),
     url(r'^init/$', 'init'),
     url(r'^login/$', 'ulogin'),
     url(r'^logout/$', 'ulogout'),

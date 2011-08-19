@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User, Group
 from django.shortcuts import redirect, get_object_or_404
 from django.db import transaction
-from django.http import Http404, HttpResponseForbidden, HttpResponse
+from django.http import Http404, HttpResponseForbidden, HttpResponse, HttpResponseRedirect
 from django.views.generic.simple import direct_to_template
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
@@ -14,6 +14,7 @@ from django.conf import settings
 from django.utils.simplejson.encoder import JSONEncoder
 from django.forms.models import modelformset_factory
 from django import db
+from django.core.urlresolvers import reverse
 
 from common.forms import *
 from contrib.constants import UNKNOWN_NAME
@@ -330,7 +331,7 @@ def journal(request):
 
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
     forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid() and cert_form.is_valid() and id_valid
-    responsible_valid = request.GET.get('responsible_myself') or responsible_form.is_valid()
+    responsible_valid = request.POST.get('responsible_myself') or responsible_form.is_valid()
 
     duplicates = []
     if request.method == "POST" and form.is_valid() and not request.REQUEST.get('duplicates_ok'):
@@ -473,7 +474,7 @@ def journal(request):
 
         if request.POST.get('and_print'):
             return redirect("print_burial", new_burial.pk)
-        return redirect("/")
+        return redirect("main_page")
 
     today = datetime.date.today()
     burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul).order_by('-date_of_creation')[:15]
@@ -563,7 +564,7 @@ def edit_burial(request, uuid):
 
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
     forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid() and cert_form.is_valid() and id_valid
-    responsible_valid = request.GET.get('responsible_myself') or responsible_form.is_valid()
+    responsible_valid = request.POST.get('responsible_myself') or responsible_form.is_valid()
 
     if request.method == "POST" and forms_valid and responsible_valid:
         cd = form.cleaned_data
@@ -637,7 +638,7 @@ def edit_burial(request, uuid):
         if request.POST.get('disable_exhumation'):
             new_burial.exhumated_date = None
 
-        if request.GET.get('responsible_myself'):
+        if request.POST.get('responsible_myself'):
             new_burial.responsible_customer = new_burial.customer
         else:
             if new_burial.responsible_customer:
@@ -645,7 +646,7 @@ def edit_burial(request, uuid):
                     last_name=cd["responsible_last_name"].capitalize(),
                     first_name=cd.get("responsible_first_name", "").capitalize(),
                     patronymic=cd.get("responsible_patronymic", "").capitalize(),
-                    location = responsible_form.save(),
+                    location = responsible_form.is_valid() and responsible_form.save() or None,
                 )
             else:
                 new_burial.responsible_customer = Person.objects.create(
@@ -653,7 +654,7 @@ def edit_burial(request, uuid):
                     last_name=cd["responsible_last_name"].capitalize(),
                     first_name=cd.get("responsible_first_name", "").capitalize(),
                     patronymic=cd.get("responsible_patronymic", "").capitalize(),
-                    location = responsible_form.save(),
+                    location = responsible_form.is_valid() and responsible_form.save() or None,
                 )
         if not request.REQUEST.get('opf') == 'fizik':
             agent = cd['agent']
@@ -697,7 +698,7 @@ def edit_burial(request, uuid):
             ds.soul_id = new_burial.person.pk
             ds.save()
 
-        return redirect("/")
+        return HttpResponseRedirect(reverse("edit_burial", args=[new_burial.pk, ]) + '?close=1')
 
     today = datetime.date.today()
     burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul,
@@ -713,6 +714,7 @@ def edit_burial(request, uuid):
         'responsible_form': responsible_form,
         'request': request,
         'id_form': id_form,
+        'close': request.GET.get('close'),
     })
 
 

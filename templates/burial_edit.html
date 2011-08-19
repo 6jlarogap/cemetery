@@ -17,4 +17,6 @@
         <input type="submit" value="Сохранить"  tabindex="22">
         <button type="reset" onclick="top.location.href='{{ request.path }}';" tabindex="23">Отмена</button>
     <a href="/journal/">Назад</a>
+
+    {% if close %} <script type="text/javascript">top.close();</script> {% endif %}
 {% endblock %}
