@@ -5,6 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminTimeWidget
+
 from models import *
 from contrib.constants import UNKNOWN_NAME
 
@@ -467,8 +468,9 @@ class InitalForm(forms.Form):
     new_region = forms.BooleanField(required=False, label="Новый регион")
     country = forms.CharField(required=False, max_length=24, label="Страна", widget=forms.TextInput())
     new_country = forms.BooleanField(required=False, label="Новая страна")
-    kpp = forms.CharField(required=False, max_length=9, label="КПП")
-    inn = forms.CharField(required=False, max_length=20, label="ИНН")
+
+    kpp = forms.CharField(required=False, max_length=9, label="КПП", validators=[DigitsValidator(), ])
+    inn = forms.CharField(required=False, max_length=20, label="ИНН", validators=[DigitsValidator(), ])
 
     def clean_username(self):
         """

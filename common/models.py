@@ -3,6 +3,7 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.validators import RegexValidator
 
 from south.modelsinspector import add_introspection_rules
 
@@ -11,6 +12,13 @@ import os
 import re
 
 from django_extensions.db.fields import UUIDField
+
+class DigitsValidator(RegexValidator):
+    regex = '^\d+$'
+    message = u'Допускаются только цифры'
+
+    def __init__(self):
+        super(DigitsValidator, self).__init__(regex=self.regex, message=self.message, code=None)
 
 PER_PAGE_VALUES = (
     (5, '5'),
@@ -324,9 +332,9 @@ class BankAccount(models.Model):
     Банковские реквизиты
     """
     organization = models.ForeignKey(Organization, verbose_name=u"Организация")      # Владелец счета
-    rs = models.CharField(u"Расчетный счет", max_length=20)              # Расчетный счет
-    ks = models.CharField(u"Корреспондентский счет", max_length=20, blank=True)      # Корреспондентский счет
-    bik = models.CharField(u"БИК", max_length=9, blank=True)                         # Банковский идентификационный код
+    rs = models.CharField(u"Расчетный счет", max_length=20, validators=[DigitsValidator(), ]) # Расчетный счет
+    ks = models.CharField(u"Корреспондентский счет", max_length=20, blank=True, validators=[DigitsValidator(), ]) # Корреспондентский счет
+    bik = models.CharField(u"БИК", max_length=9, blank=True, validators=[DigitsValidator(), ])                         # Банковский идентификационный код
     bankname = models.CharField(u"Наименование банка", max_length=64)    # Название банка
 
 
