@@ -43,14 +43,14 @@
         }
     }
 
-    function updateDover() {
+    function updateDover(el) {
         var agent = $('#id_agent').val();
         if (!agent) return;
         $.getJSON('{% url get_dover %}?agent=' + agent, function(data){
             if (!data) return
-            $('#id_dover_number').val(data.number || '');
-            $('#id_dover_date').val(data.date || '');
-            $('#id_dover_expire').val(data.expire || '');
+            if (el || !$('#id_dover_number').val()) { $('#id_dover_number').val(data.number || ''); }
+            if (el || !$('#id_dover_date').val()) { $('#id_dover_date').val(data.date || ''); }
+            if (el || !$('#id_dover_expire').val()) { $('#id_dover_expire').val(data.expire || ''); }
         })
     }
 
@@ -210,7 +210,7 @@ $(function(){
   });
 
     $('#id_agent').change(updateDover);
-    updateDover();
+    updateDover(false);
 
     $("#id_organization").after('<a href="/admin/common/organization/add/" class="add-another" id="add_id_organization" onclick="return showAddAnotherPopup(this);">создать</a>')
     $("#id_certificate-zags").after('<a href="/admin/common/zags/add/" class="add-another" id="add_id_certificate-zags" onclick="return showAddAnotherPopup(this);">создать</a>')

@@ -331,7 +331,8 @@ def journal(request):
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=Phone.objects.none())
 
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
-    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid() and cert_form.is_valid() and id_valid
+    customer_addr_valid = request.POST.get('opf') != 'fizik' or location_form.is_valid()
+    forms_valid = form.is_valid() and customer_addr_valid and registration_form.is_valid() and cert_form.is_valid() and id_valid
     responsible_valid = request.POST.get('responsible_myself') or responsible_form.is_valid()
 
     duplicates = []
@@ -386,7 +387,7 @@ def journal(request):
         if cd.get("customer_patronymic", ""):
             customer.patronymic = cd["customer_patronymic"].capitalize()
 
-        customer.location = location_form.save()
+        customer.location = location_form.is_valid() and location_form.save() or None
         customer.save()
 
         if id_form.is_valid():
@@ -438,10 +439,11 @@ def journal(request):
         if not request.REQUEST.get('opf') == 'fizik':
             agent = cd['agent']
             if agent:
-                agent.dover_number = cd['dover_number']
-                agent.dover_date = cd['dover_date']
-                agent.dover_expire = cd['dover_expire']
-                agent.save()
+                new_burial.doverennost, created = agent.doverennosti.get_or_create(
+                    number = cd['dover_number'],
+                    date = cd['dover_date'],
+                    expire = cd['dover_expire'],
+                )
 
             new_burial.responsible_agent = agent
 
@@ -540,10 +542,10 @@ def edit_burial(request, uuid):
         'opf': burial.responsible_agent and 'yurik' or 'fizik',
         'organization': burial.responsible_agent and burial.responsible_agent.organization,
         'agent': burial.responsible_agent,
-        'agent_director': burial.responsible_agent and not burial.responsible_agent.dover_number,
-        'dover_number': burial.responsible_agent and burial.responsible_agent.dover_number or '',
-        'dover_date': burial.responsible_agent and burial.responsible_agent.dover_number or '',
-        'dover_expire': burial.responsible_agent and burial.responsible_agent.dover_number or '',
+        'agent_director': burial.responsible_agent and not burial.doverennost,
+        'dover_number': burial.doverennost and burial.doverennost.number or '',
+        'dover_date': burial.doverennost and burial.doverennost.date or '',
+        'dover_expire': burial.doverennost and burial.doverennost.expire or '',
     }
     form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None, initial=initial)
     location_form = AddressForm(prefix='address', data=request.POST or None, instance=burial.customer.location)
@@ -570,7 +572,8 @@ def edit_burial(request, uuid):
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=burial.customer.phone_set.all())
 
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
-    forms_valid = form.is_valid() and location_form.is_valid() and registration_form.is_valid() and cert_form.is_valid() and id_valid
+    customer_addr_valid = request.POST.get('opf') != 'fizik' or location_form.is_valid()
+    forms_valid = form.is_valid() and customer_addr_valid and registration_form.is_valid() and cert_form.is_valid() and id_valid
     responsible_valid = request.POST.get('responsible_myself') or responsible_form.is_valid()
 
     if request.method == "POST" and forms_valid and responsible_valid:
@@ -604,7 +607,7 @@ def edit_burial(request, uuid):
         if cd.get("customer_patronymic", ""):
             customer.patronymic = cd["customer_patronymic"].capitalize()
 
-        customer.location = location_form.save()
+        customer.location = location_form.is_valid() and location_form.save() or None
         customer.save()
 
         if id_form.is_valid():
@@ -666,10 +669,11 @@ def edit_burial(request, uuid):
         if not request.REQUEST.get('opf') == 'fizik':
             agent = cd['agent']
             if agent:
-                agent.dover_number = cd['dover_number']
-                agent.dover_date = cd['dover_date']
-                agent.dover_expire = cd['dover_expire']
-                agent.save()
+                new_burial.doverennost, created = agent.doverennosti.get_or_create(
+                    number = cd['dover_number'],
+                    date = cd['dover_date'],
+                    expire = cd['dover_expire'],
+                )
 
             new_burial.responsible_agent = agent
 
@@ -1733,15 +1737,15 @@ def get_agents(request):
 @login_required
 def get_dover(request):
     try:
-        agents = Agent.objects.exclude(dover_expire__isnull=True).exclude(dover_expire__lt=datetime.datetime.now())
-        agent = agents.get(pk=request.GET.get('agent'))
-    except Agent.DoesNotExist:
+        dover = Doverennost.objects.exclude(expire__isnull=True).exclude(expire__lt=datetime.datetime.now())
+        current = dover.filter(agent__pk=request.GET.get('agent')).order_by('-number')[0]
+    except IndexError:
         rez = {}
     else:
         rez = {
-            'number': agent.dover_number,
-            'date': agent.dover_date and agent.dover_date.strftime('%d.%m.%Y') or '',
-            'expire': agent.dover_expire and agent.dover_expire.strftime('%d.%m.%Y') or '',
+            'number': current.number,
+            'date': current.date and current.date.strftime('%d.%m.%Y') or '',
+            'expire': current.expire and current.expire.strftime('%d.%m.%Y') or '',
         }
     return HttpResponse(JSONEncoder().encode(rez))
 

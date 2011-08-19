@@ -391,12 +391,18 @@ class Agent(models.Model):
     })
     organization = models.ForeignKey(Organization, related_name="agents", verbose_name="Организация")
 
-    dover_number = models.CharField(verbose_name="Номер доверенности", max_length=255, blank=True, null=True)
-    dover_date = models.DateField(verbose_name="Дата выдачи", blank=True, null=True)
-    dover_expire = models.DateField(verbose_name="Действует до", blank=True, null=True)
-
     def __unicode__(self):
         return unicode(self.person)
+
+class Doverennost(models.Model):
+    agent = models.ForeignKey(Agent, related_name="doverennosti", verbose_name="Доверенность")
+
+    number = models.CharField(verbose_name="Номер доверенности", max_length=255, blank=True, null=True)
+    date = models.DateField(verbose_name="Дата выдачи", blank=True, null=True)
+    expire = models.DateField(verbose_name="Действует до", blank=True, null=True)
+
+    def __unicode__(self):
+        return unicode(self.agent) + ' - ' + self.dover_number
 
 class Cemetery(models.Model):
     """
@@ -663,6 +669,8 @@ class Burial(Order):
     acct_num_str1 = models.CharField(editable=False, null=True, max_length=16)
     acct_num_num = models.PositiveIntegerField(editable=False, null=True)
     acct_num_str2 = models.CharField(editable=False, null=True, max_length=16)
+
+    doverennost = models.ForeignKey(Doverennost, null=True)
 
     class Meta:
         verbose_name = (u'захоронение')
