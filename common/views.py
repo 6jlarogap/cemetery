@@ -1351,6 +1351,11 @@ def init(request):
             env.save()
 
             return redirect("/management/")
+        else:
+            for f in bank_formset.forms:
+                if f.instance and f.cleaned_data.get('DELETE'):
+                    f.instance.delete()
+
     else:
         try:
             env = Env.objects.get()
