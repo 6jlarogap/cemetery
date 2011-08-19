@@ -470,7 +470,7 @@ class InitalForm(forms.Form):
     new_country = forms.BooleanField(required=False, label="Новая страна")
 
     kpp = forms.CharField(required=False, max_length=9, label="КПП", validators=[DigitsValidator(), ])
-    inn = forms.CharField(required=False, max_length=20, label="ИНН", validators=[DigitsValidator(), ])
+    inn = forms.CharField(required=False, max_length=12, label="ИНН", validators=[DigitsValidator(), ])
 
     def clean_username(self):
         """
