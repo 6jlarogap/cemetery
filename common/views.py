@@ -1235,10 +1235,11 @@ def init(request):
     except:
         organization = None
         env = None
-
-    organization.bankaccount_set.filter(rs='').delete()
-    organization.bankaccount_set.filter(rs__isnull=True).delete()
-    bank_formset = InitBankFormset(instance=organization, data=request.POST or None)
+        bank_formset = InitBankFormset(instance=None, data=request.POST or None)
+    else:
+        organization.bankaccount_set.filter(rs='').delete()
+        organization.bankaccount_set.filter(rs__isnull=True).delete()
+        bank_formset = InitBankFormset(instance=organization, data=request.POST or None)
 
     if request.method == "POST":
         form = InitalForm(request.POST)
@@ -1260,11 +1261,10 @@ def init(request):
 
             bank_formset = InitBankFormset(instance=organization, data=request.POST or None)
             for f in bank_formset.forms:
-                if f.is_valid():
-                    if f.cleaned_data.get('DELETE'):
-                        f.instance.delete()
-                    else:
-                        f.save()
+                if f.instance and f.data.get('DELETE'):
+                    f.instance.delete()
+                elif f.is_valid():
+                    f.save()
 
             # Создаем объект Phone для организации.
             org_phone = cd.get("org_phone", "")
@@ -1351,10 +1351,6 @@ def init(request):
             env.save()
 
             return redirect("/management/")
-        else:
-            for f in bank_formset.forms:
-                if f.instance and f.cleaned_data.get('DELETE'):
-                    f.instance.delete()
 
     else:
         try:
