@@ -333,7 +333,9 @@ def journal(request):
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
     customer_addr_valid = request.POST.get('opf') != 'fizik' or location_form.is_valid()
     forms_valid = form.is_valid() and customer_addr_valid and registration_form.is_valid() and cert_form.is_valid() and id_valid
-    responsible_valid = request.POST.get('responsible_myself') or responsible_form.is_valid()
+    responsible_valid = request.POST.get('responsible_myself') or \
+                        request.POST.get('responsible_last_name') in [None, '', UNKNOWN_NAME] or \
+                        responsible_form.is_valid()
 
     duplicates = []
     if request.method == "POST" and form.is_valid() and not request.REQUEST.get('duplicates_ok'):
@@ -537,7 +539,7 @@ def edit_burial(request, uuid):
         'responsible_last_name': burial.responsible_customer and burial.responsible_customer.person.last_name,
         'responsible_first_name': burial.responsible_customer and burial.responsible_customer.person.first_name,
         'responsible_patronymic': burial.responsible_customer and burial.responsible_customer.person.patronymic,
-        'responsible_myself': burial.responsible_customer == burial.customer,
+        'responsible_myself': burial.responsible_customer == burial.customer and not burial.responsible_agent,
 
         'opf': burial.responsible_agent and 'yurik' or 'fizik',
         'organization': burial.responsible_agent and burial.responsible_agent.organization,
@@ -574,7 +576,11 @@ def edit_burial(request, uuid):
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
     customer_addr_valid = request.POST.get('opf') != 'fizik' or location_form.is_valid()
     forms_valid = form.is_valid() and customer_addr_valid and registration_form.is_valid() and cert_form.is_valid() and id_valid
-    responsible_valid = request.POST.get('responsible_myself') or responsible_form.is_valid()
+    responsible_valid = request.POST.get('responsible_myself') or \
+                        request.POST.get('responsible_last_name') in [None, '', UNKNOWN_NAME] or \
+                        responsible_form.is_valid()
+
+    print 'responsible_valid', responsible_valid, request.POST.get('responsible_last_name')
 
     if request.method == "POST" and forms_valid and responsible_valid:
         cd = form.cleaned_data

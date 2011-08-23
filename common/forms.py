@@ -376,6 +376,7 @@ class JournalForm(AutoTabIndex):
         if data.get('opf', 'fizik') != 'fizik':
             for f in ['dover_date', 'dover_expire', 'dover_number', ]:
                 self.fields[f].required = not data.get('agent_director') or False
+            self.fields['agent'].required = True
 
         if cem:
             self.fields["cemetery"].initial = cem
