@@ -652,7 +652,7 @@ class OrderFiles(models.Model):
 
     @property
     def name(self):
-        return mark_safe(unicode(os.path.basename(self.ofile.url)).encode('utf-8'))
+        return mark_safe(os.path.basename(self.ofile.path))
 
 class OrderComments(models.Model):
     """
