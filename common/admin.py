@@ -59,8 +59,9 @@ class OCAdmin(admin.ModelAdmin):
 #        return super(RoleAdmin, self).get_form(request, obj=None, **kwargs)
 
 class OrganizationAgentInline(admin.StackedInline):
+    fk_name = 'organization'
     model = Agent
-    raw_id_fields = ['person', ]
+    exclude = ['creator', 'birth_date', 'death_date', 'location', ]
 
 class OrganizationPhoneInline(admin.StackedInline):
     model = Phone

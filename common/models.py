@@ -210,7 +210,6 @@ class Soul(models.Model):
     class Meta:
         ordering = ['uuid']
 
-
 class Phone(models.Model):
     """
     Телефонный номер.
@@ -408,15 +407,8 @@ class PersonRole(models.Model):
     class Meta:
         unique_together = (("person", "role"),)
 
-class Agent(models.Model):
-    uuid = UUIDField(primary_key=True)
-    person = models.ForeignKey(Person, related_name="is_agent_of", verbose_name="Персона", limit_choices_to={
-        'is_agent_of__pk__isnull': False,
-    })
+class Agent(Person):
     organization = models.ForeignKey(Organization, related_name="agents", verbose_name="Организация")
-
-    def __unicode__(self):
-        return unicode(self.person)
 
 class Doverennost(models.Model):
     agent = models.ForeignKey(Agent, related_name="doverennosti", verbose_name="Доверенность")
@@ -626,7 +618,7 @@ class Order(models.Model):
     uuid = UUIDField(primary_key=True)
     responsible = models.ForeignKey(Soul, related_name='ordr_responsible')          # Исполнитель. Ответственный за исполнение Заказа. Организация кладбища
     customer = models.ForeignKey(Soul, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)
-    responsible_agent = models.ForeignKey(Agent, blank=True, null=True)             # Агент Заказчика-юрлица
+    responsible_agent = models.ForeignKey(Agent, blank=True, null=True, related_name='orders')             # Агент Заказчика-юрлица
     responsible_customer = models.ForeignKey(Soul, related_name='ordr_responsible_customer', blank=True, null=True) # Ответственный за захоронением
 
     doer = models.ForeignKey(Soul, blank=True, null=True, related_name="doerorder")  # Исполнитель (работник).
