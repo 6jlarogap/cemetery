@@ -622,6 +622,14 @@ $(function(){
                     <td class="free_form">{{ form.file1_comment.label_tag }}</td>
                     <td >&nbsp;</td>
                 </tr>
+                {% for of in burial.orderfiles_set.all %}
+                    <tr>
+                        <td class="free_form"><a href="{{ of.ofile.url }}" target="_blank">{{ of.name }}</a></td>
+                        <td class="free_form">{{ of.comment }}</td>
+                        <td >{{ of.creator.userprofile.user }}</td>
+                        </td>
+                    </tr>
+                {% endfor %}
                 <tr>
                     <td class="free_form">{{ form.file1.errors }}{{ form.file1 }}</td>
                     <td class="free_form">{{ form.file1_comment.errors }}{{ form.file1_comment }}</td>
