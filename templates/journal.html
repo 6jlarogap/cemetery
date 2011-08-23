@@ -624,7 +624,7 @@ $(function(){
                 </tr>
                 {% for of in burial.orderfiles_set.all %}
                     <tr>
-                        <td class="free_form"><a href="{{ of.ofile.url }}" target="_blank">{{ of.name }}</a></td>
+                        <td class="free_form"><a href="{{ of.ofile.url }}" target="_blank">{{ of.name|safe }}</a></td>
                         <td class="free_form">{{ of.comment }}</td>
                         <td >{{ of.creator.userprofile.user }}</td>
                         </td>
