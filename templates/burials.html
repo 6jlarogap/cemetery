@@ -196,14 +196,17 @@
         <td>{{ b.product.place.seat }}</td>
         <td>{{ b.product.place.cemetery.name }}</td>
         <td>{{ b.operation.op_type }}</td>
-        {% if b.customer.person.last_name %}
+        {% if b.customer.person.filled %}
             <td>
                 {{ b.customer.person.last_name }}
                 {{ b.customer.person.first_name }}
                 {{ b.customer.person.patronymic }}
             </td>
         {% else %}
-            <td>&nbsp;</td>
+            <td>
+                {{ b.responsible_agent.organization }}<br/>
+                {{ b.responsible_agent.person }}
+            </td>
         {% endif %}
         <td>
             {% for phone in b.customer.phone_set.all  %}
