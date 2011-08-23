@@ -613,6 +613,13 @@ $(function(){
                 <tr>
                     <td colspan="3" class="free_form">{{ form.comment.label_tag }}</td>
                 </tr>
+                {% for oc in burial.ordercomments_set.all %}
+                    <tr>
+                        <td class="free_form">{{ oc.date_of_creation|date:"d.m.Y H:i" }}</td>
+                        <td >{{ oc.comment }}</td>
+                        <td >{{ oc.creator.userprofile.user }}</td>
+                    </tr>
+                {% endfor %}
                 <tr>
                     <td colspan="3" class="free_form">{{ form.comment.errors }}{{ form.comment }}</td>
                 </tr>
@@ -627,7 +634,6 @@ $(function(){
                         <td class="free_form"><a href="{{ of.ofile.url }}" target="_blank">{{ of.name|safe }}</a></td>
                         <td class="free_form">{{ of.comment }}</td>
                         <td >{{ of.creator.userprofile.user }}</td>
-                        </td>
                     </tr>
                 {% endfor %}
                 <tr>
