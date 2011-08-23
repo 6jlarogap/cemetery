@@ -6,40 +6,72 @@
  * To change this template use File | Settings | File Templates.
  */
 $(function() {
-  //автодополнение страны.
-  $("input:text[id$=country]").autocomplete({
-        source: "/getcountries/",
-        minLength: 1,
-        delay: 100
-  });
 
-  //автодополнение региона.
-  $("input:text[id$=region]").autocomplete({
+  //автодополнение страны.
+    function completeCountry(event, ui) {
+        $(this).val(ui.item.value.split("/")[0]);
+        $(this).siblings(':checkbox, label').removeAttr('checked').hide();
+        return false;
+    }
+
+    $("input:text[id$=country]").autocomplete({
+        source: function(term, callback) {
+          var id = $(this.element).attr('id').replace(/region/g, '');
+          var url = "/getcountries/?term="+term.term;
+          var siblings = $(this.element).siblings(':checkbox, label');
+          $.getJSON(url, function(data) {
+              siblings.attr('checked', '1').show();
+              callback(data);
+          });
+        },
+        minLength: 1,
+        delay: 100,
+        select: completeCountry,
+        focus: completeCountry
+    });
+
+    //автодополнение региона.
+    function completeRegion(event, ui) {
+        var id = $(this).attr('id').replace(/region/g, '');
+        $(this).val(ui.item.value.split("/")[0]);
+        $('#'+id+'country').val(ui.item.value.split("/")[1]);
+        $('#'+id+'country').siblings(':checkbox, label').removeAttr('checked').hide();
+        $(this).siblings(':checkbox, label').removeAttr('checked').hide();
+        return false;
+    }
+
+    $("input:text[id$=region]").autocomplete({
        source: function(term, callback) {
            var id = $(this.element).attr('id').replace(/region/g, '');
            var url = "/getregions/?term="+term.term;
            if ($('#'+id+'country').val()) {
                url += "&country=" + $('#'+id+'country').val();
            }
-           $.getJSON(url, callback);
+           var siblings = $(this.element).siblings(':checkbox, label');
+           $.getJSON(url, function(data) {
+               siblings.attr('checked', '1').show();
+               callback(data);
+           });
        },
        minLength: 2,
        delay: 100,
-       select: function(event, ui) {
-            var id = $(this).attr('id').replace(/region/g, '');
-            $(this).val(ui.item.value.split("/")[0]);
-            $('#'+id+'country').val(ui.item.value.split("/")[1]);
-            return false;
-       },
-       focus: function(event, ui) {
-           var id = $(this).attr('id').replace(/region/g, '');
-           $(this).val(ui.item.value.split("/")[0]);
-           $('#'+id+'country').val(ui.item.value.split("/")[1]);
-           return false;
-       }
-  });
-  //автодополнение нас. пункта.
-  $("input:text[id$=city]").autocomplete({
+       select: completeRegion,
+       focus: completeRegion
+    });
+
+    //автодополнение нас. пункта.
+    function completeCity(event, ui) {
+        var id = $(this).attr('id').replace(/city/g, '');
+        $(this).val(ui.item.value.split("/")[0]);
+        $('#'+id+'region').val(ui.item.value.split("/")[1]);
+        $('#'+id+'region').siblings(':checkbox, label').removeAttr('checked').hide();
+        $('#'+id+'country').val(ui.item.value.split("/")[2]);
+        $('#'+id+'country').siblings(':checkbox, label').removeAttr('checked').hide();
+        $(this).siblings(':checkbox, label').removeAttr('checked').hide();
+        return false;
+    }
+
+    $("input:text[id$=city]").autocomplete({
       source: function(term, callback) {
           var id = $(this.element).attr('id').replace(/city/g, '');
           var url = "/getcities/?term="+term.term;
@@ -49,28 +81,33 @@ $(function() {
           if ($('#'+id+'region').val()) {
               url += "&region=" + $('#'+id+'region').val();
           }
-          $.getJSON(url, callback);
+          var siblings = $(this.element).siblings(':checkbox, label');
+          $.getJSON(url, function(data) {
+               siblings.attr('checked', '1').show();
+               callback(data);
+          });
        },
        minLength: 2,
        delay: 100,
-       select: function(event, ui) {
-           var id = $(this).attr('id').replace(/city/g, '');
-           $(this).val(ui.item.value.split("/")[0]);
-           $('#'+id+'region').val(ui.item.value.split("/")[1]);
-           $('#'+id+'country').val(ui.item.value.split("/")[2]);
-           return false;
-       },
-       focus: function(event, ui) {
-           var id = $(this).attr('id').replace(/city/g, '');
-           $(this).val(ui.item.value.split("/")[0]);
-           $('#'+id+'region').val(ui.item.value.split("/")[1]);
-           $('#'+id+'country').val(ui.item.value.split("/")[2]);
-           return false;
-       }
+       select: completeCity,
+       focus: completeCity
 
-  });
-  //автодополнение улицы.
-  $("input:text[id$=street]").autocomplete({
+    });
+    //автодополнение улицы.
+    function completeCity(event, ui) {
+        var id = $(this).attr('id').replace(/street/g, '');
+        $(this).val(ui.item.value.split("/")[0]);
+        $('#'+id+'city').val(ui.item.value.split("/")[1]);
+        $('#'+id+'city').siblings(':checkbox, label').removeAttr('checked').hide();
+        $('#'+id+'region').val(ui.item.value.split("/")[2]);
+        $('#'+id+'region').siblings(':checkbox, label').removeAttr('checked').hide();
+        $('#'+id+'country').val(ui.item.value.split("/")[3]);
+        $('#'+id+'country').siblings(':checkbox, label').removeAttr('checked').hide();
+        $(this).siblings(':checkbox, label').removeAttr('checked').hide();
+        return false;
+    }
+
+    $("input:text[id$=street]").autocomplete({
       source: function(term, callback) {
           var id = $(this.element).attr('id').replace(/street/g, '');
           var url = "/getstreets/?term="+term.term;
@@ -83,26 +120,16 @@ $(function() {
           if ($('#'+id+'city').val()) {
               url += "&city=" + $('#'+id+'city').val();
           }
-          $.getJSON(url, callback);
+          var siblings = $(this.element).siblings(':checkbox, label');
+          $.getJSON(url, function(data) {
+               siblings.attr('checked', '1').show();
+               callback(data);
+          });
        },
        minLength: 2,
        delay: 100,
-       select: function(event, ui) {
-           var id = $(this).attr('id').replace(/street$/g, '');
-           $(this).val(ui.item.value.split("/")[0]);
-           $('#'+id+'city').val(ui.item.value.split("/")[1]);
-           $('#'+id+'region').val(ui.item.value.split("/")[2]);
-           $('#'+id+'country').val(ui.item.value.split("/")[3]);
-           return false;
-       },
-       focus: function(event, ui) {
-           var id = $(this).attr('id').replace(/street$/g, '');
-           $(this).val(ui.item.value.split("/")[0]);
-           $('#'+id+'city').val(ui.item.value.split("/")[1]);
-           $('#'+id+'region').val(ui.item.value.split("/")[2]);
-           $('#'+id+'country').val(ui.item.value.split("/")[3]);
-           return false;
-       }
+       select: completeCity,
+       focus: completeCity
 
     });
 })

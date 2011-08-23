@@ -331,7 +331,9 @@ def journal(request):
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=Phone.objects.none())
 
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
-    customer_addr_valid = request.POST.get('opf') != 'fizik' or location_form.is_valid()
+    customer_addr_valid = request.POST.get('opf') != 'fizik' or \
+                          request.POST.get('customer_last_name') in [None, '', UNKNOWN_NAME] or \
+                          location_form.is_valid()
     forms_valid = form.is_valid() and customer_addr_valid and registration_form.is_valid() and cert_form.is_valid() and id_valid
     responsible_valid = request.POST.get('responsible_myself') or \
                         request.POST.get('responsible_last_name') in [None, '', UNKNOWN_NAME] or \
@@ -574,7 +576,9 @@ def edit_burial(request, uuid):
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=burial.customer.phone_set.all())
 
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
-    customer_addr_valid = request.POST.get('opf') != 'fizik' or location_form.is_valid()
+    customer_addr_valid = request.POST.get('opf') != 'fizik' or \
+                          request.POST.get('customer_last_name') in [None, '', UNKNOWN_NAME] or \
+                          location_form.is_valid()
     forms_valid = form.is_valid() and customer_addr_valid and registration_form.is_valid() and cert_form.is_valid() and id_valid
     responsible_valid = request.POST.get('responsible_myself') or \
                         request.POST.get('responsible_last_name') in [None, '', UNKNOWN_NAME] or \
