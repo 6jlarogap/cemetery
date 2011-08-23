@@ -5,6 +5,8 @@ from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import RegexValidator
 from django.conf import settings
+from django.utils.safestring import mark_safe
+
 from contrib.constants import UNKNOWN_NAME
 
 from south.modelsinspector import add_introspection_rules
@@ -650,7 +652,7 @@ class OrderFiles(models.Model):
 
     @property
     def name(self):
-        return os.path.basename(self.ofile.url)
+        return mark_safe(os.path.basename(self.ofile.url))
 
 class OrderComments(models.Model):
     """
