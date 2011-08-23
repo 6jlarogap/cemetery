@@ -42,9 +42,9 @@
                                 <a href="/init/">[Инициализация]</a>&nbsp;&nbsp;|&nbsp;
                                 <a href="/management/">[Управление]</a>&nbsp;&nbsp;|&nbsp;
                             {% else %}
-                                <a href='/?trash=1'>[Корзина]</a>&nbsp;&nbsp;|&nbsp;
                                 <a href="/profile/">{{ user.last_name }} {{ user.first_name }} {{ user.userprofile.soul.person.patronymic }} ({{ user.username }})</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
                             {% endif %}
+                            <a href='/?trash=1'>[Корзина]</a>&nbsp;&nbsp;|&nbsp;
                             <a href="/logout/">[Выход]</a>
                         {% else %}
                             <a href="/login/">[Вход]</a>
