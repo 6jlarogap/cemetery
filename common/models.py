@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import RegexValidator
+from django.conf import settings
+from contrib.constants import UNKNOWN_NAME
 
 from south.modelsinspector import add_introspection_rules
 
@@ -245,6 +247,9 @@ class Person(Soul):
         else:
             result = self.uuid
         return result
+
+    def filled(self):
+        return self.last_name and self.last_name != UNKNOWN_NAME
     
     def save(self, *args, **kwargs):
         Burial.objects.filter(person=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
@@ -619,8 +624,7 @@ class Order(models.Model):
     ], default='nal', blank=False)
 
     def add_comment(self, txt, creator):
-        comment = OrderComments(order=self, comment=txt,
-                                  creator=creator)
+        comment = OrderComments(order=self, comment=txt, creator=creator)
         comment.save()
 
     def get_responsible_customer(self):

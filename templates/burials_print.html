@@ -9,7 +9,7 @@
     <body>
         <table width="100%" style="">
             <thead>
-                <td>N в кн</td>
+                <td>№</td>
                 <td>ФИО</td>
                 <td>Даты</td>
                 <td>Св-во</td>
@@ -48,7 +48,7 @@
 	        <td>{{ b.product.place.seat }}</td>
 	        <td>{{ b.product.place.cemetery.name }}</td>
 	        <td>{{ b.product.place.rooms_occupied|default:1 }}/{{ b.product.place.rooms_free }}</td>
-            <td>{{ b.customer.person.location }}</td>
+            <td>{{ b.person.location }}</td>
 	        {% if b.responsible_agent %}
                 <td>
                     {{ b.responsible_agent.organization }}<br/>
@@ -56,15 +56,12 @@
                 </td>
 	        {% else %}
                 <td>
-                    {{ b.customer.person.last_name }}
-                    {{ b.customer.person.first_name }}
-                    {{ b.customer.person.patronymic }}
-                    {% if b.customer.person.personid %}
-                        <br/>
-                        {{ b.customer.person.personid.id_type }}
-                        {{ b.customer.person.personid.series }}
-                        {{ b.customer.person.personid.number }}
+                    {% if b.customer.person.filled %}
+                        {{ b.customer.person.last_name }}
+                        {{ b.customer.person.first_name }}
+                        {{ b.customer.person.patronymic }}
                     {% endif %}
+                    {% if b.customer.person.location.country %}{{ b.customer.person.location }}{% endif %}
                  </td>
  	        {% endif %}
             </tr>
