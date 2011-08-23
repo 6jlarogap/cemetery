@@ -3,7 +3,7 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinLengthValidator
 from django.conf import settings
 from django.utils.safestring import mark_safe
 
@@ -20,9 +20,26 @@ from django_extensions.db.fields import UUIDField
 class DigitsValidator(RegexValidator):
     regex = '^\d+$'
     message = u'Допускаются только цифры'
+    code = 'digits'
 
     def __init__(self):
-        super(DigitsValidator, self).__init__(regex=self.regex, message=self.message, code=None)
+        super(DigitsValidator, self).__init__(regex=self.regex)
+
+class LengthValidator(MinLengthValidator):
+    compare = lambda self, v, l: v != l
+    message = u'Длина %(limit_value)s'
+    code = 'length_custom'
+
+class VarLengthValidator(MinLengthValidator):
+    compare = lambda self, v, l:  not l[0] <= v <= l[1]
+    message = u'Длина %(limit_value)s'
+    code = 'length_custom1'
+
+class NotEmptyValidator(MinLengthValidator):
+    compare = lambda self, v, l:  not v
+    clean = lambda self, x: unicode(x).strip()
+    message = u'Не пусто'
+    code = 'not_empty'
 
 PER_PAGE_VALUES = (
     (5, '5'),
@@ -316,8 +333,8 @@ class Organization(Soul):
     Юридическое лицо.
     """
     ogrn = models.CharField(u"ОГРН/ОГРИП", max_length=15, blank=True)                                  # ОГРН
-    inn = models.CharField(u"ИНН", max_length=12, blank=True)                                    # ИНН
-    kpp = models.CharField(u"КПП", max_length=9, blank=True)                                     # КПП
+    inn = models.CharField(u"ИНН", max_length=12, blank=True, validators=[VarLengthValidator((10, 12)), DigitsValidator(), ])                                    # ИНН
+    kpp = models.CharField(u"КПП", max_length=9, blank=True, validators=[DigitsValidator(), ])                                     # КПП
     name = models.CharField(u"Краткое название организации", max_length=99)                      # Название краткое
     full_name = models.CharField(u"Полное название организации", max_length=255, null=True)      # Название полное
 
@@ -339,10 +356,10 @@ class BankAccount(models.Model):
     Банковские реквизиты
     """
     organization = models.ForeignKey(Organization, verbose_name=u"Организация")      # Владелец счета
-    rs = models.CharField(u"Расчетный счет", max_length=20, validators=[DigitsValidator(), ]) # Расчетный счет
-    ks = models.CharField(u"Корреспондентский счет", max_length=20, blank=True, validators=[DigitsValidator(), ]) # Корреспондентский счет
-    bik = models.CharField(u"БИК", max_length=9, blank=True, validators=[DigitsValidator(), ])                         # Банковский идентификационный код
-    bankname = models.CharField(u"Наименование банка", max_length=64)    # Название банка
+    rs = models.CharField(u"Расчетный счет", max_length=20, validators=[DigitsValidator(), LengthValidator(20), ]) # Расчетный счет
+    ks = models.CharField(u"Корреспондентский счет", max_length=20, blank=True, validators=[DigitsValidator(), LengthValidator(20), ]) # Корреспондентский счет
+    bik = models.CharField(u"БИК", max_length=9, validators=[DigitsValidator(), LengthValidator(9), ])                         # Банковский идентификационный код
+    bankname = models.CharField(u"Наименование банка", max_length=64, validators=[NotEmptyValidator(1), ])    # Название банка
 
 
 class Role(models.Model):

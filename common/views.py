@@ -1266,6 +1266,7 @@ def init(request):
                 elif f.is_valid():
                     f.save()
 
+
             # Создаем объект Phone для организации.
             org_phone = cd.get("org_phone", "")
             if org_phone:
