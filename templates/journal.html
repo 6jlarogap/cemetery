@@ -289,10 +289,7 @@ $(function(){
             {% endif %}
 
             {{ form.non_field_errors }}
-            {{ location_form.non_field_errors }}
-            {{ registration_form.non_field_errors }}
             {{ certificate_form.non_field_errors }}
-            {{ responsible_form.non_field_errors }}
             <table width="800">
                 <!-- burial  -->
                 <tr>
@@ -352,6 +349,7 @@ $(function(){
                 <tr>
                     <td colspan="3">
                         <h2>Адрес усопшего</h2>
+                        {{ registration_form.non_field_errors }}
                     </td>
                 </tr>
                 <tr>
@@ -498,7 +496,10 @@ $(function(){
 
                 <!-- LOCATION -->
                 <tr class="opf_fizik">
-                    <td colspan="3"><h2>Адрес проживания заказчика-физлица (для связи)</h2></td>
+                    <td colspan="3">
+                        <h2>Адрес проживания заказчика-физлица (для связи)</h2>
+                        {{ location_form.non_field_errors }}
+                    </td>
                 </tr>
                 <tr class="opf_fizik">
                     <td class="free_form">
@@ -545,7 +546,10 @@ $(function(){
 
                 <!-- responsible -->
                 <tr class="free_form">
-                    <td colspan="3"><h2>Ответственное лицо</h2></td>
+                    <td colspan="3">
+                        <h2>Ответственное лицо</h2>
+                        {{ responsible_form.non_field_errors }}
+                    </td>
                 </tr>
                 <tr class="opf_fizik">
                     <td class="free_form">{{ form.responsible_myself.label_tag }}</td>

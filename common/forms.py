@@ -25,9 +25,9 @@ PER_PAGE_VALUES = (
     (50, '50'),
 )
 
-RE_CITY = u"[а-яА-Яa-zA-Z0-9\-\.\ ]"
-RE_LASTNAME = u"[а-яА-Яa-zA-Z0-9\-\*]"
-RE_USERNAME = r"[a-zA-Z0-9\@\.\+\-\_]"
+RE_CITY = u"^[а-яА-Яa-zA-Z0-9\-\.\ ]*$"
+RE_LASTNAME = u"^[а-яА-Яa-zA-Z0-9\-\*\s]*$"
+RE_USERNAME = r"^[a-zA-Z0-9\@\.\+\-\_]*$"
 
 ORDER_BY_VALUES = (
     ('person__last_name', '+фамилии'),
@@ -321,9 +321,10 @@ class JournalForm(AutoTabIndex):
     death_date = forms.DateField(label="Дата смерти*", initial=get_yesterday)
     exhumated_date = forms.DateField(label="Дата эксгумации", required=False)
     last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
-            help_text="Допускаются только буквы, цифры и символ '-'", initial=UNKNOWN_NAME)
-    first_name = forms.CharField(required=False, max_length=30, label="Имя")
-    patronymic = forms.CharField(required=False, max_length=30, label="Отчество")
+            help_text="Допускаются только буквы, цифры и символ '-'", initial=UNKNOWN_NAME,
+            validators=[RegexValidator(RE_LASTNAME), ])
+    first_name = forms.CharField(required=False, max_length=30, label="Имя", validators=[RegexValidator(RE_LASTNAME), ])
+    patronymic = forms.CharField(required=False, max_length=30, label="Отчество", validators=[RegexValidator(RE_LASTNAME), ])
     cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(), label="Кладбище*", required=True)
     operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None, required=True)
     hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
@@ -333,15 +334,21 @@ class JournalForm(AutoTabIndex):
     rooms = forms.IntegerField(label="Мест в ограде", required=False)
     customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
                                          help_text="Допускаются только буквы, цифры и символ '-'",
-                                         initial=UNKNOWN_NAME)
-    customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика")
-    customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика")
+                                         initial=UNKNOWN_NAME,
+                                         validators=[RegexValidator(RE_LASTNAME), ])
+    customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика",
+                                          validators=[RegexValidator(RE_LASTNAME), ])
+    customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика",
+                                          validators=[RegexValidator(RE_LASTNAME), ])
 
     responsible_last_name = forms.CharField(max_length=30, label="Фамилия ответственного*",
                                          help_text="Допускаются только буквы, цифры и символ '-'",
-                                         initial=UNKNOWN_NAME)
-    responsible_first_name = forms.CharField(required=False, max_length=30, label="Имя ответственного")
-    responsible_patronymic = forms.CharField(required=False, max_length=30, label="Отчество ответственного")
+                                         initial=UNKNOWN_NAME,
+                                         validators=[RegexValidator(RE_LASTNAME), ])
+    responsible_first_name = forms.CharField(required=False, max_length=30, label="Имя ответственного",
+                                             validators=[RegexValidator(RE_LASTNAME), ])
+    responsible_patronymic = forms.CharField(required=False, max_length=30, label="Отчество ответственного",
+                                             validators=[RegexValidator(RE_LASTNAME), ])
     responsible_myself = forms.BooleanField(required=False, label="Заказчик является ответственным", initial=True)
 
     opf = forms.ChoiceField(label="Орг.-пр. форма", choices=[
@@ -385,12 +392,6 @@ class JournalForm(AutoTabIndex):
 
     def clean(self):
         cd = self.cleaned_data
-
-        # Проверка имен усопшего и заказчика на наличие недопустимых символов
-        last_name = cd.get("last_name", UNKNOWN_NAME)
-        rest = re.sub(RE_LASTNAME, "", last_name)
-        if rest:
-            raise forms.ValidationError("Недопустимые символы в имени усопшего. Допускаются только буквы, цифры и тире")
 
         # Валидация кладбища/операции.
         operation = cd.get("operation", None)
