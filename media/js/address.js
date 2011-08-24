@@ -94,7 +94,7 @@ $(function() {
 
     });
     //автодополнение улицы.
-    function completeCity(event, ui) {
+    function completeStreet(event, ui) {
         var id = $(this).attr('id').replace(/street/g, '');
         $(this).val(ui.item.value.split("/")[0]);
         $('#'+id+'city').val(ui.item.value.split("/")[1]);
@@ -128,8 +128,8 @@ $(function() {
        },
        minLength: 2,
        delay: 100,
-       select: completeCity,
-       focus: completeCity
+       select: completeStreet,
+       focus: completeStreet
 
     });
 })
