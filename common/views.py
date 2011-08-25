@@ -584,8 +584,6 @@ def edit_burial(request, uuid):
                         request.POST.get('responsible_last_name') in [None, '', UNKNOWN_NAME] or \
                         responsible_form.is_valid()
 
-    print 'responsible_valid', responsible_valid, request.POST.get('responsible_last_name')
-
     if request.method == "POST" and forms_valid and responsible_valid:
         cd = form.cleaned_data
 
