@@ -153,7 +153,7 @@ def main_page(request):
                 patr = parts[2].strip(",")
                 patr = patr.capitalize()# //rd-- patch to not working iregex
 
-# //rd-- fio search field regex rules            
+# //rd-- fio search field regex rules
 # ".етер"   # ^
 # "етер"    # ^
 # "етер.*"  # ^
@@ -437,7 +437,7 @@ def journal(request):
                 last_name=cd["responsible_last_name"].capitalize(),
                 first_name=cd.get("responsible_first_name", "").capitalize(),
                 patronymic=cd.get("responsible_patronymic", "").capitalize(),
-                location = responsible_form.save(),
+                location = responsible_form.is_valid() and responsible_form.save(),
             )
 
         if not request.REQUEST.get('opf') == 'fizik':
@@ -644,7 +644,7 @@ def edit_burial(request, uuid):
 
         new_burial.date_plan = d
         new_burial.date_fact = d
-        
+
         new_burial.account_book_n = cd["account_book_n"]
         new_burial.exhumated_date = cd["exhumated_date"]
         new_burial.customer = customer.soul_ptr
@@ -723,7 +723,7 @@ def edit_burial(request, uuid):
     burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul,
                             date_of_creation__gte=today).order_by('-date_of_creation')[:20]
     return direct_to_template(request, 'burial_edit.html', {
-        'burial': burial, 
+        'burial': burial,
         'form': form,
         'object_list': burials,
         'phoneset': phoneset,

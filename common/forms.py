@@ -269,6 +269,9 @@ class AddressForm(ModelAutoTabIndex):
         return cd
 
     def save(self, *args, **kwargs):
+        if not self.is_valid():
+            return
+
         cd = self.cleaned_data
 
         location = super(AddressForm, self).save(commit=False, *args, **kwargs)
@@ -787,7 +790,7 @@ class EditUserForm(forms.ModelForm):
         if self.cleaned_data.get('password1'):
             user.set_password(self.cleaned_data['password1'])
         return user
-        
+
 @autostrip
 class UserProfileForm(forms.Form):
     """
