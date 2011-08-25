@@ -437,7 +437,7 @@ def journal(request):
                 last_name=cd["responsible_last_name"].capitalize(),
                 first_name=cd.get("responsible_first_name", "").capitalize(),
                 patronymic=cd.get("responsible_patronymic", "").capitalize(),
-                location = responsible_form.is_valid() and responsible_form.save(),
+                location = responsible_form.is_valid() and responsible_form.save() or None,
             )
 
         if not request.REQUEST.get('opf') == 'fizik':
