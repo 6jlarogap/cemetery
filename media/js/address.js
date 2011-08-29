@@ -20,7 +20,7 @@ $(function() {
           var url = "/getcountries/?term="+term.term;
           var siblings = $(this.element).siblings(':checkbox, label');
           $.getJSON(url, function(data) {
-              siblings.attr('checked', '1').show();
+              siblings.removeAttr('checked').show();
               callback(data);
           });
         },
@@ -49,7 +49,7 @@ $(function() {
            }
            var siblings = $(this.element).siblings(':checkbox, label');
            $.getJSON(url, function(data) {
-               siblings.attr('checked', '1').show();
+               siblings.removeAttr('checked').show();
                callback(data);
            });
        },
@@ -83,7 +83,7 @@ $(function() {
           }
           var siblings = $(this.element).siblings(':checkbox, label');
           $.getJSON(url, function(data) {
-               siblings.attr('checked', '1').show();
+               siblings.removeAttr('checked').show();
                callback(data);
           });
        },
@@ -122,7 +122,7 @@ $(function() {
           }
           var siblings = $(this.element).siblings(':checkbox, label');
           $.getJSON(url, function(data) {
-               siblings.attr('checked', '1').show();
+               siblings.removeAttr('checked').show();
                callback(data);
           });
        },
