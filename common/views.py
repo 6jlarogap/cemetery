@@ -511,6 +511,11 @@ def edit_burial(request, uuid):
         burial.save()
         return HttpResponseRedirect(reverse("main_page") + '?close=1')
 
+    if request.REQUEST.get('undelete'):
+        burial.is_trash = False
+        burial.save()
+        return HttpResponseRedirect(reverse("main_page") + '?close=1')
+
     PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=4)
 
     cem = burial.product.place.cemetery
