@@ -315,13 +315,13 @@ class JournalForm(AutoTabIndex):
     Форма журнала - создания нового захоронения.
     """
 
-    account_book_n = forms.CharField(max_length=16, label="Номер в книге учета*", required=False)
+    account_book_n = forms.CharField(max_length=16, label="Номер в книге учета", required=False)
 
-    burial_date = forms.DateField(label="Дата захоронения*", initial=get_today)
+    burial_date = forms.DateField(label="Дата захоронения*", initial=get_today, required=True)
     burial_time = forms.TimeField(label="Время захоронения", required=False)
 
-    birth_date = forms.DateField(label="Дата рождения*", initial='')
-    death_date = forms.DateField(label="Дата смерти*", initial=get_yesterday)
+    birth_date = forms.DateField(label="Дата рождения", initial='', required=False)
+    death_date = forms.DateField(label="Дата смерти", initial=get_yesterday, required=False)
     exhumated_date = forms.DateField(label="Дата эксгумации", required=False)
     last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
             help_text="Допускаются только буквы, цифры и символ '-'", initial=UNKNOWN_NAME,
@@ -331,9 +331,9 @@ class JournalForm(AutoTabIndex):
     cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(), label="Кладбище*", required=True)
     operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None, required=True)
     hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
-    area = forms.CharField(max_length=9, label="Участок*")
+    area = forms.CharField(max_length=9, label="Участок", required=False)
     row = forms.CharField(max_length=9, label="Ряд", required=False)
-    seat = forms.CharField(max_length=9, label="Место*", required=False)
+    seat = forms.CharField(max_length=9, label="Место", required=False)
     rooms = forms.IntegerField(label="Мест в ограде всего", required=False)
     rooms_free = forms.IntegerField(label="Свободно", required=False)
     customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
@@ -393,6 +393,17 @@ class JournalForm(AutoTabIndex):
             self.fields["cemetery"].initial = cem
         if oper:
             self.fields["operation"].initial = oper
+
+        if data.get('burial_date'):
+            bdt = datetime.datetime.strptime(data.get('burial_date'), '%d.%m.%Y')
+            bd = datetime.date(*tuple(bdt.timetuple())[:3])
+            if bd >= datetime.date.today():
+                self.fields['burial_time'].required=True
+
+        if data.get('opf') != 'fizik' and not data.get('agent_director'):
+            for f in ['dover_number', 'dover_date', 'dover_expire']:
+                self.fields[f].required = True
+
 
     def clean(self):
         cd = self.cleaned_data

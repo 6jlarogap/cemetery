@@ -291,11 +291,11 @@ class Person(Soul):
 
 class PersonID(models.Model):
     person = models.OneToOneField(Person)
-    id_type = models.ForeignKey(IDDocumentType, verbose_name=u"Тип документа")
-    series = models.CharField(u"Серия", max_length=4, blank=True, null=True)
-    number = models.CharField(u"Номер", max_length=16)
+    id_type = models.ForeignKey(IDDocumentType, verbose_name=u"Тип документа*")
+    series = models.CharField(u"Серия*", max_length=4, null=True)
+    number = models.CharField(u"Номер*", max_length=16)
     who = models.CharField(u"Кем выдан", max_length=255, blank=True, null=True)
-    when = models.DateField(u"Дата выдачи")
+    when = models.DateField(u"Дата выдачи", blank=True, null=True)
 
 class ZAGS(models.Model):
     name = models.CharField(u"Название", max_length=255)
@@ -314,10 +314,10 @@ class DeathCertificate(models.Model):
     uuid = UUIDField(primary_key=True)
     soul = models.OneToOneField(Soul)
 
-    s_number = models.CharField(u"Номер свидетельства", max_length=30)
+    s_number = models.CharField(u"Номер свидетельства", max_length=30, blank=True, null=True)
     series = models.CharField(u"Серия свидетельства", max_length=30, blank=True, null=True)
-    release_date = models.DateField(u"Дата выдачи", null=True)
-    zags = models.ForeignKey(ZAGS, verbose_name=u"ЗАГС", blank=True, null=True)
+    release_date = models.DateField(u"Дата выдачи", null=True, blank=True)
+    zags = models.ForeignKey(ZAGS, verbose_name=u"ЗАГС*", null=True)
 
     def __unicode__(self):
         return u"Свид. о смерти (%s)" % self.soul.__unicode__()
