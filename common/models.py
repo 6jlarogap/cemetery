@@ -172,8 +172,20 @@ class Location(models.Model):
 
     def __unicode__(self):
         if self.street:
-            return u'%s (дом %s, корп. %s, строен. %s, кв. %s)' % (self.street,
-                                self.house, self.block, self.building, self.flat)
+            addr = u'%s' % self.street
+            if self.house:
+                addr += u', дом %s' % self.house
+            if self.block:
+                addr += u', корп. %s' % self.block
+            if self.building:
+                addr += u', строен. %s' % self.building
+            if self.flat:
+                addr += u', кв. %s' % self.flat
+
+            addr += u', %s' % (self.city or self.street.city)
+            addr += u', %s' % (self.region or self.street.city.region)
+            addr += u', %s' % (self.country or self.street.city.region.country)
+            return addr
         else:
             return u"незаполненный адрес"
 
@@ -201,6 +213,21 @@ class Soul(models.Model):
             return u"Юр. лицо: %s" % self.organization
         else:
             return self.uuid
+
+    def full_human_name(self):
+        try:
+            person = self.person
+        except AttributeError:
+            pass
+        else:
+            if person.filled():
+                return ' '.join((person.last_name, person.first_name, person.patronymic))
+            return u'Неизвестно'
+
+    def age(self):
+        start = self.birth_date
+        finish = (self.death_date or datetime.date.today())
+        return int(((finish - start).days) / 365.25)
 
     def save(self, *args, **kwargs):
         if hasattr(self, "person"):
@@ -698,6 +725,22 @@ class Burial(Order):
 
     def __unicode__(self):
         return u"захоронение: %s" % self.person.__unicode__()
+
+    def full_customer_name(self):
+        try:
+            agent = self.responsible_agent
+            org = agent.organization
+        except AttributeError:
+            pass
+        else:
+            return "%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s>" % {
+                'org': org,
+                'agent': agent,
+                'd_num': self.doverennost.number,
+                'd_date': self.doverennost.date.strftime('%d.%m.%Y'),
+            }
+
+        return self.customer.full_human_name()
 
     @staticmethod
     def split_parts(self):
