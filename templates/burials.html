@@ -196,16 +196,16 @@
         <td>{{ b.product.place.seat }}</td>
         <td>{{ b.product.place.cemetery.name }}</td>
         <td>{{ b.operation.op_type }}</td>
-        {% if b.customer.person.filled %}
+        {% if b.responsible_agent %}
+            <td>
+                {{ b.responsible_agent.organization }}<br/>
+                {{ b.responsible_agent.person }}
+            </td>
+        {% else %}
             <td>
                 {{ b.customer.person.last_name }}
                 {{ b.customer.person.first_name }}
                 {{ b.customer.person.patronymic }}
-            </td>
-        {% else %}
-            <td>
-                {{ b.responsible_agent.organization }}<br/>
-                {{ b.responsible_agent.person }}
             </td>
         {% endif %}
         <td>

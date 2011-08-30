@@ -367,6 +367,12 @@ class Organization(Soul):
     def __unicode__(self):
         return self.name or self.full_name
 
+    def bank_account(self):
+        try:
+            return self.bankaccount_set.all()[0]
+        except IndexError:
+            return 
+
     def phone(self):
         try:
             return self.phone_set.all()[0]
@@ -733,7 +739,7 @@ class Burial(Order):
         except AttributeError:
             pass
         else:
-            return "%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s>" % {
+            return u"%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s" % {
                 'org': org,
                 'agent': agent,
                 'd_num': self.doverennost.number,

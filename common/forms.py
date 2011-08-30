@@ -486,6 +486,7 @@ class InitalForm(forms.Form):
     country = forms.CharField(required=False, max_length=24, label="Страна", widget=forms.TextInput())
     new_country = forms.BooleanField(required=False, label="Новая страна")
 
+    ogrn = forms.CharField(required=False, max_length=15, label="ОГРН", validators=[DigitsValidator(), ])
     kpp = forms.CharField(required=False, max_length=9, label="КПП", validators=[DigitsValidator(), ])
     inn = forms.CharField(required=False, max_length=12, label="ИНН", validators=[VarLengthValidator((10, 12)), DigitsValidator(), ])
 
