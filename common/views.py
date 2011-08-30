@@ -311,6 +311,7 @@ def journal(request):
     initial = {
         'burial_date': next_day.strftime('%d.%m.%Y'),
         'rooms': 1,
+        'rooms_free': 0,
     }
     if request.GET.get('place'):
         place = get_object_or_404(Place, pk=request.GET.get('place'))
@@ -366,10 +367,8 @@ def journal(request):
             place.area = cd["area"]
             place.row = cd["row"]
             place.seat = cd["seat"]
-            if cd["burial_date"] < datetime.date.today() and (not cd["rooms"] or cd["rooms"] == 1):
-                place.rooms = place.count_burials() + 1
-            else:
-                place.rooms = cd["rooms"] or 1
+            place.rooms = cd["rooms"] or 1
+            place.rooms_free = cd["rooms_free"] or 1
             place.soul = cd["cemetery"].organization.soul_ptr
             place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
             place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
@@ -537,8 +536,8 @@ def edit_burial(request, uuid):
         'area': burial.product.place.area,
         'row': burial.product.place.row,
         'seat': burial.product.place.seat,
-        'rooms': burial.product.place.rooms,
-        'rooms_free': burial.product.place.rooms_free,
+        'rooms': burial.product.place.rooms or 1,
+        'rooms_free': burial.product.place.rooms_free or 0,
         'customer_last_name': burial.customer.person.last_name,
         'customer_first_name': burial.customer.person.first_name,
         'customer_patronymic': burial.customer.person.patronymic,
@@ -598,6 +597,7 @@ def edit_burial(request, uuid):
         place.row = cd["row"]
         place.seat = cd["seat"]
         place.rooms = cd["rooms"] or 1
+        place.rooms_free = cd["rooms_free"] or 0
         place.soul = cd["cemetery"].organization.soul_ptr
         place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
         place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)

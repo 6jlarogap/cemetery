@@ -58,6 +58,8 @@ $(function(){
     var CALENDAR_ICON = '/admin_media/img/admin/icon_calendar.gif';
     var CLOCK_IMAGE = '/admin_media/img/admin/icon_clock.gif';
 
+    $('#id_rooms, #id_rooms_free').css('width', '30px');
+
     $.datepicker.setDefaults($.datepicker.regional['']);
     var now = Date();
     $('input[name$=date],input[name$=expire],input[name$=when]').css('width', '100px').datepicker({
@@ -212,10 +214,10 @@ $(function(){
     $('#id_agent').change(updateDover);
     updateDover(false);
 
-    $("#id_organization").after('<a href="/admin/common/organization/add/" class="add-another" id="add_id_organization" onclick="return showAddAnotherPopup(this);">создать</a>')
-    $("#id_certificate-zags").after('<a href="/admin/common/zags/add/" class="add-another" id="add_id_certificate-zags" onclick="return showAddAnotherPopup(this);">создать</a>')
-    $("#id_id-id_type").after('<a href="/admin/common/iddocumenttype/add/" class="add-another" id="add_id_id-id_type" onclick="return showAddAnotherPopup(this);">создать</a>')
-    $("#id_agent").after('<a href="/admin/common/organization/"+$("#id_organization").val()+"/" target="_blank">создать</a>')
+    $("#id_organization").after('<a href="/admin/common/organization/add/" class="add-another" id="add_id_organization" onclick="return showAddAnotherPopup(this);">создать</a>');
+    $("#id_certificate-zags").after('<a href="/admin/common/zags/add/" class="add-another" id="add_id_certificate-zags" onclick="return showAddAnotherPopup(this);">создать</a>');
+    $("#id_id-id_type").after('<a href="/admin/common/iddocumenttype/add/" class="add-another" id="add_id_id-id_type" onclick="return showAddAnotherPopup(this);">создать</a>');
+    $("#id_agent").after('<a href="/admin/common/organization/"+$("#id_organization").val()+"/" target="_blank">создать</a>');
 
 })
 </script>
@@ -416,18 +418,15 @@ $(function(){
                     <td class="free_form">{{ form.area.label_tag }}</td>
                     <td class="free_form">{{ form.row.label_tag }}</td>
                     <td class="free_form">{{ form.seat.label_tag }}</td>
-                    <td class="free_form">{{ form.rooms.label_tag }}</td>
+                    <td class="free_form"> Мест в ограде</td>
                 </tr>
                 <tr>
                     <td class="free_form">{{ form.area.errors }}{{ form.area }}</td>
                     <td class="free_form">{{ form.row.errors }}{{ form.row }}</td>
                     <td class="free_form">{{ form.seat.errors }}{{ form.seat }}</td>
                     <td class="free_form">
-                        {{ form.rooms.errors }}{{ form.rooms }}
-                        {% if burial %}
-                            <br/>
-                            {{ burial.product.place.rooms_occupied }} занято/{{ burial.product.place.rooms_free }} своб.
-                        {% endif %}
+                        {{ form.rooms.errors }}{{ form.rooms }} всего /
+                        {{ form.rooms_free.errors }}{{ form.rooms_free }} своб
                     </td>
                 </tr>
                 <!-- -->

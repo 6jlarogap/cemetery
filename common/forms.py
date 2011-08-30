@@ -334,7 +334,8 @@ class JournalForm(AutoTabIndex):
     area = forms.CharField(max_length=9, label="Участок*")
     row = forms.CharField(max_length=9, label="Ряд", required=False)
     seat = forms.CharField(max_length=9, label="Место*", required=False)
-    rooms = forms.IntegerField(label="Мест в ограде", required=False)
+    rooms = forms.IntegerField(label="Мест в ограде всего", required=False)
+    rooms_free = forms.IntegerField(label="Свободно", required=False)
     customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
                                          help_text="Допускаются только буквы, цифры и символ '-'",
                                          initial=UNKNOWN_NAME,
