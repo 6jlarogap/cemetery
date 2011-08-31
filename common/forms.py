@@ -263,9 +263,6 @@ class AddressForm(ModelAutoTabIndex):
             if block or building or flat:
                 if not house:
                     raise forms.ValidationError("Не указан дом.")
-        else:
-            if house or block or building or flat:
-                raise forms.ValidationError("Не выбрана улица.")
         return cd
 
     def save(self, *args, **kwargs):
