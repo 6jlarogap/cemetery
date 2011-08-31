@@ -740,7 +740,7 @@ class Burial(Order):
             pass
         else:
             return u"%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s" % {
-                'org': org,
+                'org': org.full_name or org,
                 'agent': agent,
                 'd_num': self.doverennost.number,
                 'd_date': self.doverennost.date.strftime('%d.%m.%Y'),
