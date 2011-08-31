@@ -674,18 +674,12 @@ class CemeteryForm(forms.Form):
         new_city = cd.get("new_city", False)
         new_street = cd.get("new_street", False)
         if country or region or city or street:
-            if not street:
-                raise forms.ValidationError("Отсутствует улица.")
             if not city:
                 raise forms.ValidationError("Отсутствует нас. пункт.")
             if not region:
                 raise forms.ValidationError("Отсутствует регион.")
             if not country:
                 raise forms.ValidationError("Отсутствует страна.")
-        if (block or building) and not house:
-            raise forms.ValidationError("Отсутствует номер дома.")
-        if (house or block or building) and not street:
-            raise forms.ValidationError("Отсутствует улица.")
         if country:
             try:
                 country_obj = GeoCountry.objects.get(name=country)
