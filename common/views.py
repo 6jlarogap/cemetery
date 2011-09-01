@@ -786,22 +786,25 @@ def print_burial(request, uuid):
     except (Env.DoesNotExist, Organization.DoesNotExist):
         org = None
 
+    print_positions = []
     if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
         for f in positions_fs.forms:
             if f.cleaned_data['active']:
+                print_positions.append(f.initial['order_product'].pk)
                 try:
                     pos = OrderPosition.objects.get(order_product=f.initial['order_product'], order=burial)
                 except OrderPosition.DoesNotExist:
-                    OrderPosition.objects.create(
+                    pos = OrderPosition.objects.create(
                         order_product=f.initial['order_product'],
                         order=burial,
                         price=f.cleaned_data['price'],
                         count=f.cleaned_data['count'],
                     )
                 else:
-                    pos.price = pos.price
-                    pos.count = pos.count
+                    pos.price = f.cleaned_data['price']
+                    pos.count = f.cleaned_data['count']
                     pos.save()
+
             else:
                 try:
                     pos = OrderPosition.objects.get(order_product=f.initial['order_product'], order=burial)
@@ -810,13 +813,37 @@ def print_burial(request, uuid):
                 else:
                     pos.delete()
 
+        transaction.commit()
+
         payment_form.save()
 
         positions = get_positions(burial)
+        positions = filter(lambda p: p['order_product'].pk in print_positions, positions)
+
+        try:
+            burial_creator = u'%s' % burial.creator.person
+        except Exception:
+            try:
+                u = burial.creator.userprofile.user
+                burial_creator = (u'%s %s' % (u.last_name, u.first_name)).strip()
+            except Exception, e:
+                burial_creator = u''
+
+        try:
+            current_user = u'%s' % request.user.userprofile.soul.person
+        except Exception:
+            try:
+                u = request.user
+                current_user = (u'%s %s' % (u.last_name, u.first_name)).strip()
+            except Exception, e:
+                current_user = u''
+
+        spaces = mark_safe('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
 
         if print_form.cleaned_data.get('receipt'):
             return direct_to_template(request, 'reports/spravka.html', {
                 'burial': burial,
+                'current_user': current_user or spaces,
                 'now': datetime.datetime.now(),
                 'org': org,
             })
@@ -830,7 +857,9 @@ def print_burial(request, uuid):
 
         return direct_to_template(request, 'reports/act.html', {
             'burial': burial,
+            'burial_creator': burial_creator or spaces,
             'positions': positions,
+            'print_positions': print_positions,
             'total': float(sum([p['sum'] for p in positions])),
             'catafalque': print_form.cleaned_data.get('catafalque'),
             'graving': print_form.cleaned_data.get('graving'),

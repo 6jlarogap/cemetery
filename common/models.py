@@ -910,7 +910,7 @@ class OrderPosition(models.Model):
         return self.count * self.price
 
     def __unicode__(self):
-        return self.name
+        return self.uuid
 
     class Meta:
         verbose_name = (u'позиция счет-заказа')
