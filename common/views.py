@@ -991,9 +991,7 @@ def profile(request):
 
 
 
-@login_required
-#@permission_required('common.change_burial')
-#@is_in_group("management")
+@user_passes_test(lambda u: u.is_staff or u.is_superuser)
 def management(request):
     """
     Общая страница выбора вариантов управления.
