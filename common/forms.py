@@ -312,7 +312,7 @@ class JournalForm(AutoTabIndex):
     Форма журнала - создания нового захоронения.
     """
 
-    account_book_n = forms.CharField(max_length=16, label="Номер в книге учета", required=False)
+    account_book_n = forms.CharField(max_length=16, label="Номер в книге учета", required=False, help_text=u'если пусто - заполнится автоматически')
 
     burial_date = forms.DateField(label="Дата захоронения*", initial=get_today, required=True)
     burial_time = forms.TimeField(label="Время захоронения", required=False)
@@ -330,7 +330,7 @@ class JournalForm(AutoTabIndex):
     hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
     area = forms.CharField(max_length=9, label="Участок", required=False)
     row = forms.CharField(max_length=9, label="Ряд", required=False)
-    seat = forms.CharField(max_length=9, label="Место", required=False)
+    seat = forms.CharField(max_length=9, label="Место", required=False, help_text=u'если пусто - заполнится автоматически')
     rooms = forms.IntegerField(label="Мест в ограде всего", required=False)
     rooms_free = forms.IntegerField(label="Свободно", required=False)
     customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
