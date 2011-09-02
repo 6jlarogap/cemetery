@@ -13851,11 +13851,11 @@ COPY common_metro (uuid, city_id, name) FROM stdin;
 
 COPY common_operation (uuid, op_type) FROM stdin;
 7d58e9ec-2add-11e0-8b17-485b39c96dfe	Захоронение
-0df73c7a-a1a5-43d5-a31f-b4fee8c5e50b	Почетное захоронение
+-- 0df73c7a-a1a5-43d5-a31f-b4fee8c5e50b	Почетное захоронение
 78672a34-2add-11e0-8b17-485b39c96dfe	Захоронение в существующую
 732795d6-2add-11e0-8b17-485b39c96dfe	Подзахоронение к существующей
 6e0492ac-2add-11e0-8b17-485b39c96dfe	Урна
-c9b7a6b5-12a5-4da5-8242-b9e556bcc6e3	Захоронение детское
+-- c9b7a6b5-12a5-4da5-8242-b9e556bcc6e3	Захоронение детское
 \.
 
 
