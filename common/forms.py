@@ -468,7 +468,7 @@ class InitalForm(forms.Form):
     """
     org_name = forms.CharField(label="*Название организации", max_length=99)
     org_full_name = forms.CharField(label="Полное название организации", max_length=255)
-    org_phone = forms.CharField(required=False, max_length=20, label="Телефон организации", widget=forms.TextInput())
+    org_phone = forms.CharField(required=False, max_length=20, label="Телефон организации", widget=forms.TextInput(), help_text=u'указать код страны и города')
     post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс")
     street = forms.CharField(required=False, max_length=99, label="Улица", widget=forms.TextInput())
     new_street = forms.BooleanField(required=False, label="Новая улица")
@@ -728,7 +728,7 @@ class NewUserForm(forms.Form):
     patronymic = forms.CharField(max_length=30, label="Отчество", required=False)
 #    role = forms.ModelChoiceField(queryset=Role.objects.all(), label="Роль")
 #    is_staff = forms.BooleanField(required=False, label="Доступ в админку")
-    phone = forms.CharField(max_length=20, label="Телефон", required=False)
+    phone = forms.CharField(max_length=20, label="Телефон", required=False, help_text=u'указать код страны и города')
     password1 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль")
     password2 = forms.CharField(max_length=18, widget=forms.PasswordInput(render_value=False), label="Пароль (еще раз)")
     def clean(self):

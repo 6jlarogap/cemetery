@@ -243,7 +243,7 @@ class Phone(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     soul = models.ForeignKey(Soul)
-    f_number = models.CharField(u"Номер телефона", max_length=20)  # Телефон.
+    f_number = models.CharField(u"Номер телефона", max_length=20, help_text=u'указать код страны и города')  # Телефон.
 
     class Meta:
         unique_together = (("soul", "f_number"),)
