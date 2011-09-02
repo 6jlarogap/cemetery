@@ -996,9 +996,6 @@ def management(request):
     """
     Общая страница выбора вариантов управления.
     """
-    user = request.user
-    if not user.is_superuser:
-        return HttpResponseForbidden("Forbidden")
     return direct_to_template(request, 'management.html')
 
 
