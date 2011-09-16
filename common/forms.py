@@ -426,6 +426,24 @@ class JournalForm(AutoTabIndex):
                 self.fields[f].required = True
 
 
+    def clean_responsible_last_name(self):
+        name = self.cleaned_data['responsible_last_name']
+        if '*' in name and name != UNKNOWN_NAME:
+            raise forms.ValidationError(u'Недопустимая фамилия')
+        return name
+
+    def clean_customer_last_name(self):
+        name = self.cleaned_data['customer_last_name']
+        if '*' in name and name != UNKNOWN_NAME:
+            raise forms.ValidationError(u'Недопустимая фамилия')
+        return name
+
+    def clean_last_name(self):
+        name = self.cleaned_data['last_name']
+        if '*' in name and name != UNKNOWN_NAME:
+            raise forms.ValidationError(u'Недопустимая фамилия')
+        return name
+
     def clean(self):
         cd = self.cleaned_data
 
