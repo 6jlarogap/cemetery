@@ -8,4 +8,11 @@ except ImportError:
     sys.exit(1)
 
 if __name__ == "__main__":
-    execute_manager(settings)
+    try:
+        execute_manager(settings)
+    except ImportError:
+        import os
+        activate_this = os.path.join(os.path.dirname(__file__), '.env', 'bin', 'activate_this.py')
+        execfile(activate_this, dict(__file__=activate_this))
+
+        execute_manager(settings)
