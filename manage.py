@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+import os
+
+activate_this = os.path.join(os.path.dirname(__file__), '.env', 'bin', 'activate_this.py')
+if os.path.exists(activate_this):
+    execfile(activate_this, dict(__file__=activate_this))
+
 from django.core.management import execute_manager
 try:
     import settings # Assumed to be in the same directory.
@@ -8,11 +14,4 @@ except ImportError:
     sys.exit(1)
 
 if __name__ == "__main__":
-    try:
-        execute_manager(settings)
-    except ImportError:
-        import os
-        activate_this = os.path.join(os.path.dirname(__file__), '.env', 'bin', 'activate_this.py')
-        execfile(activate_this, dict(__file__=activate_this))
-
-        execute_manager(settings)
+    execute_manager(settings)
