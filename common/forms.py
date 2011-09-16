@@ -222,7 +222,7 @@ class AddressForm(ModelAutoTabIndex):
         if country:
             # Страна.
             try:
-                country_object = GeoCountry.objects.get(name__exact=country)
+                country_object = GeoCountry.objects.get(name__iexact=country)
             except ObjectDoesNotExist:
                 if not cd.get("new_country"):
                     raise forms.ValidationError("Страна не найдена.")
@@ -241,7 +241,7 @@ class AddressForm(ModelAutoTabIndex):
             if new_country and not cd.get("new_region", False):
                 raise forms.ValidationError("У новой страны регион должен быть тоже новым.")
             try:
-                region_object = GeoRegion.objects.get(country__name__exact=country, name__exact=region)
+                region_object = GeoRegion.objects.get(country__name__iexact=country, name__iexact=region)
             except ObjectDoesNotExist:
                 if not cd.get("new_region"):
                     raise forms.ValidationError("Регион не найден.")
@@ -260,7 +260,7 @@ class AddressForm(ModelAutoTabIndex):
             if new_region and not cd.get("new_city"):
                 raise forms.ValidationError("У нового региона нас. пункт должен быть тоже новым.")
             try:
-                city_object = GeoCity.objects.get(region__name__exact=region, name__exact=city)
+                city_object = GeoCity.objects.get(region__name__iexact=region, name__iexact=city)
             except ObjectDoesNotExist:
                 if not cd.get("new_city"):
                     raise forms.ValidationError("Нас. пункт не найден.")
@@ -277,7 +277,7 @@ class AddressForm(ModelAutoTabIndex):
             if new_city and not cd.get("new_street"):
                 raise forms.ValidationError("У нового нас. пункта улица должна быть тоже новой.")
             try:
-                street_object = Street.objects.get(city__name__exact=city, name__exact=street)
+                street_object = Street.objects.get(city__name__iexact=city, name__iexact=street)
             except ObjectDoesNotExist:
                 if not cd.get("new_street", False):
                     raise forms.ValidationError("Улица не найдена.")
@@ -299,27 +299,27 @@ class AddressForm(ModelAutoTabIndex):
         if cd.get("country", ""):
             # Страна.
             try:
-                country = GeoCountry.objects.get(name__exact=cd["country"])
+                country = GeoCountry.objects.get(name__iexact=cd["country"])
             except ObjectDoesNotExist:
-                country = GeoCountry(name=cd["country"])
+                country = GeoCountry(name=cd["country"].capitalize())
                 country.save()
             # Регион.
             try:
-                region = GeoRegion.objects.get(country=country, name__exact=cd["region"])
+                region = GeoRegion.objects.get(country=country, name__iexact=cd["region"])
             except ObjectDoesNotExist:
-                region = GeoRegion(country=country, name=cd["region"])
+                region = GeoRegion(country=country, name=cd["region"].capitalize())
                 region.save()
             # Нас. пункт.
             try:
-                city = GeoCity.objects.get(region=region, name__exact=cd["city"])
+                city = GeoCity.objects.get(region=region, name__iexact=cd["city"])
             except ObjectDoesNotExist:
-                city = GeoCity(country=country, region=region, name=cd["city"])
+                city = GeoCity(country=country, region=region, name=cd["city"].capitalize())
                 city.save()
             # Улица.
             try:
-                street = Street.objects.get(city=city, name__exact=cd["street"])
+                street = Street.objects.get(city=city, name__iexact=cd["street"])
             except ObjectDoesNotExist:
-                street = Street(city=city, name=cd["street"])
+                street = Street(city=city, name=cd["street"].capitalize())
                 street.save()
             # Сохраняем Location.
             location.street = street
@@ -706,7 +706,7 @@ class CemeteryForm(forms.Form):
                 raise forms.ValidationError("Отсутствует страна.")
         if country:
             try:
-                country_obj = GeoCountry.objects.get(name=country)
+                country_obj = GeoCountry.objects.get(name__iexact=country)
             except ObjectDoesNotExist:
                 if not new_country:
                     raise forms.ValidationError("Указанная страна не существует.")
@@ -715,7 +715,7 @@ class CemeteryForm(forms.Form):
                     raise forms.ValidationError("Указанный регион не существует.")
             else:
                 try:
-                    region_obj = GeoRegion.objects.get(country=country_obj, name=region)
+                    region_obj = GeoRegion.objects.get(country=country_obj, name__iexact=region)
                 except ObjectDoesNotExist:
                     if not new_region:
                         raise forms.ValidationError("Указанный регион не существует.")
@@ -724,7 +724,7 @@ class CemeteryForm(forms.Form):
                     raise forms.ValidationError("Указанный нас. пункт не существует.")
             else:
                 try:
-                    city_obj = GeoCity.objects.get(country=country_obj, region=region_obj, name=city)
+                    city_obj = GeoCity.objects.get(country=country_obj, region=region_obj, name__iexact=city)
                 except ObjectDoesNotExist:
                     if not new_city:
                         raise forms.ValidationError("Указанный нас. пункт не существует.")
@@ -733,7 +733,7 @@ class CemeteryForm(forms.Form):
                     raise forms.ValidationError("Указанная улица не существует.")
             else:
                 try:
-                    street_obj = Street.objects.get(city=city_obj, name=street)
+                    street_obj = Street.objects.get(city=city_obj, name__iexact=street)
                 except ObjectDoesNotExist:
                     if not new_street:
                         raise forms.ValidationError("Указанная улица не существует.")

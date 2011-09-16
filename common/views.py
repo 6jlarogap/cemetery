@@ -1800,11 +1800,11 @@ def get_street(request):
     if q is not None:
         kwargs = dict(name__istartswith=q)
         if request.GET.get('country'):
-            kwargs['city__region__country__name'] = request.GET['country']
+            kwargs['city__region__country__name__iexact'] = request.GET['country']
         if request.GET.get('region'):
-            kwargs['city__region__name'] = request.GET['region']
+            kwargs['city__region__name__iexact'] = request.GET['region']
         if request.GET.get('city'):
-            kwargs['city__name'] = request.GET['city']
+            kwargs['city__name__iexact'] = request.GET['city']
         rezult = Street.objects.filter(**kwargs).order_by("name", "city__name", "city__region__name",
                                                                      "city__region__country__name")[:24]
         for s in rezult:
@@ -1836,9 +1836,9 @@ def get_cities(request):
     if q is not None:
         kwargs = dict(name__istartswith=q)
         if request.GET.get('country'):
-            kwargs['region__country__name'] = request.GET['country']
+            kwargs['region__country__name__iexact'] = request.GET['country']
         if request.GET.get('region'):
-            kwargs['region__name'] = request.GET['region']
+            kwargs['region__name__iexact'] = request.GET['region']
         rezult = GeoCity.objects.filter(**kwargs).order_by("name", "region__name", "region__country__name")[:24]
         for s in rezult:
             cities.append(u"%s/%s/%s" % (s.name, s.region.name, s.region.country.name))
@@ -1855,7 +1855,7 @@ def get_regions(request):
     if q is not None:
         kwargs = dict(name__istartswith=q)
         if request.GET.get('country'):
-            kwargs['country__name'] = request.GET['country']
+            kwargs['country__name__iexact'] = request.GET['country']
         rezult = GeoRegion.objects.filter(**kwargs).order_by("name", "country__name")[:24]
         for s in rezult:
             regions.append(u"%s/%s" % (s.name, s.country.name))
