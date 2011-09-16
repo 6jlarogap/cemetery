@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.forms.forms import conditional_escape, flatatt, mark_safe, BoundField
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -51,6 +52,29 @@ ORDER_BY_VALUES = (
     #('comment', '+комментарию'),
     #('-comment', '-комментарию'),
 )
+
+def required_label_tag(self, contents=None, attrs=None):
+    """
+    Wraps the given contents in a <label>, if the field has an ID attribute.
+    Does not HTML-escape the contents. If contents aren't given, uses the
+    field's HTML-escaped label.
+
+    If attrs are given, they're used as HTML attributes on the <label> tag.
+    """
+    contents = contents or conditional_escape(self.label)
+    widget = self.field.widget
+    id_ = widget.attrs.get('id') or self.auto_id
+
+    contents = contents.strip('* ')
+    if self.field.required:
+        contents = contents + ' *'
+
+    if id_:
+        attrs = attrs and flatatt(attrs) or ''
+        contents = u'<label for="%s"%s>%s</label>' % (widget.id_for_label(id_), attrs, unicode(contents))
+    return mark_safe(contents)
+
+BoundField.label_tag = required_label_tag
 
 def get_yesterday():
     return (datetime.date.today() - datetime.timedelta(1)).strftime("%d.%m.%Y")

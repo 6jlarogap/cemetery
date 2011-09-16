@@ -290,8 +290,8 @@ $(function(){
                 </table>
             {% endif %}
 
-            {{ form.non_field_errors }}
-            {{ certificate_form.non_field_errors }}
+            {% if form.data %}{{ form.non_field_errors }}{% endif %}
+            {% if certificate_form.data %}{{ certificate_form.non_field_errors }}{% endif %}
             <table width="800">
                 <!-- burial  -->
                 <tr>
@@ -355,7 +355,7 @@ $(function(){
                 <tr>
                     <td colspan="3">
                         <h2>Адрес усопшего</h2>
-                        {{ registration_form.non_field_errors }}
+                        {% if registration_form.country.data %}{{ registration_form.non_field_errors }}{% endif %}
                     </td>
                 </tr>
                 <tr>
@@ -509,7 +509,7 @@ $(function(){
                 <tr class="opf_fizik">
                     <td colspan="3">
                         <h2>Адрес проживания заказчика-физлица (для связи)</h2>
-                        {{ location_form.non_field_errors }}
+                        {% if location_form.country.data %}{{ location_form.non_field_errors }}{% endif %}
                     </td>
                 </tr>
                 <tr class="opf_fizik">
@@ -563,7 +563,7 @@ $(function(){
                 <tr class="free_form">
                     <td colspan="3">
                         <h2>Ответственное лицо</h2>
-                        {{ responsible_form.non_field_errors }}
+                        {% if responsible_form.country.data %}{{ responsible_form.non_field_errors }}{% endif %}
                     </td>
                 </tr>
                 <tr class="opf_fizik">
