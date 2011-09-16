@@ -27,7 +27,10 @@
         $(function() {
             $('input[name=delete]').click(function(){
                 return confirm('Точно удалить?');
-            })
+            });
+            $('#id_cemetery').change(function(){
+                $('#id_account_book_n, #id_seat').val('');
+;            });
         })
     </script>
 {% endblock %}
