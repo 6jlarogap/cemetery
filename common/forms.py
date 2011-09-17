@@ -944,6 +944,14 @@ class PrintOptionsForm(forms.Form):
     receipt = forms.BooleanField(label=u"справка о захоронении", required=False, initial=False)
     dogovor = forms.BooleanField(label=u"договор ответственного", required=False, initial=False)
 
+    catafalque_route = forms.CharField(label=u"маршрут а/к", required=False, widget=forms.Textarea)
+    catafalque_start = forms.CharField(label=u"подача а/к", required=False)
+    catafalque_time = forms.TimeField(label=u"время а/к", required=False)
+
+    coffin_size = forms.CharField(label=u"размер гроба", required=False)
+
+    print_now = forms.BooleanField(label=u"отправить на печать", required=False)
+
 class IDForm(forms.ModelForm):
     class Meta:
         model = PersonID

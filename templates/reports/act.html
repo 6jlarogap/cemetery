@@ -61,7 +61,7 @@
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Адрес</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{% if not burial.responsible_agent %}{{ burial.customer.location }}{% endif %}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{% if not burial.responsible_agent %}{{ burial.customer.location|default:"" }}{% endif %}</FONT></TD>
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Фамилия, имя, отчество умершего</FONT></TD>
@@ -101,11 +101,11 @@
 			<TD STYLE="border-bottom: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.product.place.cemetery }}</FONT></TD>
 			</TR>
 		<TR>
-			<TD COLSPAN="9" STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Маршрут движения с/транспорта</FONT></TD>
+			<TD COLSPAN="9" STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Маршрут движения с/транспорта: {{ catafalque_route|default:"" }}</FONT></TD>
 			</TR>
 		<TR>
-            <TD COLSPAN="3" STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> время подачи с/транспорта</FONT></TD>
-            <TD COLSPAN="6" STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 0" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">место подачи с/транспорта</FONT></TD>
+            <TD COLSPAN="3" STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> время подачи с/транспорта {{ catafalque_time|time:"H:i"|default:"" }}</FONT></TD>
+            <TD COLSPAN="6" STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 0" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">место подачи с/транспорта {{ catafalque_start|default:"" }}</FONT></TD>
 			</TR>
 		<TR>
 			<TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000" COLSPAN=9 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время отпуска с/транспорта клиентом   в _____ ч______мин.</FONT></TD>
@@ -130,9 +130,9 @@
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=3 ALIGN=LEFT VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ p.order_product }}</FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM ><FONT SIZE=1 COLOR="#000000">{{ p.order_product.measure }}</FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM ><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.price|floatformat:"-2" }}</FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.sum|floatformat:"-2" }}</FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=center VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
+                <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.price|floatformat:"-2" }}</FONT></TD>
+                <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.sum|floatformat:"-2" }}</FONT></TD>
             </TR>
         {% endfor %}
         {% else %}
@@ -248,7 +248,7 @@
 		<TR>
 			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=7 ALIGN=RIGHT VALIGN=BOTTOM SDNUM="1033;0;@"><B><FONT COLOR="#000000">Итого (сумма прописью)</FONT></B></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">{% if total %}{{ total|floatformat:"-2" }}{% endif %}</FONT></TD>
+			<TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM><FONT COLOR="#000000">{% if total %}{{ total|floatformat:"-2" }}{% endif %}</FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
@@ -353,7 +353,7 @@
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=19 ALIGN=CENTER VALIGN=TOP SDVAL="1" SDNUM="1033;"><FONT COLOR="#000000">{{ forloop.counter }}</FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=LEFT VALIGN=MIDDLE  SDNUM="1033;0;@"><FONT COLOR="#000000">{{ p.order_product }}</FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM ><FONT SIZE=1 COLOR="#000000">{{ p.order_product.measure }}</FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=center VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
             </TR>
         {% empty %}
             <TR>
@@ -661,14 +661,14 @@
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Маршрут</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ catafalque_route|default:"" }}</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время использования</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ catafalque_time|time:"H:i"|default:"" }}</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -796,33 +796,25 @@
             </TR>
             <TR>
                 <TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Адрес</FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.person.location }}</FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.person.location|default:"" }}</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             </TR>
             <TR>
                 <TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Могила </FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"></FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=center colspan="3" VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"></FONT></TD>
                 <TD STYLE="border-top: 1px solid #000000" ALIGN=RIGHT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">№</FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.product.place.seat }}</FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=center colspan="3" VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.product.place.seat }}</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             </TR>
             <TR>
                 <TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Участок №</FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.product.place.area }}</FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=center colspan="3" VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{{ burial.product.place.area }}</FONT></TD>
                 <TD ALIGN=RIGHT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">размер гроба</FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " ALIGN=LEFT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000"><BR></FONT></TD>
+                <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ALIGN=center VALIGN=BOTTOM SDNUM="1033;0;@" colspan=3><FONT COLOR="#000000">{{ coffin_size|default:"" }}</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -888,10 +880,11 @@
 <div style="page-break-after: always;">&nbsp;</div>
 {% endif %}
 
-
-<script type="text/javascript">
-    window.print();
-</script>
+{% if print_now %}
+    <script type="text/javascript">
+        window.print();
+    </script>
+{% endif %}
 </BODY>
 
 </HTML>

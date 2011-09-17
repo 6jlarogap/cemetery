@@ -876,6 +876,11 @@ def print_burial(request, uuid):
             'graving': print_form.cleaned_data.get('graving'),
             'now': datetime.datetime.now(),
             'org': org,
+            'catafalque_route': print_form.cleaned_data.get('catafalque_route') or '',
+            'catafalque_time': print_form.cleaned_data.get('catafalque_time') or '',
+            'catafalque_start': print_form.cleaned_data.get('catafalque_start') or '',
+            'coffin_size': print_form.cleaned_data.get('coffin_size') or '',
+            'print_now': print_form.cleaned_data.get('print_now'),
         })
 
     return direct_to_template(request, 'burial_print.html', {
