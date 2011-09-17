@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.forms.extras.widgets import SelectDateWidget
 from django.forms.forms import conditional_escape, flatatt, mark_safe, BoundField
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
@@ -330,6 +331,62 @@ class AddressForm(ModelAutoTabIndex):
         location.save()
         return location
 
+class UnclearSelectDateWidget(SelectDateWidget):
+    month_unclear = False
+    year_unclear = False
+    
+    def value_from_datadict(self, data, files, name):
+        from django.forms.extras.widgets import get_format, datetime_safe
+
+        y = data.get(self.year_field % name)
+        m = data.get(self.month_field % name)
+        d = data.get(self.day_field % name)
+        if y == m == d == "0":
+            return None
+
+        self.no_day = self.no_month = False
+
+        if y:
+            if settings.USE_L10N:
+                input_format = get_format('DATE_INPUT_FORMATS')[0]
+                try:
+                    ud = UnclearDate(int(y), int(m), int(d))
+                except ValueError, e:
+                    return '%s-%s-%s' % (y, m, d)
+                else:
+                    self.no_month = ud.no_month
+                    self.no_day = ud.no_day
+                    date_value = datetime_safe.new_date(ud.d)
+                return date_value.strftime(input_format)
+            else:
+                return '%s-%s-%s' % (y, m, d)
+        return data.get(name, None)
+
+    def create_select(self, name, field, value, val, choices):
+        from django.forms.extras.widgets import Select
+        if 'id' in self.attrs:
+            id_ = self.attrs['id']
+        else:
+            id_ = 'id_%s' % name
+        choices.insert(0, self.none_value)
+        local_attrs = self.build_attrs(id=field % id_)
+        s = Select(choices=choices)
+        select_html = s.render(field % name, val, local_attrs)
+        return select_html
+
+class UnclearDateField(forms.DateField):
+    widget = UnclearSelectDateWidget(years=range(datetime.date.today().year, 1900, -1))
+
+    def to_python(self, value):
+        if isinstance(value, UnclearDate):
+            return value
+        return super(UnclearDateField, self).to_python(value)
+
+    def prepare_value(self, value):
+        if isinstance(value, UnclearDate):
+            return value
+        return value
+
 @autostrip
 class JournalForm(AutoTabIndex):
     """
@@ -341,7 +398,7 @@ class JournalForm(AutoTabIndex):
     burial_date = forms.DateField(label="Дата захоронения*", initial=get_today, required=True)
     burial_time = forms.TimeField(label="Время захоронения", required=False)
 
-    birth_date = forms.DateField(label="Дата рождения", initial='', required=False)
+    birth_date = UnclearDateField(label="Дата рождения", initial='', required=False)
     death_date = forms.DateField(label="Дата смерти", initial=get_yesterday, required=False)
     exhumated_date = forms.DateField(label="Дата эксгумации", required=False)
     last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),

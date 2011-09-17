@@ -380,7 +380,11 @@ def journal(request):
         new_person.last_name = cd["last_name"].capitalize()
         new_person.first_name = cd["first_name"].capitalize()
         new_person.patronymic = cd["patronymic"].capitalize()
-        new_person.birth_date = cd.get("birth_date") or None
+
+        new_person.birth_date = cd.get("birth_date")
+        new_person.birth_date_no_month = new_person.birth_date and form.fields['birth_date'].widget.no_month
+        new_person.birth_date_no_day = new_person.birth_date and form.fields['birth_date'].widget.no_day
+
         new_person.death_date = cd.get("death_date") or None
         new_person.save()
 
@@ -475,7 +479,7 @@ def journal(request):
                 of.comment = cd["file1_comment"]
             of.save()
 
-        if cert_form.cleaned_data.get('s_number'):
+        if cert_form.cleaned_data.get('zags'):
             ds = cert_form.save(commit=False)
             ds.soul_id=new_burial.person.pk
             ds.save()
@@ -526,7 +530,7 @@ def edit_burial(request, uuid):
         'account_book_n': burial.account_book_n,
         'burial_date': burial.date_fact and burial.date_fact.strftime('%d.%m.%Y'),
         'burial_time': burial.date_fact and burial.date_fact.strftime('%H:%M'),
-        'birth_date': burial.person.birth_date and burial.person.birth_date.strftime('%d.%m.%Y'),
+        'birth_date': burial.person.unclear_birth_date,
         'death_date': burial.person.death_date and burial.person.death_date.strftime('%d.%m.%Y'),
         'exhumated_date': burial.exhumated_date and burial.exhumated_date.strftime('%d.%m.%Y'),
         'last_name': burial.person.last_name,
@@ -585,12 +589,15 @@ def edit_burial(request, uuid):
     customer_addr_valid = request.POST.get('opf') != 'fizik' or \
                           request.POST.get('customer_last_name') in [None, '', UNKNOWN_NAME] or \
                           location_form.is_valid()
-    forms_valid = form.is_valid() and customer_addr_valid and registration_form.is_valid() and cert_form.is_valid() and id_valid
+    registration_valid = not registration_form['country'].data or registration_form.is_valid()
+    
+    forms_valid = form.is_valid() and customer_addr_valid and registration_valid and cert_form.is_valid() and id_valid
     responsible_valid = request.POST.get('responsible_myself') or \
                         request.POST.get('responsible_last_name') in [None, '', UNKNOWN_NAME] or \
                         responsible_form.is_valid()
 
-    if request.method == "POST" and forms_valid and responsible_valid:
+    everything_valid = request.method == "POST" and forms_valid and responsible_valid
+    if everything_valid:
         cd = form.cleaned_data
 
         place = burial.product.place
@@ -610,7 +617,11 @@ def edit_burial(request, uuid):
         new_person.last_name = cd["last_name"].capitalize()
         new_person.first_name = cd["first_name"].capitalize()
         new_person.patronymic = cd["patronymic"].capitalize()
-        new_person.birth_date = cd.get("birth_date") or None
+
+        new_person.birth_date = cd.get("birth_date")
+        new_person.birth_date_no_month = new_person.birth_date and form.fields['birth_date'].widget.no_month
+        new_person.birth_date_no_day = new_person.birth_date and form.fields['birth_date'].widget.no_day
+
         new_person.death_date = cd.get("death_date") or None
         new_person.save()
 
@@ -719,7 +730,7 @@ def edit_burial(request, uuid):
                 of.comment = cd["file1_comment"]
             of.save()
 
-        if cert_form.cleaned_data.get('s_number'):
+        if cert_form.cleaned_data.get('zags'):
             ds = cert_form.save(commit=False)
             ds.soul_id = new_burial.person.pk
             ds.save()

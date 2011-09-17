@@ -195,12 +195,39 @@ class Location(models.Model):
         super(Location, self).save(*args, **kwargs)
 
 
+class UnclearDate:
+    def __init__(self, year, month=None, day=None):
+        self.d = datetime.date(year, month or 1, day or 1)
+        self.no_day = not day
+        self.no_month = not month
+
+    def strftime(self, format):
+        if self.no_day:
+            format = format.replace('%d', '-')
+        if self.no_month:
+            format = format.replace('%m', '-')
+        return self.d.strftime(format)
+
+    @property
+    def year(self):
+        return self.d.year
+
+    @property
+    def month(self):
+        return not self.no_month and self.d.month or None
+
+    @property
+    def day(self):
+        return not self.no_month and self.d.day or None
+
 class Soul(models.Model):
     """
     Душа.
     """
     uuid = UUIDField(primary_key=True)
     birth_date = models.DateField(u"Дата рождения", blank=True, null=True)
+    birth_date_no_month = models.BooleanField(default=False)
+    birth_date_no_day = models.BooleanField(default=False)
     death_date = models.DateField(u"Дата смерти", blank=True, null=True)
     location = models.OneToOneField(Location, blank=True, null=True)  # Адрес орг-ии или человека (Person).
     creator = models.ForeignKey(u"Soul", blank=True, null=True)  # Создатель записи.
@@ -213,6 +240,24 @@ class Soul(models.Model):
             return u"Юр. лицо: %s" % self.organization
         else:
             return self.uuid
+
+    def get_birth_date(self):
+        birth_date = UnclearDate(self.birth_date.year, self.birth_date.month, self.birth_date.day)
+        if self.birth_date_no_day:
+            birth_date.day = None
+        if self.birth_date_no_month:
+            birth_date.month = None
+        return birth_date
+
+    def set_birth_date(self, ubd):
+        self.birth_date = ubd
+        if ubd:
+            if ubd.no_day:
+                self.birth_date_no_day = True
+            if ubd.no_month:
+                self.birth_date_no_month = True
+
+    unclear_birth_date = property(get_birth_date, set_birth_date)
 
     def full_human_name(self):
         try:

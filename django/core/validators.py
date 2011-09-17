@@ -35,7 +35,6 @@ class RegexValidator(object):
         """
         Validates that the input matches the regular expression.
         """
-        print 'regex', value, self.regex.pattern
         if not self.regex.search(smart_unicode(value)):
             raise ValidationError(self.message, code=self.code)
 
