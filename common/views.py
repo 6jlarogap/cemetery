@@ -1162,6 +1162,7 @@ def management_cemetery(request):
                         location.building = location_building
             if location_post_index:
                 location.post_index = location_post_index
+            location.info = cd.get('info') or ''
             location.save()
             return redirect("/management/cemetery/")
     else:
@@ -1248,12 +1249,15 @@ def management_edit_cemetery(request, uuid):
                         location.building = location_building
             if location_post_index:
                 location.post_index = location_post_index
+            location.info = cd.get('info') or ''
             location.save()
             return redirect('/management/cemetery/')
     else:
         initial_data = {
             "organization": cemetery.organization,
             "name": cemetery.name,
+            "info": cemetery.location.info,
+
         }
         if cemetery.location.street:
             initial_data["country"] = cemetery.location.street.city.country.name
@@ -1394,6 +1398,7 @@ def init(request):
                         org_location.flat = org_location_flat
             if org_location_post_index:
                 org_location.post_index = org_location_post_index
+            org_location.info = cd.get('info') or ''
             org_location.save()
             organization.location = org_location
             organization.save()
@@ -1428,6 +1433,7 @@ def init(request):
                 house = org.location.house,
                 block = org.location.block,
                 building = org.location.building,
+                info = org.location.info,
                 flat = org.location.flat,
                 kpp = org.kpp,
                 inn = org.inn,

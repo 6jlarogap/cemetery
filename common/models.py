@@ -181,6 +181,8 @@ class Location(models.Model):
                 addr += u', строен. %s' % self.building
             if self.flat:
                 addr += u', кв. %s' % self.flat
+            if self.info:
+                addr += u', %s' % self.info
 
             addr += u', %s' % (self.city or self.street.city)
             addr += u', %s' % (self.region or self.street.city.region)

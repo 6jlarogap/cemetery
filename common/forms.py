@@ -581,6 +581,7 @@ class InitalForm(forms.Form):
     new_region = forms.BooleanField(required=False, label="Новый регион")
     country = forms.CharField(required=False, max_length=24, label="Страна", widget=forms.TextInput())
     new_country = forms.BooleanField(required=False, label="Новая страна")
+    info = forms.CharField(required=False, widget=forms.Textarea, label=u"Доп. инфо")
 
     ogrn = forms.CharField(required=False, max_length=15, label="ОГРН", validators=[DigitsValidator(), ])
     kpp = forms.CharField(required=False, max_length=9, label="КПП", validators=[DigitsValidator(), ])
@@ -759,6 +760,8 @@ class CemeteryForm(forms.Form):
     house = forms.CharField(required=False, max_length=16, label="Дом", widget=forms.TextInput())
     block = forms.CharField(required=False, max_length=16, label="Корпус", widget=forms.TextInput())
     building = forms.CharField(required=False, max_length=16, label="Строение")
+    info = forms.CharField(required=False, widget=forms.Textarea, label=u"Доп. инфо")
+
     def clean(self):
         cd = self.cleaned_data
         country = cd.get("country", "")
