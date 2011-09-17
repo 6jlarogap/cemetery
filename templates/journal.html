@@ -55,10 +55,10 @@
     }
 
 $(function(){
+    $('#id_rooms, #id_rooms_free').css('width', '30px');
+
     var CALENDAR_ICON = '/admin_media/img/admin/icon_calendar.gif';
     var CLOCK_IMAGE = '/admin_media/img/admin/icon_clock.gif';
-
-    $('#id_rooms, #id_rooms_free').css('width', '30px');
 
     $.datepicker.setDefaults($.datepicker.regional['']);
     var now = Date();
