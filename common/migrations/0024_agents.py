@@ -8,19 +8,26 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        try:
-            pid = orm.Person.objects.filter(pk='52bf18f8-bf3b-11e0-8f76-00163e45e1c0')[0].pk
-        except IndexError:
-            pid = orm.Person.objects.all()[0].pk
-
         # Deleting field 'Agent.uuid'
         db.delete_column('common_agent', 'uuid')
 
         # Deleting field 'Agent.person'
         db.delete_column('common_agent', 'person_id')
 
-        # Adding field 'Agent.person_ptr'
-        db.add_column('common_agent', 'person_ptr', self.gf('django.db.models.fields.related.OneToOneField')(default=pid, to=orm['common.Person'], unique=True, primary_key=True), keep_default=False)
+        try:
+            pid = orm.Person.objects.filter(pk='52bf18f8-bf3b-11e0-8f76-00163e45e1c0')[0].pk
+        except IndexError:
+            try:
+                pid = orm.Person.objects.all()[0].pk
+            except IndexError:
+                # Adding field 'Agent.person_ptr'
+                db.add_column('common_agent', 'person_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['common.Person'], unique=True, primary_key=True), keep_default=False)
+            else:
+                # Adding field 'Agent.person_ptr'
+                db.add_column('common_agent', 'person_ptr', self.gf('django.db.models.fields.related.OneToOneField')(default=pid, to=orm['common.Person'], unique=True, primary_key=True), keep_default=False)
+
+
+
 
 
     def backwards(self, orm):

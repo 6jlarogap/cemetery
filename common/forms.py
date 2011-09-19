@@ -964,3 +964,16 @@ class IDForm(forms.ModelForm):
         }
 
 
+class PhoneForm(forms.ModelForm):
+    class Meta:
+        model = Phone
+        exclude=( "soul", )
+
+    def __init__(self, *args, **kwargs):
+        super(PhoneForm, self).__init__(*args, **kwargs)
+        self.fields['f_number'].required = False
+
+    def clean_f_number(self):
+        if not self.cleaned_data.get('f_number'):
+            raise forms.ValidationError(u"Обязательное поле")
+        return self.cleaned_data['f_number']

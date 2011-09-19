@@ -68,6 +68,7 @@ class OrganizationPhoneInline(admin.StackedInline):
 
 class OrganizationAdmin(admin.ModelAdmin):
     raw_id_fields = ['location', 'creator', ]
+    exclude = ['birth_date', 'birth_date_no_day', 'birth_date_no_month', 'death_date', ]
 
     inlines = [OrganizationPhoneInline, OrganizationAgentInline, ]
 

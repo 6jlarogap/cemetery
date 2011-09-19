@@ -294,7 +294,7 @@ def journal(request):
     """
     Страница ввода нового захоронения.
     """
-    PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=3)
+    PhoneFormSet = modelformset_factory(Phone, form=PhoneForm, extra=3)
 
     if request.user.userprofile.default_cemetery:
         cem = request.user.userprofile.default_cemetery
@@ -382,8 +382,8 @@ def journal(request):
         new_person.patronymic = cd["patronymic"].capitalize()
 
         new_person.birth_date = cd.get("birth_date")
-        new_person.birth_date_no_month = new_person.birth_date and form.fields['birth_date'].widget.no_month
-        new_person.birth_date_no_day = new_person.birth_date and form.fields['birth_date'].widget.no_day
+        new_person.birth_date_no_month = new_person.birth_date and form.fields['birth_date'].widget.no_month or False
+        new_person.birth_date_no_day = new_person.birth_date and form.fields['birth_date'].widget.no_day or False
 
         new_person.death_date = cd.get("death_date") or None
         new_person.save()
@@ -619,8 +619,8 @@ def edit_burial(request, uuid):
         new_person.patronymic = cd["patronymic"].capitalize()
 
         new_person.birth_date = cd.get("birth_date")
-        new_person.birth_date_no_month = new_person.birth_date and form.fields['birth_date'].widget.no_month
-        new_person.birth_date_no_day = new_person.birth_date and form.fields['birth_date'].widget.no_day
+        new_person.birth_date_no_month = new_person.birth_date and form.fields['birth_date'].widget.no_month or False
+        new_person.birth_date_no_day = new_person.birth_date and form.fields['birth_date'].widget.no_day or False
 
         new_person.death_date = cd.get("death_date") or None
         new_person.save()
