@@ -228,8 +228,8 @@ class Soul(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     birth_date = models.DateField(u"Дата рождения", blank=True, null=True)
-    birth_date_no_month = models.BooleanField(default=False)
-    birth_date_no_day = models.BooleanField(default=False)
+    birth_date_no_month = models.BooleanField(default=False, editable=False)
+    birth_date_no_day = models.BooleanField(default=False, editable=False)
     death_date = models.DateField(u"Дата смерти", blank=True, null=True)
     location = models.OneToOneField(Location, blank=True, null=True)  # Адрес орг-ии или человека (Person).
     creator = models.ForeignKey(u"Soul", blank=True, null=True)  # Создатель записи.
@@ -964,4 +964,26 @@ class OrderPosition(models.Model):
     class Meta:
         verbose_name = (u'позиция счет-заказа')
         verbose_name_plural = (u'позиция счет-заказа')
+
+def set_last_name(sender, instance, **kwargs):
+    instance.last_name = instance.last_name.capitalize()
+    instance.first_name = instance.first_name.capitalize()
+    instance.patronymic = instance.patronymic.capitalize()
+models.signals.pre_save.connect(set_last_name, sender=Person)
+models.signals.pre_save.connect(set_last_name, sender=Agent)
+
+def set_dc(sender, instance, **kwargs):
+    instance.s_number = instance.s_number.upper()
+    instance.series = instance.series.upper()
+models.signals.pre_save.connect(set_dc, sender=DeathCertificate)
+
+def set_id_doc(sender, instance, **kwargs):
+    instance.number = instance.number.upper()
+    instance.series = instance.series.upper()
+models.signals.pre_save.connect(set_id_doc, sender=PersonID)
+
+def set_dover(sender, instance, **kwargs):
+    instance.number = instance.number.upper()
+models.signals.pre_save.connect(set_dover, sender=Doverennost)
+
 
