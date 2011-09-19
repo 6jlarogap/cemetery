@@ -244,6 +244,8 @@ class Soul(models.Model):
             return self.uuid
 
     def get_birth_date(self):
+        if not self.birth_date:
+            return None
         birth_date = UnclearDate(self.birth_date.year, self.birth_date.month, self.birth_date.day)
         if self.birth_date_no_day:
             birth_date.day = None
