@@ -524,7 +524,7 @@ def edit_burial(request, uuid):
         burial.save()
         return HttpResponseRedirect(reverse("main_page") + '?close=1')
 
-    PhoneFormSet = modelformset_factory(Phone, exclude=("soul",), extra=4)
+    PhoneFormSet = modelformset_factory(Phone, form=PhoneForm, extra=3)
 
     cem = burial.product.place.cemetery
     oper = burial.operation
