@@ -362,6 +362,9 @@ def journal(request):
         # Try to get Place.
         try:
             place = Place.objects.get(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"])
+            place.rooms = not cd["rooms"] is None and cd["rooms"] or 1
+            place.rooms_free = not cd["rooms_free"] is None and cd["rooms_free"] or 1
+            place.save()
         except ObjectDoesNotExist:
             # Create new Place.
             place = Place(creator=request.user.userprofile.soul)
