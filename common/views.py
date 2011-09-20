@@ -362,8 +362,8 @@ def journal(request):
         # Try to get Place.
         try:
             place = Place.objects.get(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"])
-            place.rooms = not cd["rooms"] is None and cd["rooms"] or 1
-            place.rooms_free = not cd["rooms_free"] is None and cd["rooms_free"] or 1
+            place.rooms = cd["rooms"]
+            place.rooms_free = cd["rooms_free"]
             place.save()
         except ObjectDoesNotExist:
             # Create new Place.
@@ -372,8 +372,8 @@ def journal(request):
             place.area = cd["area"]
             place.row = cd["row"]
             place.seat = cd["seat"]
-            place.rooms = not cd["rooms"] is None and cd["rooms"] or 1
-            place.rooms_free = not cd["rooms_free"] is None and cd["rooms_free"] or 1
+            place.rooms = cd["rooms"]
+            place.rooms_free = cd["rooms_free"]
             place.soul = cd["cemetery"].organization.soul_ptr
             place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
             place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
