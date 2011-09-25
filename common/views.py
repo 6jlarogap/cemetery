@@ -14,6 +14,7 @@ from django.conf import settings
 from django.utils.simplejson.encoder import JSONEncoder
 from django.forms.models import modelformset_factory
 from django import db
+from django.db.models import Q
 from django.core.urlresolvers import reverse
 
 from common.forms import *
@@ -236,7 +237,12 @@ def main_page(request):
 #                regex = u"^%s" % regex
 #            if not (regex.endswith(".") or regex.endswith("*")):
 #                regex = u"%s$" % regex
-            burials = burials.filter(customer__person__last_name__iregex=regex)
+            burials = burials.filter(
+                Q(customer__person__last_name__iregex=regex) |
+                Q(responsible_agent__last_name__iregex=regex) |
+                Q(responsible_agent__organization__name__icontains=cd["customer"]) |
+                Q(responsible_agent__organization__full_name__icontains=cd["customer"])
+            )
         if cd["owner"]:
             burials = burials.filter(creator=cd["owner"].userprofile.soul)
         if cd["area"]:
