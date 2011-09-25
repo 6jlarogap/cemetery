@@ -520,6 +520,14 @@ def edit_burial(request, uuid):
     """
     burial = get_object_or_404(Burial, uuid=uuid)
 
+    if request.REQUEST.get('delete_ordercomment'):
+        burial.ordercomments_set.filter(uuid=request.REQUEST.get('delete_ordercomment')).delete()
+        return HttpResponseRedirect('.')
+
+    if request.REQUEST.get('delete_orderfile'):
+        burial.orderfiles_set.filter(uuid=request.REQUEST.get('delete_orderfile')).delete()
+        return HttpResponseRedirect('.')
+
     if request.REQUEST.get('delete'):
         burial.is_trash = True
         burial.save()

@@ -640,7 +640,10 @@ $(function(){
                     <tr>
                         <td class="free_form">{{ oc.date_of_creation|date:"d.m.Y H:i" }}</td>
                         <td >{{ oc.comment }}</td>
-                        <td >{{ oc.creator.userprofile.user }}</td>
+                        <td >
+                            {{ oc.creator.userprofile.user }}
+                            <a href="?delete_ordercomment={{ oc.pk }}">удалить</a>
+                        </td>
                     </tr>
                 {% endfor %}
                 <tr>
@@ -656,7 +659,10 @@ $(function(){
                     <tr>
                         <td class="free_form"><a href="{{ of.ofile.url }}" target="_blank">{{ of.name|safe }}</a></td>
                         <td class="free_form">{{ of.comment }}</td>
-                        <td >{{ of.creator.userprofile.user }}</td>
+                        <td >
+                            {{ of.creator.userprofile.user }}
+                            <a href="?delete_orderfile={{ of.pk }}">удалить</a>
+                        </td>
                     </tr>
                 {% endfor %}
                 <tr>
