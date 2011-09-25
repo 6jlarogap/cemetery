@@ -31,10 +31,9 @@
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=5 HEIGHT=35 ALIGN=RIGHT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000">Счёт-заказ №</FONT></I></B></TD>
-			<TD ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000">________</FONT></I></B></TD>
-			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000"><BR></FONT></I></B></TD>
+			<TD ALIGN=LEFT VALIGN=BOTTOM colspan=3><B><I><FONT SIZE=5 COLOR="#000000">
+                {{ burial.account_book_n }}/{{ burial.product.place.cemetery }}
+			</FONT></I></B></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" HEIGHT=19 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000"><BR></FONT></TD>
@@ -506,13 +505,9 @@
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=5 HEIGHT=35 ALIGN=RIGHT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000">Наряд №</FONT></I></B></TD>
-			<TD ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000">________</FONT></I></B></TD>
-			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="" ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000"><BR></FONT></I></B></TD>
-			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD ALIGN=LEFT VALIGN=BOTTOM colspan=7><B><I><FONT SIZE=5 COLOR="#000000">
+                {{ burial.account_book_n }}/{{ burial.product.place.cemetery }}/т
+			</FONT></I></B></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ now|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.</FONT></TD>
@@ -619,13 +614,9 @@
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=5 HEIGHT=35 ALIGN=RIGHT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000">Наряд №</FONT></I></B></TD>
-			<TD ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000">________</FONT></I></B></TD>
-			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD STYLE="" ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000"><BR></FONT></I></B></TD>
-			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
-			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
+			<TD ALIGN=LEFT VALIGN=BOTTOM colspan=7><B><I><FONT SIZE=5 COLOR="#000000">
+                {{ burial.account_book_n }}/{{ burial.product.place.cemetery }}/а
+			</FONT></I></B></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ now|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.</FONT></TD>
@@ -754,13 +745,9 @@
             </TR>
             <TR>
                 <TD STYLE="border-left: 1px solid #000000" COLSPAN=5 HEIGHT=35 ALIGN=RIGHT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000">Наряд №</FONT></I></B></TD>
-                <TD ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000">________</FONT></I></B></TD>
-                <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD STYLE="" ALIGN=LEFT VALIGN=BOTTOM><B><I><FONT SIZE=5 COLOR="#000000"><BR></FONT></I></B></TD>
-                <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
-                <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
+                <TD ALIGN=LEFT VALIGN=BOTTOM colspan=7><B><I><FONT SIZE=5 COLOR="#000000">
+                    {{ burial.account_book_n }}/{{ burial.product.place.cemetery }}/м
+                </FONT></I></B></TD>
             </TR>
             <TR>
                 <TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ now|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.</FONT></TD>
