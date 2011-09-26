@@ -219,6 +219,8 @@ $(function(){
     $("#id_id-id_type").after('<a href="/admin/common/iddocumenttype/add/" class="add-another" id="add_id_id-id_type" onclick="return showAddAnotherPopup(this);">создать</a>');
     $("#id_agent").after('<a href="/admin/common/organization/"+$("#id_organization").val()+"/" target="_blank">создать</a>');
 
+    $(':input[name$=-house], :input[name$=-block], :input[name$=-building], :input[name$=-flat]').css('width', '40px');
+
 })
 </script>
 {% endblock %}
@@ -361,8 +363,7 @@ $(function(){
                 <tr>
                     <td class="free_form">{{ registration_form.street.label_tag }}</td>
                     <td class="free_form">{{ registration_form.house.label_tag }}</td>
-                    <td class="free_form">{{ registration_form.block.label_tag }}</td>
-                    <td class="free_form">{{ registration_form.building.label_tag }}</td>
+                    <td class="free_form">{{ registration_form.block.label_tag }}, {{ registration_form.building.label_tag }}</td>
                     <td class="free_form">{{ registration_form.flat.label_tag }}</td>
                 </tr>
                 <tr>
@@ -371,8 +372,9 @@ $(function(){
                         {{ registration_form.new_street.label_tag }}{{ registration_form.new_street }}
                     </td>
                     <td class="free_form">{{ registration_form.house.errors }}{{ registration_form.house }}</td>
-                    <td class="free_form">{{ registration_form.block.errors }}{{ registration_form.block }}</td>
-                    <td class="free_form">{{ registration_form.building.errors }}{{ registration_form.building }}</td>
+                    <td class="free_form">
+                        {{ registration_form.block.errors }}{{ registration_form.building.errors }} {{ registration_form.block }}, {{ registration_form.building }}
+                    </td>
                     <td class="free_form">{{ registration_form.flat.errors }}{{ registration_form.flat }}</td>
                 </tr>
                 <tr>
@@ -517,8 +519,7 @@ $(function(){
                         {{ location_form.street.label_tag }}
                     </td>
                     <td class="free_form">{{ location_form.house.label_tag }}</td>
-                    <td class="free_form">{{ location_form.block.label_tag }}</td>
-                    <td class="free_form">{{ location_form.building.label_tag }}</td>
+                    <td class="free_form">{{ location_form.block.label_tag }}, {{ location_form.building.label_tag }}</td>
                     <td class="free_form">{{ location_form.flat.label_tag }}</td>
                 </tr>
                 <tr class="opf_fizik">
@@ -527,8 +528,7 @@ $(function(){
                         {{ location_form.new_street.label_tag }}{{ location_form.new_street }}
                     </td>
                     <td class="free_form">{{ location_form.house.errors }}{{ location_form.house }}</td>
-                    <td class="free_form">{{ location_form.block.errors }}{{ location_form.block }}</td>
-                    <td class="free_form">{{ location_form.building.errors }}{{ location_form.building }}</td>
+                    <td class="free_form">{{ location_form.block.errors }}{{ location_form.building.errors }}{{ location_form.block }}, {{ location_form.building }}</td>
                     <td class="free_form">{{ location_form.flat.errors }}{{ location_form.flat }}</td>
                 </tr>
                 <tr class="opf_fizik">
@@ -586,8 +586,7 @@ $(function(){
                 <tr class="responsible_myself">
                     <td class="free_form">{{ responsible_form.street.label_tag }}</td>
                     <td class="free_form">{{ responsible_form.house.label_tag }}</td>
-                    <td class="free_form">{{ responsible_form.block.label_tag }}</td>
-                    <td class="free_form">{{ responsible_form.building.label_tag }}</td>
+                    <td class="free_form">{{ responsible_form.block.label_tag }}, {{ responsible_form.building.label_tag }}</td>
                     <td class="free_form">{{ responsible_form.flat.label_tag }}</td>
                 </tr>
                 <tr class="responsible_myself">
@@ -596,8 +595,10 @@ $(function(){
                         {{ responsible_form.new_street.label_tag }}{{ responsible_form.new_street }}
                     </td>
                     <td class="free_form">{{ responsible_form.house.errors }}{{ responsible_form.house }}</td>
-                    <td class="free_form">{{ responsible_form.block.errors }}{{ responsible_form.block }}</td>
-                    <td class="free_form">{{ responsible_form.building.errors }}{{ responsible_form.building }}</td>
+                    <td class="free_form">
+                        {{ responsible_form.block }}, {{ responsible_form.building }}
+                        {{ responsible_form.block.errors }}{{ responsible_form.building.errors }}
+                    </td>
                     <td class="free_form">{{ responsible_form.flat.errors }}{{ responsible_form.flat }}</td>
                 </tr>
                 <tr class="responsible_myself">
@@ -642,7 +643,7 @@ $(function(){
                         <td >{{ oc.comment }}</td>
                         <td >
                             {{ oc.creator.userprofile.user }}
-                            <a href="?delete_ordercomment={{ oc.pk }}">удалить</a>
+                            <a href="?delete_ordercomment={{ oc.pk }}" class="delete">удалить</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -661,7 +662,7 @@ $(function(){
                         <td class="free_form">{{ of.comment }}</td>
                         <td >
                             {{ of.creator.userprofile.user }}
-                            <a href="?delete_orderfile={{ of.pk }}">удалить</a>
+                            <a href="?delete_orderfile={{ of.pk }}" class="delete">удалить</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -752,5 +753,9 @@ $(function(){
     {% endif %}
 
     </div>
+
+    <script type="text/javascript">
+        $(function() { $('a.delete').click(function() { return confirm('Действительно удалить?') } ) })
+    </script>
 
 {% endblock %}
