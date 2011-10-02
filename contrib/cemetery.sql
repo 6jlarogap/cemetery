@@ -157,7 +157,7 @@ ALTER TABLE public.auth_permission OWNER TO postgres;
 
 CREATE SEQUENCE auth_permission_id_seq
     START WITH 1
-    INCREMENT BY 1
+    INCREMENT BY 100
     NO MAXVALUE
     NO MINVALUE
     CACHE 1;
@@ -176,7 +176,7 @@ ALTER SEQUENCE auth_permission_id_seq OWNED BY auth_permission.id;
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('auth_permission_id_seq', 129, true);
+SELECT pg_catalog.setval('auth_permission_id_seq', 130, true);
 
 
 --
@@ -315,12 +315,8 @@ SELECT pg_catalog.setval('auth_user_user_permissions_id_seq', 1, false);
 --
 
 CREATE TABLE common_agent (
-    uuid character varying(36) NOT NULL,
-    person_id character varying(36) NOT NULL,
     organization_id character varying(36) NOT NULL,
-    dover_number character varying(255),
-    dover_date date,
-    dover_expire date
+    person_ptr_id character varying(36) NOT NULL
 );
 
 
@@ -379,7 +375,12 @@ CREATE TABLE common_burial (
     person_id character varying(36) NOT NULL,
     account_book_n character varying(16) NOT NULL,
     last_sync_date timestamp with time zone NOT NULL,
-    exhumated_date timestamp with time zone
+    exhumated_date timestamp with time zone,
+    acct_num_str1 character varying(16),
+    acct_num_num integer,
+    acct_num_str2 character varying(16),
+    doverennost_id integer,
+    CONSTRAINT common_burial_acct_num_num_check CHECK ((acct_num_num >= 0))
 );
 
 
@@ -419,7 +420,7 @@ ALTER TABLE public.common_cemetery OWNER TO postgres;
 CREATE TABLE common_deathcertificate (
     uuid character varying(36) NOT NULL,
     soul_id character varying(36) NOT NULL,
-    s_number character varying(30) NOT NULL,
+    s_number character varying(30),
     series character varying(30),
     release_date date,
     zags_id integer
@@ -427,6 +428,49 @@ CREATE TABLE common_deathcertificate (
 
 
 ALTER TABLE public.common_deathcertificate OWNER TO postgres;
+
+--
+-- Name: common_doverennost; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE common_doverennost (
+    id integer NOT NULL,
+    agent_id character varying(36) NOT NULL,
+    number character varying(255),
+    date date,
+    expire date
+);
+
+
+ALTER TABLE public.common_doverennost OWNER TO postgres;
+
+--
+-- Name: common_doverennost_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE common_doverennost_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_doverennost_id_seq OWNER TO postgres;
+
+--
+-- Name: common_doverennost_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE common_doverennost_id_seq OWNED BY common_doverennost.id;
+
+
+--
+-- Name: common_doverennost_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('common_doverennost_id_seq', 1, false);
+
 
 --
 -- Name: common_email; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -621,7 +665,10 @@ CREATE TABLE common_location (
     gps_x double precision,
     gps_y double precision,
     gps_z double precision,
-    info text
+    info text,
+    city_id character varying(36),
+    region_id character varying(36),
+    country_id character varying(36)
 );
 
 
@@ -758,7 +805,7 @@ ALTER TABLE public.common_orderproduct OWNER TO postgres;
 
 CREATE TABLE common_organization (
     soul_ptr_id character varying(36) NOT NULL,
-    ogrn character varying(13) NOT NULL,
+    ogrn character varying(15) NOT NULL,
     inn character varying(12) NOT NULL,
     name character varying(99) NOT NULL,
     kpp character varying(9) NOT NULL,
@@ -793,7 +840,7 @@ CREATE TABLE common_personid (
     series character varying(4),
     number character varying(16) NOT NULL,
     who character varying(255),
-    "when" date NOT NULL
+    "when" date
 );
 
 
@@ -874,8 +921,20 @@ CREATE TABLE common_place (
     date_of_creation timestamp with time zone NOT NULL,
     rooms integer NOT NULL,
     rooms_free integer NOT NULL,
+    area_str1 character varying(9),
+    area_num integer,
+    area_str2 character varying(9),
+    row_str1 character varying(9),
+    row_num integer,
+    row_str2 character varying(9),
+    seat_str1 character varying(9),
+    seat_num integer,
+    seat_str2 character varying(9),
+    CONSTRAINT common_place_area_num_check CHECK ((area_num >= 0)),
     CONSTRAINT common_place_rooms_check CHECK ((rooms >= 0)),
-    CONSTRAINT common_place_rooms_free_check CHECK ((rooms_free >= 0))
+    CONSTRAINT common_place_rooms_free_check CHECK ((rooms_free >= 0)),
+    CONSTRAINT common_place_row_num_check CHECK ((row_num >= 0)),
+    CONSTRAINT common_place_seat_num_check CHECK ((seat_num >= 0))
 );
 
 
@@ -1017,7 +1076,9 @@ CREATE TABLE common_soul (
     death_date date,
     location_id character varying(36),
     creator_id character varying(36),
-    date_of_creation timestamp with time zone NOT NULL
+    date_of_creation timestamp with time zone NOT NULL,
+    birth_date_no_month boolean NOT NULL,
+    birth_date_no_day boolean NOT NULL
 );
 
 
@@ -1177,7 +1238,7 @@ ALTER TABLE public.django_content_type OWNER TO postgres;
 
 CREATE SEQUENCE django_content_type_id_seq
     START WITH 1
-    INCREMENT BY 1
+    INCREMENT BY 100
     NO MAXVALUE
     NO MINVALUE
     CACHE 1;
@@ -1196,7 +1257,7 @@ ALTER SEQUENCE django_content_type_id_seq OWNED BY django_content_type.id;
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('django_content_type_id_seq', 43, true);
+SELECT pg_catalog.setval('django_content_type_id_seq', 144, true);
 
 
 --
@@ -1254,6 +1315,199 @@ SELECT pg_catalog.setval('django_site_id_seq', 1, true);
 
 
 --
+-- Name: sentry_filtervalue; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE sentry_filtervalue (
+    id integer NOT NULL,
+    key character varying(32) NOT NULL,
+    value character varying(200) NOT NULL
+);
+
+
+ALTER TABLE public.sentry_filtervalue OWNER TO postgres;
+
+--
+-- Name: sentry_filtervalue_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE sentry_filtervalue_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.sentry_filtervalue_id_seq OWNER TO postgres;
+
+--
+-- Name: sentry_filtervalue_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE sentry_filtervalue_id_seq OWNED BY sentry_filtervalue.id;
+
+
+--
+-- Name: sentry_filtervalue_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('sentry_filtervalue_id_seq', 1, false);
+
+
+--
+-- Name: sentry_groupedmessage; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE sentry_groupedmessage (
+    id integer NOT NULL,
+    logger character varying(64) DEFAULT 'root'::character varying NOT NULL,
+    class_name character varying(128),
+    level integer DEFAULT 40 NOT NULL,
+    message text NOT NULL,
+    traceback text,
+    view character varying(200),
+    checksum character varying(32) NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    times_seen integer DEFAULT 1 NOT NULL,
+    last_seen timestamp with time zone DEFAULT '2011-10-03 00:24:40.136989+04'::timestamp with time zone NOT NULL,
+    first_seen timestamp with time zone DEFAULT '2011-10-03 00:24:40.137898+04'::timestamp with time zone NOT NULL,
+    data text,
+    score integer NOT NULL,
+    CONSTRAINT sentry_groupedmessage_level_check CHECK ((level >= 0)),
+    CONSTRAINT sentry_groupedmessage_status_check CHECK ((status >= 0)),
+    CONSTRAINT sentry_groupedmessage_times_seen_check CHECK ((times_seen >= 0))
+);
+
+
+ALTER TABLE public.sentry_groupedmessage OWNER TO postgres;
+
+--
+-- Name: sentry_groupedmessage_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE sentry_groupedmessage_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.sentry_groupedmessage_id_seq OWNER TO postgres;
+
+--
+-- Name: sentry_groupedmessage_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE sentry_groupedmessage_id_seq OWNED BY sentry_groupedmessage.id;
+
+
+--
+-- Name: sentry_groupedmessage_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('sentry_groupedmessage_id_seq', 1, false);
+
+
+--
+-- Name: sentry_message; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE sentry_message (
+    id integer NOT NULL,
+    logger character varying(64) DEFAULT 'root'::character varying NOT NULL,
+    class_name character varying(128),
+    level integer DEFAULT 40 NOT NULL,
+    message text NOT NULL,
+    traceback text,
+    view character varying(200),
+    url character varying(200),
+    server_name character varying(128) NOT NULL,
+    checksum character varying(32) NOT NULL,
+    datetime timestamp with time zone DEFAULT '2011-10-03 00:24:40.29892+04'::timestamp with time zone NOT NULL,
+    data text,
+    group_id integer,
+    site character varying(128),
+    message_id character varying(32),
+    CONSTRAINT sentry_message_level_check CHECK ((level >= 0))
+);
+
+
+ALTER TABLE public.sentry_message OWNER TO postgres;
+
+--
+-- Name: sentry_message_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE sentry_message_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.sentry_message_id_seq OWNER TO postgres;
+
+--
+-- Name: sentry_message_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE sentry_message_id_seq OWNED BY sentry_message.id;
+
+
+--
+-- Name: sentry_message_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('sentry_message_id_seq', 1, false);
+
+
+--
+-- Name: sentry_messageindex; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE sentry_messageindex (
+    id integer NOT NULL,
+    object_id integer NOT NULL,
+    "column" character varying(32) NOT NULL,
+    value character varying(128) NOT NULL,
+    CONSTRAINT sentry_messageindex_object_id_check CHECK ((object_id >= 0))
+);
+
+
+ALTER TABLE public.sentry_messageindex OWNER TO postgres;
+
+--
+-- Name: sentry_messageindex_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE sentry_messageindex_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.sentry_messageindex_id_seq OWNER TO postgres;
+
+--
+-- Name: sentry_messageindex_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE sentry_messageindex_id_seq OWNED BY sentry_messageindex.id;
+
+
+--
+-- Name: sentry_messageindex_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('sentry_messageindex_id_seq', 1, false);
+
+
+--
 -- Name: south_migrationhistory; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -1292,7 +1546,7 @@ ALTER SEQUENCE south_migrationhistory_id_seq OWNED BY south_migrationhistory.id;
 -- Name: south_migrationhistory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('south_migrationhistory_id_seq', 18, true);
+SELECT pg_catalog.setval('south_migrationhistory_id_seq', 40, true);
 
 
 --
@@ -1355,6 +1609,13 @@ ALTER TABLE common_bankaccount ALTER COLUMN id SET DEFAULT nextval('common_banka
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
+ALTER TABLE common_doverennost ALTER COLUMN id SET DEFAULT nextval('common_doverennost_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
 ALTER TABLE common_env ALTER COLUMN id SET DEFAULT nextval('common_env_id_seq'::regclass);
 
 
@@ -1405,6 +1666,34 @@ ALTER TABLE django_content_type ALTER COLUMN id SET DEFAULT nextval('django_cont
 --
 
 ALTER TABLE django_site ALTER COLUMN id SET DEFAULT nextval('django_site_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE sentry_filtervalue ALTER COLUMN id SET DEFAULT nextval('sentry_filtervalue_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE sentry_groupedmessage ALTER COLUMN id SET DEFAULT nextval('sentry_groupedmessage_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE sentry_message ALTER COLUMN id SET DEFAULT nextval('sentry_message_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE sentry_messageindex ALTER COLUMN id SET DEFAULT nextval('sentry_messageindex_id_seq'::regclass);
 
 
 --
@@ -1715,7 +2004,7 @@ COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY auth_user (id, username, first_name, last_name, email, password, is_staff, is_active, is_superuser, last_login, date_joined) FROM stdin;
-1	soul			soul@youmemory.org	sha1$4577d$f5939aa4345e986d4b0d2cb9ab3799d032720636	t	t	t	2011-03-02 13:52:42.442178+03	2011-01-28 15:43:24.389277+03
+1	soul			soul@youmemory.org	sha1$4577d$f5939aa4345e986d4b0d2cb9ab3799d032720636	t	t	t	2011-10-03 00:26:40.95716+04	2011-01-28 15:43:24.389277+03
 \.
 
 
@@ -1739,7 +2028,7 @@ COPY auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 -- Data for Name: common_agent; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_agent (uuid, person_id, organization_id, dover_number, dover_date, dover_expire) FROM stdin;
+COPY common_agent (organization_id, person_ptr_id) FROM stdin;
 \.
 
 
@@ -1755,7 +2044,7 @@ COPY common_bankaccount (id, organization_id, rs, ks, bik, bankname) FROM stdin;
 -- Data for Name: common_burial; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_burial (order_ptr_id, person_id, account_book_n, last_sync_date, exhumated_date) FROM stdin;
+COPY common_burial (order_ptr_id, person_id, account_book_n, last_sync_date, exhumated_date, acct_num_str1, acct_num_num, acct_num_str2, doverennost_id) FROM stdin;
 \.
 
 
@@ -1772,6 +2061,14 @@ COPY common_cemetery (uuid, organization_id, location_id, name, creator_id, date
 --
 
 COPY common_deathcertificate (uuid, soul_id, s_number, series, release_date, zags_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: common_doverennost; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY common_doverennost (id, agent_id, number, date, expire) FROM stdin;
 \.
 
 
@@ -13825,7 +14122,7 @@ COPY common_impcem (cem_pk, name, country, region, city, street, post_index, hou
 -- Data for Name: common_location; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_location (uuid, post_index, street_id, house, block, building, flat, gps_x, gps_y, gps_z, info) FROM stdin;
+COPY common_location (uuid, post_index, street_id, house, block, building, flat, gps_x, gps_y, gps_z, info, city_id, region_id, country_id) FROM stdin;
 \.
 
 
@@ -13850,12 +14147,6 @@ COPY common_metro (uuid, city_id, name) FROM stdin;
 --
 
 COPY common_operation (uuid, op_type) FROM stdin;
-7d58e9ec-2add-11e0-8b17-485b39c96dfe	Захоронение
--- 0df73c7a-a1a5-43d5-a31f-b4fee8c5e50b	Почетное захоронение
-78672a34-2add-11e0-8b17-485b39c96dfe	Захоронение в существующую
-732795d6-2add-11e0-8b17-485b39c96dfe	Подзахоронение к существующей
-6e0492ac-2add-11e0-8b17-485b39c96dfe	Урна
--- c9b7a6b5-12a5-4da5-8242-b9e556bcc6e3	Захоронение детское
 \.
 
 
@@ -13943,7 +14234,7 @@ COPY common_phone (uuid, soul_id, f_number) FROM stdin;
 -- Data for Name: common_place; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_place (product_ptr_id, cemetery_id, area, "row", seat, gps_x, gps_y, gps_z, creator_id, date_of_creation, rooms, rooms_free) FROM stdin;
+COPY common_place (product_ptr_id, cemetery_id, area, "row", seat, gps_x, gps_y, gps_z, creator_id, date_of_creation, rooms, rooms_free, area_str1, area_num, area_str2, row_str1, row_num, row_str2, seat_str1, seat_num, seat_str2) FROM stdin;
 \.
 
 
@@ -14008,8 +14299,8 @@ COPY common_roletree (uuid, master_id, slave_id) FROM stdin;
 -- Data for Name: common_soul; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_soul (uuid, birth_date, death_date, location_id, creator_id, date_of_creation) FROM stdin;
-6f5832e0-2adc-11e0-8b17-485b39c96dfe	2011-01-28	\N	\N	\N	2011-01-28 15:45:07.033887+03
+COPY common_soul (uuid, birth_date, death_date, location_id, creator_id, date_of_creation, birth_date_no_month, birth_date_no_day) FROM stdin;
+6f5832e0-2adc-11e0-8b17-485b39c96dfe	2011-01-28	\N	\N	\N	2011-01-28 15:45:07.033887+03	f	f
 \.
 
 
@@ -14035,7 +14326,7 @@ f74670f4-2adc-11e0-8b17-485b39c96dfe	f08c6f20-2adc-11e0-8b17-485b39c96dfe	НЕИ
 --
 
 COPY common_userprofile (user_id, soul_id, default_cemetery_id, default_operation_id, default_country_id, default_region_id, default_city_id, records_per_page, records_order_by) FROM stdin;
-1	6f5832e0-2adc-11e0-8b17-485b39c96dfe	\N	\N	\N	\N	\N	\N	
+1	6f5832e0-2adc-11e0-8b17-485b39c96dfe	\N	\N	\N	\N	\N	5	
 \.
 
 
@@ -14110,12 +14401,16 @@ COPY django_content_type (id, name, app_label, model) FROM stdin;
 48	позиция счет-заказа	common	orderposition
 49	id document type	common	iddocumenttype
 50	person id	common	personid
+144	doverennost	common	doverennost
 \.
 
 
 --
 -- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: postgres
 --
+
+COPY django_session (session_key, session_data, expire_date) FROM stdin;
+f304dd4c32705b7d018efb4f81efa35c	gAJ9cQEoVQp0ZXN0Y29va2llcQJVBndvcmtlZHEDVRJfYXV0aF91c2VyX2JhY2tlbmRxBFUpZGph\nbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxBVUNX2F1dGhfdXNlcl9pZHEG\nSwF1LmZmNGU1YTBkYmYzMzg1ODljMWE5NjZhM2I1MTE2ODNl\n	2011-10-17 00:26:41.175143+04
 \.
 
 
@@ -14125,6 +14420,38 @@ COPY django_content_type (id, name, app_label, model) FROM stdin;
 
 COPY django_site (id, domain, name) FROM stdin;
 1	example.com	example.com
+\.
+
+
+--
+-- Data for Name: sentry_filtervalue; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY sentry_filtervalue (id, key, value) FROM stdin;
+\.
+
+
+--
+-- Data for Name: sentry_groupedmessage; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY sentry_groupedmessage (id, logger, class_name, level, message, traceback, view, checksum, status, times_seen, last_seen, first_seen, data, score) FROM stdin;
+\.
+
+
+--
+-- Data for Name: sentry_message; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY sentry_message (id, logger, class_name, level, message, traceback, view, url, server_name, checksum, datetime, data, group_id, site, message_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: sentry_messageindex; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY sentry_messageindex (id, object_id, "column", value) FROM stdin;
 \.
 
 
@@ -14150,6 +14477,28 @@ COPY south_migrationhistory (id, app_name, migration, applied) FROM stdin;
 16	common	0015_row_blank	2011-08-01 07:45:23.222861+04
 17	common	0016_person_id	2011-08-01 07:45:23.744223+04
 18	common	0017_free_room	2011-08-01 07:45:25.273061+04
+19	sentry	0001_initial	2011-10-02 20:24:40.75525+04
+20	sentry	0002_auto__del_field_groupedmessage_url__chg_field_groupedmessage_view__chg	2011-10-02 20:24:41.556645+04
+21	sentry	0003_auto__add_field_message_group__del_field_groupedmessage_server_name	2011-10-02 20:24:41.830291+04
+22	sentry	0004_auto__add_filtervalue__add_unique_filtervalue_key_value	2011-10-02 20:24:41.937549+04
+23	sentry	0005_auto	2011-10-02 20:24:42.023719+04
+24	sentry	0006_auto	2011-10-02 20:24:42.083979+04
+25	sentry	0007_auto__add_field_message_site	2011-10-02 20:24:42.411301+04
+26	sentry	0008_auto__chg_field_message_view__add_field_groupedmessage_data__chg_field	2011-10-02 20:24:43.535169+04
+27	sentry	0009_auto__add_field_message_message_id	2011-10-02 20:24:44.076387+04
+28	sentry	0010_auto__add_messageindex__add_unique_messageindex_column_value_object_id	2011-10-02 20:24:44.204788+04
+29	sentry	0011_auto__add_field_groupedmessage_score	2011-10-02 20:24:44.703834+04
+30	sentry	0012_auto	2011-10-02 20:24:44.834535+04
+31	common	0018_denorm	2011-10-02 20:25:59.742957+04
+32	common	0019_apply_denorm	2011-10-02 20:26:00.2261+04
+33	common	0020_ogrn	2011-10-02 20:26:00.860544+04
+34	common	0021_location	2011-10-02 20:26:01.641022+04
+35	common	0022_dover	2011-10-02 20:26:02.152987+04
+36	common	0023_dover_burial	2011-10-02 20:26:02.749333+04
+37	common	0024_agents	2011-10-02 20:26:03.431333+04
+38	common	0025_required_fields	2011-10-02 20:26:04.030498+04
+39	common	0026_auto__add_field_soul_birth_date_no_month__add_field_soul_birth_date_no	2011-10-02 20:26:04.812577+04
+40	common	0027_auto__del_field_soul_birth_date_no_year__add_field_soul_birth_date_no_	2011-10-02 20:26:05.546634+04
 \.
 
 
@@ -14262,7 +14611,7 @@ ALTER TABLE ONLY auth_user
 --
 
 ALTER TABLE ONLY common_agent
-    ADD CONSTRAINT common_agent_pkey PRIMARY KEY (uuid);
+    ADD CONSTRAINT common_agent_pkey PRIMARY KEY (person_ptr_id);
 
 
 --
@@ -14303,6 +14652,14 @@ ALTER TABLE ONLY common_deathcertificate
 
 ALTER TABLE ONLY common_deathcertificate
     ADD CONSTRAINT common_deathcertificate_soul_id_key UNIQUE (soul_id);
+
+
+--
+-- Name: common_doverennost_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY common_doverennost
+    ADD CONSTRAINT common_doverennost_pkey PRIMARY KEY (id);
 
 
 --
@@ -14722,6 +15079,70 @@ ALTER TABLE ONLY django_site
 
 
 --
+-- Name: sentry_filtervalue_key_2e7ed19d_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sentry_filtervalue
+    ADD CONSTRAINT sentry_filtervalue_key_2e7ed19d_uniq UNIQUE (key, value);
+
+
+--
+-- Name: sentry_filtervalue_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sentry_filtervalue
+    ADD CONSTRAINT sentry_filtervalue_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sentry_groupedmessage_logger_7aac5db_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sentry_groupedmessage
+    ADD CONSTRAINT sentry_groupedmessage_logger_7aac5db_uniq UNIQUE (logger, view, checksum);
+
+
+--
+-- Name: sentry_groupedmessage_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sentry_groupedmessage
+    ADD CONSTRAINT sentry_groupedmessage_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sentry_message_message_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sentry_message
+    ADD CONSTRAINT sentry_message_message_id_key UNIQUE (message_id);
+
+
+--
+-- Name: sentry_message_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sentry_message
+    ADD CONSTRAINT sentry_message_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sentry_messageindex_column_14e385c1_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sentry_messageindex
+    ADD CONSTRAINT sentry_messageindex_column_14e385c1_uniq UNIQUE ("column", value, object_id);
+
+
+--
+-- Name: sentry_messageindex_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sentry_messageindex
+    ADD CONSTRAINT sentry_messageindex_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: south_migrationhistory_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -14800,20 +15221,6 @@ CREATE INDEX common_agent_organization_id_like ON common_agent USING btree (orga
 
 
 --
--- Name: common_agent_person_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_agent_person_id ON common_agent USING btree (person_id);
-
-
---
--- Name: common_agent_person_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX common_agent_person_id_like ON common_agent USING btree (person_id varchar_pattern_ops);
-
-
---
 -- Name: common_bankaccount_organization_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -14825,6 +15232,13 @@ CREATE INDEX common_bankaccount_organization_id ON common_bankaccount USING btre
 --
 
 CREATE INDEX common_bankaccount_organization_id_like ON common_bankaccount USING btree (organization_id varchar_pattern_ops);
+
+
+--
+-- Name: common_burial_doverennost_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_burial_doverennost_id ON common_burial USING btree (doverennost_id);
 
 
 --
@@ -14888,6 +15302,20 @@ CREATE INDEX common_cemetery_organization_id_like ON common_cemetery USING btree
 --
 
 CREATE INDEX common_deathcertificate_zags_id ON common_deathcertificate USING btree (zags_id);
+
+
+--
+-- Name: common_doverennost_agent_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_doverennost_agent_id ON common_doverennost USING btree (agent_id);
+
+
+--
+-- Name: common_doverennost_agent_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_doverennost_agent_id_like ON common_doverennost USING btree (agent_id varchar_pattern_ops);
 
 
 --
@@ -14986,6 +15414,48 @@ CREATE INDEX common_impbur_cemetery_id ON common_impbur USING btree (cemetery_id
 --
 
 CREATE INDEX common_impbur_cemetery_id_like ON common_impbur USING btree (cemetery_id varchar_pattern_ops);
+
+
+--
+-- Name: common_location_city_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_location_city_id ON common_location USING btree (city_id);
+
+
+--
+-- Name: common_location_city_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_location_city_id_like ON common_location USING btree (city_id varchar_pattern_ops);
+
+
+--
+-- Name: common_location_country_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_location_country_id ON common_location USING btree (country_id);
+
+
+--
+-- Name: common_location_country_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_location_country_id_like ON common_location USING btree (country_id varchar_pattern_ops);
+
+
+--
+-- Name: common_location_region_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_location_region_id ON common_location USING btree (region_id);
+
+
+--
+-- Name: common_location_region_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX common_location_region_id_like ON common_location USING btree (region_id varchar_pattern_ops);
 
 
 --
@@ -15661,6 +16131,202 @@ CREATE INDEX django_admin_log_user_id ON django_admin_log USING btree (user_id);
 
 
 --
+-- Name: sentry_groupedmessage_checksum; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_checksum ON sentry_groupedmessage USING btree (checksum);
+
+
+--
+-- Name: sentry_groupedmessage_checksum_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_checksum_like ON sentry_groupedmessage USING btree (checksum varchar_pattern_ops);
+
+
+--
+-- Name: sentry_groupedmessage_class_name; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_class_name ON sentry_groupedmessage USING btree (class_name);
+
+
+--
+-- Name: sentry_groupedmessage_class_name_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_class_name_like ON sentry_groupedmessage USING btree (class_name varchar_pattern_ops);
+
+
+--
+-- Name: sentry_groupedmessage_first_seen; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_first_seen ON sentry_groupedmessage USING btree (first_seen);
+
+
+--
+-- Name: sentry_groupedmessage_last_seen; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_last_seen ON sentry_groupedmessage USING btree (last_seen);
+
+
+--
+-- Name: sentry_groupedmessage_level; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_level ON sentry_groupedmessage USING btree (level);
+
+
+--
+-- Name: sentry_groupedmessage_logger; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_logger ON sentry_groupedmessage USING btree (logger);
+
+
+--
+-- Name: sentry_groupedmessage_logger_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_logger_like ON sentry_groupedmessage USING btree (logger varchar_pattern_ops);
+
+
+--
+-- Name: sentry_groupedmessage_status; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_status ON sentry_groupedmessage USING btree (status);
+
+
+--
+-- Name: sentry_groupedmessage_times_seen; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_times_seen ON sentry_groupedmessage USING btree (times_seen);
+
+
+--
+-- Name: sentry_groupedmessage_view; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_view ON sentry_groupedmessage USING btree (view);
+
+
+--
+-- Name: sentry_groupedmessage_view_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_groupedmessage_view_like ON sentry_groupedmessage USING btree (view varchar_pattern_ops);
+
+
+--
+-- Name: sentry_message_checksum; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_checksum ON sentry_message USING btree (checksum);
+
+
+--
+-- Name: sentry_message_checksum_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_checksum_like ON sentry_message USING btree (checksum varchar_pattern_ops);
+
+
+--
+-- Name: sentry_message_class_name; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_class_name ON sentry_message USING btree (class_name);
+
+
+--
+-- Name: sentry_message_class_name_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_class_name_like ON sentry_message USING btree (class_name varchar_pattern_ops);
+
+
+--
+-- Name: sentry_message_datetime; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_datetime ON sentry_message USING btree (datetime);
+
+
+--
+-- Name: sentry_message_group_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_group_id ON sentry_message USING btree (group_id);
+
+
+--
+-- Name: sentry_message_level; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_level ON sentry_message USING btree (level);
+
+
+--
+-- Name: sentry_message_logger; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_logger ON sentry_message USING btree (logger);
+
+
+--
+-- Name: sentry_message_logger_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_logger_like ON sentry_message USING btree (logger varchar_pattern_ops);
+
+
+--
+-- Name: sentry_message_server_name; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_server_name ON sentry_message USING btree (server_name);
+
+
+--
+-- Name: sentry_message_server_name_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_server_name_like ON sentry_message USING btree (server_name varchar_pattern_ops);
+
+
+--
+-- Name: sentry_message_site; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_site ON sentry_message USING btree (site);
+
+
+--
+-- Name: sentry_message_site_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_site_like ON sentry_message USING btree (site varchar_pattern_ops);
+
+
+--
+-- Name: sentry_message_view; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_view ON sentry_message USING btree (view);
+
+
+--
+-- Name: sentry_message_view_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX sentry_message_view_like ON sentry_message USING btree (view varchar_pattern_ops);
+
+
+--
 -- Name: auth_group_permissions_permission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -15690,6 +16356,14 @@ ALTER TABLE ONLY auth_user_groups
 
 ALTER TABLE ONLY auth_user_user_permissions
     ADD CONSTRAINT auth_user_user_permissions_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: city_id_refs_uuid_7208650f; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY common_location
+    ADD CONSTRAINT city_id_refs_uuid_7208650f FOREIGN KEY (city_id) REFERENCES common_geocity(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -16141,6 +16815,14 @@ ALTER TABLE ONLY auth_permission
 
 
 --
+-- Name: country_id_refs_uuid_4776c59; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY common_location
+    ADD CONSTRAINT country_id_refs_uuid_4776c59 FOREIGN KEY (country_id) REFERENCES common_geocountry(uuid) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
 -- Name: creator_id_refs_uuid_40fcd9f5; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -16165,11 +16847,27 @@ ALTER TABLE ONLY django_admin_log
 
 
 --
+-- Name: doverennost_id_refs_id_222f0bae; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY common_burial
+    ADD CONSTRAINT doverennost_id_refs_id_222f0bae FOREIGN KEY (doverennost_id) REFERENCES common_doverennost(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
 -- Name: group_id_refs_id_3cea63fe; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY auth_group_permissions
     ADD CONSTRAINT group_id_refs_id_3cea63fe FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: group_id_refs_id_757f499a; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY sentry_message
+    ADD CONSTRAINT group_id_refs_id_757f499a FOREIGN KEY (group_id) REFERENCES sentry_groupedmessage(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -16221,14 +16919,6 @@ ALTER TABLE ONLY common_bankaccount
 
 
 --
--- Name: person_id_refs_soul_ptr_id_1f069bedc0879de2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY common_agent
-    ADD CONSTRAINT person_id_refs_soul_ptr_id_1f069bedc0879de2 FOREIGN KEY (person_id) REFERENCES common_person(soul_ptr_id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: person_id_refs_soul_ptr_id_5ea561ceb4128dda; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -16237,11 +16927,19 @@ ALTER TABLE ONLY common_personid
 
 
 --
--- Name: responsible_agent_id_refs_uuid_2b741d90abca697e; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: person_ptr_id_refs_soul_ptr_id_3f78621e; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY common_order
-    ADD CONSTRAINT responsible_agent_id_refs_uuid_2b741d90abca697e FOREIGN KEY (responsible_agent_id) REFERENCES common_agent(uuid) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY common_agent
+    ADD CONSTRAINT person_ptr_id_refs_soul_ptr_id_3f78621e FOREIGN KEY (person_ptr_id) REFERENCES common_person(soul_ptr_id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: region_id_refs_uuid_3269ccdc; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY common_location
+    ADD CONSTRAINT region_id_refs_uuid_3269ccdc FOREIGN KEY (region_id) REFERENCES common_georegion(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
