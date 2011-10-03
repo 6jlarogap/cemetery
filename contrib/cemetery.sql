@@ -1215,7 +1215,7 @@ ALTER SEQUENCE django_admin_log_id_seq OWNED BY django_admin_log.id;
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('django_admin_log_id_seq', 24, true);
+SELECT pg_catalog.setval('django_admin_log_id_seq', 26, true);
 
 
 --
@@ -2093,7 +2093,6 @@ COPY common_env (id, uuid) FROM stdin;
 --
 
 COPY common_geocity (uuid, country_id, region_id, name) FROM stdin;
-f08c6f20-2adc-11e0-8b17-485b39c96dfe	9398d222-2adc-11e0-8b17-485b39c96dfe	ead988d8-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН
 7c8b4d5c-303c-11e0-b70a-485b39c96dfe	7c88553e-303c-11e0-b70a-485b39c96dfe	7c89b0e6-303c-11e0-b70a-485b39c96dfe	Москва
 7c8c544a-303c-11e0-b70a-485b39c96dfe	7c88553e-303c-11e0-b70a-485b39c96dfe	7c89b0e6-303c-11e0-b70a-485b39c96dfe	Абрамцево
 7c8d34aa-303c-11e0-b70a-485b39c96dfe	7c88553e-303c-11e0-b70a-485b39c96dfe	7c89b0e6-303c-11e0-b70a-485b39c96dfe	Алабино
@@ -13056,7 +13055,6 @@ a86d30b6-303c-11e0-b70a-485b39c96dfe	a76178bc-303c-11e0-b70a-485b39c96dfe	a86c7b
 --
 
 COPY common_geocountry (uuid, name) FROM stdin;
-9398d222-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН
 7c88553e-303c-11e0-b70a-485b39c96dfe	Россия
 85cd84f2-303c-11e0-b70a-485b39c96dfe	Австралия
 8603b5ea-303c-11e0-b70a-485b39c96dfe	Австрия
@@ -13170,7 +13168,6 @@ a76178bc-303c-11e0-b70a-485b39c96dfe	Япония
 --
 
 COPY common_georegion (uuid, country_id, name) FROM stdin;
-ead988d8-2adc-11e0-8b17-485b39c96dfe	9398d222-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН
 7c89b0e6-303c-11e0-b70a-485b39c96dfe	7c88553e-303c-11e0-b70a-485b39c96dfe	Москва и Московская обл.
 7d2b9f5a-303c-11e0-b70a-485b39c96dfe	7c88553e-303c-11e0-b70a-485b39c96dfe	Санкт-Петербург и область
 7d577698-303c-11e0-b70a-485b39c96dfe	7c88553e-303c-11e0-b70a-485b39c96dfe	Адыгея
@@ -14317,7 +14314,6 @@ COPY common_soulproducttypeoperation (uuid, soul_id, p_type_id, operation_id) FR
 --
 
 COPY common_street (uuid, city_id, name) FROM stdin;
-f74670f4-2adc-11e0-8b17-485b39c96dfe	f08c6f20-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН
 \.
 
 
@@ -14343,6 +14339,8 @@ COPY common_zags (id, name) FROM stdin;
 --
 
 COPY django_admin_log (id, action_time, user_id, content_type_id, object_id, object_repr, action_flag, change_message) FROM stdin;
+25	2011-10-03 18:44:18.382946+04	1	14	f74670f4-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН	3	
+26	2011-10-03 18:45:17.455178+04	1	10	9398d222-2adc-11e0-8b17-485b39c96dfe	НЕИЗВЕСТЕН	3	
 \.
 
 
