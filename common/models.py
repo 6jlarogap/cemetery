@@ -495,6 +495,7 @@ class OrderFiles(models.Model):
     comment = models.CharField(max_length=96, blank=True)
     creator = models.ForeignKey(Soul, null=True)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
+
     def delete(self):
         if self.ofile != "":
             if os.path.exists(self.ofile.path):

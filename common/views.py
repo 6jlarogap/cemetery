@@ -390,11 +390,9 @@ def journal(request):
                 nfile = request.FILES[nf]
                 of = OrderFiles(creator=request.user.userprofile.soul)
                 of.order = new_burial.order_ptr
-                nfile.name = unicode(nfile.name)
-                of.ofile = nfile
                 if cd.get("file1_comment", ""):
                     of.comment = cd["file1_comment"]
-                of.save()
+                of.ofile.save(nfile.name, nfile, save=True)
 
 #            # Create new Order.
 #            new_order = Order(creator=request.user.userprofile.soul)
@@ -442,12 +440,12 @@ def edit_burial(request, uuid):
     if request.method == "POST":
         phones = Phone.objects.filter(soul=burial.customer.person.soul_ptr)
         phones.filter(f_number='').delete()
- 	    phones.filter(f_number__isnull=True).delete()
+        phones.filter(f_number__isnull=True).delete()
         phoneset = PhoneFormSet(request.POST, request.FILES, queryset=phones)
         form = EditBurialForm(request.POST, request.FILES)
         if form.is_valid():
             for pf in phoneset.forms:
- 	            if pf.is_valid() and pf.cleaned_data.get('f_number'):
+                if pf.is_valid() and pf.cleaned_data.get('f_number'):
                     phone = pf.save(commit=False)
                     phone.soul = burial.customer.person.soul_ptr
                     phone.save()
@@ -542,11 +540,9 @@ def edit_burial(request, uuid):
                 nfile = request.FILES["file1"]
                 of = OrderFiles(creator=request.user.userprofile.soul)
                 of.order = burial.order_ptr
-                nfile.name = unicode(nfile.name)
-                of.ofile = nfile
                 if cd.get("file1_comment", ""):
                     of.comment = cd["file1_comment"]
-                of.save()
+                of.ofile.save(nfile.name, nfile, save=True)
             return redirect("/burial/%s/" % uuid)
     else:
 #        phones = Phone.objects.filter(soul=burial.customer.person.soul_ptr)
