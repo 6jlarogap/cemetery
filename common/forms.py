@@ -879,6 +879,9 @@ class EditUserForm(forms.ModelForm):
         ka = self.fields.keyOrder.index('is_active')
         self.fields.keyOrder[kp], self.fields.keyOrder[ka] = self.fields.keyOrder[ka], self.fields.keyOrder[kp]
 
+        for f in self.fields:
+            self.fields[f].widget.attrs['autocomplete'] = 'off'
+
     def clean(self):
         cd = self.cleaned_data
         if cd.get("password1") == cd.get("password2"):
