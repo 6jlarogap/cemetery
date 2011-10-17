@@ -20,6 +20,13 @@
         </style>
         {% if close %} <script type="text/javascript">top.close();</script> {% endif %}
 
+        <script type="text/javascript" src="/media/js/jquery-1.4.4.min.js"></script>
+        <script type="text/javascript">
+            if (top.location.href != '/') {
+                $('input').attr('autocomplete', 'off');
+            }
+        </script>
+
 {% block scripts %}{% endblock %}
     </head>
     <body>
