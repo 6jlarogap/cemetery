@@ -1341,6 +1341,7 @@ def init(request):
             organization.full_name = cd["org_full_name"]
             organization.kpp = cd["kpp"]
             organization.inn = cd["inn"]
+            organization.ogrn = cd["ogrn"]
             organization.save()
 
             bank_formset = InitBankFormset(instance=organization, data=request.POST or None)
@@ -1462,6 +1463,7 @@ def init(request):
                 flat = org.location.flat,
                 kpp = org.kpp,
                 inn = org.inn,
+                ogrn = org.ogrn,
             )
             if org and org.location and org.location.street:
                 initial['street'] = org.location.street.name
