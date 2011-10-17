@@ -1141,7 +1141,7 @@ def management_cemetery(request):
             location_block = cd.get("block", "")
             location_building = cd.get("building", "")
             location_post_index = cd.get("post_index", "")
-            if location_street and location_city and location_region and location_country:
+            if location_city and location_region and location_country:
                 # Есть все для создания непустого Location.
                 # Страна.
                 try:
@@ -1149,6 +1149,7 @@ def management_cemetery(request):
                 except ObjectDoesNotExist:
                     country = GeoCountry(name=location_country.capitalize())
                     country.save()
+                location.country = country
                 # Регион.
                 try:
                     region = GeoRegion.objects.get(name__exact=location_region,
@@ -1156,6 +1157,7 @@ def management_cemetery(request):
                 except ObjectDoesNotExist:
                     region = GeoRegion(name=location_region.capitalize(), country=country)
                     region.save()
+                location.region = region
                 # Нас. пункт.
                 try:
                     city = GeoCity.objects.get(name__exact=location_city, region=region)
@@ -1163,14 +1165,16 @@ def management_cemetery(request):
                     city = GeoCity(name=location_city.capitalize(), country=country,
                                    region=region)
                     city.save()
-                # Улица.
-                try:
-                    street = Street.objects.get(name__exact=location_street, city=city)
-                except ObjectDoesNotExist:
-                    street = Street(name=location_street.capitalize(), city=city)
-                    street.save()
-                # Продолжаем с Location.
-                location.street = street
+                location.city = city
+                if location_street:
+                    # Улица.
+                    try:
+                        street = Street.objects.get(name__exact=location_street, city=city)
+                    except ObjectDoesNotExist:
+                        street = Street(name=location_street.capitalize(), city=city)
+                        street.save()
+                    # Продолжаем с Location.
+                    location.street = street
                 if location_house:
                     location.house = location_house
                     if location_block:
@@ -1228,7 +1232,7 @@ def management_edit_cemetery(request, uuid):
             location.building = ""
             location.flat = ""
 #            location.save()
-            if location_street and location_city and location_region and location_country:
+            if location_city and location_region and location_country:
                 # Есть все для создания непустого Location.
                 # Страна.
                 try:
@@ -1236,6 +1240,7 @@ def management_edit_cemetery(request, uuid):
                 except ObjectDoesNotExist:
                     country = GeoCountry(name=location_country.capitalize())
                     country.save()
+                location.country = country
                 # Регион.
                 try:
                     region = GeoRegion.objects.get(name__exact=location_region,
@@ -1243,6 +1248,7 @@ def management_edit_cemetery(request, uuid):
                 except ObjectDoesNotExist:
                     region = GeoRegion(name=location_region.capitalize(), country=country)
                     region.save()
+                location.region = region
                 # Нас. пункт.
                 try:
                     city = GeoCity.objects.get(name__exact=location_city, region=region)
@@ -1250,6 +1256,8 @@ def management_edit_cemetery(request, uuid):
                     city = GeoCity(name=location_city.capitalize(), country=country,
                                    region=region)
                     city.save()
+                location.city = city
+            if location_street:
                 # Улица.
                 try:
                     street = Street.objects.get(name__exact=location_street, city=city)
@@ -1258,12 +1266,12 @@ def management_edit_cemetery(request, uuid):
                     street.save()
                 # Продолжаем с Location.
                 location.street = street
-                if location_house:
-                    location.house = location_house
-                    if location_block:
-                        location.block = location_block
-                    if location_building:
-                        location.building = location_building
+            if location_house:
+                location.house = location_house
+                if location_block:
+                    location.block = location_block
+                if location_building:
+                    location.building = location_building
             if location_post_index:
                 location.post_index = location_post_index
             location.info = cd.get('info') or ''

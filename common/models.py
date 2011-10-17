@@ -171,10 +171,15 @@ class Location(models.Model):
     info = models.TextField(u"Дополнительная информация", blank=True, null=True)             # Дополнительная информация
 
     def __unicode__(self):
-        if self.street:
-            addr = u'%s' % self.street
+        if self.street or self.region:
+            addr = u''
+            if self.street:
+                addr += u'%s' % self.street
             if self.house:
-                addr += u', дом %s' % self.house
+                if addr:
+                    addr += u', дом %s' % self.house
+                else:
+                    addr += u'дом %s' % self.house
             if self.block:
                 addr += u', корп. %s' % self.block
             if self.building:
@@ -184,10 +189,13 @@ class Location(models.Model):
             if self.info:
                 addr += u', %s' % self.info
 
-            addr += u', %s' % (self.city or self.street.city)
+            if addr:
+                addr += u', %s' % (self.city or self.street.city)
+            else:
+                addr += u'%s' % (self.city or self.street.city)
             addr += u', %s' % (self.region or self.street.city.region)
             addr += u', %s' % (self.country or self.street.city.region.country)
-            return addr
+            return addr.replace(', ,', ', ')
         else:
             return u"незаполненный адрес"
 

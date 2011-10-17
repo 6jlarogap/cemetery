@@ -806,15 +806,16 @@ class CemeteryForm(forms.Form):
                 except ObjectDoesNotExist:
                     if not new_city:
                         raise forms.ValidationError("Указанный нас. пункт не существует.")
-            if new_city:
-                if not new_street:
-                    raise forms.ValidationError("Указанная улица не существует.")
-            else:
-                try:
-                    street_obj = Street.objects.get(city=city_obj, name__iexact=street)
-                except ObjectDoesNotExist:
-                    if not new_street:
+            if street:
+                if new_street:
+                    if not new_region:
                         raise forms.ValidationError("Указанная улица не существует.")
+                else:
+                    try:
+                        city_obj = Street.objects.get(region=region_obj, name__iexact=street)
+                    except ObjectDoesNotExist:
+                        if not new_city:
+                            raise forms.ValidationError("Указанная улица пункт не существует.")
         return cd
 
 
