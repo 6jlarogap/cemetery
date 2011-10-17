@@ -23,7 +23,16 @@
         <script type="text/javascript" src="/media/js/jquery-1.4.4.min.js"></script>
         <script type="text/javascript">
             if (top.location.href != '/') {
-                $('input').attr('autocomplete', 'off').prop('autocomplete', 'off');
+                if (navigator.userAgent.toLowerCase().indexOf("chrome") >= 0) {
+                    $(window).load(function(){
+                        $('input:-webkit-autofill').each(function(){
+                            var text = $(this).val();
+                            var name = $(this).attr('name');
+                            $(this).after(this.outerHTML).remove();
+                            $('input[name=' + name + ']').val(text);
+                        });
+                    });
+                }
             }
         </script>
 
