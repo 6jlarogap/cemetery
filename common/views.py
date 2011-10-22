@@ -206,9 +206,9 @@ def main_page(request):
         if cd["burial_date_from"]:
             burials = burials.filter(date_fact__gte=cd["burial_date_from"])
             if not cd["burial_date_to"]:
-                burials = burials.filter(date_fact__lte=cd["burial_date_from"])
+                burials = burials.filter(date_fact__lt=cd["burial_date_from"] + datetime.timedelta(1))
         if cd["burial_date_to"]:
-            burials = burials.filter(date_fact__lte=cd["burial_date_to"])
+            burials = burials.filter(date_fact__lt=cd["burial_date_to"] + datetime.timedelta(1))
 #        if cd["death_certificate"]:
 #            burials = burials.filter(person__soul_ptr__deathcertificate__s_number=cd["death_certificate"])
         if cd["account_book_n_from"]:
