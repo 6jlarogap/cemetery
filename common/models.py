@@ -370,6 +370,7 @@ class Person(Soul):
         return fio.strip()
 
     class Meta:
+        ordering = ['last_name', 'first_name', 'patronymic', ]
         verbose_name = (u'физ. лицо')
         verbose_name_plural = (u'физ. лица')
 
@@ -388,6 +389,7 @@ class ZAGS(models.Model):
         return self.name
 
     class Meta:
+        ordering = ['name']
         verbose_name = (u'ЗАГС')
         verbose_name_plural = (u'ЗАГС')
 
@@ -437,6 +439,7 @@ class Organization(Soul):
             return
 
     class Meta:
+        ordering = ['name']
         verbose_name = (u'юр. лицо')
         verbose_name_plural = (u'юр. лица')
 
@@ -523,7 +526,7 @@ class Cemetery(models.Model):
     last_sync_date = models.DateTimeField(u"Дата последней синхронизации", default=datetime.datetime(2000, 1, 1, 0, 0))
 
     class Meta:
-        #ordering = ['name']
+        ordering = ['name']
         verbose_name = (u'кладбище')
         verbose_name_plural = (u'кладбища')
 
@@ -546,6 +549,7 @@ class ProductType(models.Model):
         return self.name
 
     class Meta:
+        ordering = ['name']
         verbose_name = (u'тип продукта')
         verbose_name_plural = (u'типы продуктов')
 
@@ -566,6 +570,9 @@ class Product(models.Model):
         comment.save()
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name', ]
 
 class ProductFiles(models.Model):
     """
@@ -697,6 +704,7 @@ class Operation(models.Model):
     def __unicode__(self):
         return self.op_type[:24]
     class Meta:
+        ordering = ['op_type']
         verbose_name = (u'операция с продуктом')
         verbose_name_plural = (u'операции с продуктом')
 
