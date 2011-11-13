@@ -462,6 +462,13 @@ class JournalForm(AutoTabIndex):
 
         super(JournalForm, self).__init__(*args, **kwargs)
 
+        bd = None
+        if data.get('burial_date'):
+            bdt = datetime.datetime.strptime(data.get('burial_date'), '%d.%m.%Y')
+            bd = datetime.date(*tuple(bdt.timetuple())[:3])
+            if bd >= datetime.date.today():
+                self.fields['burial_time'].required=True
+
         if data.get('opf', 'fizik') != 'fizik':
             for f in ['dover_date', 'dover_expire', 'dover_number', ]:
                 self.fields[f].required = not data.get('agent_director') or False
@@ -472,15 +479,11 @@ class JournalForm(AutoTabIndex):
         if oper:
             self.fields["operation"].initial = oper
 
-        if data.get('burial_date'):
-            bdt = datetime.datetime.strptime(data.get('burial_date'), '%d.%m.%Y')
-            bd = datetime.date(*tuple(bdt.timetuple())[:3])
-            if bd >= datetime.date.today():
-                self.fields['burial_time'].required=True
-
         if data.get('opf') != 'fizik' and not data.get('agent_director'):
             for f in ['dover_number', 'dover_date', 'dover_expire']:
                 self.fields[f].required = True
+                if bd and bd < datetime.date.today():
+                    self.fields[f].required = False
 
 
     def clean_responsible_last_name(self):
