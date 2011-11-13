@@ -375,7 +375,9 @@ class UnclearSelectDateWidget(SelectDateWidget):
         return select_html
 
 class UnclearDateField(forms.DateField):
-    widget = UnclearSelectDateWidget(years=range(datetime.date.today().year, 1900, -1))
+    today = datetime.date.today()
+
+    widget = UnclearSelectDateWidget(years=range(today.month > 10 and today.day > 20 and (today.year + 1) or today.year, 1900, -1))
 
     def to_python(self, value):
         if isinstance(value, UnclearDate):
