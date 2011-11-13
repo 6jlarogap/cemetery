@@ -519,7 +519,7 @@ class JournalForm(AutoTabIndex):
             raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
 
         if not cd["seat"] and cd["account_book_n"]:
-            raise forms.ValidationError("При указанном номере в журнале необходимо указать и номер места")
+            cd["seat"] = cd["account_book_n"]
 
         place = Place()
         place.cemetery = cd["cemetery"]
