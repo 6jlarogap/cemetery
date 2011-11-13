@@ -807,8 +807,8 @@ class Burial(Order):
             return u"%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s" % {
                 'org': org.full_name or org,
                 'agent': agent,
-                'd_num': self.doverennost.number,
-                'd_date': self.doverennost.date.strftime('%d.%m.%Y'),
+                'd_num': self.doverennost.number or '',
+                'd_date': self.doverennost.date and self.doverennost.date.strftime('%d.%m.%Y') or '',
             }
 
         return self.customer.full_human_name()
