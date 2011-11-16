@@ -3,7 +3,7 @@
 from django import forms
 from django.forms.extras.widgets import SelectDateWidget
 from django.forms.forms import conditional_escape, flatatt, mark_safe, BoundField
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminTimeWidget
@@ -224,6 +224,8 @@ class AddressForm(ModelAutoTabIndex):
             # Страна.
             try:
                 country_object = GeoCountry.objects.get(name__iexact=country)
+            except MultipleObjectsReturned:
+                country_object = GeoCountry.objects.filter(name__iexact=country)[0]
             except ObjectDoesNotExist:
                 if not cd.get("new_country"):
                     raise forms.ValidationError("Страна не найдена.")
@@ -243,6 +245,8 @@ class AddressForm(ModelAutoTabIndex):
                 raise forms.ValidationError("У новой страны регион должен быть тоже новым.")
             try:
                 region_object = GeoRegion.objects.get(country__name__iexact=country, name__iexact=region)
+            except MultipleObjectsReturned:
+                region_object = GeoRegion.objects.filter(country__name__iexact=country, name__iexact=region)[0]
             except ObjectDoesNotExist:
                 if not cd.get("new_region"):
                     raise forms.ValidationError("Регион не найден.")
@@ -262,6 +266,8 @@ class AddressForm(ModelAutoTabIndex):
                 raise forms.ValidationError("У нового региона нас. пункт должен быть тоже новым.")
             try:
                 city_object = GeoCity.objects.get(region__name__iexact=region, name__iexact=city)
+            except MultipleObjectsReturned:
+                city_object = GeoCity.objects.filter(region__name__iexact=region, name__iexact=city)[0]
             except ObjectDoesNotExist:
                 if not cd.get("new_city"):
                     raise forms.ValidationError("Нас. пункт не найден.")
@@ -279,6 +285,8 @@ class AddressForm(ModelAutoTabIndex):
                 raise forms.ValidationError("У нового нас. пункта улица должна быть тоже новой.")
             try:
                 street_object = Street.objects.get(city__name__iexact=city, name__iexact=street)
+            except MultipleObjectsReturned:
+                street_object = Street.objects.filter(city__name__iexact=city, name__iexact=street)[0]
             except ObjectDoesNotExist:
                 if not cd.get("new_street", False):
                     raise forms.ValidationError("Улица не найдена.")
