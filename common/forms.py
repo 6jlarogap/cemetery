@@ -395,7 +395,7 @@ class JournalForm(AutoTabIndex):
     Форма журнала - создания нового захоронения.
     """
 
-    account_book_n = forms.CharField(max_length=16, label="Номер в книге учета", required=False, help_text=u'если пусто - заполнится автоматически')
+    account_book_n = forms.CharField(max_length=8, label="Номер в книге учета", required=False, help_text=u'если пусто - заполнится автоматически')
 
     burial_date = forms.DateField(label="Дата захоронения*", initial=get_today, required=True)
     burial_time = forms.TimeField(label="Время захоронения", required=False)
@@ -413,7 +413,7 @@ class JournalForm(AutoTabIndex):
     hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
     area = forms.CharField(max_length=9, label="Участок", required=False)
     row = forms.CharField(max_length=9, label="Ряд", required=False)
-    seat = forms.CharField(max_length=9, label="Место", required=False, help_text=u'если пусто - заполнится автоматически')
+    seat = forms.CharField(max_length=8, label="Место", required=False, help_text=u'если пусто - заполнится автоматически')
     rooms = forms.IntegerField(label="Мест в ограде всего", required=False)
     rooms_free = forms.IntegerField(label="Свободно", required=False)
     customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
@@ -505,6 +505,20 @@ class JournalForm(AutoTabIndex):
         if '*' in name and name != UNKNOWN_NAME:
             raise forms.ValidationError(u'Недопустимая фамилия')
         return name
+
+    def clean_account_book_n(self):
+        if not self.cleaned_data['account_book_n']:
+            return self.cleaned_data['account_book_n']
+        if self.cleaned_data['account_book_n'].isdigit() and len(self.cleaned_data['account_book_n']) == 8:
+            return self.cleaned_data['account_book_n']
+        raise forms.ValidationError(u"Должно быть 8 цифр")
+
+    def clean_seat(self):
+        if not self.cleaned_data['seat']:
+            return self.cleaned_data['seat']
+        if self.cleaned_data['seat'].isdigit() and len(self.cleaned_data['seat']) == 8:
+            return self.cleaned_data['seat']
+        raise forms.ValidationError(u"Должно быть 8 цифр")
 
     def clean(self):
         cd = self.cleaned_data
