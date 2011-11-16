@@ -334,7 +334,9 @@ class AddressForm(ModelAutoTabIndex):
 class UnclearSelectDateWidget(SelectDateWidget):
     month_unclear = False
     year_unclear = False
-    
+    no_day = False
+    no_month = False
+
     def value_from_datadict(self, data, files, name):
         from django.forms.extras.widgets import get_format, datetime_safe
 
@@ -361,6 +363,14 @@ class UnclearSelectDateWidget(SelectDateWidget):
             else:
                 return '%s-%s-%s' % (y, m, d)
         return data.get(name, None)
+
+    def render(self, name, value, attrs=None):
+        if value:
+            if isinstance(value, basestring):
+                value = datetime.datetime.strptime(value, '%d.%m.%Y')
+            year, month, day = value.year, value.month, value.day
+            value = UnclearDate(year, not self.no_month and month or None, not self.no_day and day or None)
+        return super(UnclearSelectDateWidget, self).render(name, value, attrs)
 
     def create_select(self, name, field, value, val, choices):
         from django.forms.extras.widgets import Select
