@@ -375,7 +375,7 @@ $(function(){
                 <tr>
                     <td colspan="3">
                         <h2>Адрес усопшего</h2>
-                        {% if registration_form.data %}{{ registration_form.non_field_errors }}{% endif %}
+                        {% if not registration_valid %}{{ registration_form.non_field_errors }}{% endif %}
                     </td>
                 </tr>
                 <tr>
@@ -529,7 +529,7 @@ $(function(){
                 <tr class="opf_fizik">
                     <td colspan="3">
                         <h2>Адрес проживания заказчика-физлица (для связи)</h2>
-                        {% if location_form.data %}{{ location_form.non_field_errors }}{% endif %}
+                        {% if not customer_addr_valid %}{{ location_form.non_field_errors }}{% endif %}
                     </td>
                 </tr>
                 <tr class="opf_fizik">

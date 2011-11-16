@@ -503,6 +503,8 @@ def journal(request):
         'certificate_form': cert_form,
         'id_form': id_form,
         'duplicates': duplicates,
+        'customer_addr_valid': customer_addr_valid,
+        'registration_valid': registration_valid,
     })
 
 @login_required
