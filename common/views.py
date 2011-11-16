@@ -106,13 +106,6 @@ def main_page(request):
     if form.is_valid():
         cd = form.cleaned_data
         # Обновляем профиль пользователя.
-        #if request.user.is_authenticated() and not request.user.is_superuser:
-        if request.user.is_authenticated():
-            # Сохраняем в профиль значение per_page.
-            if cd.get("per_page", ""):
-                if request.user.userprofile.records_per_page != cd["per_page"]:
-                    request.user.userprofile.records_per_page = cd["per_page"]
-                    request.user.userprofile.save()
         if cd.get("records_order_by", ""):
             if cd["records_order_by"] == u'account_book_n':
                 burials = burials.order_by('acct_num_str1', 'acct_num_num', 'acct_num_str2')
@@ -262,6 +255,7 @@ def main_page(request):
     else:
         #if request.user.is_authenticated() and not request.user.is_superuser and not form_data:
         if request.user.is_authenticated() and not form_data:
+            print 'request.user.userprofile.records_per_page', request.user.userprofile.records_per_page
             pp = request.user.userprofile.records_per_page
             ob = request.user.userprofile.records_order_by
             redirect_str = "/?print="
@@ -993,6 +987,7 @@ def profile(request):
                 soul = Soul(creator=request.user.userprofile.soul)
                 soul.save()
                 up = UserProfile(user=request.user, soul=soul)
+
             if cd.get("cemetery", ""):
                 up.default_cemetery = cd["cemetery"]
             else:
