@@ -804,10 +804,11 @@ def print_burial(request, uuid):
     """
     burial = get_object_or_404(Burial, uuid=uuid)
     positions = get_positions(burial)
+    initials = burial.get_print_info()
 
-    payment_form = OrderPaymentForm(instance=burial, data=request.POST or None, )
-    positions_fs = OrderPositionsFormset(initial=positions, data=request.POST or None, )
-    print_form = PrintOptionsForm(data=request.POST or None, )
+    payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
+    positions_fs = OrderPositionsFormset(initial=initials['positions'] or positions, data=request.POST or None)
+    print_form = PrintOptionsForm(data=request.POST or None, initial=initials['print'])
     try:
         env = Env.objects.get()
         org = Organization.objects.get(uuid=env.uuid)
@@ -816,6 +817,12 @@ def print_burial(request, uuid):
 
     print_positions = []
     if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
+        burial.set_print_info({
+            'positions': [f.cleaned_data for f in positions_fs.forms if f.is_valid()],
+            'print': print_form.cleaned_data,
+        })
+        burial.save()
+
         for f in positions_fs.forms:
             if f.cleaned_data['active']:
                 print_positions.append(f.initial['order_product'].pk)

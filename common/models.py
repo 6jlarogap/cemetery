@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import RegexValidator, MinLengthValidator
 from django.conf import settings
 from django.utils.safestring import mark_safe
+from django.utils import simplejson
 
 from contrib.constants import UNKNOWN_NAME
 
@@ -789,6 +790,8 @@ class Burial(Order):
 
     doverennost = models.ForeignKey(Doverennost, null=True)
 
+    print_info = models.TextField(editable=False, null=True)
+
     class Meta:
         verbose_name = (u'захоронение')
         verbose_name_plural = (u'захоронения')
@@ -796,6 +799,27 @@ class Burial(Order):
 
     def __unicode__(self):
         return u"захоронение: %s" % self.person.__unicode__()
+
+    def get_print_info(self):
+        if self.print_info:
+            data = simplejson.loads(self.print_info)
+            for p in data['positions'] or []:
+                p['order_product'] = OrderProduct.objects.get(name=p['order_product'])
+            return data
+        else:
+            return {
+                'positions': None,
+                'print': None,
+            }
+
+    def set_print_info(self, data):
+        for p in data['positions']:
+            p['price'] = u'%s' % p['price']
+            p['count'] = u'%s' % p['count']
+            p['order_product'] = p['order_product'].name
+        data['print']['catafalque_time'] = data['print']['catafalque_time'].strftime('%H:%M')
+        print data['print']['catafalque_time']
+        self.print_info = simplejson.dumps(data)
 
     def full_customer_name(self):
         try:
