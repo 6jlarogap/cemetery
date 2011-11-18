@@ -550,7 +550,12 @@ class JournalForm(AutoTabIndex):
         except:
             raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
 
-        if not cd["seat"] and cd["account_book_n"]:
+        if not cd.get("account_book_n"):
+            cd["account_book_n"] = ''
+        if not cd.get("seat"):
+            cd["seat"] = ''
+
+        if not cd.get("seat") and cd.get("account_book_n"):
             cd["seat"] = cd["account_book_n"]
 
         place = Place()
