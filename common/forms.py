@@ -427,7 +427,7 @@ class JournalForm(AutoTabIndex):
     first_name = forms.CharField(required=False, max_length=30, label="Имя", validators=[RegexValidator(RE_LASTNAME), ])
     patronymic = forms.CharField(required=False, max_length=30, label="Отчество", validators=[RegexValidator(RE_LASTNAME), ])
     cemetery = forms.ModelChoiceField(queryset=Cemetery.objects.all(), label="Кладбище*", required=True)
-    operation = forms.ModelChoiceField(queryset=Operation.objects.all(), label="Услуга*", empty_label=None, required=True)
+    operation = forms.ModelChoiceField(queryset=Operation.objects.all().order_by('ordering', 'op_type'), label="Услуга*", empty_label=None, required=True)
     hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
     area = forms.CharField(max_length=9, label="Участок", required=False)
     row = forms.CharField(max_length=9, label="Ряд", required=False)
