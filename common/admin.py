@@ -103,7 +103,8 @@ class OrderAdmin(admin.ModelAdmin):
     raw_id_fields = ['responsible', 'responsible_customer', 'responsible_agent', 'customer', 'doer', 'product', 'creator', ]
 
 class OperationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['op_type', 'ordering']
+    list_editable = ['ordering']
 
 class ProductCommentsAdmin(admin.ModelAdmin):
     raw_id_fields = ['product', 'creator', ]
