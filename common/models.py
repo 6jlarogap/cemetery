@@ -702,10 +702,13 @@ class Operation(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     op_type = models.CharField(u"Имя операции", max_length=100)
+    ordering = models.PositiveSmallIntegerField(u"Сортировка", default=1)
+
     def __unicode__(self):
         return self.op_type[:24]
+
     class Meta:
-        ordering = ['op_type']
+        ordering = ['ordering', 'op_type']
         verbose_name = (u'операция с продуктом')
         verbose_name_plural = (u'операции с продуктом')
 
