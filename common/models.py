@@ -820,8 +820,8 @@ class Burial(Order):
             p['price'] = u'%s' % p['price']
             p['count'] = u'%s' % p['count']
             p['order_product'] = p['order_product'].name
-        data['print']['catafalque_time'] = data['print']['catafalque_time'].strftime('%H:%M')
-        print data['print']['catafalque_time']
+        if data['print']['catafalque_time']:
+            data['print']['catafalque_time'] = data['print']['catafalque_time'].strftime('%H:%M')
         self.print_info = simplejson.dumps(data)
 
     def full_customer_name(self):
