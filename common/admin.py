@@ -130,6 +130,7 @@ class DeathCertificateAdmin(admin.ModelAdmin):
 class OrderProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'ordering', ]
     list_editable = ['ordering', ]
+    ordering = ['ordering', 'name']
 
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Role, RoleAdmin)
