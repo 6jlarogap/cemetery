@@ -770,7 +770,7 @@ def edit_burial(request, uuid):
 
 def get_positions(burial):
     positions = []
-    for product in OrderProduct.objects.all():
+    for product in OrderProduct.objects.all().order_by('ordering', 'name'):
         try:
             pos = OrderPosition.objects.get(order_product=product, order=burial)
         except OrderPosition.DoesNotExist:

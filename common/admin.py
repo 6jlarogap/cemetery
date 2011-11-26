@@ -127,6 +127,10 @@ class ProductAdmin(admin.ModelAdmin):
 class DeathCertificateAdmin(admin.ModelAdmin):
     raw_id_fields = ['soul', ]
 
+class OrderProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'ordering', ]
+    list_editable = ['ordering', ]
+
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Role, RoleAdmin)
 admin.site.register(Soul, SoulAdmin)
@@ -158,4 +162,4 @@ admin.site.register(OrderFiles, OFAdmin)
 admin.site.register(OrderComments, OCAdmin)
 #admin.site.register(Role, RoleAdmin)
 
-admin.site.register(OrderProduct)
+admin.site.register(OrderProduct, OrderProductAdmin)

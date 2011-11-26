@@ -979,6 +979,7 @@ class OrderProduct(models.Model):
     default = models.BooleanField(u"Вкл. по умолчанию", default=False, blank=True)
     measure = models.CharField(u"Единицы измерения", max_length=50, blank=True)
     price = models.DecimalField(u"Цена", decimal_places=2, max_digits=10)
+    ordering = models.PositiveSmallIntegerField(u"Сортировка", default=1)
 
     def __unicode__(self):
         return self.name
