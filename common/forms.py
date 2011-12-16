@@ -220,7 +220,7 @@ class AddressForm(ModelAutoTabIndex):
 
         new_country = new_region = new_city = new_street = False
 
-        if country:
+        if country.strip('.,() '):
             # Страна.
             try:
                 country_object = GeoCountry.objects.get(name__iexact=country)
@@ -239,7 +239,7 @@ class AddressForm(ModelAutoTabIndex):
         else:
             raise forms.ValidationError("Не все поля адреса заполнены.")
 
-        if region:
+        if region.strip('.,() '):
             # Регион.
             if new_country and not cd.get("new_region", False):
                 raise forms.ValidationError("У новой страны регион должен быть тоже новым.")
@@ -260,7 +260,7 @@ class AddressForm(ModelAutoTabIndex):
         else:
             raise forms.ValidationError("Не все поля адреса заполнены.")
 
-        if city:
+        if city.strip('.,() '):
             # Нас. пункт.
             if new_region and not cd.get("new_city"):
                 raise forms.ValidationError("У нового региона нас. пункт должен быть тоже новым.")
@@ -279,7 +279,7 @@ class AddressForm(ModelAutoTabIndex):
                 else:
                     raise forms.ValidationError("Нас. пункт с таким именем уже существует в выбранном регионе.")
 
-        if street:
+        if street.strip('.,() '):
             # Улица.
             if new_city and not cd.get("new_street"):
                 raise forms.ValidationError("У нового нас. пункта улица должна быть тоже новой.")
@@ -305,36 +305,42 @@ class AddressForm(ModelAutoTabIndex):
         cd = self.cleaned_data
 
         location = super(AddressForm, self).save(commit=False, *args, **kwargs)
-        if cd.get("country", ""):
+
+        country = region = city = street = None
+        if cd.get("country", "").strip('.,() '):
             # Страна.
             try:
                 country = GeoCountry.objects.get(name__iexact=cd["country"])
             except ObjectDoesNotExist:
                 country = GeoCountry(name=cd["country"].capitalize())
                 country.save()
+        if cd.get("region", "").strip('.,() '):
             # Регион.
             try:
                 region = GeoRegion.objects.get(country=country, name__iexact=cd["region"])
             except ObjectDoesNotExist:
                 region = GeoRegion(country=country, name=cd["region"].capitalize())
                 region.save()
+        if cd.get("city", "").strip('.,() '):
             # Нас. пункт.
             try:
                 city = GeoCity.objects.get(region=region, name__iexact=cd["city"])
             except ObjectDoesNotExist:
                 city = GeoCity(country=country, region=region, name=cd["city"].capitalize())
                 city.save()
+        if cd.get("street", "").strip('.,() '):
             # Улица.
             try:
                 street = Street.objects.get(city=city, name__iexact=cd["street"])
             except ObjectDoesNotExist:
                 street = Street(city=city, name=cd["street"].capitalize())
                 street.save()
-            # Сохраняем Location.
-            location.street = street
-            location.country = country
-            location.region = region
-            location.city = city
+
+        # Сохраняем Location.
+        location.street = street
+        location.country = country
+        location.region = region
+        location.city = city
 
         location.save()
         return location
@@ -1021,7 +1027,7 @@ class PrintOptionsForm(forms.Form):
             raise forms.ValidationError(u'Время подачи + время а/к должно быть позже времени захоронения')
         return self.cleaned_data
     """
-    
+
 class IDForm(forms.ModelForm):
     class Meta:
         model = PersonID
