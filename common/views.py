@@ -804,7 +804,7 @@ def print_burial(request, uuid):
 
     payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
     positions_fs = OrderPositionsFormset(initial=initials['positions'] or positions, data=request.POST or None)
-    print_form = PrintOptionsForm(data=request.POST or None, initial=initials['print'])
+    print_form = PrintOptionsForm(data=request.POST or None, initial=initials['print'], burial=burial)
     try:
         env = Env.objects.get()
         org = Organization.objects.get(uuid=env.uuid)
