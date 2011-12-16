@@ -219,6 +219,7 @@ class AddressForm(ModelAutoTabIndex):
         flat = cd.get("flat", "")
 
         new_country = new_region = new_city = new_street = False
+        country_object = region_object = city_object = None
 
         if country.strip('.,() *'):
             # Страна.
@@ -244,9 +245,9 @@ class AddressForm(ModelAutoTabIndex):
             if new_country and not cd.get("new_region", False):
                 raise forms.ValidationError("У новой страны регион должен быть тоже новым.")
             try:
-                region_object = GeoRegion.objects.get(country__name__iexact=country, name__iexact=region)
+                region_object = GeoRegion.objects.get(country=country_object, name__iexact=region)
             except MultipleObjectsReturned:
-                region_object = GeoRegion.objects.filter(country__name__iexact=country, name__iexact=region)[0]
+                region_object = GeoRegion.objects.filter(country=country_object, name__iexact=region)[0]
             except ObjectDoesNotExist:
                 if not cd.get("new_region"):
                     raise forms.ValidationError("Регион не найден.")
@@ -265,9 +266,9 @@ class AddressForm(ModelAutoTabIndex):
             if new_region and not cd.get("new_city"):
                 raise forms.ValidationError("У нового региона нас. пункт должен быть тоже новым.")
             try:
-                city_object = GeoCity.objects.get(region__name__iexact=region, name__iexact=city)
+                city_object = GeoCity.objects.get(region=region_object, name__iexact=city)
             except MultipleObjectsReturned:
-                city_object = GeoCity.objects.filter(region__name__iexact=region, name__iexact=city)[0]
+                city_object = GeoCity.objects.filter(region=region_object, name__iexact=city)[0]
             except ObjectDoesNotExist:
                 if not cd.get("new_city"):
                     raise forms.ValidationError("Нас. пункт не найден.")
@@ -283,10 +284,11 @@ class AddressForm(ModelAutoTabIndex):
             # Улица.
             if new_city and not cd.get("new_street"):
                 raise forms.ValidationError("У нового нас. пункта улица должна быть тоже новой.")
+
             try:
-                street_object = Street.objects.get(city__name__iexact=city, name__iexact=street)
+                street_object = Street.objects.get(city=city_object, name__iexact=street)
             except MultipleObjectsReturned:
-                street_object = Street.objects.filter(city__name__iexact=city, name__iexact=street)[0]
+                street_object = Street.objects.filter(city=city_object, name__iexact=street)[0]
             except ObjectDoesNotExist:
                 if not cd.get("new_street", False):
                     raise forms.ValidationError("Улица не найдена.")
