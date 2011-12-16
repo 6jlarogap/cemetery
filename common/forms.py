@@ -300,9 +300,18 @@ class AddressForm(ModelAutoTabIndex):
                     raise forms.ValidationError("Не указан дом.")
         return cd
 
+    def is_valid(self, *args, **kwargs):
+        valid = super(AddressForm, self).is_valid(*args, **kwargs)
+        if not self.data.get('%s-country' % self.prefix) \
+           and not self.data.get('%s-region' % self.prefix) \
+           and not self.data.get('%s-city' % self.prefix):
+            self.cleaned_data = None
+            return True
+        return valid
+
     def save(self, *args, **kwargs):
-        if not self.is_valid():
-            return
+        if not self.is_valid() or not self.cleaned_data:
+            return None
 
         cd = self.cleaned_data
 
