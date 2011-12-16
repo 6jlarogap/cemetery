@@ -574,7 +574,7 @@ def edit_burial(request, uuid):
         'dover_date': burial.doverennost and burial.doverennost.date or '',
         'dover_expire': burial.doverennost and burial.doverennost.expire or '',
     }
-    form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None, initial=initial)
+    form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None, initial=initial, instance=burial)
     location_form = AddressForm(prefix='address', data=request.POST or None, instance=burial.customer.location)
     registration_form = AddressForm(prefix='registration', data=request.POST or None, instance=burial.person.location)
     responsible_form = AddressForm(

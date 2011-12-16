@@ -492,6 +492,7 @@ class JournalForm(AutoTabIndex):
     def __init__(self, *args, **kwargs):
         cem = kwargs.pop('cem', None)
         oper = kwargs.pop('oper', None)
+        self.instance = kwargs.pop('instance', None)
 
         data = kwargs.get('data') or {}
         if 'dover_number' in data and not data.get('dover_number'):
@@ -566,6 +567,11 @@ class JournalForm(AutoTabIndex):
                                                        p_type=settings.PLACE_PRODUCTTYPE_ID)
         except:
             raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
+
+        if not self.instance:
+            if spo.operation.op_type in [u'Захоронение в существующую', u'Подзахоронение к существующей']:
+                if not cd.get('seat'):
+                    raise forms.ValidationError(u"Нужно указать номер могилы")
 
         if not cd.get("account_book_n"):
             cd["account_book_n"] = ''
