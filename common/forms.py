@@ -827,6 +827,17 @@ class CemeteryForm(forms.Form):
     building = forms.CharField(required=False, max_length=16, label="Строение")
     info = forms.CharField(required=False, widget=forms.Textarea, label=u"Доп. инфо")
 
+    def clean_name(self):
+        if not self.initial.get('name'):
+            try:
+                Cemetery.objects.get(name=self.cleaned_data['name'])
+            except Cemetery.DoesNotExist:
+                return self.cleaned_data['name']
+            except Cemetery.MultipleObjectsReturned:
+                pass
+            raise forms.ValidationError(u"Такое кладбище уже есть")
+        return self.cleaned_data['name']
+
     def clean(self):
         cd = self.cleaned_data
         country = cd.get("country", "")

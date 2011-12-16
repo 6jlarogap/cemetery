@@ -1137,6 +1137,7 @@ def management_cemetery(request):
             cemetery.name = cd["name"]
             cemetery.creator = request.user.userprofile.soul
             cemetery.save()
+
             location_street = cd.get("street", "")
             location_city = cd.get("city", "")
             location_region = cd.get("region", "")
@@ -1191,7 +1192,13 @@ def management_cemetery(request):
             location.save()
             return redirect("/management/cemetery/")
     else:
-        form = CemeteryForm()
+        try:
+            env = Env.objects.get()
+            organization = Organization.objects.get(uuid=env.uuid)
+        except:
+            organization = None
+            env = None
+        form = CemeteryForm(initial={'organization': organization})
     cemeteries = Cemetery.objects.all()
     return direct_to_template(request, 'management_add_cemetery.html',
                               {'form': form,
@@ -1213,8 +1220,26 @@ def management_edit_cemetery(request, uuid):
         cemetery = Cemetery.objects.get(uuid=uuid)
     except ObjectDoesNotExist:
         raise Http404
+    initial_data = {
+        "organization": cemetery.organization,
+        "name": cemetery.name,
+        "info": cemetery.location.info,
+        }
+    if cemetery.location.street:
+        initial_data["country"] = cemetery.location.street.city.country.name
+        initial_data["region"] = cemetery.location.street.city.region.name
+        initial_data["city"] = cemetery.location.street.city.name
+        initial_data["street"] = cemetery.location.street.name
+        if cemetery.location.house:
+            initial_data["house"] = cemetery.location.house
+        if cemetery.location.block:
+            initial_data["block"] = cemetery.location.block
+        if cemetery.location.building:
+            initial_data["building"] = cemetery.location.building
+    if cemetery.location.post_index:
+        initial_data["post_index"] = cemetery.location.post_index
     if request.method == "POST":
-        form = CemeteryForm(request.POST)
+        form = CemeteryForm(request.POST, initial=initial_data)
         if form.is_valid():
             location = cemetery.location
             cd = form.cleaned_data
@@ -1229,6 +1254,8 @@ def management_edit_cemetery(request, uuid):
             location_block = cd.get("block", "")
             location_building = cd.get("building", "")
             location_post_index = cd.get("post_index", "")
+
+            """
             # Очищаем Location.
             location.street = None
             location.house = ""
@@ -1236,6 +1263,7 @@ def management_edit_cemetery(request, uuid):
             location.building = ""
             location.flat = ""
 #            location.save()
+            """
             if location_city and location_region and location_country:
                 # Есть все для создания непустого Location.
                 # Страна.
@@ -1282,25 +1310,6 @@ def management_edit_cemetery(request, uuid):
             location.save()
             return redirect('/management/cemetery/')
     else:
-        initial_data = {
-            "organization": cemetery.organization,
-            "name": cemetery.name,
-            "info": cemetery.location.info,
-
-        }
-        if cemetery.location.street:
-            initial_data["country"] = cemetery.location.street.city.country.name
-            initial_data["region"] = cemetery.location.street.city.region.name
-            initial_data["city"] = cemetery.location.street.city.name
-            initial_data["street"] = cemetery.location.street.name
-            if cemetery.location.house:
-                initial_data["house"] = cemetery.location.house
-            if cemetery.location.block:
-                initial_data["block"] = cemetery.location.block
-            if cemetery.location.building:
-                initial_data["building"] = cemetery.location.building
-        if cemetery.location.post_index:
-            initial_data["post_index"] = cemetery.location.post_index
         form = CemeteryForm(initial=initial_data)
     return direct_to_template(request, 'management_edit_cemetery.html',
                               {'form': form,})
