@@ -35,6 +35,20 @@
                 }
             }
             $(function() { $('input').attr('autocomplete', 'off'); });
+
+            logoff_timer = 0;
+            if (top.location.href.search('/login/') == -1) {
+                setInterval(function() {
+                    if (logoff_timer > 3600) {
+                        top.location = '/logout/';
+                    }
+                    logoff_timer += 60;
+                }, 60000);
+            }
+
+            $(document).mousemove(function() {
+                logoff_timer = 0;
+            });
         </script>
 
 {% block scripts %}{% endblock %}

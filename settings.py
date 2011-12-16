@@ -158,6 +158,9 @@ SENTRY_TESTING = True
 
 #DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False}
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 3600
+
 try:
     from settings_local import *
 except ImportError:
