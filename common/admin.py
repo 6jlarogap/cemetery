@@ -91,8 +91,14 @@ class CemeteryAdmin(admin.ModelAdmin):
 class LocationAdmin(admin.ModelAdmin):
     raw_id_fields = ['street', ]
 
+class GeoAdmin(admin.ModelAdmin):
+    ordering = ['name', ]
+    search_fields = ['name', ]
+
 class StreetAdmin(admin.ModelAdmin):
     raw_id_fields = ['city', ]
+    ordering = ['name', ]
+    search_fields = ['name', ]
 
 class MetroAdmin(admin.ModelAdmin):
     raw_id_fields = ['city', ]
@@ -141,8 +147,8 @@ admin.site.register(ProductType)
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(Cemetery, CemeteryAdmin)
 admin.site.register(Location, LocationAdmin)
-admin.site.register(GeoCountry)
-admin.site.register(GeoCity)
+admin.site.register(GeoCountry, GeoAdmin)
+admin.site.register(GeoCity, GeoAdmin)
 admin.site.register(Street, StreetAdmin)
 admin.site.register(Metro, MetroAdmin)
 admin.site.register(ProductComments, ProductCommentsAdmin)
@@ -153,7 +159,7 @@ admin.site.register(Phone, PhoneAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(ProductFiles, ProductFilesAdmin)
 admin.site.register(Product, ProductAdmin)
-admin.site.register(GeoRegion)
+admin.site.register(GeoRegion, GeoAdmin)
 admin.site.register(DeathCertificate, DeathCertificateAdmin)
 admin.site.register(ZAGS)
 admin.site.register(IDDocumentType)
