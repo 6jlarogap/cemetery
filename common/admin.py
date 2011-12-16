@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+from django import forms
 from common.models import *
 
 class PersonAdmin(admin.ModelAdmin):

@@ -56,6 +56,8 @@
 $(function(){
     $('#id_rooms, #id_rooms_free').css('width', '30px');
 
+    $('#id_organization').css('width', '420px');
+
     var CALENDAR_ICON = '/admin_media/img/admin/icon_calendar.gif';
     var CLOCK_IMAGE = '/admin_media/img/admin/icon_clock.gif';
 
@@ -471,11 +473,11 @@ $(function(){
                     <td class="free_form">{{ form.opf.errors }}{{ form.opf }}</td>
                 </tr>
                 <tr class="opf_yurik">
-                    <td class="free_form opf_yurik">{{ form.organization.label_tag }}</td>
+                    <td class="free_form opf_yurik" colspan="2">{{ form.organization.label_tag }}</td>
                     <td class="free_form opf_yurik">{{ form.agent_director.label_tag }}</td>
                 <tr>
                 <tr class="opf_yurik">
-                    <td class="free_form opf_yurik">{{ form.organization.errors }}{{ form.organization }}</td>
+                    <td class="free_form opf_yurik" colspan="2">{{ form.organization.errors }}{{ form.organization }}</td>
                     <td class="free_form opf_yurik">{{ form.agent_director.errors }}{{ form.agent_director }}</td>
                 <tr>
                 <tr class="opf_yurik agent">
