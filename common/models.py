@@ -662,6 +662,12 @@ class Place(Product):
         if self.seat:
             self.seat = self.seat.lower()
 
+        if self.rooms is None:
+            self.rooms = 1
+
+        if self.rooms_free is None:
+            self.rooms_free = 0
+
         self.split_parts(self)
 
         Burial.objects.filter(product__place=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
