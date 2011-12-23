@@ -813,7 +813,10 @@ class Burial(Order):
         if self.print_info:
             data = simplejson.loads(self.print_info)
             for p in data['positions'] or []:
-                p['order_product'] = OrderProduct.objects.get(name=p['order_product'])
+                try:
+                    p['order_product'] = OrderProduct.objects.get(name=p['order_product'])
+                except OrderProduct.DoesNotExist:
+                    pass
             return data
         else:
             return {
