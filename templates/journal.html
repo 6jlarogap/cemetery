@@ -63,8 +63,7 @@ $(function(){
 
     $.datepicker.setDefaults($.datepicker.regional['']);
     var now = new Date();
-    var now_year = now.year;
-    if (now.getMonth() > 10 && now.getDate() > 20) { now_year += 1; }
+    var now_year = now.getFullYear();
     $('input[name$=date],input[name$=expire],input[name$=when]').css('width', '100px').datepicker({
         dateFormat: 'dd.mm.yy',
         changeMonth: true,
@@ -77,6 +76,10 @@ $(function(){
         buttonImage: CALENDAR_ICON,
         buttonImageOnly: true
     });
+    if (now.getMonth() == 11 && now.getDate() > 20) {
+        $('input#id_burial_date').datepicker('option', 'yearRange', '1900:' +  (now_year + 1));
+    }
+
     $('input[name$=time]').each(function() {
         var btn_id = $(this).attr('id') + '_button';
         var img = $('<img src="'+CLOCK_IMAGE+'"/>').attr('id', btn_id).insertAfter($(this));
