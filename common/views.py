@@ -802,7 +802,8 @@ def print_burial(request, uuid):
     initials = burial.get_print_info()
 
     if initials:
-        ip = [p for p in initials.setdefault('positions', [])]
+        pos_list = initials.setdefault('positions', []) or []
+        ip = [p for p in pos_list]
 
         for idx,p in enumerate(positions):
             found = False
