@@ -807,7 +807,7 @@ def print_burial(request, uuid):
 
         for idx,p in enumerate(positions):
             found = False
-            for i in initials.get('positions', []):
+            for i in initials.get('positions', []) or []:
                 try:
                     n = i['order_product'].name
                 except AttributeError:
@@ -821,7 +821,7 @@ def print_burial(request, uuid):
             if not found:
                 ip.append(p)
 
-        for idx,i in enumerate(initials.setdefault('positions', [])):
+        for idx,i in enumerate(initials.setdefault('positions', []) or []):
             found = False
             for p in positions:
                 try:
