@@ -556,6 +556,7 @@ def edit_burial(request, uuid):
         'seat': burial.product.place.seat,
         'rooms': burial.product.place.rooms or 1,
         'rooms_free': burial.product.place.rooms_free or 0,
+        'family_burial': burial.product.place.count_burials() > 1,
         'customer_last_name': burial.customer.person.last_name,
         'customer_first_name': burial.customer.person.first_name,
         'customer_patronymic': burial.customer.person.patronymic,
@@ -612,17 +613,42 @@ def edit_burial(request, uuid):
     if everything_valid:
         cd = form.cleaned_data
 
-        place = burial.product.place
-        place.cemetery = cd["cemetery"]
-        place.area = cd["area"]
-        place.row = cd["row"]
-        place.seat = cd["seat"]
-        place.rooms = cd["rooms"] or 1
-        place.rooms_free = cd["rooms_free"] or 0
-        place.soul = cd["cemetery"].organization.soul_ptr
-        place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
-        place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
-        place.save()
+        if request.POST.get('split_burial'):
+            burial.product.place.rooms -= 1
+            burial.product.place.save()
+
+            place = Place(creator=request.user.userprofile.soul)
+            place.rooms = 1
+            place.rooms_free = 0
+
+            place.cemetery = cd["cemetery"]
+            place.area = cd["area"]
+            place.row = cd["row"]
+            place.seat = None
+
+            place.soul = cd["cemetery"].organization.soul_ptr
+            place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
+            place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
+
+            place.generate_seat()
+
+            place.save()
+
+            burial.product = place.product_ptr
+            burial.save()
+        else:
+            place.rooms = cd["rooms"] or 1
+            place.rooms_free = cd["rooms_free"] or 0
+            place = burial.product.place
+
+            place.cemetery = cd["cemetery"]
+            place.area = cd["area"]
+            place.row = cd["row"]
+            place.seat = cd["seat"]
+
+            place.soul = cd["cemetery"].organization.soul_ptr
+            place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
+            place.save()
 
         # Create new Person for dead man.
         new_person = burial.person

@@ -191,11 +191,11 @@ class Location(models.Model):
                 addr += u', %s' % self.info
 
             if addr:
-                addr += u', %s' % (self.city or self.street.city)
+                addr += u', %s' % (self.city or self.street and self.street.city or '')
             else:
-                addr += u'%s' % (self.city or self.street.city)
-            addr += u', %s' % (self.region or self.street.city.region)
-            addr += u', %s' % (self.country or self.street.city.region.country)
+                addr += u'%s' % (self.city or self.street and self.street.city or '')
+            addr += u', %s' % (self.region or self.street and self.street.city.region or '')
+            addr += u', %s' % (self.country or self.street and self.street.city.region.country or '')
             return addr.replace(', ,', ', ')
         else:
             return u"незаполненный адрес"
@@ -675,7 +675,7 @@ class Place(Product):
 
     def generate_seat(self):
         y = str(datetime.date.today().year)
-        max_seat = str(Place.objects.filter(cemetery=self.cemetery).aggregate(models.Max('seat'))['seat__max']) or ''
+        max_seat = str(Place.objects.filter(cemetery=self.cemetery, seat__startswith=y).aggregate(models.Max('seat'))['seat__max']) or ''
         if max_seat.startswith(y):
             current_seat = int(float(max_seat)) + 1
         else:

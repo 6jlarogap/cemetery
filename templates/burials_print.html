@@ -48,7 +48,7 @@
 	        <td>{{ b.product.place.seat }}</td>
 	        <td>{{ b.product.place.cemetery.name }}</td>
 	        <td>{{ b.product.place.rooms_occupied|default:1 }}/{{ b.product.place.rooms_free }}</td>
-            <td>{{ b.person.location }}</td>
+            <td>{{ b.person.location|default:"неизвестен" }}</td>
 	        {% if b.responsible_agent %}
                 <td>
                     {{ b.responsible_agent.organization }}<br/>
