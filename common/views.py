@@ -637,9 +637,10 @@ def edit_burial(request, uuid):
             burial.product = place.product_ptr
             burial.save()
         else:
+            place = burial.product.place
+
             place.rooms = cd["rooms"] or 1
             place.rooms_free = cd["rooms_free"] or 0
-            place = burial.product.place
 
             place.cemetery = cd["cemetery"]
             place.area = cd["area"]
