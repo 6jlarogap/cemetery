@@ -12,7 +12,7 @@ chown -R www-data:www-data /home/django/projects
 cp configs/postgres/pg_hba.conf /etc/postgresql/8.4/main/
 chown postgres:postgres /etc/postgresql/8.4/main/pg_hba.conf
 chmod 640 /etc/postgresql/8.4/main/pg_hba.conf
-/etc/init.d/postgresql restart || echo 'postgres restart failed' && exit 1
+/etc/init.d/postgresql-8.4 restart || echo 'postgres restart failed' && exit 1
 #Nginx
 cp -R configs/nginx/fastcgi_params /etc/nginx/
 chown root:root /etc/nginx/fastcgi_params
