@@ -22,10 +22,10 @@ chown root:root /etc/nginx/sites-available/cemetery
 chmod 644 /etc/nginx/sites-available/cemetery
 ln -s /etc/nginx/sites-available/cemetery /etc/nginx/sites-enabled/
 #User for admin
-adduser --disabled-password --gecos "" soul
-usermod -G admin soul
-usermod -p '$1$KQwQ4Rq7$CtkUF2cjpb9raBQZPjy4J0' soul
-mkdir /home/soul/.ssh
+#adduser --disabled-password --gecos "" soul
+#usermod -G admin soul
+#usermod -p '$1$KQwQ4Rq7$CtkUF2cjpb9raBQZPjy4J0' soul
+mkdir -p /home/soul/.ssh
 chown soul:soul /home/soul/.ssh
 chmod 700 /home/soul/.ssh
 cat configs/soul.pub >> /home/soul/.ssh/authorized_keys
