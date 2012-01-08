@@ -1,7 +1,7 @@
 #! /bin/bash
 
 PACKAGES="	acpid
-		git
+		git-core
 		htop
 		links
 		mc
