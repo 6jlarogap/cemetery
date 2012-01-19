@@ -58,10 +58,10 @@ mkdir -p /var/cemetery/terminal
 chown -R www-data:www-data /var/cemetery
 chmod 777 /var/cemetery/terminal
 #--configs
-cp configs/ubuntu/etc/network/interfaces /etc/network/interfaces
-chown root:root /etc/network/interfaces
-chmod 644 /etc/network/interfaces
-/etc/init.d/networking restart
+#cp configs/ubuntu/etc/network/interfaces /etc/network/interfaces
+#chown root:root /etc/network/interfaces
+#chmod 644 /etc/network/interfaces
+#/etc/init.d/networking restart
 cp configs/ubuntu/etc/samba/smb.conf /etc/samba/smb.conf
 chown root:root /etc/samba/smb.conf
 chmod 644 /etc/samba/smb.conf
