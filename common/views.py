@@ -950,6 +950,16 @@ def print_burial(request, uuid):
                 'org': org,
             })
 
+        catafalque_release = ('_____', '_____',)
+        catafalque_time = ('_____', '_____',)
+        if print_form.cleaned_data.get('catafalque_time'):
+            try:
+                catafalque_hours = filter(lambda p: u'автокатафалк' in p['order_product'].name.lower(), positions)[0]['count']
+            except IndexError:
+                catafalque_hours = 0
+            catafalque_time = map(int, print_form.cleaned_data.get('catafalque_time').split(':'))
+            catafalque_release = [catafalque_time[0] + int(catafalque_hours), catafalque_time[1]]
+
         return direct_to_template(request, 'reports/act.html', {
             'burial': burial,
             'burial_creator': burial_creator or spaces,
@@ -961,8 +971,10 @@ def print_burial(request, uuid):
             'now': datetime.datetime.now(),
             'org': org,
             'catafalque_route': print_form.cleaned_data.get('catafalque_route') or '',
-            'catafalque_time': print_form.cleaned_data.get('catafalque_time') or '',
             'catafalque_start': print_form.cleaned_data.get('catafalque_start') or '',
+            'catafalque_time': catafalque_time and ':'.join(map(str, catafalque_time)) or '',
+            'catafalque_release': catafalque_release and ':'.join(map(str, catafalque_release)) or '',
+            'catafalque_hours': int(catafalque_hours),
             'coffin_size': print_form.cleaned_data.get('coffin_size') or '',
             'print_now': print_form.cleaned_data.get('print_now'),
         })

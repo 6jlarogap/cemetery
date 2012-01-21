@@ -102,15 +102,15 @@
 			<TD COLSPAN="9" STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Маршрут движения с/транспорта: {{ catafalque_route|default:"" }}</FONT></TD>
 			</TR>
 		<TR>
-            <TD COLSPAN="3" STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> время подачи с/транспорта {{ catafalque_time|time:"H:i"|default:"" }}</FONT></TD>
+            <TD COLSPAN="3" STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> время подачи с/транспорта {{ catafalque_time|default:"" }}</FONT></TD>
             <TD COLSPAN="6" STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 0" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">место подачи с/транспорта {{ catafalque_start|default:"" }}</FONT></TD>
 			</TR>
 		<TR>
-			<TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000" COLSPAN=9 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время отпуска с/транспорта клиентом   в _____ ч______мин.</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000" COLSPAN=9 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время отпуска с/транспорта клиентом   в {{ catafalque_release|default:"" }}</FONT></TD>
 			</TR>
 		<TR>
 			<TD COLSPAN="5" STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время заезда а/к на кладбище     _____ ч______мин.</FONT></TD>
-			<TD COLSPAN="4" STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время захоронения умершего    _____ ч______мин.</FONT></TD>
+			<TD COLSPAN="4" STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время захоронения умершего    {{ burial.date_fact|default:burial.date_plan|time:"H" }}ч {{ burial.date_fact|default:burial.date_plan|time:"i" }}мин.</FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=40 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">№ п/п</FONT></TD>
@@ -392,15 +392,15 @@
 			<TD COLSPAN="9" STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Маршрут движения с/транспорта: {{ catafalque_route|default:"" }}</FONT></TD>
 			</TR>
 		<TR>
-            <TD COLSPAN="3" STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> время подачи с/транспорта {{ catafalque_time|time:"H:i"|default:"" }}</FONT></TD>
+            <TD COLSPAN="3" STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"> время подачи с/транспорта {{ catafalque_time|default:"" }}</FONT></TD>
             <TD COLSPAN="6" STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 0" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">место подачи с/транспорта {{ catafalque_start|default:"" }}</FONT></TD>
 			</TR>
 		<TR>
-			<TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000" COLSPAN=9 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время отпуска с/транспорта клиентом   в _____ ч______мин.</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000" COLSPAN=9 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время отпуска с/транспорта клиентом   в {{ catafalque_release|default:"" }}</FONT></TD>
 			</TR>
 		<TR>
 			<TD COLSPAN="5" STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время заезда а/к на кладбище     _____ ч______мин.</FONT></TD>
-			<TD COLSPAN="4" STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время захоронения умершего    _____ ч______мин.</FONT></TD>
+			<TD COLSPAN="4" STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время захоронения умершего    {{ burial.date_fact|default:burial.date_plan|time:"H" }}ч {{ burial.date_fact|default:burial.date_plan|time:"i" }}мин.</FONT></TD>
 		</TR>
 		<TR>
 			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=40 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">№ п/п</FONT></TD>
@@ -1108,7 +1108,7 @@
 		</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время использования</FONT></TD>
-			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ catafalque_time|time:"H:i"|default:"" }}</FONT></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ catafalque_time|default:"__________________" }} / {{ catafalque_hours }} {{ catafalque_hours|choose_plural:"час,часа,часов" }}</FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
 			<TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
