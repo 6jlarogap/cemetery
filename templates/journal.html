@@ -244,6 +244,13 @@ $(function(){
 
     $(':input[name$=-house], :input[name$=-block], :input[name$=-building], :input[name$=-flat]').css('width', '40px');
 
+    $("input:text[id$=-who]").autocomplete({
+        source: '{% url get_passport_sources %}',
+        minLength: 1,
+        delay: 100
+    });
+
+
 })
 </script>
 {% endblock %}

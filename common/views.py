@@ -1917,6 +1917,14 @@ def get_dover(request):
     return HttpResponse(JSONEncoder().encode(rez))
 
 @login_required
+def get_passport_sources(request):
+    docs = PersonID.objects.all()
+    q = request.GET.get('term', None)
+    if q:
+        docs = docs.filter(who__istartswith=q)
+    return HttpResponse(simplejson.dumps(list(docs.values_list('who', flat=True).distinct())))
+
+@login_required
 def get_street(request):
     """
     Получение улицы с городом, регионом и страной.

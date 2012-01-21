@@ -40,6 +40,7 @@ urlpatterns += patterns('common.views',
 
     # доверенности
     url(r'^getdover/$', 'get_dover', name='get_dover'),
+    url(r'^getpassportsources/$', 'get_passport_sources', name='get_passport_sources'),
 
     # Уникальный список фамилий заказчиков.
     url(r'^getpersonunln/$', 'get_customer_ln'),
