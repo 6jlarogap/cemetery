@@ -599,7 +599,7 @@ class JournalForm(AutoTabIndex):
             pass
         else:
             if b.responsible_customer:
-                r = b.responsible_customer
+                r = b.responsible_customer.person
                 if cd['responsible_myself']:
                     new_r = Person(
                         last_name=cd['customer_last_name'],
