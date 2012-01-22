@@ -590,6 +590,19 @@ class JournalForm(AutoTabIndex):
             if cd["rooms"] <= place.count_burials():
                 raise forms.ValidationError("Нет свободного места в ограде")
 
+        try:
+            burials = Burial.objects.exclude(account_book_n=self.cleaned_data['account_book_n'])
+            b = burials.filter(product__place__seat = self.cleaned_data['seat'])[0]
+        except IndexError:
+            pass
+        else:
+            responsible = self.cleaned_data['responsible_myself'] and b.customer or b.responsible_customer
+            if responsible:
+                responsible = responsible.person
+                if self.cleaned_data['responsible_last_name'] != responsible.last_name or \
+                   self.cleaned_data['responsible_first_name'] != responsible.first_name or \
+                   self.cleaned_data['responsible_patronymic'] != responsible.patronymic:
+                    raise forms.ValidationError(u"Ответственный за все родственные захоронения должен быть один: %s" % responsible)
         return cd
 
 class CertificateForm(forms.ModelForm):
