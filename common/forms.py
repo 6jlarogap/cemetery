@@ -600,7 +600,20 @@ class JournalForm(AutoTabIndex):
         else:
             if b.responsible_customer:
                 r = b.responsible_customer
-                if cd['responsible_last_name'] != r.last_name or cd['responsible_first_name'] != r.first_name or cd['responsible_patronymic'] != r.patronymic:
+                if cd['responsible_myself']:
+                    new_r = Person(
+                        last_name=cd['customer_last_name'],
+                        first_name=cd['customer_first_name'],
+                        patronymic=cd['customer_patronymic'],
+                    )
+                else:
+                    new_r = Person(
+                        last_name=cd['responsible_last_name'],
+                        first_name=cd['responsible_first_name'],
+                        patronymic=cd['responsible_patronymic'],
+                    )
+
+                if new_r.last_name != r.last_name or new_r.first_name != r.first_name or new_r.patronymic != r.patronymic:
                     raise forms.ValidationError(u"Ответственный за все родственные захоронения должен быть один: %s" % r)
         return cd
 
