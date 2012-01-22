@@ -10,7 +10,6 @@ from django.http import Http404, HttpResponseForbidden, HttpResponse, HttpRespon
 from django.views.generic.simple import direct_to_template
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
-#from django.utils import simplejson
 from django.utils.simplejson.encoder import JSONEncoder
 from django.forms.models import modelformset_factory
 from django import db
@@ -24,6 +23,7 @@ from common.models import *
 from simplepagination import paginate
 from annoying.decorators import render_to
 
+import math
 import re
 import datetime
 import time
@@ -960,6 +960,13 @@ def print_burial(request, uuid):
             catafalque_time = map(int, print_form.cleaned_data.get('catafalque_time').split(':'))
             catafalque_release = [catafalque_time[0] + int(catafalque_hours), catafalque_time[1]]
 
+        if catafalque_hours:
+            hours = math.floor(catafalque_hours)
+            minutes = math.floor((float(catafalque_hours) - math.floor(catafalque_hours)) * 60)
+            catafalque_hours =  datetime.time(int(hours), int(minutes)).strftime('%H:%M').lstrip('0')
+        else:
+            catafalque_hours = None
+
         return direct_to_template(request, 'reports/act.html', {
             'burial': burial,
             'burial_creator': burial_creator or spaces,
@@ -974,7 +981,7 @@ def print_burial(request, uuid):
             'catafalque_start': print_form.cleaned_data.get('catafalque_start') or '',
             'catafalque_time': catafalque_time and ':'.join(map(str, catafalque_time)) or '',
             'catafalque_release': catafalque_release and ':'.join(map(str, catafalque_release)) or '',
-            'catafalque_hours': int(catafalque_hours),
+            'catafalque_hours': catafalque_hours,
             'coffin_size': print_form.cleaned_data.get('coffin_size') or '',
             'print_now': print_form.cleaned_data.get('print_now'),
         })
