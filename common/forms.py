@@ -1063,22 +1063,6 @@ class PrintOptionsForm(forms.Form):
         self.burial = kwargs.pop('burial')
         super(PrintOptionsForm, self).__init__(*args, **kwargs)
 
-    """
-    def clean_catafalque_start(self):
-        if not self.data.get('catafalque'):
-            return self.cleaned_data['catafalque_start']
-        if self.cleaned_data['catafalque_start'] > self.burial.date_fact:
-            raise forms.ValidationError(u'Время подачи должно быть прежде времени захоронения')
-        return self.cleaned_data['catafalque_start']
-
-    def clean(self):
-        if not self.cleaned_data.get('catafalque'):
-            return self.cleaned_data
-        cat_finish = self.cleaned_data['catafalque_start'] + datetime.timedelta(0, 3600 * self.cleaned_data['catafalque_time'])
-        if cat_finish < self.burial.date_fact:
-            raise forms.ValidationError(u'Время подачи + время а/к должно быть позже времени захоронения')
-        return self.cleaned_data
-    """
 
 class IDForm(forms.ModelForm):
     who = forms.CharField(label=u"Кем выдан")

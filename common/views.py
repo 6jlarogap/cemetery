@@ -976,6 +976,9 @@ def print_burial(request, uuid):
         else:
             catafalque_hours = None
 
+        if catafalque_time:
+            catafalque_time = datetime.time(*catafalque_time)
+
         if not time_check_failed:
             return direct_to_template(request, 'reports/act.html', {
                 'burial': burial,
@@ -989,7 +992,7 @@ def print_burial(request, uuid):
                 'org': org,
                 'catafalque_route': print_form.cleaned_data.get('catafalque_route') or '',
                 'catafalque_start': print_form.cleaned_data.get('catafalque_start') or '',
-                'catafalque_time': catafalque_time and ':'.join(map(str, catafalque_time)) or '',
+                'catafalque_time': catafalque_time and (u' ч. '.join(catafalque_time.strftime(u'%H %M').lstrip('0').split(' ')) + u' мин.') or '',
                 'catafalque_hours': catafalque_hours and (u' ч. '.join(catafalque_hours.strftime(u'%H %M').lstrip('0').split(' ')) + u' мин.') or '',
                 'coffin_size': print_form.cleaned_data.get('coffin_size') or '',
                 'print_now': print_form.cleaned_data.get('print_now'),
