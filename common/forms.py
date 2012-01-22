@@ -592,9 +592,8 @@ class JournalForm(AutoTabIndex):
 
         try:
             burials = Burial.objects.exclude(account_book_n=self.cleaned_data['account_book_n'])
-            burials = burials.exclude(responsible_customer__person__last_name=UNKNOWN_NAME)
-            burials = burials.exclude(responsible_customer__person__last_name__startswith='*')
             burials = burials.filter(responsible_customer__isnull=False, product__place__seat=self.cleaned_data['seat'])
+            burials = [b for b in burials if b.responsible_customer.person.last_name != UNKNOWN_NAME and not b.responsible_customer.person.last_name.startswith('*')]
             b = burials[0]
         except IndexError:
             pass
