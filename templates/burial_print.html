@@ -126,6 +126,17 @@
                     <h2>Катафалк</h2>
                 </td>
             </tr>
+            {% if time_check_failed %}
+                <tr>
+                    <td colspan="6">
+                        <h3 class="error">
+                            Время захоронения не попадает в промежуток между подачей и освобождением катафалка.
+                            <br/>
+                            <input type="checkbox" name="skip_time_check" value="on" /> все верно, так и должно быть
+                        </h3>
+                    </td>
+                </tr>
+            {% endif %}
             <tr>
                 <td colspan="3">
                     {{ print_form.catafalque_route.label_tag }}

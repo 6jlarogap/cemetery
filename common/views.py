@@ -875,6 +875,8 @@ def print_burial(request, uuid):
     except (Env.DoesNotExist, Organization.DoesNotExist):
         org = None
 
+    time_check_failed = False
+
     print_positions = []
     if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
         burial.set_print_info({
@@ -958,39 +960,47 @@ def print_burial(request, uuid):
             except IndexError:
                 catafalque_hours = 0
             catafalque_time = map(int, print_form.cleaned_data.get('catafalque_time').split(':'))
-            catafalque_release = [catafalque_time[0] + int(catafalque_hours), catafalque_time[1]]
 
         if catafalque_hours:
             hours = math.floor(catafalque_hours)
             minutes = math.floor((float(catafalque_hours) - math.floor(catafalque_hours)) * 60)
-            catafalque_hours =  datetime.time(int(hours), int(minutes)).strftime('%H:%M').lstrip('0')
+            catafalque_hours = datetime.time(int(hours), int(minutes))
+
+            if catafalque_time:
+                delta = datetime.timedelta(0, catafalque_hours.hour * 3600 + catafalque_hours.minute * 60)
+                catafalque_release = datetime.datetime(burial.date_fact.year, burial.date_fact.month, burial.date_fact.day, *catafalque_time) + delta
+
+                if burial.date_fact.time() < datetime.time(*catafalque_time) or catafalque_release.time() < burial.date_fact.time():
+                    if not request.REQUEST.get('skip_time_check'):
+                        time_check_failed = True
         else:
             catafalque_hours = None
 
-        return direct_to_template(request, 'reports/act.html', {
-            'burial': burial,
-            'burial_creator': burial_creator or spaces,
-            'positions': positions,
-            'print_positions': print_positions,
-            'total': float(sum([p['sum'] for p in positions])),
-            'catafalque': print_form.cleaned_data.get('catafalque'),
-            'graving': print_form.cleaned_data.get('graving'),
-            'now': datetime.datetime.now(),
-            'org': org,
-            'catafalque_route': print_form.cleaned_data.get('catafalque_route') or '',
-            'catafalque_start': print_form.cleaned_data.get('catafalque_start') or '',
-            'catafalque_time': catafalque_time and ':'.join(map(str, catafalque_time)) or '',
-            'catafalque_release': catafalque_release and ':'.join(map(str, catafalque_release)) or '',
-            'catafalque_hours': catafalque_hours,
-            'coffin_size': print_form.cleaned_data.get('coffin_size') or '',
-            'print_now': print_form.cleaned_data.get('print_now'),
-        })
+        if not time_check_failed:
+            return direct_to_template(request, 'reports/act.html', {
+                'burial': burial,
+                'burial_creator': burial_creator or spaces,
+                'positions': positions,
+                'print_positions': print_positions,
+                'total': float(sum([p['sum'] for p in positions])),
+                'catafalque': print_form.cleaned_data.get('catafalque'),
+                'graving': print_form.cleaned_data.get('graving'),
+                'now': datetime.datetime.now(),
+                'org': org,
+                'catafalque_route': print_form.cleaned_data.get('catafalque_route') or '',
+                'catafalque_start': print_form.cleaned_data.get('catafalque_start') or '',
+                'catafalque_time': catafalque_time and ':'.join(map(str, catafalque_time)) or '',
+                'catafalque_hours': catafalque_hours.strftime('%H:%M').lstrip('0'),
+                'coffin_size': print_form.cleaned_data.get('coffin_size') or '',
+                'print_now': print_form.cleaned_data.get('print_now'),
+            })
 
     return direct_to_template(request, 'burial_print.html', {
         'burial': burial,
         'positions_fs': positions_fs,
         'payment_form': payment_form,
         'print_form': print_form,
+        'time_check_failed': time_check_failed,
     })
 
 @login_required
