@@ -201,6 +201,8 @@ admin.site.register(GeoRegion, GeoAdmin)
 admin.site.register(DeathCertificate, DeathCertificateAdmin)
 admin.site.register(ZAGS)
 admin.site.register(IDDocumentType)
+admin.site.register(DocumentSource)
+
 
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Burial, BurialAdmin)

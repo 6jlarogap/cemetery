@@ -1947,11 +1947,11 @@ def get_dover(request):
 
 @login_required
 def get_passport_sources(request):
-    docs = PersonID.objects.all()
+    docs = DocumentSource.objects.all()
     q = request.GET.get('term', None)
     if q:
-        docs = docs.filter(who__istartswith=q)
-    return HttpResponse(simplejson.dumps(list(docs.values_list('who', flat=True).distinct())))
+        docs = docs.filter(name__istartswith=q)
+    return HttpResponse(simplejson.dumps(list(docs.values_list('name', flat=True))))
 
 @login_required
 def get_street(request):

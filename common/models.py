@@ -375,12 +375,18 @@ class Person(Soul):
         verbose_name = (u'физ. лицо')
         verbose_name_plural = (u'физ. лица')
 
+class DocumentSource(models.Model):
+    name = models.CharField(u"Наименование органа", max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
 class PersonID(models.Model):
     person = models.OneToOneField(Person)
     id_type = models.ForeignKey(IDDocumentType, verbose_name=u"Тип документа*")
     series = models.CharField(u"Серия*", max_length=4, null=True)
     number = models.CharField(u"Номер*", max_length=16)
-    who = models.CharField(u"Кем выдан", max_length=255, blank=True, null=True)
+    source = models.ForeignKey(DocumentSource, verbose_name=u"Кем выдан", blank=True, null=True)
     when = models.DateField(u"Дата выдачи", blank=True, null=True)
 
 class ZAGS(models.Model):

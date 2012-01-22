@@ -1081,12 +1081,21 @@ class PrintOptionsForm(forms.Form):
     """
 
 class IDForm(forms.ModelForm):
+    who = forms.CharField(label=u"Кем выдан")
+
     class Meta:
         model = PersonID
         exclude = ['person', ]
         widgets = {
             'when': CalendarWidget,
         }
+
+    def save(self, *args, **kwargs):
+        kwargs['commit'] = False
+        obj = super(IDForm, self).save(*args, **kwargs)
+        obj.source = DocumentSource.objects.get_or_create(name=self.cleaned_data['who'])
+        obj.save()
+        return obj
 
 
 class PhoneForm(forms.ModelForm):

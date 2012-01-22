@@ -67,7 +67,7 @@
     <p class="P11"><span class="Font_20_Style12"><span class="T9"/></span></p><p class="P17"><span class="Font_20_Style11"><span class="T9">{{ burial.responsible_customer.location|default:"__________________________________________" }}</span></span></p>
     <p class="P15">
     {% if burial.responsible_customer.personid %}
-        <span class="T9">{{ burial.responsible_customer.personid.get_id_type_display }}: серия {{ burial.responsible_customer.personid.series }} № {{ burial.responsible_customer.personid.number }}, выдан</span><span class="T10"> </span><span class="T9">{{ burial.customer.personid.when|date:"d.m.Y" }}, </span><span class="Font_20_Style12">{{ burial.responsible_customer.personid.who }}</span>
+        <span class="T9">{{ burial.responsible_customer.personid.get_id_type_display }}: серия {{ burial.responsible_customer.personid.series }} № {{ burial.responsible_customer.personid.number }}, выдан</span><span class="T10"> </span><span class="T9">{{ burial.customer.personid.when|date:"d.m.Y" }}, </span><span class="Font_20_Style12">{{ burial.responsible_customer.personid.source }}</span>
 {% else %}
         <span class="T9">паспорт: серия ___________ № ___________, выдан</span><span class="T10"> </span><span class="T9">____________, </span><span class="Font_20_Style12"><span class="T9">_______________________</span></span><span class="Font_20_Style12"><span class="T10">____________</span></span></p><p class="P15"><span class="Font_20_Style12"><span class="T10">_______________</span></span><span class="Font_20_Style12"><span class="T9">________</span></span><span class="Font_20_Style12"><span class="T10">_________________________</span></span>
 {% endif %}
