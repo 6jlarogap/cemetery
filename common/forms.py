@@ -594,16 +594,14 @@ class JournalForm(AutoTabIndex):
             burials = Burial.objects.exclude(account_book_n=self.cleaned_data['account_book_n'])
             burials = burials.exclude(responsible_customer__person__last_name=UNKNOWN_NAME)
             burials = burials.exclude(responsible_customer__person__last_name__startswith='*')
-            b = burials.filter(responsible_customer__isnull=False, product__place__seat = self.cleaned_data['seat'])[0]
+            b = burials.filter(responsible_customer__isnull=False, product__place__seat=self.cleaned_data['seat'])[0]
         except IndexError:
             pass
         else:
             if b.responsible_customer:
-                responsible = b.responsible_customer.person
-                if self.cleaned_data['responsible_last_name'] != responsible.last_name or \
-                   self.cleaned_data['responsible_first_name'] != responsible.first_name or \
-                   self.cleaned_data['responsible_patronymic'] != responsible.patronymic:
-                    raise forms.ValidationError(u"Ответственный за все родственные захоронения должен быть один: %s" % responsible)
+                r = b.responsible_customer
+                if cd['responsible_last_name'] != r.last_name or cd['responsible_first_name'] != r.first_name or cd['responsible_patronymic'] != r.patronymic:
+                    raise forms.ValidationError(u"Ответственный за все родственные захоронения должен быть один: %s" % r)
         return cd
 
 class CertificateForm(forms.ModelForm):
