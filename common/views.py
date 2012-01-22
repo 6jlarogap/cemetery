@@ -990,7 +990,7 @@ def print_burial(request, uuid):
                 'catafalque_route': print_form.cleaned_data.get('catafalque_route') or '',
                 'catafalque_start': print_form.cleaned_data.get('catafalque_start') or '',
                 'catafalque_time': catafalque_time and ':'.join(map(str, catafalque_time)) or '',
-                'catafalque_hours': catafalque_hours and catafalque_hours.strftime(u'%H ч. %M мин.').lstrip('0') or '',
+                'catafalque_hours': catafalque_hours and (u' ч. '.join(catafalque_hours.strftime(u'%H %M').lstrip('0').split(' ')) + u' мин.') or '',
                 'coffin_size': print_form.cleaned_data.get('coffin_size') or '',
                 'print_now': print_form.cleaned_data.get('print_now'),
             })
