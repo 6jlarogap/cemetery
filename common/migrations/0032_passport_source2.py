@@ -9,7 +9,7 @@ class Migration(DataMigration):
     def forwards(self, orm):
         origins = orm.PersonID.objects.all().values_list('who', flat=True)
         for o in origins:
-            orm.DocumentSource.objects.create(name=o)
+            orm.DocumentSource.objects.get_or_create(name=o)
 
     def backwards(self, orm):
         "Write your backwards methods here."

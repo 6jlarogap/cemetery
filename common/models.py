@@ -376,7 +376,7 @@ class Person(Soul):
         verbose_name_plural = (u'физ. лица')
 
 class DocumentSource(models.Model):
-    name = models.CharField(u"Наименование органа", max_length=255)
+    name = models.CharField(u"Наименование органа", max_length=255, unique=True)
 
     def __unicode__(self):
         return self.name
