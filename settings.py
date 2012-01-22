@@ -160,6 +160,7 @@ SENTRY_TESTING = True
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 3600
+SESSION_SAVE_EVERY_REQUEST = True
 
 try:
     from settings_local import *
