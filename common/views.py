@@ -952,6 +952,8 @@ def print_burial(request, uuid):
 
         catafalque_release = ('_____', '_____',)
         catafalque_time = ('_____', '_____',)
+        catafalque_hours = None
+
         if print_form.cleaned_data.get('catafalque_time'):
             try:
                 catafalque_hours = filter(lambda p: u'автокатафалк' in p['order_product'].name.lower(), positions)[0]['count']
