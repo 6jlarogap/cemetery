@@ -954,6 +954,14 @@ def print_burial(request, uuid):
         catafalque_time = ('_____', '_____',)
         catafalque_hours = None
 
+        try:
+            lifters_hours = filter(lambda p: u'грузчики' in p['order_product'].name.lower(), positions)[0]['count']
+            hours = math.floor(lifters_hours)
+            minutes = math.floor((float(lifters_hours) - math.floor(lifters_hours)) * 60)
+            lifters_hours = datetime.time(int(hours), int(minutes))
+        except IndexError:
+            lifters_hours = 0
+
         if print_form.cleaned_data.get('catafalque_time'):
             try:
                 catafalque_hours = filter(lambda p: u'автокатафалк' in p['order_product'].name.lower(), positions)[0]['count']
@@ -987,6 +995,7 @@ def print_burial(request, uuid):
                 'print_positions': print_positions,
                 'total': float(sum([p['sum'] for p in positions])),
                 'catafalque': print_form.cleaned_data.get('catafalque'),
+                'lifters': print_form.cleaned_data.get('lifters'),
                 'graving': print_form.cleaned_data.get('graving'),
                 'now': datetime.datetime.now(),
                 'org': org,
@@ -994,6 +1003,7 @@ def print_burial(request, uuid):
                 'catafalque_start': print_form.cleaned_data.get('catafalque_start') or '',
                 'catafalque_time': catafalque_time and (u' ч. '.join(catafalque_time.strftime(u'%H %M').lstrip('0').strip().split(' ')) + u' мин.') or '',
                 'catafalque_hours': catafalque_hours and (u' ч. '.join(catafalque_hours.strftime(u'%H %M').lstrip('0').strip().split(' ')) + u' мин.') or '',
+                'lifters_hours': lifters_hours and (u' ч. '.join(lifters_hours.strftime(u'%H %M').lstrip('0').strip().split(' ')) + u' мин.') or '',
                 'coffin_size': print_form.cleaned_data.get('coffin_size') or '',
                 'print_now': print_form.cleaned_data.get('print_now'),
             })

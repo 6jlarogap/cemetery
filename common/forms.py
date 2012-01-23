@@ -1047,6 +1047,7 @@ class OrderPaymentForm(forms.ModelForm):
 
 class PrintOptionsForm(forms.Form):
     catafalque = forms.BooleanField(label=u"наряд на автокатафалк", required=False, initial=False)
+    lifters = forms.BooleanField(label=u"наряд на грузчиков", required=False, initial=False)
     graving = forms.BooleanField(label=u"наряд на рытье могилы", required=False, initial=True)
     receipt = forms.BooleanField(label=u"справка о захоронении", required=False, initial=False)
     dogovor = forms.BooleanField(label=u"договор ответственного", required=False, initial=False)
