@@ -612,9 +612,6 @@ def edit_burial(request, uuid):
         cd = form.cleaned_data
 
         if request.POST.get('split_burial'):
-            burial.product.place.rooms -= 1
-            burial.product.place.save()
-
             place = Place(creator=request.user.userprofile.soul)
             place.rooms = 1
             place.rooms_free = 0
@@ -622,18 +619,36 @@ def edit_burial(request, uuid):
             place.cemetery = cd["cemetery"]
             place.area = cd["area"]
             place.row = cd["row"]
-            place.seat = None
+            place.seat = ''
 
             place.soul = cd["cemetery"].organization.soul_ptr
             place.name = u"%s.уч%sряд%sместо%s" % (place.cemetery.name, place.area, place.row, place.seat)
             place.p_type = ProductType.objects.get(uuid=settings.PLACE_PRODUCTTYPE_ID)
 
-            place.generate_seat()
-
             place.save()
+
+            if cd['seat'] != cd['account_book_n']:
+                # отделяем текущее от остальных
+                burial.product.place.rooms -= 1
+                burial.product.place.save()
+            else:
+                # переносим остальные
+                others = Burial.objects.filter(product__place__seat=cd['seat']).exclude(pk=burial.pk)
+                if others:
+                    seat = min(*others.values_list('account_book_n', flat=True))
+                    o = others[0]
+                    o.product.place.seat = seat
+                    o.product.place.rooms -= 1
+                    o.product.place.save()
 
             burial.product = place.product_ptr
             burial.save()
+
+            if not burial.product.place.seat:
+                burial.product.place.generate_seat()
+
+            burial.product.place.save()
+
         else:
             place = burial.product.place
 

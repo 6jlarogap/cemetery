@@ -1078,7 +1078,7 @@ class IDForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         kwargs['commit'] = False
         obj = super(IDForm, self).save(*args, **kwargs)
-        obj.source = DocumentSource.objects.get_or_create(name=self.cleaned_data['who'])
+        obj.source, _tmp = DocumentSource.objects.get_or_create(name=self.cleaned_data['who'])
         obj.save()
         return obj
 
