@@ -90,5 +90,13 @@
             </div>
         </div>
         {% block content %}{% endblock %}
+
+        {% if debug %}
+            <ul>
+                {% for q in sql_queries %}
+                    <li>{{ q.time }}: {{ q.sql }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </body>
 </html>

@@ -682,7 +682,10 @@ class Migration(DataMigration):
 
         from common.models import GeoCity, Street
 
-        kaluga = GeoCity.objects.get(pk=KALUGA_UUID)
+        try:
+            kaluga = GeoCity.objects.get(pk=KALUGA_UUID)
+        except GeoCity.DoesNotExist:
+            kaluga = GeoCity.objects.filter(name=u'Калуга')[0]
 
         for n in STREETS.split('\n'):
             n = n.strip()
