@@ -999,7 +999,7 @@ def print_burial(request, uuid):
         else:
             catafalque_hours = None
 
-        if catafalque_time:
+        if catafalque_time and isinstance(catafalque_time[0], integer):
             catafalque_time = datetime.time(*catafalque_time)
 
         if not time_check_failed:
