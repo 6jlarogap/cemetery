@@ -14,6 +14,10 @@ class StreetForm(forms.ModelForm):
     class Meta:
         model = Street
 
+    def __init__(self, *args, **kwargs):
+        Street.__unicode__ = lambda s: u'%s %s' % (s.name, s.city)
+        super(StreetForm, self).__init__(*args, **kwargs)
+
     def save(self, *args, **kwargs):
         if self.instance and self.cleaned_data.get('combine_with') and self.cleaned_data.get('really_combine'):
             Location.objects.filter(street=self.instance).update(street=self.cleaned_data.get('combine_with'))
