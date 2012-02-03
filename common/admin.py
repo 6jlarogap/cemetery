@@ -20,7 +20,13 @@ class StreetForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         if self.instance and self.cleaned_data.get('combine_with') and self.cleaned_data.get('really_combine'):
-            Location.objects.filter(street=self.instance).update(street=self.cleaned_data.get('combine_with'))
+            new_street = self.cleaned_data.get('combine_with')
+            Location.objects.filter(street=self.instance).update(
+                street=new_street,
+                city=new_street.city,
+                region=new_street.city and new_street.city.region,
+                country=new_street.city and new_street.city.region and new_street.city.region.country,
+            )
             self.instance.delete()
         else:
             return super(StreetForm, self).save(*args, **kwargs)
