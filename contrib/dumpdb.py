@@ -1,7 +1,16 @@
 #!/usr/bin/env python
 
-import os
-import sys
+
+import sys, os
+
+PATH = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(PATH)
+
+from django.core.management import setup_environ
+
+import settings
+setup_environ(settings)
+
 import glob
 from constants import DUMPS_DIR, STORE_DUMPS
 
