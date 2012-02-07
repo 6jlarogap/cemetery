@@ -660,7 +660,6 @@ class InitalForm(forms.Form):
     ceo_name = forms.CharField(max_length=255, label="ФИО директора", help_text=u'именительный падеж, напр. ИВАНОВ И.И.')
     ceo_name_who = forms.CharField(max_length=255, label="ФИО директора р.п.", help_text=u'родительный падеж, напр. ИВАНОВА И.И.')
     ceo_document = forms.CharField(max_length=255, label="Документ директора", help_text=u'на основании чего? например, УСТАВА')
-    personal_account = forms.CharField(max_length=255, label="Л/с")
     post_index = forms.CharField(required=False, max_length=16, label="Почтовый индекс")
     street = forms.CharField(required=False, max_length=99, label="Улица", widget=forms.TextInput())
     new_street = forms.BooleanField(required=False, label="Новая улица")

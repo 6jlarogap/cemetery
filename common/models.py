@@ -432,7 +432,6 @@ class Organization(Soul):
     ceo_name = models.CharField(u"ФИО директора", max_length=255, null=True, blank=True, help_text=u'именительный падеж, напр. ИВАНОВ И.И.')
     ceo_name_who = models.CharField(u"ФИО директора р.п.", max_length=255, null=True, blank=True, help_text=u'родительный падеж, напр. ИВАНОВА И.И.')
     ceo_document = models.CharField(u"Документ директора", max_length=255, null=True, blank=True, help_text=u'на основании чего? например, УСТАВА')
-    personal_account = models.CharField(u"Л/с", max_length=9, blank=True, null=True, validators=[DigitsValidator(), ])                                     # КПП
 
     def __unicode__(self):
         return self.name or self.full_name
@@ -463,7 +462,7 @@ class BankAccount(models.Model):
     ks = models.CharField(u"Корреспондентский счет", max_length=20, blank=True, validators=[DigitsValidator(), LengthValidator(20), ]) # Корреспондентский счет
     bik = models.CharField(u"БИК", max_length=9, validators=[DigitsValidator(), LengthValidator(9), ])                         # Банковский идентификационный код
     bankname = models.CharField(u"Наименование банка", max_length=64, validators=[NotEmptyValidator(1), ])    # Название банка
-
+    ls = models.CharField(u"Л/с", max_length=9, blank=True, null=True, validators=[DigitsValidator(), ])                                     # КПП
 
 class Role(models.Model):
     """
