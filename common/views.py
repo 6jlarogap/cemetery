@@ -959,6 +959,7 @@ def print_burial(request, uuid):
             })
 
         if print_form.cleaned_data.get('dogovor'):
+
             return direct_to_template(request, 'reports/dogovor.html', {
                 'burial': burial,
                 'now': datetime.datetime.now(),
@@ -1477,6 +1478,8 @@ def init(request):
             organization.kpp = cd["kpp"]
             organization.inn = cd["inn"]
             organization.ogrn = cd["ogrn"]
+            organization.ceo_name = cd["ceo_name"]
+            organization.ceo_name_who = cd["ceo_name_who"]
             organization.save()
 
             bank_formset = InitBankFormset(instance=organization, data=request.POST or None)

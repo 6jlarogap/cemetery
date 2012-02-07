@@ -429,6 +429,8 @@ class Organization(Soul):
     kpp = models.CharField(u"КПП", max_length=9, blank=True, validators=[DigitsValidator(), ])                                     # КПП
     name = models.CharField(u"Краткое название организации", max_length=99)                      # Название краткое
     full_name = models.CharField(u"Полное название организации", max_length=255, null=True)      # Название полное
+    ceo_name = models.CharField(u"ФИО директора", max_length=255, null=True, blank=True, help_text=u'именительный падеж, напр. ИВАНОВ И.И.')
+    ceo_name_who = models.CharField(u"ФИО директора р.п.", max_length=255, null=True, blank=True, help_text=u'родительный падеж, напр. ИВАНОВА И.И.')
 
     def __unicode__(self):
         return self.name or self.full_name
