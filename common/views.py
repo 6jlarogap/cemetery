@@ -1480,6 +1480,8 @@ def init(request):
             organization.ogrn = cd["ogrn"]
             organization.ceo_name = cd["ceo_name"]
             organization.ceo_name_who = cd["ceo_name_who"]
+            organization.ceo_document = cd["ceo_document"]
+            organization.personal_account = cd["personal_account"]
             organization.save()
 
             bank_formset = InitBankFormset(instance=organization, data=request.POST or None)
@@ -1591,6 +1593,8 @@ def init(request):
                 org_phone = phones and phones[0] or None,
                 ceo_name = org.ceo_name,
                 ceo_name_who = org.ceo_name_who,
+                ceo_document = org.ceo_document,
+                personal_account = org.personal_account,
                 post_index = org.location.post_index,
                 new_street = False,
                 new_city = False,

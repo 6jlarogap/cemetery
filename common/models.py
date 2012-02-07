@@ -431,6 +431,8 @@ class Organization(Soul):
     full_name = models.CharField(u"Полное название организации", max_length=255, null=True)      # Название полное
     ceo_name = models.CharField(u"ФИО директора", max_length=255, null=True, blank=True, help_text=u'именительный падеж, напр. ИВАНОВ И.И.')
     ceo_name_who = models.CharField(u"ФИО директора р.п.", max_length=255, null=True, blank=True, help_text=u'родительный падеж, напр. ИВАНОВА И.И.')
+    ceo_document = models.CharField(u"Документ директора", max_length=255, null=True, blank=True, help_text=u'на основании чего? например, УСТАВА')
+    personal_account = models.CharField(u"Л/с", max_length=9, blank=True, null=True, validators=[DigitsValidator(), ])                                     # КПП
 
     def __unicode__(self):
         return self.name or self.full_name
