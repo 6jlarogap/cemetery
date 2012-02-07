@@ -1589,6 +1589,8 @@ def init(request):
                 org_name = org.name,
                 org_full_name = org.full_name,
                 org_phone = phones and phones[0] or None,
+                ceo_name = org.ceo_name,
+                ceo_name_who = org.ceo_name_who,
                 post_index = org.location.post_index,
                 new_street = False,
                 new_city = False,
