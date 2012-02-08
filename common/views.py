@@ -879,8 +879,6 @@ def print_burial(request, uuid):
             if not found:
                 bad.append(ip[idx])
 
-        initials['positions'] = [ipi for ipi in ip if ipi not in bad]
-
     payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
     positions_fs = OrderPositionsFormset(initial=initials['positions'] or positions, data=request.POST or None)
     print_form = PrintOptionsForm(data=request.POST or None, initial=initials['print'], burial=burial)

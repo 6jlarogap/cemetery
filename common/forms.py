@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.forms import formsets
 from django.forms.extras.widgets import SelectDateWidget
 from django.forms.forms import conditional_escape, flatatt, mark_safe, BoundField
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
@@ -1038,7 +1039,23 @@ class OrderPositionForm(forms.ModelForm):
             'order_product': forms.HiddenInput,
         }
 
-OrderPositionsFormset = forms.formsets.formset_factory(OrderPositionForm, extra=0)
+class BaseOrderPositionsFormset(formsets.BaseFormSet):
+    def __init__(self, *args, **kwargs):
+        if kwargs.get('initial'):
+            real_initial = []
+            for i in kwargs['initial']:
+                try:
+                    OrderProduct.objects.get(pk=i['order_product'])
+                except OrderProduct.DoesNotExist:
+                    pass
+                else:
+                    real_initial.append(i)
+        kwargs['initial'] = real_initial
+
+        super(BaseOrderPositionsFormset, self).__init__(*args, **kwargs)
+
+
+OrderPositionsFormset = forms.formsets.formset_factory(OrderPositionForm, extra=0, formset=BaseOrderPositionsFormset)
 
 class OrderPaymentForm(forms.ModelForm):
     class Meta:
