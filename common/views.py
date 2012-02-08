@@ -861,6 +861,8 @@ def print_burial(request, uuid):
             if not found:
                 ip.append(p)
 
+
+        bad = []
         for idx,i in enumerate(initials.setdefault('positions', []) or []):
             found = False
             for p in positions:
@@ -875,9 +877,9 @@ def print_burial(request, uuid):
                 if n == pn:
                     found = True
             if not found:
-                ip = ip[:idx] + ip[idx+2:]
+                bad.append(ip[idx])
 
-        initials['positions'] = ip
+        initials['positions'] = [ipi for ipi in ip if ipi not in bad]
 
     payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
     positions_fs = OrderPositionsFormset(initial=initials['positions'] or positions, data=request.POST or None)
