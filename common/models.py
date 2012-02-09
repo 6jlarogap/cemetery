@@ -462,7 +462,7 @@ class BankAccount(models.Model):
     ks = models.CharField(u"Корреспондентский счет", max_length=20, blank=True, validators=[DigitsValidator(), LengthValidator(20), ]) # Корреспондентский счет
     bik = models.CharField(u"БИК", max_length=9, validators=[DigitsValidator(), LengthValidator(9), ])                         # Банковский идентификационный код
     bankname = models.CharField(u"Наименование банка", max_length=64, validators=[NotEmptyValidator(1), ])    # Название банка
-    ls = models.CharField(u"Л/с", max_length=9, blank=True, null=True, validators=[DigitsValidator(), ])                                     # КПП
+    ls = models.CharField(u"Л/с", max_length=9, blank=True, null=True, validators=[LengthValidator(11), ])
 
 class Role(models.Model):
     """
