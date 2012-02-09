@@ -1045,12 +1045,12 @@ class BaseOrderPositionsFormset(formsets.BaseFormSet):
             real_initial = []
             for i in kwargs['initial']:
                 try:
-                    OrderProduct.objects.get(pk=i['order_product'])
+                    OrderProduct.objects.get(models.Q(pk=i['order_product'].pk) | models.Q(pk=i['order_product']))
                 except OrderProduct.DoesNotExist:
                     pass
                 else:
                     real_initial.append(i)
-        kwargs['initial'] = real_initial
+            kwargs['initial'] = real_initial
 
         super(BaseOrderPositionsFormset, self).__init__(*args, **kwargs)
 

@@ -837,10 +837,9 @@ def print_burial(request, uuid):
 
     if initials:
         pos_list = initials.setdefault('positions', []) or []
-        ip = [p for p in pos_list]
 
     payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
-    positions_fs = OrderPositionsFormset(initial=initials['positions'] or positions, data=request.POST or None)
+    positions_fs = OrderPositionsFormset(initial=initials.get('positions') or positions, data=request.POST or None)
     print_form = PrintOptionsForm(data=request.POST or None, initial=initials['print'], burial=burial)
     try:
         env = Env.objects.get()
