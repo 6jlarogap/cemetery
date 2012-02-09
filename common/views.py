@@ -631,6 +631,8 @@ def edit_burial(request, uuid):
                 # отделяем текущее от остальных
                 burial.product.place.rooms -= 1
                 burial.product.place.save()
+
+                place.seat = burial.account_book_n
             else:
                 # переносим остальные
                 others = Burial.objects.filter(product__place__seat=cd['seat']).exclude(pk=burial.pk)
