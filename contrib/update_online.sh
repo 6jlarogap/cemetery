@@ -7,8 +7,8 @@ cd /home/django/projects/cemetery
 git reset --hard
 git pull
 
-./manage.py syncdb
-./manage.py migrate
+python ./manage.py syncdb
+python ./manage.py migrate
 
 # Start django daemon
 /etc/init.d/django restart
