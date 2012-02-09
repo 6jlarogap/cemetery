@@ -508,7 +508,7 @@ class JournalForm(AutoTabIndex):
             if bd >= datetime.date.today():
                 self.fields['burial_time'].required=True
 
-        if data.get('opf', 'fizik') != 'fizik':
+        if data.get('opf', 'fizik') != 'fizik' and not data.get('agent_director'):
             for f in ['dover_date', 'dover_expire', 'dover_number', ]:
                 self.fields[f].required = not data.get('agent_director') or False
             self.fields['agent'].required = True
