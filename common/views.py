@@ -731,21 +731,13 @@ def edit_burial(request, uuid):
         if request.POST.get('responsible_myself'):
             new_burial.responsible_customer = new_burial.customer
         else:
-            if new_burial.responsible_customer:
-                Person.objects.filter(pk=new_burial.responsible_customer).update(
-                    last_name=cd["responsible_last_name"].capitalize(),
-                    first_name=cd.get("responsible_first_name", "").capitalize(),
-                    patronymic=cd.get("responsible_patronymic", "").capitalize(),
-                    location = responsible_form.is_valid() and responsible_form.save() or None,
-                )
-            else:
-                new_burial.responsible_customer = Person.objects.create(
-                    creator=request.user.userprofile.soul,
-                    last_name=cd["responsible_last_name"].capitalize(),
-                    first_name=cd.get("responsible_first_name", "").capitalize(),
-                    patronymic=cd.get("responsible_patronymic", "").capitalize(),
-                    location = responsible_form.is_valid() and responsible_form.save() or None,
-                )
+            new_burial.responsible_customer, _tmp = Person.objects.get_or_create(
+                creator=request.user.userprofile.soul,
+                last_name=cd["responsible_last_name"].capitalize(),
+                first_name=cd.get("responsible_first_name", "").capitalize(),
+                patronymic=cd.get("responsible_patronymic", "").capitalize(),
+                location = responsible_form.is_valid() and responsible_form.save() or None,
+            )
         if not request.REQUEST.get('opf') == 'fizik':
             agent = cd['agent']
             if agent:
