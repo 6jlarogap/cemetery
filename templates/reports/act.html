@@ -1447,7 +1447,7 @@
 
 {% if print_now %}
     <script type="text/javascript">
-        window.print();
+        window.load = function() { window.print(); }
     </script>
 {% endif %}
 </BODY>
