@@ -534,9 +534,10 @@ class Cemetery(models.Model):
     creator = models.ForeignKey(Soul)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
     last_sync_date = models.DateTimeField(u"Дата последней синхронизации", default=datetime.datetime(2000, 1, 1, 0, 0))
+    ordering = models.PositiveIntegerField(blank=True, default=1)
 
     class Meta:
-        ordering = ['name']
+        ordering = ['ordering', 'name']
         verbose_name = (u'кладбище')
         verbose_name_plural = (u'кладбища')
 

@@ -117,6 +117,8 @@ class PlaceAdmin(admin.ModelAdmin):
 
 class CemeteryAdmin(admin.ModelAdmin):
     raw_id_fields = ['organization', 'location', 'creator', ]
+    list_display = ['name', 'organization', 'ordering']
+    list_editable = ['ordering']
 
 class LocationAdmin(admin.ModelAdmin):
     raw_id_fields = ['street', ]
