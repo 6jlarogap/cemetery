@@ -835,8 +835,10 @@ def print_burial(request, uuid):
     positions = get_positions(burial)
     initials = burial.get_print_info()
 
-    if initials:
-        pos_list = initials.setdefault('positions', []) or []
+    if initials and initials.setdefault('positions', []):
+        for p in positions:
+            if not any(filter(lambda i: i['order_product'].name == p['order_product'].name, initials['positions'])):
+                initials['positions'].append(p)
 
     payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
     positions_fs = OrderPositionsFormset(initial=initials.get('positions') or positions, data=request.POST or None)
@@ -928,9 +930,12 @@ def print_burial(request, uuid):
         catafalque_release = ('_____', '_____',)
         catafalque_time = ('_____', '_____',)
         catafalque_hours = None
+        lifters_count = u'н/д'
 
         try:
-            lifters_hours = filter(lambda p: u'грузчики' in p['order_product'].name.lower(), positions)[0]['count']
+            position = filter(lambda p: u'грузчики' in p['order_product'].name.lower(), positions)[0]
+            lifters_hours = position['count']
+            lifters_count = u'%s %s' % (position['count'], position['order_product'].measure)
             hours = math.floor(lifters_hours)
             minutes = math.floor((float(lifters_hours) - math.floor(lifters_hours)) * 60)
             lifters_hours = datetime.time(int(hours), int(minutes))
@@ -959,6 +964,9 @@ def print_burial(request, uuid):
         else:
             catafalque_hours = None
 
+        if catafalque_hours:
+            lifters_hours = catafalque_hours
+
         if catafalque_time and isinstance(catafalque_time[0], int):
             catafalque_time = datetime.time(*catafalque_time)
             catafalque_time = u' ч. '.join(catafalque_time.strftime(u'%H %M').lstrip('0').strip().split(' ')) + u' мин.'
@@ -980,6 +988,7 @@ def print_burial(request, uuid):
                 'catafalque_time': catafalque_time or '',
                 'catafalque_hours': catafalque_hours and (u' ч. '.join(catafalque_hours.strftime(u'%H %M').lstrip('0').strip().split(' ')) + u' мин.') or '',
                 'lifters_hours': lifters_hours and (u' ч. '.join(lifters_hours.strftime(u'%H %M').lstrip('0').strip().split(' ')) + u' мин.') or '',
+                'lifters_count': lifters_count,
                 'coffin_size': print_form.cleaned_data.get('coffin_size') or '',
                 'print_now': print_form.cleaned_data.get('print_now'),
             })
