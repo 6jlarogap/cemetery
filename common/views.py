@@ -105,32 +105,32 @@ def main_page(request):
     pp = None
     if form.is_valid():
         cd = form.cleaned_data
-        # Обновляем профиль пользователя.
-        if cd.get("records_order_by", ""):
-            if cd["records_order_by"] == u'account_book_n':
+        sort_order = cd.get("records_order_by", "-account_book_n")
+        if sort_order:
+            if sort_order == u'account_book_n':
                 burials = burials.order_by('acct_num_str1', 'acct_num_num', 'acct_num_str2')
-            elif cd["records_order_by"] == u'-account_book_n':
+            elif sort_order == u'-account_book_n':
                 burials = burials.order_by('-acct_num_str1', '-acct_num_num', '-acct_num_str2')
-            elif cd["records_order_by"] == u'product__place__area':
+            elif sort_order == u'product__place__area':
                 burials = burials.order_by('product__place__area_str1', 'product__place__area_num',
                                            'product__place__area_str2')
-            elif cd["records_order_by"] == u'-product__place__area':
+            elif sort_order == u'-product__place__area':
                 burials = burials.order_by('-product__place__area_str1', '-product__place__area_num',
                                            '-product__place__area_str2')
-            elif cd["records_order_by"] == u'product__place__row':
+            elif sort_order == u'product__place__row':
                 burials = burials.order_by('product__place__row_str1', 'product__place__row_num',
                                            'product__place__row_str2')
-            elif cd["records_order_by"] == u'-product__place__row':
+            elif sort_order == u'-product__place__row':
                 burials = burials.order_by('-product__place__row_str1', '-product__place__row_num',
                                            '-product__place__row_str2')
-            elif cd["records_order_by"] == u'product__place__seat':
+            elif sort_order == u'product__place__seat':
                 burials = burials.order_by('product__place__seat_str1', 'product__place__seat_num',
                                            'product__place__seat_str2')
-            elif cd["records_order_by"] == u'-product__place__seat':
+            elif sort_order == u'-product__place__seat':
                 burials = burials.order_by('-product__place__seat_str1', '-product__place__seat_num',
                                            '-product__place__seat_str2')
             else:
-                burials = burials.order_by(cd["records_order_by"])
+                burials = burials.order_by(sort_order)
         if cd.get("fio", ""):
             text = re.sub(r"\.", " ", cd["fio"])
             parts = text.split()
@@ -254,7 +254,6 @@ def main_page(request):
     else:
         #if request.user.is_authenticated() and not request.user.is_superuser and not form_data:
         if request.user.is_authenticated() and not form_data:
-            print 'request.user.userprofile.records_per_page', request.user.userprofile.records_per_page
             pp = request.user.userprofile.records_per_page
             ob = request.user.userprofile.records_order_by
             redirect_str = "/?print="
