@@ -839,40 +839,6 @@ def print_burial(request, uuid):
         pos_list = initials.setdefault('positions', []) or []
         ip = [p for p in pos_list]
 
-        for idx,p in enumerate(positions):
-            found = False
-            for i in initials.get('positions', []) or []:
-                try:
-                    n = i['order_product'].name
-                except AttributeError:
-                    n = i['order_product']
-                try:
-                    pn = p['order_product'].name
-                except AttributeError:
-                    pn = p['order_product']
-                if n == pn:
-                    found = True
-            if not found:
-                ip.append(p)
-
-
-        bad = []
-        for idx,i in enumerate(initials.setdefault('positions', []) or []):
-            found = False
-            for p in positions:
-                try:
-                    n = i['order_product'].name
-                except AttributeError:
-                    n = i['order_product']
-                try:
-                    pn = p['order_product'].name
-                except AttributeError:
-                    pn = p['order_product']
-                if n == pn:
-                    found = True
-            if not found:
-                bad.append(ip[idx])
-
     payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
     positions_fs = OrderPositionsFormset(initial=initials['positions'] or positions, data=request.POST or None)
     print_form = PrintOptionsForm(data=request.POST or None, initial=initials['print'], burial=burial)
