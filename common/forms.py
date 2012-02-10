@@ -1044,8 +1044,13 @@ class BaseOrderPositionsFormset(formsets.BaseFormSet):
         if kwargs.get('initial'):
             real_initial = []
             for i in kwargs['initial']:
+
+                if isinstance(i['order_product'], OrderProduct):
+                    q = models.Q(pk=i['order_product'].pk)
+                else:
+                    q = models.Q(name=i['order_product'])
                 try:
-                    OrderProduct.objects.get(models.Q(pk=i['order_product'].pk) | models.Q(pk=i['order_product']))
+                    OrderProduct.objects.get(q)
                 except OrderProduct.DoesNotExist:
                     pass
                 else:
