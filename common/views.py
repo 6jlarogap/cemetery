@@ -835,9 +835,14 @@ def print_burial(request, uuid):
     positions = get_positions(burial)
     initials = burial.get_print_info()
 
+    def is_same(i, p):
+        i1 = isinstance(i['order_product'], OrderProduct) and i['order_product'].name or i['order_product']
+        p1 = isinstance(p['order_product'], OrderProduct) and p['order_product'].name or p['order_product']
+        return i1 == p1
+
     if initials and initials.setdefault('positions', []):
         for p in positions:
-            if not any(filter(lambda i: i['order_product'].name == p['order_product'].name, initials['positions'])):
+            if not any(filter(lambda i: is_same(i, p), initials['positions'])):
                 initials['positions'].append(p)
 
     payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
