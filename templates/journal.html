@@ -139,6 +139,14 @@ $(function(){
      {$(this).val("{{ UNKNOWN_NAME }}");}
      });
 
+    {% if additional_burial %}
+        var add_ids = '#id_cemetery, #id_area, #id_row, #id_seat, #id_responsible_last_name, #id_responsible_first_name, #id_responsible_patronymic';
+        $(add_ids).attr('disabled', 'disabled');
+        $('form').submit(function() {
+            $(add_ids).removeAttr('disabled')
+        })
+    {% endif %}
+
 });
 
 //Первоначальное заполнение списка услуг.
