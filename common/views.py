@@ -589,7 +589,7 @@ def edit_burial(request, uuid):
         id = burial.customer.person.personid
     except (Person.DoesNotExist, PersonID.DoesNotExist):
         id = None
-    id_form = IDForm(prefix='id', data=request.POST or None, instance=id)
+    id_form = IDForm(prefix='id', data=request.POST or None, instance=id, initial={'who': id and id.source})
 
     burial.customer.phone_set.filter(f_number='').delete()
     burial.customer.phone_set.filter(f_number__isnull=True).delete()

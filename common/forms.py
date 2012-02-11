@@ -613,7 +613,9 @@ class JournalForm(AutoTabIndex):
                     patronymic=cd['responsible_patronymic'],
                 )
 
-            if new_r.last_name != r.last_name or new_r.first_name != r.first_name or new_r.patronymic != r.patronymic:
+            if new_r.last_name.lower() != r.last_name.lower() or \
+               new_r.first_name.lower() != r.first_name.lower() or \
+               new_r.patronymic.lower() != r.patronymic.lower():
                 raise forms.ValidationError(u"Ответственный за все родственные захоронения должен быть один: %s" % r)
         return cd
 
