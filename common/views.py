@@ -311,19 +311,34 @@ def journal(request):
         'rooms': 1,
         'rooms_free': 0,
     }
-    if request.GET.get('place'):
-        place = get_object_or_404(Place, pk=request.GET.get('place'))
+
+    responsible_address = None
+    if request.GET.get('burial'):
+        burial = get_object_or_404(Burial, pk=request.GET.get('burial'))
+        place = burial.product.place
         initial.update({
             'cemetery': place.cemetery,
             'area': place.area,
             'row': place.row,
             'seat': place.seat,
         })
+        if burial.responsible_customer:
+            rc = burial.responsible_customer.person
+            initial.update({
+                'responsible_last_name': rc.last_name,
+                'responsible_first_name': rc.first_name,
+                'responsible_patronymic': rc.patronymic,
+            })
+
+            if rc.location:
+                responsible_address = {}
+                for k in ['post_index', 'house', 'block', 'building', 'flat', 'info', 'street', 'ciry', 'region', 'country']:
+                    responsible_address[k] = getattr(rc.location, k, None)
 
     form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None, initial=initial)
     location_form = AddressForm(prefix='address', data=request.POST or None)
     registration_form = AddressForm(prefix='registration', data=request.POST or None)
-    responsible_form = AddressForm(prefix='responsible', data=request.POST or None)
+    responsible_form = AddressForm(prefix='responsible', data=request.POST or None, initial=responsible_address)
     cert_form = CertificateForm(prefix='certificate', data=request.POST or None)
     id_form = IDForm(prefix='id', data=request.POST or None)
 
@@ -502,6 +517,7 @@ def journal(request):
         'duplicates': duplicates,
         'customer_addr_valid': customer_addr_valid,
         'registration_valid': registration_valid,
+        'additional_burial': request.GET.get('place'),
     })
 
 @login_required

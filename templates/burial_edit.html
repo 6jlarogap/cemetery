@@ -11,7 +11,7 @@
             {{ form.in_trash.label_tag }}{{ form.in_trash }}
         {% endif %}
         <br />
-        <a href="{% url add_burial %}?place={{ burial.product.place.pk }}" target="_blank">Добавить родственное</a>
+        <a href="{% url add_burial %}?burial={{ burial.pk }}" target="_blank">Добавить родственное</a>
         <a href="{% url print_burial burial.pk %}" target="_blank">Документы</a>
         <br />
         <input type="submit" value="Сохранить"  tabindex="22">
