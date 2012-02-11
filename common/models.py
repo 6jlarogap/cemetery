@@ -240,7 +240,7 @@ class Soul(models.Model):
     birth_date_no_month = models.BooleanField(default=False, editable=False)
     birth_date_no_day = models.BooleanField(default=False, editable=False)
     death_date = models.DateField(u"Дата смерти", blank=True, null=True)
-    location = models.OneToOneField(Location, blank=True, null=True)  # Адрес орг-ии или человека (Person).
+    location = models.ForeignKey(Location, blank=True, null=True)  # Адрес орг-ии или человека (Person).
     creator = models.ForeignKey(u"Soul", blank=True, null=True)  # Создатель записи.
     date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
 
