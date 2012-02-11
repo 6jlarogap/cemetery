@@ -807,6 +807,7 @@ class Burial(Order):
     acct_num_num = models.PositiveIntegerField(editable=False, null=True)
     acct_num_str2 = models.CharField(editable=False, null=True, max_length=16)
 
+    organization = models.ForeignKey(Organization, null=True, blank=True)
     doverennost = models.ForeignKey(Doverennost, null=True)
 
     print_info = models.TextField(editable=False, null=True)

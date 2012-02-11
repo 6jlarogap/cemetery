@@ -456,6 +456,7 @@ def journal(request):
                 )
 
             new_burial.responsible_agent = agent
+            new_burial.organization = cd['organization']
 
         new_burial.save()
 
@@ -563,10 +564,10 @@ def edit_burial(request, uuid):
         'responsible_patronymic': burial.responsible_customer and burial.responsible_customer.person.patronymic,
         'responsible_myself': burial.responsible_customer == burial.customer and not burial.responsible_agent,
 
-        'opf': burial.responsible_agent and 'yurik' or 'fizik',
-        'organization': burial.responsible_agent and burial.responsible_agent.organization,
+        'opf': burial.organization and 'yurik' or 'fizik',
+        'organization': burial.responsible_agent and burial.responsible_agent.organization or burial.organization,
         'agent': burial.responsible_agent,
-        'agent_director': burial.responsible_agent and not burial.doverennost,
+        'agent_director': burial.organization and not burial.responsible_agent,
         'dover_number': burial.doverennost and burial.doverennost.number or '',
         'dover_date': burial.doverennost and burial.doverennost.date or '',
         'dover_expire': burial.doverennost and burial.doverennost.expire or '',
@@ -748,6 +749,7 @@ def edit_burial(request, uuid):
                 )
 
             new_burial.responsible_agent = agent
+            new_burial.organization = cd['organization']
 
 
         new_burial.save()

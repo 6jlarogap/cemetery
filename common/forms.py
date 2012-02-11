@@ -508,10 +508,9 @@ class JournalForm(AutoTabIndex):
             if bd >= datetime.date.today():
                 self.fields['burial_time'].required=True
 
-        if data.get('opf', 'fizik') != 'fizik' and not data.get('agent_director'):
-            for f in ['dover_date', 'dover_expire', 'dover_number', ]:
+        if data.get('opf', 'fizik') != 'fizik':
+            for f in ['dover_date', 'dover_expire', 'dover_number', 'agent', ]:
                 self.fields[f].required = not data.get('agent_director') or False
-            self.fields['agent'].required = True
 
         if cem:
             self.fields["cemetery"].initial = cem
@@ -523,6 +522,9 @@ class JournalForm(AutoTabIndex):
                 self.fields[f].required = True
                 if bd and bd < datetime.date.today():
                     self.fields[f].required = False
+
+        if data.get('agent_director'):
+            data['agent'] = None
 
 
     def clean_responsible_last_name(self):

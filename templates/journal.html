@@ -110,7 +110,7 @@ $(function(){
     updateResponsible();
 
     $('#id_agent_director').change(updateAgent);
-    updateAgent();
+    setTimeout("updateAgent();", 100);
 
     $('#id_opf_0, #id_opf_1').change(updateOPF);
     updateOPF();
