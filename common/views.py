@@ -517,7 +517,7 @@ def journal(request):
         'duplicates': duplicates,
         'customer_addr_valid': customer_addr_valid,
         'registration_valid': registration_valid,
-        'additional_burial': request.GET.get('place'),
+        'additional_burial': request.GET.get('burial'),
     })
 
 @login_required
