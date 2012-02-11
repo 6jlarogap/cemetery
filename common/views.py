@@ -4,6 +4,8 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User, Group
+from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, ContentType
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect, get_object_or_404
 from django.db import transaction
 from django.http import Http404, HttpResponseForbidden, HttpResponse, HttpResponseRedirect
@@ -29,7 +31,6 @@ import datetime
 import time
 import csv
 from cStringIO import StringIO
-#from django.utils import datetime_safe
 
 
 csv.register_dialect("4mysqlout", escapechar="\\", quoting=csv.QUOTE_NONE)
@@ -499,6 +500,14 @@ def journal(request):
             ds.soul_id=new_burial.person.pk
             ds.save()
 
+        LogEntry.objects.log_action(
+            user_id = request.user.pk,
+            content_type_id = ContentType.objects.get_for_model(new_burial).pk,
+            object_id = new_burial.pk,
+            object_repr = u'%s' % new_burial,
+            action_flag = ADDITION,
+        )
+
         if request.POST.get('and_print'):
             return redirect("print_burial", new_burial.pk)
         return redirect(".")
@@ -798,6 +807,14 @@ def edit_burial(request, uuid):
             ds = cert_form.save(commit=False)
             ds.soul_id = new_burial.person.pk
             ds.save()
+
+        LogEntry.objects.log_action(
+            user_id = request.user.pk,
+            content_type_id = ContentType.objects.get_for_model(new_burial).pk,
+            object_id = new_burial.pk,
+            object_repr = u'%s' % new_burial,
+            action_flag = CHANGE,
+        )
 
         return HttpResponseRedirect(reverse("edit_burial", args=[new_burial.pk, ]) + '?close=1')
 
