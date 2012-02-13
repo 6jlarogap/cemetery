@@ -1007,7 +1007,7 @@ class EditUserForm(forms.ModelForm):
 
         if self.cleaned_data.get('password1'):
             user.set_password(self.cleaned_data['password1'])
-            if kwargs.get('commit'):
+            if kwargs.get('commit', True):
                 user.save()
         return user
 
