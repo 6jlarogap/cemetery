@@ -113,7 +113,7 @@ $(function(){
     setTimeout("updateAgent();", 100);
 
     $('#id_opf_0, #id_opf_1').change(updateOPF);
-    updateOPF();
+    setTimeout("updateOPF();", 100);
 
   $("#id_burial_date, #id_birth_date, #id_death_date").focus(function(){
      this.select();
