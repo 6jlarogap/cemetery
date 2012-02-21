@@ -858,6 +858,13 @@ class Burial(Order):
                 'd_date': self.doverennost.date and self.doverennost.date.strftime('%d.%m.%Y') or '',
             }
 
+        if self.organization:
+            return u"%(org)s, в лице директора %(ceo)s, действующего на основании %(doc)s" % {
+                'org': self.organization.full_name or self.organization,
+                'ceo': self.organization.ceo_name_who,
+                'doc': self.organization.ceo_document,
+                }
+
         return self.customer.full_human_name()
 
     @staticmethod
