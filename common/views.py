@@ -1209,10 +1209,7 @@ def management_user(request):
             dgroups = Group.objects.all()
             for dgr in dgroups:
                 user.groups.add(dgr)
-#            if hasattr(cd['role'], "djgroups") and cd['role'].djgroups.all():
-#                for djgr in cd['role'].djgroups.all():
-#                    user.groups.add(djgr)  # Добавляем человека в django-группу, связанную с его ролью.
-#            user.is_staff = True
+            user.is_staff = True
             user.save()
             return redirect("/management/user/")
     else:
