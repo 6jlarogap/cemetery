@@ -282,7 +282,7 @@
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=BOTTOM><B><FONT COLOR="#000000">Все условия заказа подтверждаю______________________________________________</FONT></B></TD>
-			<TD COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">({{ burial.responsible_agent|default:burial.customer.person|default:"________________________________" }})</FONT></TD>
+			<TD COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">({{ burial.responsible_agent|default:burial.organization.ceo_name|default:burial.customer.person|default:"________________________________" }})</FONT></TD>
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" HEIGHT=19 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"><BR></FONT></TD>
@@ -572,7 +572,7 @@
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=BOTTOM><B><FONT COLOR="#000000">Все условия заказа подтверждаю______________________________________________</FONT></B></TD>
-			<TD COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">({{ burial.responsible_agent|default:burial.customer.person|default:"________________________________" }})</FONT></TD>
+			<TD COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">({{ burial.responsible_agent|default:burial.organization.ceo_name|default:burial.customer.person|default:"________________________________" }})</FONT></TD>
 			</TR>
 		<TR>
 			<TD STYLE="border-left: 1px solid #000000" HEIGHT=19 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000"><BR></FONT></TD>
@@ -1408,7 +1408,7 @@
             </TR>
             <TR>
                 <TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=BOTTOM><B><FONT COLOR="#000000">Все условия заказа подтверждаю___________________________________________</FONT></B></TD>
-                <TD STYLE="" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">({{ burial.responsible_agent|default:burial.customer.person|default:"________________________________" }})</FONT></TD>
+                <TD STYLE="" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">({{ burial.responsible_agent|default:burial.organization.ceo_name|default:burial.customer.person|default:"________________________________" }})</FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
                 <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>

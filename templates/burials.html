@@ -156,22 +156,6 @@ $(function(){
         <td width="25%" id="free_form">{{ form.burial_date_to.label_tag }}</td>
         <td width="25%">{{ form.burial_date_to.errors }}{{ form.burial_date_to }}</td>
     </tr>
-    <!--
-    <tr>
-        <td width="25%" id="free_form">{{ form.death_certificate.label_tag }}</td>
-        <td width="25%">{{ form.death_certificate.errors }}{{ form.death_certificate }}</td>
-        <td width="25%" id="free_form">{{ form.account_book_n.label_tag }}</td>
-        <td width="25%">{{ form.account_book_n.errors }}{{ form.account_book_n }}</td>
-    </tr>
-    -->
-    <!--
-    <tr>
-        <td width="25%" id="free_form">{{ form.customer.label_tag }}</td>
-        <td width="25%">{{ form.customer.errors }}{{ form.customer }}</td>
-        <td width="25%" id="free_form">{{ form.owner.label_tag }}</td>
-        <td width="25%">{{ form.owner.errors }}{{ form.owner }}</td>
-    </tr>
-    -->
     <tr>
         <td width="25%" id="free_form">{{ form.comment.label_tag }}</td>
         <td width="25%">{{ form.comment.errors }}{{ form.comment }}</td>
@@ -186,22 +170,6 @@ $(function(){
         <td width="16%" id="free_form">{{ form.row.label_tag }}{{ form.row.errors }}&nbsp;&nbsp;{{ form.row }}</td>
         <td width="16%" id="free_form">{{ form.seat.label_tag }}{{ form.seat.errors }}&nbsp;&nbsp;{{ form.seat }}</td>
     </tr>
-    <!--
-    <tr>
-        <td width="16%" id="free_form">{{ form.gps_x.label_tag }}</td>
-        <td width="16%">{{ form.gps_x.errors }}{{ form.gps_x }}</td>
-        <td width="16%" id="free_form">{{ form.gps_y.label_tag }}</td>
-        <td width="16%">{{ form.gps_y.errors }}{{ form.gps_y }}</td>
-        <td width="16%" id="free_form">{{ form.gps_z.label_tag }}</td>
-        <td width="16%">{{ form.gps_z.errors }}{{ form.gps_z }}</td>
-    </tr>
-    <tr>
-        <td width="16%">{{ form.operation.errors }}{{ form.operation }}</td>
-        <td width="16%">{{ form.area.errors }}{{ form.area }}</td>
-        <td width="16%">{{ form.row.errors }}{{ form.row }}</td>
-        <td width="16%">{{ form.seat.errors }}{{ form.seat }}</td>
-    </tr>
-    -->
 </table>
 <input type="submit" value="Искать" />&nbsp;&nbsp;
 <input type="submit" name="print" value="Распечатать все" />&nbsp;&nbsp;
@@ -239,10 +207,10 @@ $(function(){
         <td>{{ b.product.place.seat }}</td>
         <td>{{ b.product.place.cemetery.name }}</td>
         <td>{{ b.operation.op_type }}</td>
-        {% if b.responsible_agent %}
+        {% if b.organization %}
             <td>
-                {{ b.responsible_agent.organization }}<br/>
-                {{ b.responsible_agent.person }}
+                {{ b.organization }}<br/>
+                {% if b.responsible_agent %}{{ b.responsible_agent.person }}{% else %}{{ b.organization.ceo_name }}{% endif %}
             </td>
         {% else %}
             <td>
