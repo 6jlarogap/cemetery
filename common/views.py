@@ -57,12 +57,14 @@ def ulogin(request):
     Страница логина.
     """
     if request.user.is_authenticated():
-        return redirect('/logout/')
+        return redirect('/')
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
             next_url = request.GET.get("next", "/")
+            if next_url == '/logout/':
+                next_url = '/'
             return redirect(next_url)
     else:
         form = AuthenticationForm()
