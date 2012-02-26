@@ -844,6 +844,10 @@ class Burial(Order):
             data['print']['catafalque_time'] = data['print']['catafalque_time'].strftime('%H:%M')
         self.print_info = simplejson.dumps(data)
 
+    @property
+    def ceo_name(self):
+        return self.organization and self.organization.ceo_name or ''
+        
     def full_customer_name(self):
         try:
             agent = self.responsible_agent

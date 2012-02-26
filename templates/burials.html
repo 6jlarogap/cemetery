@@ -210,7 +210,7 @@ $(function(){
         {% if b.organization %}
             <td>
                 {{ b.organization }}<br/>
-                {% if b.responsible_agent %}{{ b.responsible_agent.person }}{% else %}{{ b.organization.ceo_name }}{% endif %}
+                {% if b.responsible_agent %}{{ b.responsible_agent.person }}{% else %}{{ b.ceo_name }}{% endif %}
             </td>
         {% else %}
             <td>
