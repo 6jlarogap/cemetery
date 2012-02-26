@@ -521,7 +521,7 @@ class Doverennost(models.Model):
     expire = models.DateField(verbose_name="Действует до", blank=True, null=True)
 
     def __unicode__(self):
-        return unicode(self.agent) + ' - ' + self.dover_number
+        return unicode(self.agent) + ' - ' + self.number
 
 class Cemetery(models.Model):
     """
@@ -847,7 +847,7 @@ class Burial(Order):
     @property
     def ceo_name(self):
         return self.organization and self.organization.ceo_name or ''
-        
+
     def full_customer_name(self):
         try:
             agent = self.responsible_agent

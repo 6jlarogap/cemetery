@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
 from django import forms
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
 from common.models import *
@@ -189,6 +191,16 @@ class OrderProductAdmin(admin.ModelAdmin):
     list_editable = ['ordering', ]
     ordering = ['ordering', 'name']
 
+class LogEntryAdmin(admin.ModelAdmin):
+    list_display = ['action_time', 'object_link', 'user', ]
+
+    def object_link(self, obj):
+        if isinstance(obj, Burial):
+            return u'<a href="%s">Захоронение %s</a>' % (reverse('edit_burial', obj.pk), obj.account_book_n)
+        else:
+            return u'%s' % obj
+    object_link.allow_tags = True
+
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Role, RoleAdmin)
 admin.site.register(Soul, SoulAdmin)
@@ -223,3 +235,5 @@ admin.site.register(OrderComments, OCAdmin)
 #admin.site.register(Role, RoleAdmin)
 
 admin.site.register(OrderProduct, OrderProductAdmin)
+
+admin.site.register(LogEntry, LogEntryAdmin)
