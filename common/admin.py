@@ -199,7 +199,7 @@ class LogEntryAdmin(admin.ModelAdmin):
         if isinstance(o, Burial):
             return u'<a href="%s">Захоронение %s (%s)</a>' % (reverse('edit_burial', args=[o.pk]), o.account_book_n, o.person)
         else:
-            return u'%s' % obj
+            return u'%s' % o
     object_link.allow_tags = True
 
 admin.site.register(Organization, OrganizationAdmin)
