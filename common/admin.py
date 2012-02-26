@@ -197,7 +197,7 @@ class LogEntryAdmin(admin.ModelAdmin):
     def object_link(self, obj):
         o = obj.get_edited_object()
         if isinstance(o, Burial):
-            return u'<a href="%s">Захоронение %s</a>' % (reverse('edit_burial', o.pk), o.account_book_n)
+            return u'<a href="%s">Захоронение %s (%s)</a>' % (reverse('edit_burial', o.pk), o.account_book_n, o.person)
         else:
             return u'%s' % obj
     object_link.allow_tags = True
