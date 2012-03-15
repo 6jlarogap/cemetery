@@ -1042,6 +1042,7 @@ def print_burial(request, uuid):
                 'lifters_count': lifters_count,
                 'coffin_size': print_form.cleaned_data.get('coffin_size') or '',
                 'print_now': print_form.cleaned_data.get('print_now'),
+                'dop_info': request.REQUEST.get('dop_info') or '',
             })
 
     return direct_to_template(request, 'burial_print.html', {

@@ -1124,6 +1124,11 @@
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
         </TR>
+        {% if dop_info %}
+            <TR>
+                <TD STYLE="border: 1px solid #000000;" ALIGN=LEFT VALIGN=TOP COLSPAN="13"><FONT COLOR="#000000">{{ dop_info|linebreaks }}</FONT></TD>
+            </TR>
+        {% endif %}
         <TR>
             <TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Заказ принял ____________________________________________________________</FONT></TD>
             <TD STYLE="" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">({{ burial_creator }})</FONT></TD>
@@ -1254,6 +1259,11 @@
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
         </TR>
+        {% if dop_info %}
+            <TR>
+                <TD STYLE="border: 1px solid #000000;" ALIGN=LEFT VALIGN=TOP COLSPAN="13"><FONT COLOR="#000000">{{ dop_info|linebreaks }}</FONT></TD>
+            </TR>
+        {% endif %}
         <TR>
             <TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Заказ принял ____________________________________________________________</FONT></TD>
             <TD STYLE="" COLSPAN=3 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000">({{ burial_creator }})</FONT></TD>
