@@ -128,6 +128,10 @@ class ClockWidget(forms.TextInput):
         super(ClockWidget, self).__init__(attrs=attrs)
 
 
+class UserChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.get_full_name() or obj.username or obj.email
+
 @autostrip
 class SearchForm(forms.Form):
     """
@@ -146,8 +150,7 @@ class SearchForm(forms.Form):
     account_book_n_from = forms.CharField(required=False, max_length=16, label="Номер в книге учета от и до")
     account_book_n_to = forms.CharField(required=False, max_length=16, label="Номер в книге учета до")
     customer = forms.CharField(required=False, max_length=30, label="Заказчик")
-    owner = forms.ModelChoiceField(required=False, queryset=User.objects.all(), empty_label="Все",
-                                   label="Создатель")
+    owner = UserChoiceField(required=False, queryset=User.objects.all(), empty_label="Все", label="Создатель")
     area = forms.CharField(required=False, max_length=9, label="Участок")
     row = forms.CharField(required=False, max_length=9, label="Ряд")
     seat = forms.CharField(required=False, max_length=9, label="Место")

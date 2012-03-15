@@ -162,8 +162,10 @@
             </tr>
         </table>
         <br />
-        <p>Доп. информация</p>
-        <textarea rows="10" cols="40" name="dop_info"></textarea>
+        <div>
+            <p>Доп. информация</p>
+            <textarea rows="10" cols="40" name="dop_info"></textarea>
+        </div>
         <input type="submit" value="Распечатать документы">
         <input type="submit" name="receipt" value="Распечатать справку">
         {% if burial.responsible_customer.person.filled %}<input type="submit" name="dogovor" value="Распечатать договор отв.">{% endif %}
