@@ -241,11 +241,20 @@ def main_page(request):
         if cd["owner"]:
             burials = burials.filter(creator=cd["owner"].userprofile.soul)
         if cd["area"]:
-            burials = burials.filter(product__place__area=cd["area"])
+            if cd["area"] == 'NULL':
+                burials = burials.filter(product__place__area='')
+            else:
+                burials = burials.filter(product__place__area=cd["area"])
         if cd["row"]:
-            burials = burials.filter(product__place__row=cd["row"])
+            if cd["row"] == 'NULL':
+                burials = burials.filter(product__place__row='')
+            else:
+                burials = burials.filter(product__place__row=cd["row"])
         if cd["seat"]:
-            burials = burials.filter(product__place__seat=cd["seat"])
+            if cd["seat"] == 'NULL':
+                burials = burials.filter(product__place__seat='')
+            else:
+                burials = burials.filter(product__place__seat=cd["seat"])
         if cd["gps_x"]:
             burials = burials.filter(product__place__gps_x=cd["gps_x"])
         if cd["gps_y"]:

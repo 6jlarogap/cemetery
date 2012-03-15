@@ -237,7 +237,9 @@ $(function(){
             {% if user|in_group:"edit_burial"  %}
                 <a title="редактировать" target="_blank" href='/burial/{{ b.uuid }}/'><img src="/media/edit.png"></a>
             {% endif %}
-            <a title="к могиле" href='/?cemetery={{ b.product.place.cemetery.uuid }}&area={{ b.product.place.area }}&row={{ b.product.place.row }}&seat={{ b.product.place.seat }}'><img width="16" src="/media/tree.png"></a>
+            <a title="к могиле"
+               href='/?cemetery={{ b.product.place.cemetery.uuid }}&area={{ b.product.place.area|default:'NULL' }}&row={{ b.product.place.row|default:'NULL' }}&seat={{ b.product.place.seat|default:'NULL' }}'
+                    ><img width="16" src="/media/tree.png"></a>
         </td>
     </tr>
 	{% endfor %}
