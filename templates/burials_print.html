@@ -49,12 +49,12 @@
 	        <td>{{ b.product.place.cemetery.name }}</td>
 	        <td>{{ b.product.place.rooms_occupied|default:1 }}/{{ b.product.place.rooms_free }}</td>
             <td>{{ b.person.location|default:"неизвестен" }}</td>
-	        {% if b.responsible_agent %}
+            {% if b.organization %}
                 <td>
-                    {{ b.responsible_agent.organization }}<br/>
-                    {{ b.responsible_agent.person }}
+                    {{ b.organization }}<br/>
+                    {% if b.responsible_agent %}{{ b.responsible_agent.person }}{% else %}{{ b.ceo_name }}{% endif %}
                 </td>
-	        {% else %}
+            {% else %}
                 <td>
                     {% if b.customer.person.filled %}
                         {{ b.customer.person.last_name }}

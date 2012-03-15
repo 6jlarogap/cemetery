@@ -762,10 +762,10 @@ $(function(){
                 <td>{{ b.product.place.seat }}</td>
                 <td>{{ b.product.place.cemetery.name }}</td>
                 <td>{{ b.operation.op_type }}</td>
-                {% if b.responsible_agent %}
+                {% if b.organization %}
                     <td>
-                        {{ b.responsible_agent.organization }}<br/>
-                        {{ b.responsible_agent.person }}
+                        {{ b.organization }}<br/>
+                        {% if b.responsible_agent %}{{ b.responsible_agent.person }}{% else %}{{ b.ceo_name }}{% endif %}
                     </td>
                 {% else %}
                     <td>
