@@ -107,10 +107,11 @@ $(function(){
     })
 
     $('#id_responsible_myself').change(updateResponsible);
-    updateResponsible();
+    setTimeout("updateResponsible();", 100);
 
     $('#id_agent_director').change(updateAgent);
     setTimeout("updateAgent();", 100);
+    setTimeout("updateAgent();", 500);
 
     $('#id_opf_0, #id_opf_1').change(updateOPF);
     setTimeout("updateOPF();", 100);

@@ -786,6 +786,10 @@ def edit_burial(request, uuid):
 
             new_burial.responsible_agent = agent
             new_burial.organization = cd['organization']
+        else:
+            new_burial.responsible_agent = None
+            new_burial.organization = None
+
 
 
         new_burial.save()
