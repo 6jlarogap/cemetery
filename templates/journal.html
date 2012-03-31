@@ -25,7 +25,7 @@
     }
 
     function updateAgent() {
-        if ($('#id_agent_director:checked').length == 0) {
+        if ($('#id_agent_director:visible').length > 0 && $('#id_agent_director:checked').length == 0) {
             $('.agent').show()
         } else {
             $('.agent').hide()
@@ -109,14 +109,15 @@ $(function(){
     $('#id_responsible_myself').change(updateResponsible);
     setTimeout("updateResponsible();", 100);
 
+    $('#id_opf_0, #id_opf_1').change(updateOPF);
+    setTimeout("updateOPF();", 50);
+    setTimeout("updateOPF();", 450);
+
     $('#id_agent_director').change(updateAgent);
     setTimeout("updateAgent();", 100);
     setTimeout("updateAgent();", 500);
 
-    $('#id_opf_0, #id_opf_1').change(updateOPF);
-    setTimeout("updateOPF();", 100);
-
-  $("#id_burial_date, #id_birth_date, #id_death_date").focus(function(){
+    $("#id_burial_date, #id_birth_date, #id_death_date").focus(function(){
      this.select();
      });
   
@@ -128,16 +129,6 @@ $(function(){
  $("#id_last_name").focusout(function(){
      if ($(this).val()=="")
      { $(this).val("{{ UNKNOWN_NAME }}");}
-     });
-
- $("#id_customer_last_name").focus(function(){
-     if ($(this).val()=="{{ UNKNOWN_NAME }}")
-     {$(this).val("");}
-     });
-
- $("#id_customer_last_name").focusout(function(){
-     if ($(this).val()=="")
-     {$(this).val("{{ UNKNOWN_NAME }}");}
      });
 
     {% if additional_burial %}

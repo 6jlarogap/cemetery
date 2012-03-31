@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.core.validators import RegexValidator
 from django.forms import formsets
 from django.forms.extras.widgets import SelectDateWidget
 from django.forms.forms import conditional_escape, flatatt, mark_safe, BoundField
@@ -10,7 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminTimeWidget
 
 from models import *
-from common.models import PersonID
+from common.models import PersonID, Organization, Agent
 from contrib.constants import UNKNOWN_NAME
 
 from annoying.decorators import autostrip
@@ -458,8 +459,7 @@ class JournalForm(AutoTabIndex):
     rooms_free = forms.IntegerField(label="Свободно", required=False)
     customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
                                          help_text="Допускаются только буквы, цифры и символ '-'",
-                                         initial=UNKNOWN_NAME,
-                                         validators=[RegexValidator(RE_LASTNAME), ])
+                                         required=True)
     customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика",
                                           validators=[RegexValidator(RE_LASTNAME), ])
     customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика",
@@ -533,12 +533,6 @@ class JournalForm(AutoTabIndex):
 
     def clean_responsible_last_name(self):
         name = self.cleaned_data['responsible_last_name']
-        if '*' in name and name != UNKNOWN_NAME:
-            raise forms.ValidationError(u'Недопустимая фамилия')
-        return name
-
-    def clean_customer_last_name(self):
-        name = self.cleaned_data['customer_last_name']
         if '*' in name and name != UNKNOWN_NAME:
             raise forms.ValidationError(u'Недопустимая фамилия')
         return name
