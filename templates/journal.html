@@ -467,13 +467,6 @@ $(function(){
                     <td class="free_form">
                         {{ form.rooms.errors }}{{ form.rooms }} всего /
                         {{ form.rooms_free.errors }}{{ form.rooms_free }} своб
-                        {% if form.initial.family_burial %}
-                            <br/>
-                            <label>
-                                <input type="checkbox" name="split_burial" value="on" {% if request.REQUEST.split_burial %} checked="1"{% endif %}/>
-                                отделить от родственного
-                            </label>
-                        {% endif %}
                     </td>
                 </tr>
                 <!-- -->
