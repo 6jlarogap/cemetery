@@ -344,7 +344,7 @@ def journal(request):
 
             if rc.location:
                 responsible_address = {}
-                for k in ['post_index', 'house', 'block', 'building', 'flat', 'info', 'street', 'ciry', 'region', 'country']:
+                for k in ['post_index', 'house', 'block', 'building', 'flat', 'info', 'street', 'city', 'region', 'country']:
                     responsible_address[k] = getattr(rc.location, k, None)
 
     form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None, initial=initial)
