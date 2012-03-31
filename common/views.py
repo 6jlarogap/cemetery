@@ -775,6 +775,18 @@ def edit_burial(request, uuid):
                     patronymic=cd.get("responsible_patronymic", "").capitalize(),
                     location = responsible_form.is_valid() and responsible_form.save() or None,
                 )
+
+        if new_burial.responsible_customer:
+            burials = Burial.objects.exclude(account_book_n=cd['account_book_n'])
+            burials = burials.filter(
+                product__place__cemetery=cd['cemetery'],
+                product__place__area=cd['area'],
+                product__place__row=cd['row'],
+                product__place__seat=cd['seat'],
+            )
+            burials = burials.filter(responsible_customer__isnull=False)
+            burials.update(responsible_customer=new_burial.responsible_customer)
+
         if not request.REQUEST.get('opf') == 'fizik':
             agent = cd['agent']
             if agent:
