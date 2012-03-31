@@ -560,6 +560,9 @@ class JournalForm(AutoTabIndex):
     def clean(self):
         cd = self.cleaned_data
 
+        if cd.get('opf') == 'yurik' and not cd.get('organization'):
+            raise forms.ValidationError("Не указана организация для ЮЛ")
+
         # Валидация кладбища/операции.
         operation = cd.get("operation", None)
         cemetery = cd.get("cemetery") or Cemetery()
