@@ -357,6 +357,7 @@ def journal(request):
     phoneset = PhoneFormSet(prefix='phones', data=request.POST or None, queryset=Phone.objects.none())
 
     id_valid = request.POST.get('opf') != 'fizik' or id_form.is_valid()
+
     customer_addr_valid = request.POST.get('opf') != 'fizik' or \
                           request.POST.get('customer_last_name') in [None, '', UNKNOWN_NAME] or \
                           location_form.is_valid()

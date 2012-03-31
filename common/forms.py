@@ -457,9 +457,8 @@ class JournalForm(AutoTabIndex):
     seat = forms.CharField(max_length=8, label="Место", required=False, help_text=u'если пусто - заполнится автоматически')
     rooms = forms.IntegerField(label="Мест в ограде всего", required=False)
     rooms_free = forms.IntegerField(label="Свободно", required=False)
-    customer_last_name = forms.CharField(max_length=30, label="Фамилия заказчика*",
-                                         help_text="Допускаются только буквы, цифры и символ '-'",
-                                         required=True)
+    customer_last_name = forms.CharField(required=False, max_length=30, label="Фамилия заказчика*",
+                                         help_text="Допускаются только буквы, цифры и символ '-'")
     customer_first_name = forms.CharField(required=False, max_length=30, label="Имя заказчика",
                                           validators=[RegexValidator(RE_LASTNAME), ])
     customer_patronymic = forms.CharField(required=False, max_length=30, label="Отчество заказчика",
@@ -516,6 +515,9 @@ class JournalForm(AutoTabIndex):
             for f in ['dover_date', 'dover_expire', 'dover_number', 'agent', ]:
                 self.fields[f].required = not data.get('agent_director') or False
 
+            for f in ['customer_last_name', ]:
+                self.fields[f].required = False
+
         if cem:
             self.fields["cemetery"].initial = cem
         if oper:
@@ -529,7 +531,6 @@ class JournalForm(AutoTabIndex):
 
         if data.get('agent_director'):
             data['agent'] = None
-
 
     def clean_responsible_last_name(self):
         name = self.cleaned_data['responsible_last_name']
