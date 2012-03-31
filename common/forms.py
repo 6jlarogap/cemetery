@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminTimeWidget
 
 from models import *
+from common.models import PersonID
 from contrib.constants import UNKNOWN_NAME
 
 from annoying.decorators import autostrip
@@ -1093,6 +1094,8 @@ class PrintOptionsForm(forms.Form):
     coffin_size = forms.CharField(label=u"размер гроба", required=False)
 
     print_now = forms.BooleanField(label=u"отправить на печать", required=False)
+
+    add_info = forms.CharField(label=u"доп. инфо", required=False, widget=forms.Textarea)
 
     def __init__(self, *args, **kwargs):
         self.burial = kwargs.pop('burial')

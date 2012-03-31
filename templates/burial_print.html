@@ -163,8 +163,8 @@
         </table>
         <br />
         <div>
-            <p>Доп. информация</p>
-            <textarea rows="10" cols="40" name="dop_info"></textarea>
+            {{ print_form.add_info.label_tag }}
+            {{ print_form.add_info }}{{ print_form.add_info.errors }}
         </div>
         <input type="submit" value="Распечатать документы">
         <input type="submit" name="receipt" value="Распечатать справку">
