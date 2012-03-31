@@ -544,6 +544,40 @@ def journal(request):
 @login_required
 @is_in_group("edit_burial")
 @transaction.commit_on_success
+def separate_burial(request, uuid):
+    one = Burial.objects.get(uuid=uuid)
+    other = one.relative_burials()
+    params = {
+        'one': one,
+        'other': other,
+    }
+    if not list(other):
+        return redirect('edit_burial', [uuid, ])
+
+    if one.seat != one.account_book_n:
+        params.update({
+            'separate': 'one',
+            'seat_number': Burial().generate_account_number(),
+        })
+        if request.POST:
+            one.product.place.seat = Burial().generate_account_number()
+            one.product.place.save()
+    else:
+        params.update({
+            'separate': 'other',
+            'seat_number': min([b.account_book_n for b in other]),
+        })
+        if request.POST:
+            one.product.place.seat = Burial().generate_account_number()
+            one.product.place.save()
+        if request.POST:
+            return redirect('edit_burial', [uuid, ])
+    return direct_to_template(request, 'burial_separate.html', params)
+
+
+@login_required
+@is_in_group("edit_burial")
+@transaction.commit_on_success
 def edit_burial(request, uuid):
     """
     Страница редактирования существующего захоронения.

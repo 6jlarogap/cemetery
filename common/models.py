@@ -894,6 +894,16 @@ class Burial(Order):
         self.account_book_n = str(current_num)
         return self.account_book_n
 
+    def relative_burials(self):
+        burials = Burial.objects.exclude(account_book_n=self.account_book_n)
+        burials = burials.filter(
+            product__place__cemetery=self.product.place.cemetery,
+            product__place__area=self.product.place.area,
+            product__place__row=self.product.place.row,
+            product__place__seat=self.product.place.seat,
+        )
+        return burials
+
 #def recount_free_rooms_burial(sender, instance, **kwargs):
 #    place = instance.product.place
 #    place.rooms_free = max(0, place.rooms - place.count_burials())

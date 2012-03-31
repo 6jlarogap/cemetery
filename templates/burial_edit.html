@@ -7,21 +7,24 @@
 {% block title_h2 %}Редактирование захоронения{% endblock %}
 
 {% block buttons %}
-        {% if user|in_group:"edit_bur_in_adm" %}
-            {{ form.in_trash.label_tag }}{{ form.in_trash }}
-        {% endif %}
-        <br />
-        <a href="{% url add_burial %}?burial={{ burial.pk }}" target="_blank">Добавить родственное</a>
-        <a href="{% url print_burial burial.pk %}" target="_blank">Документы</a>
-        <br />
-        <input type="submit" value="Сохранить"  tabindex="22">
-        {% if burial.is_trash %}
-            <input type="submit" name="undelete" value="Восстановить"  tabindex="22"/>
-        {% else %}
-            <input type="submit" name="delete" value="Удалить"  tabindex="22"/>
-        {% endif %}
-        <button type="reset" onclick="top.location.href='{{ request.path }}';" tabindex="23">Отмена</button>
-        <a href="/journal/">Назад</a>
+    {% if user|in_group:"edit_bur_in_adm" %}
+        {{ form.in_trash.label_tag }}{{ form.in_trash }}
+    {% endif %}
+    <br />
+    <a href="{% url add_burial %}?burial={{ burial.pk }}" target="_blank">Добавить родственное</a>
+    {% if burial.relative_burials %}
+        <a href="{% url separate_burial burial.pk %}">Отделить родственное</a>
+    {% endif %}
+    <a href="{% url print_burial burial.pk %}" target="_blank">Документы</a>
+    <br />
+    <input type="submit" value="Сохранить"  tabindex="22">
+    {% if burial.is_trash %}
+        <input type="submit" name="undelete" value="Восстановить"  tabindex="22"/>
+    {% else %}
+        <input type="submit" name="delete" value="Удалить"  tabindex="22"/>
+    {% endif %}
+    <button type="reset" onclick="top.location.href='{{ request.path }}';" tabindex="23">Отмена</button>
+    <a href="/journal/">Назад</a>
 
     <script type="text/javascript">
         $(function() {
