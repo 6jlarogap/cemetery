@@ -595,7 +595,7 @@ class JournalForm(AutoTabIndex):
             if cd["rooms"] <= place.count_burials():
                 raise forms.ValidationError("Нет свободного места в ограде")
 
-        if self.instance:
+        if not self.instance:
             try:
                 burials = Burial.objects.exclude(account_book_n=self.cleaned_data['account_book_n'])
                 burials = burials.filter(
