@@ -604,34 +604,30 @@ class JournalForm(AutoTabIndex):
                 raise forms.ValidationError("Нет свободного места в ограде")
 
         if not self.instance:
-            try:
-                burials = Burial.objects.exclude(account_book_n=self.cleaned_data['account_book_n'])
-                burials = burials.filter(
-                    product__place__cemetery=self.cleaned_data['cemetery'],
-                    product__place__area=self.cleaned_data['area'],
-                    product__place__row=self.cleaned_data['row'],
-                    product__place__seat=self.cleaned_data['seat'],
-                )
-                burials = burials.filter(responsible_customer__isnull=False)
-                burials = [b for b in burials if b.responsible_customer.person.last_name != UNKNOWN_NAME and not b.responsible_customer.person.last_name.startswith('*')]
-                b = burials[0]
-            except IndexError:
-                pass
-            else:
-                r = b.responsible_customer.person
-                if cd['responsible_myself']:
-                    new_r = Person(
-                        last_name=cd['customer_last_name'],
-                        first_name=cd['customer_first_name'],
-                        patronymic=cd['customer_patronymic'],
-                    )
-                else:
-                    new_r = Person(
-                        last_name=cd['responsible_last_name'],
-                        first_name=cd['responsible_first_name'],
-                        patronymic=cd['responsible_patronymic'],
-                    )
+            burials = Burial.objects.exclude(account_book_n=self.cleaned_data['account_book_n'])
+            burials = burials.filter(
+                product__place__cemetery=self.cleaned_data['cemetery'],
+                product__place__area=self.cleaned_data['area'],
+                product__place__row=self.cleaned_data['row'],
+                product__place__seat=self.cleaned_data['seat'],
+            )
+            burials = burials.filter(responsible_customer__isnull=False)
 
+            if cd['responsible_myself']:
+                new_r = Person(
+                    last_name=cd['customer_last_name'],
+                    first_name=cd['customer_first_name'],
+                    patronymic=cd['customer_patronymic'],
+                )
+            else:
+                new_r = Person(
+                    last_name=cd['responsible_last_name'],
+                    first_name=cd['responsible_first_name'],
+                    patronymic=cd['responsible_patronymic'],
+                )
+
+            for b in burials:
+                r = b.responsible_customer.person
                 if new_r.last_name.lower() != r.last_name.lower() or \
                    new_r.first_name.lower() != r.first_name.lower() or \
                    new_r.patronymic.lower() != r.patronymic.lower():
