@@ -580,6 +580,14 @@ class JournalForm(AutoTabIndex):
 
         if not cd.get("account_book_n"):
             cd["account_book_n"] = ''
+        else:
+            try:
+                Burial.objects.filter(account_book_n=cd["account_book_n"], product__place__cemetery=self.cleaned_data['cemetery'])[0]
+            except Burial.DoesNotExist:
+                pass
+            else:
+                raise forms.ValidationError(u'Номер захоронения должен быть уникален в пределах одного кладбища')
+
         if not cd.get("seat"):
             cd["seat"] = ''
 
