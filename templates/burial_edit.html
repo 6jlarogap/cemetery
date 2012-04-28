@@ -10,6 +10,12 @@
     {% if user|in_group:"edit_bur_in_adm" %}
         {{ form.in_trash.label_tag }}{{ form.in_trash }}
     {% endif %}
+
+    <br />
+    <p>Создано: {{ burial.date_of_creation|date:"d.m.Y H:i" }} пользователем {{ burial.creator.userprofile }}</p>
+    {% if burial.last_change %}
+        <p>Последнее изменение: {{ burial.last_change.action_time|date:"d.m.Y H:i" }} пользователем {{ burial.last_change.user }}</p>
+    {% endif %}
     <br />
     <a href="{% url add_burial %}?burial={{ burial.pk }}" target="_blank">Добавить родственное</a>
     {% if burial.relative_burials %}
@@ -25,6 +31,7 @@
     {% endif %}
     <button type="reset" onclick="top.location.href='{{ request.path }}';" tabindex="23">Отмена</button>
     <a href="/journal/">Назад</a>
+
 
     <script type="text/javascript">
         $(function() {

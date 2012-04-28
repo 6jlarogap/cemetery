@@ -820,6 +820,15 @@ class Burial(Order):
     def __unicode__(self):
         return u"захоронение: %s" % self.person.__unicode__()
 
+    def last_change(self):
+        from django.contrib.admin.models import LogEntry, ContentType
+        ct = ContentType.objects.get_for_model(Burial)
+        try:
+            return LogEntry.objects.filter(object_id=self.pk, content_type=ct).exclude(action_time=self.date_of_creation).order_by('-id')[0]
+        except IndexError:
+            return None
+
+
     def get_print_info(self):
         if self.print_info:
             data = simplejson.loads(self.print_info)
