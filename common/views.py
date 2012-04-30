@@ -581,6 +581,7 @@ def separate_burial(request, uuid):
             )
 
             one.product = new_place
+            one.operation = Operation.objects.get(op_type=u'Захоронение')
             one.save()
     else:
         params.update({
@@ -610,6 +611,9 @@ def separate_burial(request, uuid):
                 if i == 0:
                     o.operation = Operation.objects.get(op_type=u'Захоронение')
                     o.save()
+
+            one.operation = Operation.objects.get(op_type=u'Захоронение')
+            one.save()
 
     if request.POST:
         return redirect('edit_burial', uuid)
