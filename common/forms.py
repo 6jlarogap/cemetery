@@ -1025,15 +1025,15 @@ class EditUserForm(forms.ModelForm):
         return user
 
 @autostrip
-class UserProfileForm(forms.Form):
+class UserProfileForm(forms.ModelForm):
     """
     Форма значений по умолчанию для профиля пользователя.
     """
-    cemetery = forms.ModelChoiceField(required=False, queryset=Cemetery.objects.all(), label="Кладбище")
-    operation = forms.ModelChoiceField(required=False, queryset=Operation.objects.all(), label="Услуга")
-    hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
-    records_per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label="Записей на странице")
-    records_order_by = forms.ChoiceField(required=False, choices=ORDER_BY_VALUES, label="Сортировка по")
+
+    class Meta:
+        model = UserProfile
+        exclude = ['default_country', 'default_region', 'default_city', ]
+
     def clean(self):
         cd = self.cleaned_data
         cemetery = cd.get("cemetery", None)

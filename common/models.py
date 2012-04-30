@@ -927,11 +927,11 @@ class UserProfile(models.Model):
     """
     Профиль пользователя.
     """
-    user = models.OneToOneField(User, primary_key=True)
-    soul = models.OneToOneField(Soul)
+    user = models.OneToOneField(User, primary_key=True, editable=False)
+    soul = models.OneToOneField(Soul, editable=False)
     default_cemetery = models.ForeignKey(Cemetery, verbose_name=u"Кладбище",
                                          blank=True, null=True)  # Связь с кладбищем.
-    default_operation = models.ForeignKey(Operation, verbose_name=u"Операция", blank=True, null=True)
+    default_operation = models.ForeignKey(Operation, verbose_name=u"Услуга", blank=True, null=True)
     default_country = models.ForeignKey(GeoCountry, verbose_name=u"Страна",
                                         blank=True, null=True)  # Страна.
     default_region = models.ForeignKey(GeoRegion, verbose_name=u"Регион",

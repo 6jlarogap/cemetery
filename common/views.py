@@ -1164,52 +1164,21 @@ def profile(request):
     """
     Редактирование (и создание) профиля пользователя.
     """
-    if request.method == "POST":
-        form = UserProfileForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            if hasattr(request.user, "userprofile"):
-                up = request.user.userprofile
-            else:
-                # this case could not happen - we creating profile with user creation!
-                soul = Soul(creator=request.user.userprofile.soul)
-                soul.save()
-                up = UserProfile(user=request.user, soul=soul)
+    if hasattr(request.user, "userprofile"):
+        up = request.user.userprofile
+    else:
+        # this case could not happen - we creating profile with user creation!
+        soul = Soul(creator=request.user.userprofile.soul)
+        soul.save()
+        up = UserProfile(user=request.user, soul=soul)
 
-            if cd.get("cemetery", ""):
-                up.default_cemetery = cd["cemetery"]
-            else:
-                up.default_cemetery = None
-            if cd.get("operation", ""):
-                up.default_operation = cd["operation"]
-            else:
-                up.default_operation = None
-            if cd.get("records_per_page", 0):
-                up.records_per_page = cd["records_per_page"]
-            else:
-                up.records_per_page = None
-            if cd.get("records_order_by", ""):
-                up.records_order_by = cd["records_order_by"]
-            else:
-                up.records_order_by = ""
-            up.save()
+    if request.method == "POST":
+        form = UserProfileForm(request.POST, instance=up)
+        if form.is_valid():
+            form.save()
             return redirect("/profile/")
     else:
-        if hasattr(request.user, "userprofile"):
-            profile = request.user.userprofile
-            initial_data = {}
-            if profile.default_cemetery:
-                initial_data["cemetery"] = profile.default_cemetery
-            if profile.default_operation:
-                initial_data["operation"] = profile.default_operation
-                initial_data["hoperation"] = profile.default_operation.uuid
-            if profile.records_per_page:
-                initial_data["records_per_page"]= profile.records_per_page
-            if profile.records_order_by:
-                initial_data["records_order_by"]= profile.records_order_by
-            form = UserProfileForm(initial=initial_data)
-        else:
-            form = UserProfileForm()
+        form = UserProfileForm(instance=up)
     return direct_to_template(request, 'profile2.html', {"form": form})
 
 
