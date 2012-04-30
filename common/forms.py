@@ -578,9 +578,9 @@ class JournalForm(AutoTabIndex):
                 if not cd.get('seat'):
                     raise forms.ValidationError(u"Нужно указать номер могилы")
 
-        if not cd.get("account_book_n"):
+        if not cd.get("account_book_n") :
             cd["account_book_n"] = ''
-        else:
+        elif not self.instance:
             try:
                 Burial.objects.filter(account_book_n=cd["account_book_n"], product__place__cemetery=self.cleaned_data['cemetery'])[0]
             except IndexError:
