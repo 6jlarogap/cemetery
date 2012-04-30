@@ -580,9 +580,12 @@ class JournalForm(AutoTabIndex):
 
         if not cd.get("account_book_n") :
             cd["account_book_n"] = ''
-        elif not self.instance:
+        else:
+            burials = Burial.objects.filter(account_book_n=cd["account_book_n"], product__place__cemetery=self.cleaned_data['cemetery'])
+            if self.instance:
+                burials = burials.exclude(pk=self.instance.pk)
             try:
-                Burial.objects.filter(account_book_n=cd["account_book_n"], product__place__cemetery=self.cleaned_data['cemetery'])[0]
+                burials[0]
             except IndexError:
                 pass
             else:
