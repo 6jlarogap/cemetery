@@ -615,15 +615,15 @@ class JournalForm(AutoTabIndex):
 
             if cd['responsible_myself']:
                 new_r = Person(
-                    last_name=cd['customer_last_name'],
-                    first_name=cd['customer_first_name'],
-                    patronymic=cd['customer_patronymic'],
+                    last_name=cd.get('customer_last_name', ''),
+                    first_name=cd.get('customer_first_name', ''),
+                    patronymic=cd.get('customer_patronymic', ''),
                 )
             else:
                 new_r = Person(
-                    last_name=cd['responsible_last_name'],
-                    first_name=cd['responsible_first_name'],
-                    patronymic=cd['responsible_patronymic'],
+                    last_name=cd.get('responsible_last_name', ''),
+                    first_name=cd.get('responsible_first_name', ''),
+                    patronymic=cd.get('responsible_patronymic', ''),
                 )
 
             for b in burials:
