@@ -337,6 +337,7 @@ def journal(request):
         if burial.responsible_customer:
             rc = burial.responsible_customer.person
             initial.update({
+                'responsible_myself': False,
                 'responsible_last_name': rc.last_name,
                 'responsible_first_name': rc.first_name,
                 'responsible_patronymic': rc.patronymic,
@@ -348,6 +349,10 @@ def journal(request):
                     responsible_address[k] = getattr(rc.location, k, None)
 
     form = JournalForm(cem=cem, oper=oper, data=request.POST or None, files=request.FILES or None, initial=initial)
+
+    if request.GET.get('burial'):
+        form.fields['operation'].queryset = Operation.objects.exclude(op_type=u'Захоронение').order_by('ordering', 'op_type')
+
     location_form = AddressForm(prefix='address', data=request.POST or None)
     registration_form = AddressForm(prefix='registration', data=request.POST or None)
     responsible_form = AddressForm(prefix='responsible', data=request.POST or None, initial=responsible_address)
@@ -1970,8 +1975,11 @@ def get_oper(request):
         else:
             orgsoul=cemetery.organization.soul_ptr
             choices = SoulProducttypeOperation.objects.filter(soul=orgsoul,
-                              p_type=settings.PLACE_PRODUCTTYPE_ID).values_list("operation__uuid", "operation__op_type")
-            for c in choices:
+                              p_type=settings.PLACE_PRODUCTTYPE_ID)
+            if request.GET.get('parent'):
+                choices = choices.exclude(operation__op_type=u'Захоронение')
+
+            for c in choices.values_list("operation__uuid", "operation__op_type"):
                 rez.append({"optionValue": c[0], "optionDisplay": c[1]})
             rez.insert(0, {"optionValue": 0, "optionDisplay": u'---------'})
     return HttpResponse(JSONEncoder().encode(rez))
