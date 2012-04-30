@@ -1022,7 +1022,7 @@ def print_burial(request, uuid):
             })
 
         catafalque_release = ('_____', '_____',)
-        catafalque_time = ('_____', '_____',)
+        catafalque_time = ''
         catafalque_hours = None
         lifters_count = u'н/д'
 

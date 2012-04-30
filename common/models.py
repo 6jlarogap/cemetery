@@ -943,6 +943,10 @@ class UserProfile(models.Model):
                                                     choices=PER_PAGE_VALUES)
     records_order_by = models.CharField(u"Сортировка по", max_length=50,
                                         blank=True, choices=ORDER_BY_VALUES)
+
+    catafalque_text = models.TextField(u"Текст в наряде на а/к", blank=True, default='')
+    naryad_text = models.TextField(u"Текст во всех нарядах", blank=True, default='')
+
     def __unicode__(self):
         return self.user.username
 
