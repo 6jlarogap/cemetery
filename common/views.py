@@ -550,7 +550,7 @@ def journal(request):
 @is_in_group("edit_burial")
 @transaction.commit_on_success
 def separate_burial(request, uuid):
-    one = Burial.objects.get(uuid=uuid)
+    one = get_object_or_404(Burial, uuid=uuid)
     other = one.relative_burials()
     params = {
         'one': one,
@@ -562,21 +562,57 @@ def separate_burial(request, uuid):
     if one.product.place.seat != one.account_book_n:
         params.update({
             'separate': 'one',
-            'seat_number': Burial().generate_account_number(),
+            'seat_number': one.generate_seat_number(),
         })
         if request.POST:
-            one.product.place.seat = Burial().generate_account_number()
-            one.product.place.save()
+            old_place = one.product.place
+            new_place = Place.objects.create(
+                soul = old_place.soul,
+                name = old_place.name,
+                measure = old_place.measure,
+                p_type = old_place.p_type,
+                cemetery = old_place.cemetery,
+                area = old_place.area,
+                row = old_place.row,
+                seat = one.generate_seat_number(),
+                rooms = max(old_place.rooms - 1, 1),
+                rooms_free = old_place.rooms_free,
+                creator = old_place.creator or request.user.userprofile.soul,
+            )
+
+            one.product = new_place
+            one.save()
     else:
         params.update({
             'separate': 'other',
             'seat_number': min([b.account_book_n for b in other]),
         })
         if request.POST:
-            one.product.place.seat = Burial().generate_account_number()
-            one.product.place.save()
-        if request.POST:
-            return redirect('edit_burial', [uuid, ])
+            old_place = one.product.place
+            new_place = Place.objects.create(
+                soul = old_place.soul,
+                name = old_place.name,
+                measure = old_place.measure,
+                p_type = old_place.p_type,
+                cemetery = old_place.cemetery,
+                area = old_place.area,
+                row = old_place.row,
+                seat = one.generate_seat_number(),
+                rooms = max(old_place.rooms - 1, 1),
+                rooms_free = old_place.rooms_free,
+                creator = old_place.creator or request.user.userprofile.soul,
+            )
+
+            for i, o in enumerate(other):
+                o.product = new_place
+                o.save()
+
+                if i == 0:
+                    o.operation = Operation.objects.get(op_type=u'Захоронение')
+                    o.save()
+
+    if request.POST:
+        return redirect('edit_burial', uuid)
     return direct_to_template(request, 'burial_separate.html', params)
 
 

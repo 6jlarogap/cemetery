@@ -26,6 +26,7 @@
 
     <form action="" method="POST">
         {% csrf_token %}
+        <input type="hidden" name="seat_number" value="{{ seat_number }}" />
         <input type="submit" value="отделить" />
     </form>
 {% endblock %}

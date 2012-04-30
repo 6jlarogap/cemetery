@@ -903,6 +903,17 @@ class Burial(Order):
         self.account_book_n = str(current_num)
         return self.account_book_n
 
+    def generate_seat_number(self):
+        y = str(datetime.date.today().year)
+        siblings = Burial.objects.filter(product__place__cemetery=self.product.place.cemetery, product__place__seat__istartswith=y)
+        max_num = str(siblings.aggregate(seat=models.Max('product__place__seat'))['seat']) or ''
+        if max_num.startswith(y):
+            current_num = int(float(max_num)) + 1
+        else:
+            current_num = y + '0001'
+        self.account_book_n = str(current_num)
+        return self.account_book_n
+
     def relative_burials(self):
         burials = Burial.objects.exclude(account_book_n=self.account_book_n)
         burials = burials.filter(
