@@ -562,7 +562,7 @@ def separate_burial(request, uuid):
     if one.product.place.seat != one.account_book_n:
         params.update({
             'separate': 'one',
-            'seat_number': one.generate_seat_number(),
+            'seat_number': one.account_book_n,
         })
         if request.POST:
             old_place = one.product.place
@@ -574,7 +574,7 @@ def separate_burial(request, uuid):
                 cemetery = old_place.cemetery,
                 area = old_place.area,
                 row = old_place.row,
-                seat = one.generate_seat_number(),
+                seat = one.account_book_n,
                 rooms = max(old_place.rooms - 1, 1),
                 rooms_free = old_place.rooms_free,
                 creator = old_place.creator or request.user.userprofile.soul,
@@ -598,7 +598,7 @@ def separate_burial(request, uuid):
                 cemetery = old_place.cemetery,
                 area = old_place.area,
                 row = old_place.row,
-                seat = one.generate_seat_number(),
+                seat = min([b.account_book_n for b in other]),
                 rooms = max(old_place.rooms - 1, 1),
                 rooms_free = old_place.rooms_free,
                 creator = old_place.creator or request.user.userprofile.soul,
@@ -608,7 +608,7 @@ def separate_burial(request, uuid):
                 o.product = new_place
                 o.save()
 
-                if i == 0:
+                if not i:
                     o.operation = Operation.objects.get(op_type=u'Захоронение')
                     o.save()
 
