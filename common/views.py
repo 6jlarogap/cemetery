@@ -770,6 +770,15 @@ def edit_burial(request, uuid):
         else:
             place = burial.product.place
 
+            if place.cemetery != cd["cemetery"] or place.area != cd["area"] or place.row != cd["row"] or place.seat != cd["seat"]:
+                try:
+                    place = Place.objects.filter(cemetery=cd["cemetery"], area=cd["area"], row=cd["row"], seat=cd["seat"])[0]
+                except IndexError:
+                    pass
+                else:
+                    burial.product.place = place
+                    burial.product.save()
+
             place.rooms = cd["rooms"] or 1
             place.rooms_free = cd["rooms_free"] or 0
 
