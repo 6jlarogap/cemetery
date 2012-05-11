@@ -626,7 +626,6 @@ def separate_burial(request, uuid):
 
 @login_required
 @is_in_group("edit_burial")
-@transaction.commit_on_success
 def edit_burial(request, uuid):
     """
     Страница редактирования существующего захоронения.
@@ -780,8 +779,8 @@ def edit_burial(request, uuid):
                 except IndexError:
                     pass
                 else:
-                    burial.product.place = place
-                    burial.product.save()
+                    burial.product = place.product_ptr
+                    burial.save()
 
             place.rooms = cd["rooms"] or 1
             place.rooms_free = cd["rooms_free"] or 0
@@ -833,10 +832,14 @@ def edit_burial(request, uuid):
             elif pf.instance:
                 pf.instance.delete()
 
+        burial.product = place.product_ptr
+        burial.save()
+
         # Create new Burial.
         new_burial = burial
         new_burial.person = new_person
         new_burial.product = place.product_ptr
+        new_burial.product.place = place
 
         d = cd["burial_date"]
         if cd["burial_time"]:
@@ -888,7 +891,6 @@ def edit_burial(request, uuid):
             new_burial.organization = None
 
 
-
         new_burial.save()
 
         new_burial.person.location = registration_form.save()
@@ -900,6 +902,8 @@ def edit_burial(request, uuid):
             if not place.seat:
                 place.seat = num
                 place.save()
+
+        new_burial.save()
 
         # Create comment.
         if cd.get("comment", ""):

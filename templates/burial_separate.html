@@ -11,7 +11,11 @@
     Отделяем {{ one }} от:
     <ul>
         {% for o in other %}
-            {{ o }}
+            {% if forloop.first %}
+                <a href="/burial/{{ b.uuid }}/">{{ o }}</a>
+            {% else %}
+                {{ o }}
+            {% endif %}
         {% endfor %}
     </ul>
 
