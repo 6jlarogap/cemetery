@@ -612,6 +612,10 @@ def separate_burial(request, uuid):
                     o.operation = Operation.objects.get(op_type=u'Захоронение')
                     o.save()
 
+            old_place.rooms = 1
+            old_place.rooms_free = 0
+            old_place.save()
+
             one.operation = Operation.objects.get(op_type=u'Захоронение')
             one.save()
 
