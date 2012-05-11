@@ -575,8 +575,8 @@ def separate_burial(request, uuid):
                 area = old_place.area,
                 row = old_place.row,
                 seat = one.account_book_n,
-                rooms = max(old_place.rooms - 1, 1),
-                rooms_free = old_place.rooms_free,
+                rooms = 1,
+                rooms_free = 0,
                 creator = old_place.creator or request.user.userprofile.soul,
             )
 
