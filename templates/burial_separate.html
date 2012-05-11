@@ -12,7 +12,7 @@
     <ul>
         {% for o in other %}
             {% if forloop.first %}
-                <a href="/burial/{{ b.uuid }}/">{{ o }}</a>
+                <a href="/burial/{{ o.uuid }}/" target="_blank">{{ o }}</a>
             {% else %}
                 {{ o }}
             {% endif %}
