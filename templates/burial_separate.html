@@ -12,10 +12,12 @@
     <ul>
         {% for o in other %}
             {% if forloop.first %}
-                {{ o }}
-                <a href="/burial/{{ o.uuid }}/?from_separate=1" target="_blank">Редактировать</a>
+                <li>
+                    {{ o }}
+                    <a href="/burial/{{ o.uuid }}/?from_separate=1" target="_blank">Редактировать</a>
+                </li>
             {% else %}
-                {{ o }}
+                <li>{{ o }}</li>
             {% endif %}
         {% endfor %}
     </ul>
