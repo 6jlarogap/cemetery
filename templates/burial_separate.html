@@ -12,7 +12,8 @@
     <ul>
         {% for o in other %}
             {% if forloop.first %}
-                <a href="/burial/{{ o.uuid }}/" target="_blank">{{ o }}</a>
+                {{ o }}
+                <a href="/burial/{{ o.uuid }}/?from_separate=1" target="_blank">Редактировать</a>
             {% else %}
                 {{ o }}
             {% endif %}

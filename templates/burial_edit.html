@@ -18,7 +18,7 @@
     {% endif %}
     <br />
     <a href="{% url add_burial %}?burial={{ burial.pk }}" target="_blank">Добавить родственное</a>
-    {% if burial.relative_burials %}
+    {% if burial.relative_burials and not request.GET.from_separate %}
         <a href="{% url separate_burial burial.pk %}">Отделить родственное</a>
     {% endif %}
     <a href="{% url print_burial burial.pk %}" target="_blank">Документы</a>

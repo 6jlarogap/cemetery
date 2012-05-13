@@ -620,7 +620,7 @@ def separate_burial(request, uuid):
             one.save()
 
     if request.POST:
-        return redirect('edit_burial', uuid)
+        return HttpResponseRedirect(reverse('edit_burial', args=[uuid]) + '?from_separate=1')
     return direct_to_template(request, 'burial_separate.html', params)
 
 
