@@ -5,6 +5,13 @@
     {{ form.media }}
     <link rel="stylesheet" href="/media/css/ui-lightness/jquery-ui-1.8.6.custom.css" type="text/css" />
     <link rel="stylesheet" href="/media/css/jquery-ui-timepicker.css?v=0.2.3" type="text/css" />
+
+    <style type="text/css">
+        .free_form.highlight {
+            background-color: #ffa500;
+        }
+    </style>
+
     <script type="text/javascript" src="/media/js/jquery-ui-1.8.6.custom.min.js"></script>
     <script type="text/javascript" src="/media/js/jquery.query-2.1.7.js"></script>
     <script type="text/javascript" src="/admin_media/js/admin/RelatedObjectLookups.js"></script>
@@ -439,7 +446,7 @@
     <tr>
         <td class="free_form">{{ form.area.errors }}{{ form.area }}</td>
         <td class="free_form">{{ form.row.errors }}{{ form.row }}</td>
-        <td class="free_form">
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">
             {{ form.seat.errors }}{{ form.seat }}
             <br/>
             {{ form.seat.help_text }}
@@ -570,71 +577,71 @@
 
 
     <!-- responsible -->
-    <tr class="free_form">
+    <tr class="free_form {% if request.GET.from_separate %}highlight{% endif %}">
         <td colspan="3">
             <h2>Ответственное лицо</h2>
             {% if responsible_form.country.data %}{{ responsible_form.non_field_errors }}{% endif %}
         </td>
     </tr>
     <tr class="opf_fizik">
-        <td class="free_form">{{ form.responsible_myself.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ form.responsible_myself.label_tag }}</td>
     </tr>
     <tr class="opf_fizik">
-        <td class="free_form">{{ form.responsible_myself.errors }}{{ form.responsible_myself }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ form.responsible_myself.errors }}{{ form.responsible_myself }}</td>
     </tr>
     <tr class="responsible_myself ">
-        <td class="free_form">{{ form.responsible_last_name.label_tag }}</td>
-        <td class="free_form">{{ form.responsible_first_name.label_tag }}</td>
-        <td class="free_form">{{ form.responsible_patronymic.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ form.responsible_last_name.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ form.responsible_first_name.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ form.responsible_patronymic.label_tag }}</td>
     </tr>
     <tr class="responsible_myself">
-        <td class="free_form">{{ form.responsible_last_name.errors }}{{ form.responsible_last_name }}</td>
-        <td class="free_form">{{ form.responsible_first_name.errors }}{{ form.responsible_first_name }}</td>
-        <td class="free_form">{{ form.responsible_patronymic.errors }}{{ form.responsible_patronymic }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ form.responsible_last_name.errors }}{{ form.responsible_last_name }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ form.responsible_first_name.errors }}{{ form.responsible_first_name }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ form.responsible_patronymic.errors }}{{ form.responsible_patronymic }}</td>
     </tr>
 
     <tr class="responsible_myself">
-        <td class="free_form">{{ responsible_form.street.label_tag }}</td>
-        <td class="free_form">{{ responsible_form.house.label_tag }}</td>
-        <td class="free_form">{{ responsible_form.block.label_tag }}, {{ responsible_form.building.label_tag }}</td>
-        <td class="free_form">{{ responsible_form.flat.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.street.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.house.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.block.label_tag }}, {{ responsible_form.building.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.flat.label_tag }}</td>
     </tr>
     <tr class="responsible_myself">
-        <td class="free_form">
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">
             {{ responsible_form.street.errors }}{{ responsible_form.street }}<br/>
             {{ responsible_form.new_street.label_tag }}{{ responsible_form.new_street }}
         </td>
-        <td class="free_form">{{ responsible_form.house.errors }}{{ responsible_form.house }}</td>
-        <td class="free_form">
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.house.errors }}{{ responsible_form.house }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">
             {{ responsible_form.block }}, {{ responsible_form.building }}
             {{ responsible_form.block.errors }}{{ responsible_form.building.errors }}
         </td>
-        <td class="free_form">{{ responsible_form.flat.errors }}{{ responsible_form.flat }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.flat.errors }}{{ responsible_form.flat }}</td>
     </tr>
     <tr class="responsible_myself">
-        <td class="free_form">{{ responsible_form.city.label_tag }}</td>
-        <td class="free_form">{{ responsible_form.region.label_tag }}</td>
-        <td class="free_form">{{ responsible_form.country.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.city.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.region.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.country.label_tag }}</td>
     </tr>
     <tr class="responsible_myself">
-        <td class="free_form">
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">
             {{ responsible_form.city.errors }}{{ responsible_form.city }}<br/>
             {{ responsible_form.new_city.label_tag }}{{ responsible_form.new_city }}
         </td>
-        <td class="free_form">
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">
             {{ responsible_form.region.errors }}{{ responsible_form.region }}<br/>
             {{ responsible_form.new_region.label_tag }}{{ responsible_form.new_region }}
         </td>
-        <td class="free_form">
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">
             {{ responsible_form.country.errors }}{{ responsible_form.country }}<br/>
             {{ responsible_form.new_country.label_tag }}{{ responsible_form.new_country }}
         </td>
     </tr>
     <tr class="responsible_myself">
-        <td class="free_form">{{ responsible_form.post_index.label_tag }}</td>
-        <td class="free_form">{{ responsible_form.post_index.errors }}{{ responsible_form.post_index }}</td>
-        <td class="free_form">{{ responsible_form.info.label_tag }}</td>
-        <td class="free_form">{{ responsible_form.info.errors }}{{ responsible_form.info }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.post_index.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.post_index.errors }}{{ responsible_form.post_index }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.info.label_tag }}</td>
+        <td class="free_form {% if request.GET.from_separate %}highlight{% endif %}">{{ responsible_form.info.errors }}{{ responsible_form.info }}</td>
     </tr>
     <!-- /responsible -->
 
