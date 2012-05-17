@@ -874,7 +874,7 @@ def edit_burial(request, uuid):
                     location = responsible_form.is_valid() and responsible_form.save() or None,
                 )
 
-        if new_burial.responsible_customer:
+        if new_burial.responsible_customer and new_burial.responsible_customer != Burial.objects.get(pk=new_burial.pk).responsible_customer:
             new_burial.relative_burials().update(responsible_customer=new_burial.responsible_customer)
 
         if not request.REQUEST.get('opf') == 'fizik':
