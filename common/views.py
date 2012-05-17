@@ -680,7 +680,7 @@ def edit_burial(request, uuid):
         'customer_first_name': burial.customer.person.first_name,
         'customer_patronymic': burial.customer.person.patronymic,
 
-        'responsible_last_name': burial.responsible_customer and burial.responsible_customer.person.last_name,
+        'responsible_last_name': burial.responsible_customer and burial.responsible_customer.person.last_name or '***',
         'responsible_first_name': burial.responsible_customer and burial.responsible_customer.person.first_name,
         'responsible_patronymic': burial.responsible_customer and burial.responsible_customer.person.patronymic,
         'responsible_myself': burial.responsible_customer == burial.customer and not burial.responsible_agent,
