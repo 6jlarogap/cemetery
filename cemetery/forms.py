@@ -49,4 +49,10 @@ class PersonForm(forms.ModelForm):
 class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
+        widgets = {
+            'country': forms.TextInput(attrs={'class': 'autocomplete'}),
+            'region': forms.TextInput(attrs={'class': 'autocomplete'}),
+            'city': forms.TextInput(attrs={'class': 'autocomplete'}),
+            'street': forms.TextInput(attrs={'class': 'autocomplete'}),
+        }
 

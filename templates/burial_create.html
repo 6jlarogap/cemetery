@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="/media/css/ui-lightness/jquery-ui-1.8.6.custom.css" type="text/css" />
     <link rel="stylesheet" href="/media/css/jquery-ui-timepicker.css?v=0.2.3" type="text/css" />
 
-    <script type="text/javascript" src="/media/js/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="/media/js/jquery-ui-1.8.6.custom.min.js"></script>
     <script type="text/javascript" src="/media/js/jquery.query-2.1.7.js"></script>
     <script type="text/javascript" src="/admin_media/js/admin/RelatedObjectLookups.js"></script>
@@ -157,7 +156,7 @@
                     <h2>Заказчик</h2>
                     {{ person_form.as_p }}
                     <h2>Адрес</h2>
-                    {{ location_form.as_p }}
+                    {{ location_form_customer.as_p }}
                 </div><!--/.well -->
             </div>
             <div id="block_responsible" class="block-selectable span7">
@@ -165,7 +164,7 @@
                     <h2>Ответственный</h2>
                     {{ person_form.as_p }}
                     <h2>Адрес</h2>
-                    {{ location_form.as_p }}
+                    {{ location_form_responsible.as_p }}
                 </div><!--/.well -->
             </div>
         </form>

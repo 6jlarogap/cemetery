@@ -59,10 +59,14 @@ def new_burial(request):
     place_form = PlaceForm()
     burial_form = BurialForm()
     person_form = PersonForm()
-    location_form = LocationForm()
+    location_form = LocationForm(prefix='dead')
+    location_form_responsible = LocationForm(prefix='responsible')
+    location_form_customer = LocationForm(prefix='customer')
     return render(request, 'burial_create.html', {
         'place_form': place_form,
         'burial_form': burial_form,
         'person_form': person_form,
         'location_form': location_form,
+        'location_form_responsible': location_form_responsible,
+        'location_form_customer': location_form_customer,
     })

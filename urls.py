@@ -18,6 +18,8 @@ urlpatterns += patterns('common.views',
 
     url(r'^login/$', 'ulogin'),
     url(r'^logout/$', 'ulogout'),
+
+    url(r'^geo/', include('geo.urls')),
 )
 
 urlpatterns += patterns('',

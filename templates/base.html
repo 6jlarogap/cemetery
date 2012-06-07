@@ -29,23 +29,10 @@
 
     {% if close %} <script type="text/javascript">top.close();</script> {% endif %}
 
-    <script type="text/javascript" src="/media/js/jquery-1.4.4.min.js"></script>
-    <script type="text/javascript">
-        if (top.location.href != '/') {
-            if (navigator.userAgent.toLowerCase().indexOf("chrome") >= 0) {
-                $(window).load(function(){
-                    $('input:-webkit-autofill').each(function(){
-                        var text = $(this).val();
-                        var name = $(this).attr('name');
-                        $(this).after(this.outerHTML).remove();
-                        $('input[name=' + name + ']').val(text);
-                    });
-                });
-            }
-        }
-        $(function() { $('input').attr('autocomplete', 'off'); });
-
-    </script>
+    <script type="text/javascript" src="/media/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/media/js/bootstrap-typeahead.js"></script>
+    <script type="text/javascript" src="/media/js/bootstrap-typeahead-ajax.js"></script>
+    <script type="text/javascript" src="/media/js/cemetery.js"></script>
 
     {% block scripts %}{% endblock %}
 </head>
