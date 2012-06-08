@@ -18,7 +18,17 @@
 .form-horizontal p { display: inline-block; }
 
 .block-selectable input { width: 200px; }
+.block-selectable input[type=radio] { width: auto; }
+.block-selectable input[type=checkbox] { width: auto; }
 .block-selectable select { width: 200px; }
 
+.block-selectable ul { list-style: none; }
 
+h2.buttons { margin-top: 1em; }
 
+.form-horizontal p.wide { width: 99%; }
+.form-horizontal p.wide textarea { width: 100%; }
+
+.form-horizontal p.narrow input { width: 100px }
+
+span.move-left { position: relative; left: -20px; }

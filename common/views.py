@@ -56,17 +56,54 @@ def new_burial(request):
     """
     Добавление захоронения
     """
-    place_form = PlaceForm()
     burial_form = BurialForm()
-    person_form = PersonForm()
-    location_form = LocationForm(prefix='dead')
-    location_form_responsible = LocationForm(prefix='responsible')
-    location_form_customer = LocationForm(prefix='customer')
+
     return render(request, 'burial_create.html', {
-        'place_form': place_form,
         'burial_form': burial_form,
+    })
+
+def new_burial_place(request):
+    """
+    Добавление места захоронения
+    """
+    place_form = PlaceForm()
+
+    return render(request, 'burial_create_place.html', {
+        'place_form': place_form,
+        })
+
+def new_burial_person(request):
+    """
+    Добавление усопшего
+    """
+    person_form = PersonForm()
+    location_form = LocationForm()
+
+    return render(request, 'burial_create_person.html', {
         'person_form': person_form,
         'location_form': location_form,
-        'location_form_responsible': location_form_responsible,
-        'location_form_customer': location_form_customer,
-    })
+        })
+
+def new_burial_customer(request):
+    """
+    Добавление заказчика
+    """
+    person_form = PersonForm()
+    location_form = LocationForm()
+
+    return render(request, 'burial_create_customer.html', {
+        'person_form': person_form,
+        'location_form': location_form,
+        })
+
+def new_burial_responsible(request):
+    """
+    Добавление ответственного
+    """
+    person_form = PersonForm()
+    location_form = LocationForm()
+
+    return render(request, 'burial_create_responsible.html', {
+        'person_form': person_form,
+        'location_form': location_form,
+        })

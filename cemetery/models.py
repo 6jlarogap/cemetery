@@ -118,7 +118,7 @@ class Burial(models.Model):
     """
     Захоронение.
     """
-    account_book_n = models.CharField(u"Номер в книге учета", max_length=16)
+    account_number = models.CharField(u"Номер в книге учета", max_length=16)
     operation = models.ForeignKey(Operation, verbose_name=u"Операция")
     date_fact = models.DateTimeField(u"Фактическая дата исполнения", blank=True, null=True)  # Фактическая дата исполнения.
     place = models.ForeignKey(Place)
@@ -127,6 +127,7 @@ class Burial(models.Model):
 
     client_person = models.ForeignKey(Person, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)
     client_organization = models.ForeignKey(Organization, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)
+    doverennost = models.ForeignKey(Doverennost, null=True)
 
     agent = models.ForeignKey(Agent, blank=True, null=True, related_name='orders')             # Агент Заказчика-юрлица
     responsible = models.ForeignKey(Person, blank=True, null=True) # Ответственный за захоронением
@@ -134,9 +135,6 @@ class Burial(models.Model):
     acct_num_str1 = models.CharField(editable=False, null=True, max_length=16)
     acct_num_num = models.PositiveIntegerField(editable=False, null=True)
     acct_num_str2 = models.CharField(editable=False, null=True, max_length=16)
-
-    organization = models.ForeignKey(Organization, null=True, blank=True)
-    doverennost = models.ForeignKey(Doverennost, null=True)
 
     print_info = models.TextField(editable=False, null=True)
 

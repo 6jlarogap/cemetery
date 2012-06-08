@@ -37,10 +37,15 @@ class PlaceForm(forms.ModelForm):
 class BurialForm(forms.ModelForm):
     class Meta:
         model = Burial
-        exclude = [
-            'person', 'place', 'client_person', 'client_organization',
-            'agent', 'responsible', 'organization', 'doverennost', 'deleted',
-        ]
+        widgets = {
+            'place': forms.HiddenInput(),
+            'person': forms.HiddenInput(),
+            'client_person': forms.HiddenInput(),
+            'client_organization': forms.HiddenInput(),
+            'doverennost': forms.HiddenInput(),
+            'agent': forms.HiddenInput(),
+            'responsible': forms.HiddenInput(),
+        }
 
 class PersonForm(forms.ModelForm):
     class Meta:

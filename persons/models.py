@@ -18,7 +18,7 @@ class Person(models.Model):
     """
     last_name = models.CharField(u"Фамилия", max_length=128)  # Фамилия.
     first_name = models.CharField(u"Имя", max_length=30, blank=True)  # Имя.
-    patronymic = models.CharField(u"Отчество", max_length=30, blank=True)  # Отчество.
+    middle_name = models.CharField(u"Отчество", max_length=30, blank=True)  # Отчество.
 
     birth_date = models.DateField(u"Дата рождения", blank=True, null=True)
     birth_date_no_month = models.BooleanField(default=False, editable=False)
@@ -86,7 +86,7 @@ class Person(models.Model):
         return fio.strip()
 
     class Meta:
-        ordering = ['last_name', 'first_name', 'patronymic', ]
+        ordering = ['last_name', 'first_name', 'middle_name', ]
         verbose_name = (u'физ. лицо')
         verbose_name_plural = (u'физ. лица')
 

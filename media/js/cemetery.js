@@ -88,5 +88,24 @@ $(function() {
             console.log(obj);
         }
     });
+
+    updateControls();
+
+    $('a.load').click(function(){
+        $('#block_empty').hide();
+        $('#block_empty').load(this.href, function() {
+            updateControls();
+
+            $('#block_empty').fadeIn('fast');
+        });
+        return false;
+    });
+
 });
 
+function updateControls() {
+    $('span.move-left').remove();
+    $('input[id*=date]').after('<span class="add-on move-left"><i class="icon-calendar"></i></span>').datepicker({inline: true});
+    $('input[id*=time]').after('<span class="add-on move-left"><i class="icon-time"></i></span>').timepicker({inline: true});
+
+}

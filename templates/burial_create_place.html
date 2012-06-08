@@ -1,0 +1,31 @@
+<form class='form-horizontal'>
+    <div class="well">
+        <h2>Место</h2>
+        <p>
+            {{ place_form.cemetery.label_tag }}
+            {{ place_form.cemetery }}
+            {{ place_form.cemetery.errors }}
+        </p>
+        <p>
+            {{ place_form.area.label_tag }}
+            {{ place_form.area }}
+            {{ place_form.area.errors }}
+        </p>
+        <p>
+            {{ place_form.row.label_tag }}
+            {{ place_form.row }}
+            {{ place_form.row.errors }}
+        </p>
+        <p>
+            {{ place_form.seat.label_tag }}
+            {{ place_form.seat }}
+            {{ place_form.seat.errors }}
+        </p>
+        <p>
+            {{ place_form.rooms.label_tag }}
+            {{ place_form.rooms }}
+            {{ place_form.rooms.errors }}
+        </p>
+        <h2 class="buttons"><button class="btn">Сохранить</button></h2>
+    </div><!--/.well -->
+</form>
