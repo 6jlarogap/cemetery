@@ -101,6 +101,29 @@ $(function() {
         return false;
     });
 
+    $('form.in-place').live('submit', function(){
+        var url = $(this).attr('action');
+        var data = $(this).serialize();
+        $.post(url, data, function(data) {
+            $('#block_empty').html(data);
+        });
+        return false;
+    });
+
+    $('form.main-add :input').change(function(){
+        var ready = true;
+        $('form.main-add :input').each(function() {
+            if (!$(this).val()) {
+                ready = false;
+            }
+        });
+        if (!ready) {
+            $('form.main-add .btn-primary').attr('disabled', 'disabled');
+        } else {
+            $('form.main-add .btn-primary').removeAttr('disabled');
+        }
+    });
+
 });
 
 function updateControls() {

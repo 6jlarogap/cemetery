@@ -34,6 +34,18 @@ class PlaceForm(forms.ModelForm):
     class Meta:
         model = Place
 
+    def save(self, user=None, commit=True):
+        filter_fields = ['cemetery', 'row', 'area', 'seat']
+        data = dict(filter(lambda i: i[0] in filter_fields, self.cleaned_data.items()))
+        try:
+            return Place.objects.get(**data)
+        except Place.DoesNotExist:
+            place = super(PlaceForm, self).save(commit=False)
+            place.creator = user
+            if commit:
+                place.save()
+            return place
+
 class BurialForm(forms.ModelForm):
     class Meta:
         model = Burial

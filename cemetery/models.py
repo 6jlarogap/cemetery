@@ -63,9 +63,6 @@ class Place(models.Model):
         if self.rooms is None:
             self.rooms = 1
 
-        if self.rooms_free is None:
-            self.rooms_free = 0
-
         super(Place, self).save(*args, **kwargs)
 
     def generate_seat(self):
@@ -118,7 +115,7 @@ class Burial(models.Model):
     """
     Захоронение.
     """
-    account_number = models.CharField(u"Номер в книге учета", max_length=16)
+    account_number = models.CharField(u"Номер в книге учета", max_length=16, null=True)
     operation = models.ForeignKey(Operation, verbose_name=u"Операция")
     date_fact = models.DateTimeField(u"Фактическая дата исполнения", blank=True, null=True)  # Фактическая дата исполнения.
     place = models.ForeignKey(Place)

@@ -66,11 +66,17 @@ def new_burial_place(request):
     """
     Добавление места захоронения
     """
-    place_form = PlaceForm()
+    place_form = PlaceForm(data=request.POST or None)
+
+    if request.POST and place_form.is_valid():
+        place = place_form.save(user=request.user)
+        return render(request, 'burial_create_place_ok.html', {
+            'place': place,
+        })
 
     return render(request, 'burial_create_place.html', {
         'place_form': place_form,
-        })
+    })
 
 def new_burial_person(request):
     """

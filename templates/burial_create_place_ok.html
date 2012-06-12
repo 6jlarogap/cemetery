@@ -1,0 +1,12 @@
+<form class='form-horizontal in-place' action="{% url new_burial_place %}" method="POST">
+    <div class="well">
+        Данные сохранены.
+        <script type="text/javascript">
+            $(function() {
+                var a  = $('<a href="#">{{ place.cemetery }}, {{ place.area }}, {{ place.row }}, {{ place.seat }}</a>');
+                $('#id_place').next().replaceWith(a);
+                $('#id_place').val({{ place.pk }});
+            });
+        </script>
+    </div><!--/.well -->
+</form>
