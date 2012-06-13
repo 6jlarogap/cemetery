@@ -117,8 +117,3 @@ class Location(models.Model):
             return addr.replace(', ,', ', ')
         else:
             return u"незаполненный адрес"
-
-    def save(self, *args, **kwargs):
-        if self.pk:
-            Cemetery.objects.filter(location=self).update(last_sync_date=datetime.datetime(2000, 1, 1, 0, 0))
-        super(Location, self).save(*args, **kwargs)

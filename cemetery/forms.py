@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.forms.models import model_to_dict
 from cemetery.models import Cemetery, Operation, Place, Burial
 from geo.models import Location
 from persons.models import Person
@@ -60,8 +61,66 @@ class BurialForm(forms.ModelForm):
         }
 
 class PersonForm(forms.ModelForm):
+    instance = forms.ChoiceField(widget=forms.RadioSelect)
+
+    INSTANCE_CHOICES = [
+        ('', u'Не выбрано'),
+        ('NEW', u'Новый'),
+    ]
+
     class Meta:
         model = Person
+
+    def __init__(self, *args, **kwargs):
+        super(PersonForm, self).__init__(*args, **kwargs)
+        self.data = dict(self.data.items())
+        if self.data:
+            person_kwargs = {
+                'first_name__istartswith': self.data.get('first_name', ''),
+                'last_name__istartswith': self.data.get('last_name', ''),
+                'middle_name__istartswith': self.data.get('middle_name', ''),
+            }
+            if self.data.get('instance'):
+                self.instance = Person.objects.get(pk=self.data.get('instance'))
+                self.fields['instance'].choices = self.INSTANCE_CHOICES + [
+                    (str(p.pk), p) for p in Person.objects.filter(pk=self.data.get('instance'))
+                ]
+                if not self.data.get('selected'):
+                    self.data = None
+                    self.is_bound = False
+                    self.initial = model_to_dict(self.instance, self._meta.fields, self._meta.exclude)
+                    self.initial.update({'instance': self.instance.pk})
+            else:
+                self.fields['instance'].choices = self.INSTANCE_CHOICES + [
+                    (str(p.pk), p) for p in Person.objects.filter(**person_kwargs)
+                ]
+                self.data['instance'] = None
+        else:
+            self.fields['instance'].widget = forms.HiddenInput()
+            self.data['instance'] = None
+
+    def is_valid(self):
+        if not self.is_bound or not self.data:
+            return False
+
+        if self.data.get('instance') == '':
+            return False
+
+        return super(PersonForm, self).is_valid()
+
+    def is_selected(self):
+        is_old = self.instance and self.instance.pk
+        is_new = self.data and not self.data.get('instance') is None
+        return is_old or is_new
+
+    def save(self, location=None, commit=True):
+        person = super(PersonForm, self).save(commit=False)
+        if self.instance:
+            person.pk = self.instance.pk
+        person.address = location
+        if commit:
+            person.save()
+        return person
 
 class LocationForm(forms.ModelForm):
     class Meta:
@@ -73,3 +132,7 @@ class LocationForm(forms.ModelForm):
             'street': forms.TextInput(attrs={'class': 'autocomplete'}),
         }
 
+    def __init__(self, person=None, *args, **kwargs):
+        if person:
+            kwargs.update({'instance': person.address})
+        super(LocationForm, self).__init__(*args, **kwargs)

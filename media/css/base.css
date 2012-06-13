@@ -32,3 +32,5 @@ h2.buttons { margin-top: 1em; }
 .form-horizontal p.narrow input { width: 100px }
 
 span.move-left { position: relative; left: -20px; }
+
+ul.messages { list-style: none; }

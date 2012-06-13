@@ -25,17 +25,17 @@ class Person(models.Model):
     birth_date_no_day = models.BooleanField(default=False, editable=False)
     death_date = models.DateField(u"Дата смерти", blank=True, null=True)
 
-    address = models.ForeignKey(Location, editable=False)
+    address = models.ForeignKey(Location, editable=False, null=True)
 
     def __unicode__(self):
         if self.last_name:
             result = self.last_name
             if self.first_name:
                 result += " %s." % self.first_name[0].upper()
-                if self.patronymic:
-                    result += "%s." % self.patronymic[0].upper()
+                if self.middle_name:
+                    result += "%s." % self.middle_name[0].upper()
         else:
-            result = self.uuid
+            result = u'Неизвестный'
         return result
 
     def get_birth_date(self):

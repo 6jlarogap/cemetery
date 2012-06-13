@@ -91,7 +91,7 @@ $(function() {
 
     updateControls();
 
-    $('a.load').click(function(){
+    $('a.load').live('click', function(){
         $('#block_empty').hide();
         $('#block_empty').load(this.href, function() {
             updateControls();
@@ -106,13 +106,15 @@ $(function() {
         var data = $(this).serialize();
         $.post(url, data, function(data) {
             $('#block_empty').html(data);
+            $('.errorlist').addClass('alert');
+            updateInnerForm();
         });
         return false;
     });
 
-    $('form.main-add :input').change(function(){
+    $('#id_operation, #id_place, #id_person').live('change', function(){
         var ready = true;
-        $('form.main-add :input').each(function() {
+        $('#id_operation, #id_place, #id_person').each(function() {
             if (!$(this).val()) {
                 ready = false;
             }
@@ -124,11 +126,59 @@ $(function() {
         }
     });
 
+    $('.errorlist').addClass('alert');
 });
+
+function makeDatePicker(obj) {
+    $.datepicker.setDefaults($.datepicker.regional['']);
+    var now = new Date();
+    var now_year = now.getFullYear();
+
+    obj.after('<span class="add-on move-left"><i class="icon-calendar"></i></span>').datepicker({
+        dateFormat: 'dd.mm.yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: '1900:' + now_year,
+        firstDay: 1,
+        monthNamesShort: ['Янв','Фев','Март','Апрель','Май','Июнь','Июль','Авг','Сен','Окт','Ноя','Дек'],
+        dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+        showOn: "focus",
+        inline: true
+    });
+
+    if (now.getMonth() == 11 && now.getDate() > 20) {
+        $('input#id_burial_date').datepicker('option', 'yearRange', '1900:' +  (now_year + 1));
+    }
+}
+
+function makeTimePicker(obj) {
+    obj.after('<span class="add-on move-left"><i class="icon-time"></i></span>').timepicker({
+        showOn: "focus",
+        hourText: 'Ч',
+        minuteText: 'М',
+        showPeriodLabels: false,
+        minutes: {
+            starts: 0,
+            ends: 45,
+            interval: 15
+        },
+        hours: {
+            starts: 8,
+            ends: 19,
+            interval: 1
+        },
+        inline: true
+    });
+}
 
 function updateControls() {
     $('span.move-left').remove();
-    $('input[id*=date]').after('<span class="add-on move-left"><i class="icon-calendar"></i></span>').datepicker({inline: true});
-    $('input[id*=time]').after('<span class="add-on move-left"><i class="icon-time"></i></span>').timepicker({inline: true});
+    makeDatePicker($('input[id*=date]'));
+    makeTimePicker($('input[id*=time]'));
 
+}
+
+function updateInnerForm() {
+    makeDatePicker($('#block_empty input[id*=date]'));
+    makeTimePicker($('#block_empty input[id*=time]'));
 }

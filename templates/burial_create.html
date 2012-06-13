@@ -29,19 +29,43 @@
                     <div class="row-fluid">
                         <h2>Место</h2>
                         {{ burial_form.place }}
-                        <a href="{% url new_burial_place %}" class="load">Новое</a>
+                        {% if burial_form.instance.pk %}
+                            <a href="{% url new_burial_place %}?instance={{ burial_form.instance.place.pk }}" class="load link-person">
+                                {{ burial_form.instance.place }}
+                            </a>
+                        {% else %}
+                            <a href="{% url new_burial_place %}" class="load link-person">Новый</a>
+                        {% endif %}
                         <h2>Усопший</h2>
                         {{ burial_form.person }}
-                        <a href="{% url new_burial_person %}" class="load">Иванов И.И. 01.01.1970 - 10.10.2010</a>
+                        {% if burial_form.instance.pk %}
+                            <a href="{% url new_burial_person %}?instance={{ burial_form.instance.person.pk }}" class="load link-person">
+                                {{ burial_form.instance.person }}
+                            </a>
+                        {% else %}
+                            <a href="{% url new_burial_person %}" class="load link-person">Новый</a>
+                        {% endif %}
                         <h2>Ответственный</h2>
                         {{ burial_form.responsible }}
-                        <a href="{% url new_burial_responsible %}" class="load">Новый</a>
+                        {% if burial_form.instance.pk %}
+                            <a href="{% url new_burial_responsible %}?instance={{ burial_form.instance.responsible.pk }}" class="load link-person">
+                                {{ burial_form.instance.responsible }}
+                            </a>
+                        {% else %}
+                            <a href="{% url new_burial_responsible %}" class="load link-person">Новый</a>
+                        {% endif %}
                         <h2>Заказчик</h2>
                         {{ burial_form.client_person }}
                         {{ burial_form.client_organization }}
                         {{ burial_form.agent }}
                         {{ burial_form.doverennost }}
-                        <a href="{% url new_burial_customer %}" class="load">ЮЛ "Мемориал", агент Петров П.П.</a>
+                        {% if burial_form.instance.pk %}
+                            <a href="{% url new_burial_customer %}?instance={{ burial_form.instance.customer.pk }}" class="load link-person">
+                                {{ burial_form.instance.customer }}
+                            </a>
+                        {% else %}
+                            <a href="{% url new_burial_customer %}" class="load link-person">Новый</a>
+                        {% endif %}
                         <h2 class="buttons">
                             <button class="btn btn-primary btn-large" disabled="disabled">Сохранить</button>
                         </h2>
@@ -73,7 +97,7 @@
                         <th>Заказчик</th>
                         <th>Опции</th>
                     </thead>
-                    {% for b in object_list %}
+                    {% for b in last_entered %}
                         <tr>
                             <td>{{ b.account_book_n }}</td>
                             <td>

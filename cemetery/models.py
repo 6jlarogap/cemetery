@@ -115,7 +115,7 @@ class Burial(models.Model):
     """
     Захоронение.
     """
-    account_number = models.CharField(u"Номер в книге учета", max_length=16, null=True)
+    account_number = models.CharField(u"Номер в книге учета", max_length=16, null=True, blank=True)
     operation = models.ForeignKey(Operation, verbose_name=u"Операция")
     date_fact = models.DateTimeField(u"Фактическая дата исполнения", blank=True, null=True)  # Фактическая дата исполнения.
     place = models.ForeignKey(Place)
@@ -124,7 +124,7 @@ class Burial(models.Model):
 
     client_person = models.ForeignKey(Person, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)
     client_organization = models.ForeignKey(Organization, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)
-    doverennost = models.ForeignKey(Doverennost, null=True)
+    doverennost = models.ForeignKey(Doverennost, null=True, blank=True)
 
     agent = models.ForeignKey(Agent, blank=True, null=True, related_name='orders')             # Агент Заказчика-юрлица
     responsible = models.ForeignKey(Person, blank=True, null=True) # Ответственный за захоронением
@@ -214,7 +214,7 @@ class Burial(models.Model):
 
     def save(self, *args, **kwargs):
         self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)
-        self.split_parts(self)
+        # self.split_parts(self)
         super(Burial, self).save(*args, **kwargs)
 
     def generate_account_number(self):
@@ -273,9 +273,8 @@ class UserProfile(models.Model):
 def set_last_name(sender, instance, **kwargs):
     instance.last_name = instance.last_name.capitalize()
     instance.first_name = instance.first_name.capitalize()
-    instance.patronymic = instance.patronymic.capitalize()
+    instance.middle_name = instance.middle_name.capitalize()
 models.signals.pre_save.connect(set_last_name, sender=Person)
-models.signals.pre_save.connect(set_last_name, sender=Agent)
 
 def set_dc(sender, instance, **kwargs):
     instance.s_number = instance.s_number.upper()

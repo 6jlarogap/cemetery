@@ -79,6 +79,14 @@
 
 
     <div class="container-fluid">
+        {% if messages %}
+            <ul class="messages">
+                {% for m in messages %}
+                    <li class="alert alert-{{ m.tags }}">{{ m }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
         {% block content %}{% endblock %}
 
         {% if debug %}
