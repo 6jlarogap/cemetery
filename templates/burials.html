@@ -1,116 +1,9 @@
 {% extends "base.html" %}
-{% load adminmedia %}
+
 {% load my_filters %}
-{% block scripts %}
-    {{ form.media }}
-    <link rel="stylesheet" href="/media/css/ui-lightness/jquery-ui-1.8.6.custom.css" type="text/css" />
-    <link rel="stylesheet" href="/media/css/jquery-ui-timepicker.css?v=0.2.3" type="text/css" />
-    <script type="text/javascript" src="/media/js/jquery-1.4.4.min.js"></script>
-    <script type="text/javascript" src="/media/js/jquery-ui-1.8.6.custom.min.js"></script>
-    <script type="text/javascript" src="/media/js/jquery.query-2.1.7.js"></script>
-    <script type="text/javascript" src="/admin_media/js/admin/RelatedObjectLookups.js"></script>
-    <script type="text/javascript" src="/media/js/jquery.ui.timepicker.js?v=0.2.3"></script>
-    <script type="text/javascript" src="/media/js/jquery.query-2.1.7.js"></script>
-    <script type="text/javascript" src="/media/js/jquery.autocomplete.min.js"></script>
-    <script type="text/javascript" src="/media/js/jquery.bgiframe.min.js"></script>
-    <link rel="stylesheet" href="/media/css/jquery.autocomplete.css" type="text/css" />
-    <script type="text/javascript">
-        window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";
-    </script>
-    <script type="text/javascript">
-        var submit_form = function()
-        {
-            $("#mainform").submit();
-        }
-    </script>
-    <script>
-        $(function(){
-            //Фокус в нужное поле.
-            $("#id_fio").focus();
-
-            //автодополнение фамилии заказчика.
-            $("#id_customer").autocomplete("/getpersonunln/", {
-//            autoFill: true,
-//            matchContains: true,
-                minChars: 1,
-//            cacheLength: 1,
-                selectFirst: false,
-                max: 16
-            });
-
-            //автодополнение фамилии захороненного.
-            $("#id_fio").autocomplete("/getdeadman/", {
-//        autoFill: true,
-//        matchContains: true,
-                minChars: 1,
-//        extraParams: {
-//            region: function(){
-//                return $("#id_default_region").val();
-//            }
-//        },
-//        cacheLength: 1,
-                selectFirst: false,
-//        selectOnly: true,
-//        highlight: false,
-                max: 16
-            });
-
-            $('input[name=print]').click(function() {
-                $('#mainform').attr('target', '_blank');
-                window.setTimeout("$('#mainform').attr('target', '');", 100);
-            });
-
-            var CALENDAR_ICON = '/admin_media/img/admin/icon_calendar.gif';
-            var CLOCK_IMAGE = '/admin_media/img/admin/icon_clock.gif';
-
-            $.datepicker.setDefaults($.datepicker.regional['']);
-            var now = Date();
-            $('input[name*=date],input[name*=expire],input[name*=when]').css('width', '75px').datepicker({
-                dateFormat: 'dd.mm.yy',
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '1900:' + now.year,
-                firstDay: 1,
-                monthNamesShort: ['Янв','Фев','Март','Апрель','Май','Июнь','Июль','Авг','Сен','Окт','Ноя','Дек'],
-                dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-                showOn: "both",
-                buttonImage: CALENDAR_ICON,
-                buttonImageOnly: true
-            });
-            $('input[name*=time]').each(function() {
-                var btn_id = $(this).attr('id') + '_button';
-                var img = $('<img src="'+CLOCK_IMAGE+'"/>').attr('id', btn_id).insertAfter($(this));
-                $(this).css('width', '75px').timepicker({
-                    showOn: "both",
-                    button: "#" + btn_id,
-                    hourText: 'Ч',
-                    minuteText: 'М',
-                    showPeriodLabels: false,
-                    minutes: {
-                        starts: 0,
-                        ends: 45,
-                        interval: 15
-                    },
-                    hours: {
-                        starts: 8,
-                        ends: 19,
-                        interval: 1
-                    }
-                });
-            });
-
-            $(':input,textarea,select').each(function(i, el) {
-                $(el).attr('tabIndex', i+1);
-            })
-
-        })
-
-    </script>
-{% endblock %}
-
-
 
 {% block title %}Поиск{% endblock %}
+
 {% block content %}
     <div class="row-fluid">
         <div class="span12">
@@ -119,9 +12,9 @@
                     {{ form.as_p }}
 
                     <p class="pull-left">
-                        <input type="submit" value="Искать" />&nbsp;&nbsp;
-                        <input type="submit" name="print" value="Распечатать все" />&nbsp;&nbsp;
-                        <input type="button" value="Сброс" onClick="parent.location='/'" />&nbsp;&nbsp;
+                        <input type="submit" value="Искать" class="btn btn-primary" />&nbsp;&nbsp;
+                        <input type="submit" name="print" value="Распечатать все" class="btn" />&nbsp;&nbsp;
+                        <input type="reset" value="Сброс" class="btn" />&nbsp;&nbsp;
                     </p>
                 </form>
             </div>
@@ -185,7 +78,7 @@
                             <small><a title="файл прикреплен">f</a></small>
                         {% endif %}
                         {% if user|in_group:"edit_burial"  %}
-                            <a title="редактировать" target="_blank" href='/burial/{{ b.uuid }}/'><img src="/media/edit.png"></a>
+                            <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon-edit"></i> редактировать</a>
                         {% endif %}
                         <a title="к могиле"
                            href='/?cemetery={{ b.product.place.cemetery.uuid }}&area={{ b.product.place.area|default:'NULL' }}&row={{ b.product.place.row|default:'NULL' }}&seat={{ b.product.place.seat|default:'NULL' }}'

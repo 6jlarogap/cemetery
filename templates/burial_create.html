@@ -3,6 +3,7 @@
 {% load my_filters %}
 
 {% block title %}Поиск{% endblock %}
+
 {% block content %}
     <div class="row-fluid">
         <div class="span3">
@@ -29,16 +30,16 @@
                     <div class="row-fluid">
                         <h2>Место</h2>
                         {{ burial_form.place }}
-                        {% if burial_form.instance.pk %}
+                        {% if burial_form.instance.place.pk %}
                             <a href="{% url new_burial_place %}?instance={{ burial_form.instance.place.pk }}" class="load link-person">
                                 {{ burial_form.instance.place }}
                             </a>
                         {% else %}
-                            <a href="{% url new_burial_place %}" class="load link-person">Новый</a>
+                            <a href="{% url new_burial_place %}" class="load link-person">Новое</a>
                         {% endif %}
                         <h2>Усопший</h2>
                         {{ burial_form.person }}
-                        {% if burial_form.instance.pk %}
+                        {% if burial_form.instance.person.pk %}
                             <a href="{% url new_burial_person %}?instance={{ burial_form.instance.person.pk }}" class="load link-person">
                                 {{ burial_form.instance.person }}
                             </a>
@@ -47,7 +48,7 @@
                         {% endif %}
                         <h2>Ответственный</h2>
                         {{ burial_form.responsible }}
-                        {% if burial_form.instance.pk %}
+                        {% if burial_form.instance.responsible.pk %}
                             <a href="{% url new_burial_responsible %}?instance={{ burial_form.instance.responsible.pk }}" class="load link-person">
                                 {{ burial_form.instance.responsible }}
                             </a>
@@ -59,7 +60,7 @@
                         {{ burial_form.client_organization }}
                         {{ burial_form.agent }}
                         {{ burial_form.doverennost }}
-                        {% if burial_form.instance.pk %}
+                        {% if burial_form.instance.customer.pk %}
                             <a href="{% url new_burial_customer %}?instance={{ burial_form.instance.customer.pk }}" class="load link-person">
                                 {{ burial_form.instance.customer }}
                             </a>
@@ -128,7 +129,7 @@
                                     <small><a title="файл прикреплен">f</a></small>
                                 {% endif %}
                                 {% if user|in_group:"edit_burial"  %}
-                                    <a title="редактировать" target="_blank" href='/burial/{{ b.uuid }}/'><img src="/media/edit.png"></a>
+                                    <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon-edit"></i> редактировать</a>
                                 {% endif %}
                                 <a title="к могиле"
                                    href='/?cemetery={{ b.product.place.cemetery.uuid }}&area={{ b.product.place.area|default:'NULL' }}&row={{ b.product.place.row|default:'NULL' }}&seat={{ b.product.place.seat|default:'NULL' }}'

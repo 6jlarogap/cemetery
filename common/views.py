@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 
 from cemetery.models import Burial
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm
@@ -62,11 +62,29 @@ def new_burial(request):
     if request.POST and burial_form.is_valid():
         burial_form.save()
         messages.success(request, u'Успешно сохранено')
-        return redirect('new_burial')
+        return redirect('main_page')
 
     return render(request, 'burial_create.html', {
         'burial_form': burial_form,
         'last_entered': Burial.objects.all().order_by('-id')[:10],
+    })
+
+def edit_burial(request, pk):
+    """
+    Редактирование захоронения
+    """
+    burial = get_object_or_404(Burial, pk=pk)
+    burial_form = BurialForm(data=request.POST or None, instance=burial)
+
+    if request.POST and burial_form.is_valid():
+        burial_form.save()
+        messages.success(request, u'Успешно сохранено')
+        return redirect('main_page')
+
+    return render(request, 'burial_edit.html', {
+        'burial_form': burial_form,
+        'last_entered': Burial.objects.all().order_by('-id')[:10],
+        'burial': burial,
     })
 
 def new_burial_place(request):

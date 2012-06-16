@@ -18,6 +18,7 @@ urlpatterns += patterns('common.views',
     url(r'^create/person/$', 'new_burial_person', name='new_burial_person'),
     url(r'^create/customer/$', 'new_burial_customer', name='new_burial_customer'),
     url(r'^create/responsible/$', 'new_burial_responsible', name='new_burial_responsible'),
+    url(r'^edit/(?P<pk>.*)/$', 'edit_burial', name='edit_burial'),
 
     url(r'^login/$', 'ulogin'),
     url(r'^logout/$', 'ulogout'),
