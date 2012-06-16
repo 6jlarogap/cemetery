@@ -39,9 +39,8 @@
                         {% endif %}
 
                         <br/>
-                        <p><b>Ответственный</b></p>
-                        <br/>
-                    
+                        <b>Ответственный: </b>
+
                         {{ burial_form.responsible }}
                         {% if burial_form.instance.responsible.pk %}
                             <a href="{% url new_burial_responsible %}?instance={{ burial_form.instance.responsible.pk }}" class="load link-person">
