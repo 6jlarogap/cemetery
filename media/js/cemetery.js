@@ -126,6 +126,8 @@ $(function() {
         }
     });
 
+    $('#id_operation, #id_place, #id_person').change();
+
     $('.errorlist').addClass('alert');
 });
 

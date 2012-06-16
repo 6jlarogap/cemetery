@@ -117,7 +117,7 @@ class Burial(models.Model):
     """
     account_number = models.CharField(u"Номер в книге учета", max_length=16, null=True, blank=True)
     operation = models.ForeignKey(Operation, verbose_name=u"Операция")
-    date_fact = models.DateTimeField(u"Фактическая дата исполнения", blank=True, null=True)  # Фактическая дата исполнения.
+    date_fact = models.DateField(u"Фактическая дата исполнения", blank=True, null=True)  # Фактическая дата исполнения.
     place = models.ForeignKey(Place)
 
     person = models.ForeignKey(Person, verbose_name=u"Похороненный", related_name='buried')
@@ -213,20 +213,26 @@ class Burial(models.Model):
         self.acct_num_str2 = p3
 
     def save(self, *args, **kwargs):
+        if not self.account_number:
+            self.generate_account_number()
+
+        if not self.date_fact:
+            self.date_fact = datetime.datetime.now()
+
         self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)
         # self.split_parts(self)
         super(Burial, self).save(*args, **kwargs)
 
     def generate_account_number(self):
         y = str(datetime.date.today().year)
-        siblings = Burial.objects.filter(product__place__cemetery=self.product.place.cemetery, account_book_n__istartswith=y)
-        max_num = str(siblings.aggregate(models.Max('account_book_n'))['account_book_n__max']) or ''
+        siblings = Burial.objects.filter(place__cemetery=self.place.cemetery, account_number__istartswith=y)
+        max_num = str(siblings.aggregate(max_number=models.Max('account_number'))['max_number']) or ''
         if max_num.startswith(y):
             current_num = int(float(max_num)) + 1
         else:
             current_num = y + '0001'
-        self.account_book_n = str(current_num)
-        return self.account_book_n
+        self.account_number = str(current_num)
+        return self.account_number
 
     def generate_seat_number(self):
         y = str(datetime.date.today().year)

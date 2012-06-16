@@ -2,7 +2,7 @@
 {% load adminmedia %}
 {% load my_filters %}
 
-{% block title %}Поиск{% endblock %}
+{% block title %}Ввод данных{% endblock %}
 
 {% block content %}
     <div class="row-fluid">
@@ -100,17 +100,17 @@
                     </thead>
                     {% for b in last_entered %}
                         <tr>
-                            <td>{{ b.account_book_n }}</td>
+                            <td>{{ b.account_number }}</td>
                             <td>
                                 <b> {{ b.person.last_name }}</b>
                                 {{ b.person.first_name }}
                                 {{ b.person.patronymic }}
                             </td>
                             <td>{{ b.date_fact|date:"d.m.Y" }}</td>
-                            <td>{{ b.product.place.area }}</td>
-                            <td>{{ b.product.place.row }}</td>
-                            <td>{{ b.product.place.seat }}</td>
-                            <td>{{ b.product.place.cemetery.name }}</td>
+                            <td>{{ b.place.area }}</td>
+                            <td>{{ b.place.row }}</td>
+                            <td>{{ b.place.seat }}</td>
+                            <td>{{ b.place.cemetery.name }}</td>
                             <td>{{ b.operation.op_type }}</td>
                             {% if b.organization %}
                                 <td>
@@ -126,14 +126,12 @@
                             {% endif %}
                             <td>
                                 {% if b.orderfiles_set.count %}
-                                    <small><a title="файл прикреплен">f</a></small>
+                                    <small><a title="файл прикреплен"><i class="icon icon-file"></i></a></small>
                                 {% endif %}
                                 {% if user|in_group:"edit_burial"  %}
                                     <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon-edit"></i> редактировать</a>
                                 {% endif %}
-                                <a title="к могиле"
-                                   href='/?cemetery={{ b.product.place.cemetery.uuid }}&area={{ b.product.place.area|default:'NULL' }}&row={{ b.product.place.row|default:'NULL' }}&seat={{ b.product.place.seat|default:'NULL' }}'
-                                        ><img width="16" src="/media/tree.png"></a>
+                                <a title="к могиле" href="#"><i class="icon icon-map-marker"></i> к могиле</a>
                             </td>
                         </tr>
                     {% endfor %}
