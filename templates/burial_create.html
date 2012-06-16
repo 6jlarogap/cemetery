@@ -37,6 +37,17 @@
                         {% else %}
                             <a href="{% url new_burial_place %}" class="load link-person">Новое</a>
                         {% endif %}
+
+                        <h3>Ответственный</h3>
+                        {{ burial_form.responsible }}
+                        {% if burial_form.instance.responsible.pk %}
+                            <a href="{% url new_burial_responsible %}?instance={{ burial_form.instance.responsible.pk }}" class="load link-person">
+                                {{ burial_form.instance.responsible }}
+                            </a>
+                        {% else %}
+                            <a href="{% url new_burial_responsible %}" class="load link-person">Новый</a>
+                        {% endif %}
+
                         <h2>Усопший</h2>
                         {{ burial_form.person }}
                         {% if burial_form.instance.person.pk %}
@@ -45,15 +56,6 @@
                             </a>
                         {% else %}
                             <a href="{% url new_burial_person %}" class="load link-person">Новый</a>
-                        {% endif %}
-                        <h2>Ответственный</h2>
-                        {{ burial_form.responsible }}
-                        {% if burial_form.instance.responsible.pk %}
-                            <a href="{% url new_burial_responsible %}?instance={{ burial_form.instance.responsible.pk }}" class="load link-person">
-                                {{ burial_form.instance.responsible }}
-                            </a>
-                        {% else %}
-                            <a href="{% url new_burial_responsible %}" class="load link-person">Новый</a>
                         {% endif %}
                         <h2>Заказчик</h2>
                         {{ burial_form.client_person }}
