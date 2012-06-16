@@ -6,7 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
-from cemetery.models import Burial
+from cemetery.models import Burial, Place
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm
 
 
@@ -91,7 +91,11 @@ def new_burial_place(request):
     """
     Добавление места захоронения
     """
-    place_form = PlaceForm(data=request.POST or None)
+    if request.GET.get('instance'):
+        instance = Place.objects.get(pk=request.GET['instance'])
+    else:
+        instance = None
+    place_form = PlaceForm(data=request.POST or None, instance=instance)
 
     if request.POST and place_form.is_valid():
         place = place_form.save(user=request.user)
