@@ -129,6 +129,8 @@ $(function() {
     $('#id_operation, #id_place, #id_person').change();
 
     $('.errorlist').addClass('alert');
+
+    $('#mainform #id_account_book_n_from').parents('p').before('<br/>');
 });
 
 function makeDatePicker(obj) {

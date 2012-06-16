@@ -1,4 +1,7 @@
 #mainform p { display: inline-block; }
+#mainform p.clear { display: block; clear: both;}
+
+#mainform input.hasDatepicker { width: 100px; }
 
 #mainform #id_cemetery { width: 100px; }
 #mainform #id_account_book_n_from, #mainform #id_account_book_n_to { width: 75px; }

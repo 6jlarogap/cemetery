@@ -2,6 +2,7 @@
 
 from django import forms
 from django.forms.models import model_to_dict
+
 from cemetery.models import Cemetery, Operation, Place, Burial
 from geo.models import Location
 from persons.models import Person
