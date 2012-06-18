@@ -122,8 +122,8 @@ class DeathCertificate(models.Model):
 
     person = models.OneToOneField(Person)
 
-    s_number = models.CharField(u"Номер свидетельства", max_length=30, blank=True, null=True)
-    series = models.CharField(u"Серия свидетельства", max_length=30, blank=True, null=True)
+    s_number = models.CharField(u"Номер", max_length=30, blank=True, null=True)
+    series = models.CharField(u"Серия", max_length=30, blank=True, null=True)
     release_date = models.DateField(u"Дата выдачи", null=True, blank=True)
     zags = models.ForeignKey(ZAGS, verbose_name=u"ЗАГС*", null=True)
 

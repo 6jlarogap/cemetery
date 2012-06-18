@@ -84,6 +84,27 @@
                 {{ location_form.info }}
                 {{ location_form.info.errors }}
             </p>
+            <h2>Свидетельство о смерти</h2>
+            <p class="narrow">
+                {{ dc_form.series.label_tag }}
+                {{ dc_form.series }}
+                {{ dc_form.series.errors }}
+            </p>
+            <p class="narrow">
+                {{ dc_form.s_number.label_tag }}
+                {{ dc_form.s_number }}
+                {{ dc_form.s_number.errors }}
+            </p>
+            <p class="narrow">
+                {{ dc_form.release_date.label_tag }}
+                {{ dc_form.release_date }}
+                {{ dc_form.release_date.errors }}
+            </p>
+            <p>
+                {{ dc_form.zags.label_tag }}
+                {{ dc_form.zags }}
+                {{ dc_form.zags.errors }}
+            </p>
         {% endif %}
         <h2 class="buttons"><button class="btn">{% if person_form.is_selected %}Сохранить{% else %}Далее{% endif %}</button></h2>
     </div><!--/.well -->

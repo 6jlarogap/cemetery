@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
 from cemetery.models import Burial, Place
-from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm
+from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm
+from persons.models import DeathCertificate
 
 
 def ulogin(request):
@@ -134,7 +135,32 @@ def new_burial_person(request):
     """
     Добавление усопшего
     """
-    return new_burial_somebody(request, 'person')
+    data = request.REQUEST.keys() and request.REQUEST or None
+    person_form = PersonForm(data=data)
+    location_form = LocationForm(person=person_form.instance, data=request.POST or None)
+
+    try:
+        dc = person_form.instance.deathcertificate
+    except DeathCertificate.DoesNotExist:
+        dc = None
+    dc_form = DeathCertificateForm(data=request.POST or None, prefix='dc', instance=dc)
+
+    if request.POST and person_form.data and person_form.is_valid() and dc_form.is_valid():
+        if location_form.is_valid() and location_form.cleaned_data:
+            location = location_form.save()
+        else:
+            location = None
+        person = person_form.save(location=location)
+        dc_form.save(person=person)
+        return render(request, 'burial_create_person_ok.html', {
+            'person': person,
+        })
+
+    return render(request, 'burial_create_person.html', {
+        'person_form': person_form,
+        'location_form': location_form,
+        'dc_form': dc_form,
+    })
 
 def new_burial_customer(request):
     """

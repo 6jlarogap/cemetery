@@ -5,7 +5,7 @@ from django.forms.models import model_to_dict
 
 from cemetery.models import Cemetery, Operation, Place, Burial
 from geo.models import Location
-from persons.models import Person
+from persons.models import Person, DeathCertificate
 from utils.models import PER_PAGE_VALUES, ORDER_BY_VALUES
 
 class SearchForm(forms.Form):
@@ -154,3 +154,15 @@ class LocationForm(forms.ModelForm):
         if person:
             kwargs.update({'instance': person.address})
         super(LocationForm, self).__init__(*args, **kwargs)
+
+class DeathCertificateForm(forms.ModelForm):
+    class Meta:
+        model = DeathCertificate
+
+    def save(self, person=None, commit=True):
+        dc = super(DeathCertificateForm, self).save(commit=False)
+        dc.person = person
+        if commit:
+            dc.save()
+        return dc
+
