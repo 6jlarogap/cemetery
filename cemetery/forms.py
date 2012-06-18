@@ -49,6 +49,8 @@ class PlaceForm(forms.ModelForm):
             return place
 
 class BurialForm(forms.ModelForm):
+    responsible = forms.ModelChoiceField(queryset=Person.objects.all(), widget=forms.HiddenInput)
+
     class Meta:
         model = Burial
         widgets = {
@@ -58,8 +60,23 @@ class BurialForm(forms.ModelForm):
             'client_organization': forms.HiddenInput(),
             'doverennost': forms.HiddenInput(),
             'agent': forms.HiddenInput(),
-            'responsible': forms.HiddenInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance')
+        if instance and instance.place and instance.place.responsible:
+            kwargs.setdefault('initial', {}).update({
+                'responsible': instance.place.responsible,
+            })
+        super(BurialForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        person = super(BurialForm, self).save(commit=False)
+        if person.place and self.cleaned_data.get('responsible'):
+            person.place = self.cleaned_data['responsible']
+        if commit:
+            person.save()
+        return person
 
 class PersonForm(forms.ModelForm):
     instance = forms.ChoiceField(widget=forms.RadioSelect)

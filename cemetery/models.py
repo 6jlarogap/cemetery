@@ -45,6 +45,7 @@ class Place(models.Model):
     gps_x = models.FloatField(u"Координата X", blank=True, null=True, editable=False)  # GPS X-ось.
     gps_y = models.FloatField(u"Координата Y", blank=True, null=True, editable=False)  # GPS Y-ось.
 
+    responsible = models.ForeignKey(Person, blank=True, null=True) # Ответственный за захоронением
     rooms = models.PositiveIntegerField(u"Мест в ограде", default=1, blank=True)
 
     creator = models.ForeignKey(User, verbose_name=u"Создатель записи", editable=False)  # Создатель записи.
@@ -118,8 +119,8 @@ class Burial(models.Model):
     account_number = models.CharField(u"Номер в книге учета", max_length=16, null=True, blank=True)
     operation = models.ForeignKey(Operation, verbose_name=u"Операция")
     date_fact = models.DateField(u"Фактическая дата исполнения", blank=True, null=True)  # Фактическая дата исполнения.
-    place = models.ForeignKey(Place)
 
+    place = models.ForeignKey(Place)
     person = models.ForeignKey(Person, verbose_name=u"Похороненный", related_name='buried')
 
     client_person = models.ForeignKey(Person, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)
@@ -127,7 +128,6 @@ class Burial(models.Model):
     doverennost = models.ForeignKey(Doverennost, null=True, blank=True)
 
     agent = models.ForeignKey(Agent, blank=True, null=True, related_name='orders')             # Агент Заказчика-юрлица
-    responsible = models.ForeignKey(Person, blank=True, null=True) # Ответственный за захоронением
 
     acct_num_str1 = models.CharField(editable=False, null=True, max_length=16)
     acct_num_num = models.PositiveIntegerField(editable=False, null=True)

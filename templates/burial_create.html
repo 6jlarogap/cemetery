@@ -42,9 +42,9 @@
                         <b>Ответственный: </b>
 
                         {{ burial_form.responsible }}
-                        {% if burial_form.instance.responsible.pk %}
-                            <a href="{% url new_burial_responsible %}?instance={{ burial_form.instance.responsible.pk }}" class="load link-person">
-                                {{ burial_form.instance.responsible }}
+                        {% if burial_form.instance.place.responsible.pk %}
+                            <a href="{% url new_burial_responsible %}?instance={{ burial_form.instance.place.responsible.pk }}" class="load link-person">
+                                {{ burial_form.instance.place.responsible }}
                             </a>
                         {% else %}
                             <a href="{% url new_burial_responsible %}" class="load link-person">Новый</a>
