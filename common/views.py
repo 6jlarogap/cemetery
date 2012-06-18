@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
 from cemetery.models import Burial, Place
-from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm
+from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, DoverennostForm, CustomerIDForm, CustomerForm
 from persons.models import DeathCertificate
 
 
@@ -108,29 +108,6 @@ def new_burial_place(request):
         'place_form': place_form,
         })
 
-def new_burial_somebody(request, body):
-    """
-    Добавление чего-нибудь
-    """
-    data = request.REQUEST.keys() and request.REQUEST or None
-    person_form = PersonForm(data=data)
-    location_form = LocationForm(person=person_form.instance, data=request.POST or None)
-
-    if request.POST and person_form.data and person_form.is_valid():
-        if location_form.is_valid() and location_form.cleaned_data:
-            location = location_form.save()
-        else:
-            location = None
-        person = person_form.save(location=location)
-        return render(request, 'burial_create_%s_ok.html' % body, {
-            'person': person,
-        })
-
-    return render(request, 'burial_create_%s.html' % body, {
-        'person_form': person_form,
-        'location_form': location_form,
-    })
-
 def new_burial_person(request):
     """
     Добавление усопшего
@@ -166,10 +143,55 @@ def new_burial_customer(request):
     """
     Добавление заказчика
     """
-    return new_burial_somebody(request, 'customer')
+    data = request.REQUEST.keys() and request.REQUEST or None
+    person_form = PersonForm(data=data)
+    location_form = LocationForm(person=person_form.instance, data=request.POST or None)
+
+    customer_form = CustomerForm(data=request.POST or None, prefix='customer')
+    customer_id_form = CustomerIDForm(data=request.POST or None, prefix='customer_id')
+    doverennost_form = DoverennostForm(data=request.POST or None, prefix='doverennost')
+
+    if request.POST and person_form.data and person_form.is_valid():
+        if customer_form.is_valid() and customer_id_form.is_valid() and doverennost_form.is_valid():
+            if location_form.is_valid() and location_form.cleaned_data:
+                location = location_form.save()
+            else:
+                location = None
+            person = person_form.save(location=location)
+            customer_form.save(person=person)
+            customer_id_form.save(person=person)
+            doverennost_form.save(person=person)
+            return render(request, 'burial_create_customer_ok.html', {
+                'person': person,
+            })
+
+    return render(request, 'burial_create_customer.html', {
+        'person_form': person_form,
+        'location_form': location_form,
+        'customer_form': customer_form,
+        'customer_id_form': customer_id_form,
+        'doverennost_form': doverennost_form,
+    })
 
 def new_burial_responsible(request):
     """
     Добавление ответственного
     """
-    return new_burial_somebody(request, 'responsible')
+    data = request.REQUEST.keys() and request.REQUEST or None
+    person_form = PersonForm(data=data)
+    location_form = LocationForm(person=person_form.instance, data=request.POST or None)
+
+    if request.POST and person_form.data and person_form.is_valid():
+        if location_form.is_valid() and location_form.cleaned_data:
+            location = location_form.save()
+        else:
+            location = None
+        person = person_form.save(location=location)
+        return render(request, 'burial_create_responsible_ok.html', {
+            'person': person,
+        })
+
+    return render(request, 'burial_create_responsible.html', {
+        'person_form': person_form,
+        'location_form': location_form,
+    })

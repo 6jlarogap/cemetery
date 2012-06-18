@@ -2,34 +2,51 @@
     <div class="well">
         <h2>Заказчик</h2>
         <p>
-            {{ person_form.last_name.label_tag }}
-            {{ person_form.last_name }}
-            {{ person_form.last_name.errors }}
+            {{ customer_form.customer_type.label_tag }}
+            {{ customer_form.customer_type }}
+            {{ customer_form.customer_type.errors }}
         </p>
-        <p>
-            {{ person_form.first_name.label_tag }}
-            {{ person_form.first_name }}
-            {{ person_form.first_name.errors }}
-        </p>
-        <p>
-            {{ person_form.middle_name.label_tag }}
-            {{ person_form.middle_name }}
-            {{ person_form.middle_name.errors }}
-        </p>
-        <br/>
-        {{ person_form.instance }}
-        {{ person_form.instance.errors }}
-        {% if person_form.is_selected %}
-            <input type="hidden" name="selected" value="true" />
+        <div class="fields-fizik clear clearfix">
             <p>
-                {{ person_form.birth_date.label_tag }}
-                {{ person_form.birth_date }}
-                {{ person_form.birth_date.errors }}
+                {{ person_form.last_name.label_tag }}
+                {{ person_form.last_name }}
+                {{ person_form.last_name.errors }}
             </p>
             <p>
-                {{ person_form.death_date.label_tag }}
-                {{ person_form.death_date }}
-                {{ person_form.death_date.errors }}
+                {{ person_form.first_name.label_tag }}
+                {{ person_form.first_name }}
+                {{ person_form.first_name.errors }}
+            </p>
+            <p>
+                {{ person_form.middle_name.label_tag }}
+                {{ person_form.middle_name }}
+                {{ person_form.middle_name.errors }}
+            </p>
+            <br/>
+            <p>
+                {{ customer_id_form.id_type.label_tag }}
+                {{ customer_id_form.id_type }}
+                {{ customer_id_form.id_type.errors }}
+            </p>
+            <p class="narrow">
+                {{ customer_id_form.series.label_tag }}
+                {{ customer_id_form.series }}
+                {{ customer_id_form.series.errors }}
+            </p>
+            <p class="narrow">
+                {{ customer_id_form.number.label_tag }}
+                {{ customer_id_form.number }}
+                {{ customer_id_form.number.errors }}
+            </p>
+            <p>
+                {{ customer_id_form.source.label_tag }}
+                {{ customer_id_form.source }}
+                {{ customer_id_form.source.errors }}
+            </p>
+            <p class="narrow">
+                {{ customer_id_form.date.label_tag }}
+                {{ customer_id_form.date }}
+                {{ customer_id_form.date.errors }}
             </p>
             <h2>Адрес</h2>
             <p>
@@ -84,7 +101,40 @@
                 {{ location_form.info }}
                 {{ location_form.info.errors }}
             </p>
-        {% endif %}
+        </div>
+        <div class="fields-yurik clear clearfix">
+            <p>
+                {{ customer_form.organization.label_tag }}
+                {{ customer_form.organization }}
+                {{ customer_form.organization.errors }}
+            </p>
+            <p>
+                {{ customer_form.agent_director.label_tag }}
+                {{ customer_form.agent_director }}
+                {{ customer_form.agent_director.errors }}
+            </p>
+            <h2>Агент</h2>
+            <p>
+                {{ customer_form.agent_person.label_tag }}
+                {{ customer_form.agent_person }}
+                {{ customer_form.agent_person.errors }}
+            </p>
+            <p class="narrow">
+                {{ doverennost_form.number.label_tag }}
+                {{ doverennost_form.number }}
+                {{ doverennost_form.number.errors }}
+            </p>
+            <p class="narrow">
+                {{ doverennost_form.issue_date.label_tag }}
+                {{ doverennost_form.issue_date }}
+                {{ doverennost_form.issue_date.errors }}
+            </p>
+            <p>
+                {{ doverennost_form.expire_date.label_tag }}
+                {{ doverennost_form.expire_date }}
+                {{ doverennost_form.expire_date.errors }}
+            </p>
+        </div>
         <h2 class="buttons"><button class="btn">{% if person_form.is_selected %}Сохранить{% else %}Далее{% endif %}</button></h2>
     </div><!--/.well -->
 </form>

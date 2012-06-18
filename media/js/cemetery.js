@@ -23,7 +23,7 @@ $(function() {
     CITY_URL = '/geo/autocomplete/city/';
     STREET_URL = '/geo/autocomplete/street/';
 
-    $('input.autocomplete[name$=country]').typeahead({
+    $('input.autocomplete[name$=country]').attr('autocomplete', 'off').typeahead({
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             $.ajax({
@@ -37,7 +37,7 @@ $(function() {
             console.log(obj);
         }
     });
-    $('input.autocomplete[name$=region]').typeahead({
+    $('input.autocomplete[name$=region]').attr('autocomplete', 'off').typeahead({
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             var input = $(this)[0].$element;
@@ -53,7 +53,7 @@ $(function() {
             console.log(obj);
         }
     });
-    $('input.autocomplete[name$=city]').typeahead({
+    $('input.autocomplete[name$=city]').attr('autocomplete', 'off').typeahead({
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             var input = $(this)[0].$element;
@@ -70,7 +70,7 @@ $(function() {
             console.log(obj);
         }
     });
-    $('input.autocomplete[name$=street]').typeahead({
+    $('input.autocomplete[name$=street]').attr('autocomplete', 'off').typeahead({
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             var input = $(this)[0].$element;
@@ -95,8 +95,9 @@ $(function() {
         $('#block_empty').hide();
         $('#block_empty').load(this.href, function() {
             updateControls();
-
-            $('#block_empty').fadeIn('fast');
+            $('#block_empty').fadeIn('fast', function() {
+                $('#id_customer-customer_type').change();
+            });
         });
         return false;
     });
@@ -131,6 +132,19 @@ $(function() {
     $('.errorlist').addClass('alert');
 
     $('#mainform #id_account_book_n_from').parents('p').before('<br/>');
+
+    $('#id_customer-customer_type').live('change', function() {
+        if ($(this).val() == 1) {
+            $('.fields-fizik').slideUp('fast', function() {
+                $('.fields-yurik').slideDown('fast');
+            });
+        } else {
+            $('.fields-yurik').slideUp('fast', function() {
+                $('.fields-fizik').slideDown('fast');
+            });
+        }
+    });
+
 });
 
 function makeDatePicker(obj) {
@@ -179,10 +193,11 @@ function updateControls() {
     $('span.move-left').remove();
     makeDatePicker($('input[id*=date]'));
     makeTimePicker($('input[id*=time]'));
-
+    $('#id_customer-customer_type').change();
 }
 
 function updateInnerForm() {
     makeDatePicker($('#block_empty input[id*=date]'));
     makeTimePicker($('#block_empty input[id*=time]'));
+    $('#id_customer-customer_type').change();
 }

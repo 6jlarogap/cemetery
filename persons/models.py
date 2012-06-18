@@ -102,7 +102,7 @@ class PersonID(models.Model):
     series = models.CharField(u"Серия*", max_length=4, null=True)
     number = models.CharField(u"Номер*", max_length=16)
     source = models.ForeignKey(DocumentSource, verbose_name=u"Кем выдан", blank=True, null=True)
-    when = models.DateField(u"Дата выдачи", blank=True, null=True)
+    date = models.DateField(u"Дата выдачи", blank=True, null=True)
 
 class ZAGS(models.Model):
     name = models.CharField(u"Название", max_length=255)

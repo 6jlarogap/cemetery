@@ -5,7 +5,8 @@ from django.forms.models import model_to_dict
 
 from cemetery.models import Cemetery, Operation, Place, Burial
 from geo.models import Location
-from persons.models import Person, DeathCertificate
+from organizations.models import Doverennost, Organization
+from persons.models import Person, DeathCertificate, PersonID
 from utils.models import PER_PAGE_VALUES, ORDER_BY_VALUES
 
 class SearchForm(forms.Form):
@@ -158,6 +159,7 @@ class LocationForm(forms.ModelForm):
 class DeathCertificateForm(forms.ModelForm):
     class Meta:
         model = DeathCertificate
+        exclude = ['person']
 
     def save(self, person=None, commit=True):
         dc = super(DeathCertificateForm, self).save(commit=False)
@@ -165,4 +167,38 @@ class DeathCertificateForm(forms.ModelForm):
         if commit:
             dc.save()
         return dc
+
+OPF_FIZIK = 0
+OPF_YURIK = 1
+OPF_TYPES = (
+    (OPF_FIZIK, u'Физ. лицо'),
+    (OPF_YURIK, u'Юр. лицо'),
+)
+
+class CustomerForm(forms.Form):
+    customer_type = forms.ChoiceField(label=u'Организационно-правовая форма', choices=OPF_TYPES)
+    organization = forms.ModelChoiceField(label=u'Организация', queryset=Organization.objects.all())
+    agent_director = forms.BooleanField(label=u'Директор - агент')
+    agent_person = forms.ModelChoiceField(label=u'Агент', queryset=Person.objects.none())
+
+    def __init__(self, *args, **kwargs):
+        super(CustomerForm, self).__init__(*args, **kwargs)
+        qs = Person.objects.filter(agent__organization__isnull=False).distinct()
+        self.fields['agent_person'].queryset = qs
+
+class CustomerIDForm(forms.ModelForm):
+    class Meta:
+        model = PersonID
+        exclude = ['person']
+
+    def save(self, person=None, commit=True):
+        cid = super(CustomerIDForm, self).save(commit=False)
+        cid.person = person
+        if commit:
+            cid.save()
+        return cid
+
+class DoverennostForm(forms.ModelForm):
+    class Meta:
+        model = Doverennost
 
