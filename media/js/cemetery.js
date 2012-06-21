@@ -145,6 +145,13 @@ $(function() {
         }
     });
 
+    $('#id_customer-agent_director').live('change', function() {
+        if ($(this).is(':checked') ) {
+            $('.fields-agent').slideUp('fast');
+        } else {
+            $('.fields-agent').slideDown('fast');
+        }
+    });
 });
 
 function makeDatePicker(obj) {
@@ -194,10 +201,16 @@ function updateControls() {
     makeDatePicker($('input[id*=date]'));
     makeTimePicker($('input[id*=time]'));
     $('#id_customer-customer_type').change();
+    setTimeout(function() {
+        $('#id_customer-agent_director').change();
+    }, 100);
 }
 
 function updateInnerForm() {
     makeDatePicker($('#block_empty input[id*=date]'));
     makeTimePicker($('#block_empty input[id*=time]'));
     $('#id_customer-customer_type').change();
+    setTimeout(function() {
+        $('#id_customer-agent_director').change();
+    }, 100);
 }

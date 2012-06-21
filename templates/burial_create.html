@@ -31,11 +31,11 @@
                         <h2>Место</h2>
                         {{ burial_form.place }}
                         {% if burial_form.instance.place.pk %}
-                            <a href="{% url new_burial_place %}?instance={{ burial_form.instance.place.pk }}" class="load link-person">
+                            <a href="{% url new_burial_place %}?instance={{ burial_form.instance.place.pk }}" class="load link-place">
                                 {{ burial_form.instance.place }}
                             </a>
                         {% else %}
-                            <a href="{% url new_burial_place %}" class="load link-person">Новое</a>
+                            <a href="{% url new_burial_place %}" class="load link-place">Новое</a>
                         {% endif %}
 
                         <br/>
@@ -43,11 +43,11 @@
 
                         {{ burial_form.responsible }}
                         {% if burial_form.instance.place.responsible.pk %}
-                            <a href="{% url new_burial_responsible %}?instance={{ burial_form.instance.place.responsible.pk }}" class="load link-person">
+                            <a href="{% url new_burial_responsible %}?instance={{ burial_form.instance.place.responsible.pk }}" class="load link-responsible">
                                 {{ burial_form.instance.place.responsible }}
                             </a>
                         {% else %}
-                            <a href="{% url new_burial_responsible %}" class="load link-person">Новый</a>
+                            <a href="{% url new_burial_responsible %}" class="load link-responsible">Новый</a>
                         {% endif %}
 
                         <h2>Усопший</h2>
@@ -64,12 +64,18 @@
                         {{ burial_form.client_organization }}
                         {{ burial_form.agent }}
                         {{ burial_form.doverennost }}
-                        {% if burial_form.instance.customer.pk %}
-                            <a href="{% url new_burial_customer %}?instance={{ burial_form.instance.customer.pk }}" class="load link-person">
-                                {{ burial_form.instance.customer }}
+                        {% if burial_form.instance.client_person.pk %}
+                            <a href="{% url new_burial_customer %}?instance={{ burial_form.instance.client_person.pk }}&customer_type=0" class="load link-customer">
+                                ФЛ {{ burial_form.instance.client_person }}
                             </a>
-                        {% else %}
-                            <a href="{% url new_burial_customer %}" class="load link-person">Новый</a>
+                        {% endif %}
+                        {% if burial_form.instance.client_organization.pk %}
+                            <a href="{% url new_burial_customer %}?customer_type=1&agent_director={% if burial_form.instance.agent %}{% else %}1{% endif %}&organization={{ burial_form.instance.client_organization.pk }}" class="load link-customer">
+                                ЮЛ {{ burial_form.instance.client_organization }}
+                            </a>
+                        {% endif %}
+                        {% if not burial_form.instance.client_person.pk and not burial_form.instance.client_organization.pk %}
+                            <a href="{% url new_burial_customer %}" class="load link-customer">Новый</a>
                         {% endif %}
                         <h2 class="buttons">
                             <button class="btn btn-primary btn-large" disabled="disabled">Сохранить</button>
@@ -116,16 +122,14 @@
                             <td>{{ b.place.seat }}</td>
                             <td>{{ b.place.cemetery.name }}</td>
                             <td>{{ b.operation.op_type }}</td>
-                            {% if b.organization %}
+                            {% if b.client_organization %}
                                 <td>
-                                    {{ b.organization }}<br/>
-                                    {% if b.responsible_agent %}{{ b.responsible_agent.person }}{% else %}{{ b.ceo_name }}{% endif %}
+                                    ЮЛ {{ b.organization }}<br/>
+                                    {% if b.agent %}{{ b.agent }}{% else %}{{ b.client_organization.ceo }}{% endif %}
                                 </td>
                             {% else %}
                                 <td>
-                                    {{ b.customer.person.last_name }}
-                                    {{ b.customer.person.first_name }}
-                                    {{ b.customer.person.patronymic }}
+                                    ФЛ {{ b.client_person }}
                                 </td>
                             {% endif %}
                             <td>

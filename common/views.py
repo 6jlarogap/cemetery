@@ -143,27 +143,40 @@ def new_burial_customer(request):
     """
     Добавление заказчика
     """
-    data = request.REQUEST.keys() and request.REQUEST or None
-    person_form = PersonForm(data=data)
-    location_form = LocationForm(person=person_form.instance, data=request.POST or None)
+    person_data = request.REQUEST.get('instance') and request.REQUEST or None
+    person_form = PersonForm(data=request.POST or None, initial=person_data)
+    location_form = LocationForm(person=person_form.instance, initial=person_data, data=request.POST or None)
 
-    customer_form = CustomerForm(data=request.POST or None, prefix='customer')
-    customer_id_form = CustomerIDForm(data=request.POST or None, prefix='customer_id')
-    doverennost_form = DoverennostForm(data=request.POST or None, prefix='doverennost')
+    org_data = request.REQUEST.get('organization') and request.REQUEST or None
+    customer_form = CustomerForm(data=request.POST or None, prefix='customer', initial=org_data)
+    customer_id_form = CustomerIDForm(data=request.POST or None, prefix='customer_id', initial=org_data)
+    doverennost_form = DoverennostForm(data=request.POST or None, prefix='doverennost', initial=org_data)
 
-    if request.POST and person_form.data and person_form.is_valid():
-        if customer_form.is_valid() and customer_id_form.is_valid() and doverennost_form.is_valid():
-            if location_form.is_valid() and location_form.cleaned_data:
-                location = location_form.save()
-            else:
-                location = None
-            person = person_form.save(location=location)
-            customer_form.save(person=person)
-            customer_id_form.save(person=person)
-            doverennost_form.save(person=person)
-            return render(request, 'burial_create_customer_ok.html', {
-                'person': person,
-            })
+    if request.POST and customer_form.is_valid():
+        if customer_form.is_person():
+            if person_form.is_valid() and customer_id_form.is_valid():
+                if location_form.is_valid() and location_form.cleaned_data:
+                    location = location_form.save()
+                else:
+                    location = None
+                person = person_form.save(location=location)
+                customer_id_form.save(person=person)
+                return render(request, 'burial_create_customer_person_ok.html', {
+                    'person': person,
+                })
+        else:
+            if customer_form.cleaned_data['agent_director'] or doverennost_form.is_valid():
+                org = customer_form.cleaned_data['organization']
+                agent = customer_form.get_agent()
+                if doverennost_form.is_valid():
+                    doverennost = doverennost_form.save()
+                else:
+                    doverennost = None
+                return render(request, 'burial_create_customer_org_ok.html', {
+                    'org': org,
+                    'agent': agent,
+                    'doverennost': doverennost,
+                })
 
     return render(request, 'burial_create_customer.html', {
         'person_form': person_form,

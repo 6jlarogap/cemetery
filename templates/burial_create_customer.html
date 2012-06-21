@@ -113,27 +113,29 @@
                 {{ customer_form.agent_director }}
                 {{ customer_form.agent_director.errors }}
             </p>
-            <h2>Агент</h2>
-            <p>
-                {{ customer_form.agent_person.label_tag }}
-                {{ customer_form.agent_person }}
-                {{ customer_form.agent_person.errors }}
-            </p>
-            <p class="narrow">
-                {{ doverennost_form.number.label_tag }}
-                {{ doverennost_form.number }}
-                {{ doverennost_form.number.errors }}
-            </p>
-            <p class="narrow">
-                {{ doverennost_form.issue_date.label_tag }}
-                {{ doverennost_form.issue_date }}
-                {{ doverennost_form.issue_date.errors }}
-            </p>
-            <p>
-                {{ doverennost_form.expire_date.label_tag }}
-                {{ doverennost_form.expire_date }}
-                {{ doverennost_form.expire_date.errors }}
-            </p>
+            <div class="fields-agent">
+                <h2>Агент</h2>
+                <p>
+                    {{ customer_form.agent_person.label_tag }}
+                    {{ customer_form.agent_person }}
+                    {{ customer_form.agent_person.errors }}
+                </p>
+                <p class="narrow">
+                    {{ doverennost_form.number.label_tag }}
+                    {{ doverennost_form.number }}
+                    {{ doverennost_form.number.errors }}
+                </p>
+                <p class="narrow">
+                    {{ doverennost_form.issue_date.label_tag }}
+                    {{ doverennost_form.issue_date }}
+                    {{ doverennost_form.issue_date.errors }}
+                </p>
+                <p>
+                    {{ doverennost_form.expire_date.label_tag }}
+                    {{ doverennost_form.expire_date }}
+                    {{ doverennost_form.expire_date.errors }}
+                </p>
+            </div>
         </div>
         <h2 class="buttons"><button class="btn">{% if person_form.is_selected %}Сохранить{% else %}Далее{% endif %}</button></h2>
     </div><!--/.well -->

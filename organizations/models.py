@@ -14,6 +14,7 @@ class Organization(models.Model):
     kpp = models.CharField(u"КПП", max_length=9, blank=True, validators=[DigitsValidator(), ])                                     # КПП
     name = models.CharField(u"Краткое название организации", max_length=99)                      # Название краткое
     full_name = models.CharField(u"Полное название организации", max_length=255, null=True)      # Название полное
+    ceo = models.ForeignKey(Person, verbose_name=u"Директор", null=True, blank=True)
     ceo_name = models.CharField(u"ФИО директора", max_length=255, null=True, blank=True, help_text=u'именительный падеж, напр. ИВАНОВ И.И.')
     ceo_name_who = models.CharField(u"ФИО директора р.п.", max_length=255, null=True, blank=True, help_text=u'родительный падеж, напр. ИВАНОВА И.И.')
     ceo_document = models.CharField(u"Документ директора", max_length=255, null=True, blank=True, help_text=u'на основании чего? например, УСТАВА')

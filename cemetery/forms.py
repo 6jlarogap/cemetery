@@ -50,7 +50,7 @@ class PlaceForm(forms.ModelForm):
             return place
 
 class BurialForm(forms.ModelForm):
-    responsible = forms.ModelChoiceField(queryset=Person.objects.all(), widget=forms.HiddenInput)
+    responsible = forms.ModelChoiceField(queryset=Person.objects.all(), widget=forms.HiddenInput, required=False)
 
     class Meta:
         model = Burial
@@ -72,12 +72,15 @@ class BurialForm(forms.ModelForm):
         super(BurialForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        person = super(BurialForm, self).save(commit=False)
-        if person.place and self.cleaned_data.get('responsible'):
-            person.place = self.cleaned_data['responsible']
+        burial = super(BurialForm, self).save(commit=False)
+        if burial.place and self.cleaned_data.get('responsible'):
+            burial.place.responsible = self.cleaned_data['responsible']
+            burial.place.save()
         if commit:
-            person.save()
-        return person
+            burial.save()
+
+        print 'burial.client_person, burial.client_organization', burial.client_person, burial.client_organization
+        return burial
 
 class PersonForm(forms.ModelForm):
     instance = forms.ChoiceField(widget=forms.RadioSelect)
@@ -178,13 +181,23 @@ OPF_TYPES = (
 class CustomerForm(forms.Form):
     customer_type = forms.ChoiceField(label=u'Организационно-правовая форма', choices=OPF_TYPES)
     organization = forms.ModelChoiceField(label=u'Организация', queryset=Organization.objects.all())
-    agent_director = forms.BooleanField(label=u'Директор - агент')
-    agent_person = forms.ModelChoiceField(label=u'Агент', queryset=Person.objects.none())
+    agent_director = forms.BooleanField(label=u'Директор - агент', required=False)
+    agent_person = forms.ModelChoiceField(label=u'Агент', queryset=Person.objects.none(), required=False)
 
     def __init__(self, *args, **kwargs):
         super(CustomerForm, self).__init__(*args, **kwargs)
         qs = Person.objects.filter(agent__organization__isnull=False).distinct()
         self.fields['agent_person'].queryset = qs
+
+    def is_person(self):
+        return str(self.cleaned_data['customer_type']) == str(OPF_FIZIK)
+
+    def get_agent(self):
+        if self.cleaned_data['agent_director']:
+            org = self.cleaned_data['organization']
+            return org.ceo
+        else:
+            return self.cleaned_data['agent_person']
 
 class CustomerIDForm(forms.ModelForm):
     class Meta:
@@ -201,4 +214,15 @@ class CustomerIDForm(forms.ModelForm):
 class DoverennostForm(forms.ModelForm):
     class Meta:
         model = Doverennost
+
+    def save(self, commit=True):
+        try:
+            d = Doverennost.objects.get(**self.cleaned_data)
+        except Doverennost.DoesNotExist:
+            d = super(DoverennostForm, self).save(commit=False)
+            if commit:
+                d.save()
+        return d
+
+
 
