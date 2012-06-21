@@ -108,6 +108,8 @@ class PersonForm(forms.ModelForm):
                     self.fields['instance'].choices = self.INSTANCE_CHOICES + [
                         (str(p.pk), p) for p in Person.objects.filter(pk=self.data.get('instance'))
                     ]
+                else:
+                    self.instance = Person()
                 if not self.data.get('selected') and self.instance:
                     self.data = None
                     self.is_bound = False
