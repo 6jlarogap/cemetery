@@ -102,12 +102,15 @@ class PersonForm(forms.ModelForm):
                 'last_name__istartswith': self.data.get('last_name', ''),
                 'middle_name__istartswith': self.data.get('middle_name', ''),
             }
-            if self.data.get('instance') and self.data.get('instance') != 'NEW':
-                self.instance = Person.objects.get(pk=self.data.get('instance'))
-                self.fields['instance'].choices = self.INSTANCE_CHOICES + [
-                    (str(p.pk), p) for p in Person.objects.filter(pk=self.data.get('instance'))
-                ]
-                if not self.data.get('selected'):
+            if self.data.get('instance'):
+                if self.data.get('instance') != 'NEW':
+                    self.instance = None
+                else:
+                    self.instance = Person.objects.get(pk=self.data.get('instance'))
+                    self.fields['instance'].choices = self.INSTANCE_CHOICES + [
+                        (str(p.pk), p) for p in Person.objects.filter(pk=self.data.get('instance'))
+                    ]
+                if not self.data.get('selected') and self.instance:
                     self.data = None
                     self.is_bound = False
                     self.initial = model_to_dict(self.instance, self._meta.fields, self._meta.exclude)
