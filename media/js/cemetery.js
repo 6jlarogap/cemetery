@@ -152,6 +152,8 @@ $(function() {
             $('.fields-agent').slideDown('fast');
         }
     });
+
+    $('.dropdown-toggle').dropdown();
 });
 
 function makeDatePicker(obj) {
