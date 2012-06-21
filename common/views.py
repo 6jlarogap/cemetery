@@ -122,7 +122,7 @@ def new_burial_person(request):
 
     try:
         dc = person_form.instance.deathcertificate
-    except DeathCertificate.DoesNotExist:
+    except (DeathCertificate.DoesNotExist, AttributeError):
         dc = None
     dc_form = DeathCertificateForm(data=request.POST or None, prefix='dc', instance=dc)
 
