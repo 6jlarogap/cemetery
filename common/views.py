@@ -54,6 +54,7 @@ def main_page(request):
 
     return render(request,'burials.html', result )
 
+@login_required
 def new_burial(request):
     """
     Добавление захоронения
@@ -70,6 +71,7 @@ def new_burial(request):
         'last_entered': Burial.objects.all().order_by('-id')[:10],
     })
 
+@login_required
 def edit_burial(request, pk):
     """
     Редактирование захоронения
@@ -88,6 +90,7 @@ def edit_burial(request, pk):
         'burial': burial,
     })
 
+@login_required
 def new_burial_place(request):
     """
     Добавление места захоронения
@@ -108,6 +111,7 @@ def new_burial_place(request):
         'place_form': place_form,
         })
 
+@login_required
 def new_burial_person(request):
     """
     Добавление усопшего
@@ -139,6 +143,7 @@ def new_burial_person(request):
         'dc_form': dc_form,
     })
 
+@login_required
 def new_burial_customer(request):
     """
     Добавление заказчика
@@ -186,6 +191,7 @@ def new_burial_customer(request):
         'doverennost_form': doverennost_form,
     })
 
+@login_required
 def new_burial_responsible(request):
     """
     Добавление ответственного
