@@ -116,7 +116,7 @@ class PersonForm(forms.ModelForm):
                 self.fields['instance'].choices = self.INSTANCE_CHOICES + [
                     (str(p.pk), p) for p in Person.objects.filter(**person_kwargs)
                 ]
-                self.data['instance'] = None
+                # self.data['instance'] = None
         else:
             self.fields['instance'].widget = forms.HiddenInput()
             self.data['instance'] = None
