@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from cemetery.models import *
+from persons.models import ZAGS
 
 admin.site.register(Agent)
 admin.site.register(Burial)
@@ -12,3 +13,4 @@ admin.site.register(Organization)
 admin.site.register(Region)
 admin.site.register(City)
 admin.site.register(Country)
+admin.site.register(ZAGS)
