@@ -103,9 +103,7 @@ class PersonForm(forms.ModelForm):
                 'middle_name__istartswith': self.data.get('middle_name', ''),
             }
             if self.data.get('instance'):
-                if self.data.get('instance') == 'NEW':
-                    self.instance = None
-                else:
+                if self.data.get('instance') != 'NEW':
                     self.instance = Person.objects.get(pk=self.data.get('instance'))
                     self.fields['instance'].choices = self.INSTANCE_CHOICES + [
                         (str(p.pk), p) for p in Person.objects.filter(pk=self.data.get('instance'))
