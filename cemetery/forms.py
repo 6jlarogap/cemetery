@@ -103,7 +103,7 @@ class PersonForm(forms.ModelForm):
                 'middle_name__istartswith': self.data.get('middle_name', ''),
             }
             if self.data.get('instance'):
-                if self.data.get('instance') != 'NEW':
+                if self.data.get('instance') == 'NEW':
                     self.instance = None
                 else:
                     self.instance = Person.objects.get(pk=self.data.get('instance'))
