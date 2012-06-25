@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 )
 
+
 urlpatterns += patterns('common.views',
     url(r'^$', 'main_page', name='main_page'),
     url(r'^create/$', 'new_burial', name='new_burial'),
@@ -25,7 +26,6 @@ urlpatterns += patterns('common.views',
 
     url(r'^geo/', include('geo.urls')),
 )
-
 urlpatterns += patterns('',
     (r'^sentry/', include('sentry.web.urls')),
 )

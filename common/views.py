@@ -9,6 +9,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 
 from cemetery.models import Burial, Place
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, DoverennostForm, CustomerIDForm, CustomerForm
+from organizations.models import Organization
 from persons.models import DeathCertificate
 
 
@@ -258,3 +259,4 @@ def new_burial_responsible(request):
         'person_form': person_form,
         'location_form': location_form,
     })
+

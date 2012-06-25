@@ -62,9 +62,9 @@
                         <ul class="dropdown-menu">
                             <li><a href="#">Настройки</a></li>
                             <li class="divider"></li>
-                            <li><a href="#">Организации</a></li>
-                            <li><a href="#">Кладбища</a></li>
-                            <li><a href="#">Пользователи</a></li>
+                            <li><a href="{% url admin:organizations_organization_changelist %}" target="_blank">Организации</a></li>
+                            <li><a href="{% url admin:cemetery_cemetery_changelist %}" target="_blank">Кладбища</a></li>
+                            <li><a href="{% url admin:auth_user_changelist %}" target="_blank">Пользователи</a></li>
                             <li class="divider"></li>
                             <li><a href="{% url ulogout %}">Выйти</a></li>
                         </ul>

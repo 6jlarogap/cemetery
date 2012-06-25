@@ -15,12 +15,12 @@ class Cemetery(models.Model):
     Кладбище.
     """
 
-    organization = models.ForeignKey(Organization, related_name="cemetery")  # Связь с душой.
-    location = models.ForeignKey(Location, blank=True, null=True)  # Адрес.
-    name = models.CharField(u"Название", max_length=99, blank=True)  # Название.
-    creator = models.ForeignKey(User)  # Создатель записи.
-    date_of_creation = models.DateTimeField(auto_now_add=True)  # Дата создания записи.
-    ordering = models.PositiveIntegerField(blank=True, default=1)
+    organization = models.ForeignKey(Organization, related_name="cemetery", verbose_name=u'Организация')
+    location = models.ForeignKey(Location, blank=True, null=True, verbose_name=u'Адрес')
+    name = models.CharField(u"Название", max_length=99, blank=True)
+    creator = models.ForeignKey(User, editable=False)
+    date_of_creation = models.DateTimeField(auto_now_add=True)
+    ordering = models.PositiveIntegerField(blank=True, default=1, verbose_name=u'Сортировка')
 
     class Meta:
         ordering = ['ordering', 'name']
