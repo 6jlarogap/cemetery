@@ -249,6 +249,7 @@ def new_burial_responsible(request):
     location_form = LocationForm(person=person_form.instance, data=request.POST or None)
 
     if request.POST and person_form.data and person_form.is_valid():
+        print 'location_form.is_valid()', location_form.is_valid(), location_form.errors
         if location_form.is_valid() and location_form.cleaned_data:
             location = location_form.save()
         else:

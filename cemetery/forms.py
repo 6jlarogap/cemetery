@@ -4,7 +4,7 @@ from django import forms
 from django.forms.models import model_to_dict
 
 from cemetery.models import Cemetery, Operation, Place, Burial, UserProfile
-from geo.models import Location
+from geo.models import Location, Country, Region, City, Street
 from organizations.models import Doverennost, Organization
 from persons.models import Person, DeathCertificate, PersonID
 from utils.models import PER_PAGE_VALUES, ORDER_BY_VALUES
@@ -125,15 +125,18 @@ class PersonForm(forms.ModelForm):
         if not self.is_bound or not self.data:
             return False
 
-        if self.data.get('instance') == '':
+        if not self.data.get('instance'):
+            return False
+
+        if not self.data.get('selected'):
             return False
 
         return super(PersonForm, self).is_valid()
 
     def is_selected(self):
         is_old = self.instance and self.instance.pk
-        is_new = self.data and not self.data.get('instance') is None
-        return is_old or is_new
+        is_new = self.data and self.data.get('instance')
+        return is_old or is_new or False
 
     def save(self, location=None, commit=True):
         person = super(PersonForm, self).save(commit=False)
@@ -157,6 +160,26 @@ class LocationForm(forms.ModelForm):
     def __init__(self, person=None, *args, **kwargs):
         if person:
             kwargs.update({'instance': person.address})
+            kwargs.setdefault('initial', {}).update({
+                'country': person.address.country.name,
+                'region': person.address.region.name,
+                'city': person.address.city.name,
+                'street': person.address.street.name,
+            })
+        if kwargs.get('data', {}):
+            kwargs['data'] = kwargs['data'] and kwargs['data'].copy() or {}
+            if kwargs['data'].get('country'):
+                d = kwargs['data']
+                country, _tmp = Country.objects.get_or_create(name=d['country'])
+                kwargs['data']['country'] = country.pk
+                if kwargs.get('data', {}).get('region'):
+                    region, _tmp = Region.objects.get_or_create(name=d['region'], country=country)
+                    kwargs['data']['region'] = region.pk
+                    if kwargs.get('data', {}).get('city'):
+                        city, _tmp = City.objects.get_or_create(name=d['city'], region=region)
+                        kwargs['data']['city'] = city.pk
+                        if kwargs.get('data', {}).get('street'):
+                            kwargs['data']['street'] = Street.objects.get_or_create(name=d['street'], city=city)[0].pk
         super(LocationForm, self).__init__(*args, **kwargs)
 
 class DeathCertificateForm(forms.ModelForm):
