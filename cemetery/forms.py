@@ -158,7 +158,7 @@ class LocationForm(forms.ModelForm):
         }
 
     def __init__(self, person=None, *args, **kwargs):
-        if person:
+        if person and person.address:
             kwargs.update({'instance': person.address})
             kwargs.setdefault('initial', {}).update({
                 'country': person.address.country.name,
