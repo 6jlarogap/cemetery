@@ -3,7 +3,7 @@
 from django import forms
 from django.forms.models import model_to_dict
 
-from cemetery.models import Cemetery, Operation, Place, Burial
+from cemetery.models import Cemetery, Operation, Place, Burial, UserProfile
 from geo.models import Location
 from organizations.models import Doverennost, Organization
 from persons.models import Person, DeathCertificate, PersonID
@@ -224,5 +224,10 @@ class DoverennostForm(forms.ModelForm):
                 d.save()
         return d
 
+class UserProfileForm(forms.ModelForm):
+    """
+    Форма значений по умолчанию для профиля пользователя.
+    """
 
-
+    class Meta:
+        model = UserProfile

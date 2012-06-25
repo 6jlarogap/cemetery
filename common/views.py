@@ -7,9 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.db.models.query_utils import Q
 from django.shortcuts import redirect, render, get_object_or_404
 
-from cemetery.models import Burial, Place
-from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, DoverennostForm, CustomerIDForm, CustomerForm
-from organizations.models import Organization
+from cemetery.models import Burial, Place, UserProfile
+from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm
+from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm
 from persons.models import DeathCertificate
 
 
@@ -47,7 +47,8 @@ def main_page(request):
     """
 
     burials = Burial.objects.all()
-    form = SearchForm(request.GET or None)
+    p, _tmp = UserProfile.objects.get_or_create(user=request.user)
+    form = SearchForm(request.GET or None, initial={'records_order_by': p.records_order_by, 'per_page': p.records_per_page})
     if form.data and form.is_valid():
         if form.cleaned_data['operation']:
             burials = burials.filter(operation=form.cleaned_data['operation'])
@@ -104,7 +105,8 @@ def new_burial(request):
     """
     Добавление захоронения
     """
-    burial_form = BurialForm(data=request.POST or None)
+    p, _tmp = UserProfile.objects.get_or_create(user=request.user)
+    burial_form = BurialForm(data=request.POST or None, initial={'operation': p.default_operation})
 
     if request.POST and burial_form.is_valid():
         burial_form.save()
@@ -144,7 +146,8 @@ def new_burial_place(request):
         instance = Place.objects.get(pk=request.GET['instance'])
     else:
         instance = None
-    place_form = PlaceForm(data=request.POST or None, instance=instance)
+    p, _tmp = UserProfile.objects.get_or_create(user=request.user)
+    place_form = PlaceForm(data=request.POST or None, instance=instance, initial={'cemetery': p.default_cemetery})
 
     if request.POST and place_form.is_valid():
         place = place_form.save(user=request.user)
@@ -260,3 +263,14 @@ def new_burial_responsible(request):
         'location_form': location_form,
     })
 
+@login_required
+def profile(request):
+    p, _tmp = UserProfile.objects.get_or_create(user=request.user)
+    form = UserProfileForm(data=request.POST or None, instance=p)
+    if request.POST and form.is_valid():
+        form.save()
+        return redirect('profile')
+    return render(request, 'profile.html', {
+        'profile': p,
+        'form': form,
+    })

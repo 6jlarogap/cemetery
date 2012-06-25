@@ -1015,28 +1015,6 @@ class EditUserForm(forms.ModelForm):
                 user.save()
         return user
 
-class UserProfileForm(forms.ModelForm):
-    """
-    Форма значений по умолчанию для профиля пользователя.
-    """
-
-    class Meta:
-        model = UserProfile
-        exclude = ['default_country', 'default_region', 'default_city', ]
-
-    def clean(self):
-        cd = self.cleaned_data
-        cemetery = cd.get("cemetery", None)
-        operation = cd.get("operation", None)
-        if operation and not cemetery:
-            raise forms.ValidationError("Не выбрано кладбище.")
-        if operation:
-            try:
-                spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
-                                                           p_type=settings.PLACE_PRODUCTTYPE_ID)
-            except:
-                raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
-        return cd
 
 #class OrderPositionForm(forms.ModelForm):
 #    active = forms.BooleanField(required=False)
