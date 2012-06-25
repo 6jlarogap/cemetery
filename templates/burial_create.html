@@ -124,8 +124,8 @@
                             <td>{{ b.operation.op_type }}</td>
                             {% if b.client_organization %}
                                 <td>
-                                    ЮЛ {{ b.organization }}<br/>
-                                    {% if b.agent %}{{ b.agent }}{% else %}{{ b.client_organization.ceo }}{% endif %}
+                                    ЮЛ {{ b.client_organization }}<br/>
+                                    {% if b.agent %}{{ b.agent }}{% else %}{{ b.client_organization.ceo|default:"" }}{% endif %}
                                 </td>
                             {% else %}
                                 <td>

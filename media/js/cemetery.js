@@ -145,6 +145,10 @@ $(function() {
         }
     });
 
+    $('#id_per_page').parents('p').before('<br/>');
+    $('#id_per_page').parents('p').find('label, :input').css('display', 'inline');
+    $('#id_records_order_by').parents('p').find('label, :input').css('display', 'inline');
+
     $('#id_customer-agent_director').live('change', function() {
         if ($(this).is(':checked') ) {
             $('.fields-agent').slideUp('fast');

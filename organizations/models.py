@@ -20,7 +20,7 @@ class Organization(models.Model):
     ceo_document = models.CharField(u"Документ директора", max_length=255, null=True, blank=True, help_text=u'на основании чего? например, УСТАВА')
 
     def __unicode__(self):
-        return self.name or self.full_name
+        return self.name or self.full_name or u'Unknown'
 
     def bank_account(self):
         try:

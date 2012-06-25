@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.db.models.query_utils import Q
 from django.shortcuts import redirect, render, get_object_or_404
 
 from cemetery.models import Burial, Place
@@ -46,11 +47,54 @@ def main_page(request):
 
     burials = Burial.objects.all()
     form = SearchForm(request.GET or None)
+    if form.data and form.is_valid():
+        if form.cleaned_data['operation']:
+            burials = burials.filter(operation=form.cleaned_data['operation'])
+        if form.cleaned_data['fio']:
+            fio = [f.strip('.') for f in form.cleaned_data['fio'].split(' ')]
+            q = Q()
+            for f in fio:
+                q &= Q(person__last_name__icontains=f) | Q(person__first_name__icontains=f) | Q(person__middle_name__icontains=f)
+            burials = burials.filter(q)
+        if form.cleaned_data['birth_date_from']:
+            burials = burials.filter(person__birth_date__gte=form.cleaned_data['birth_date_from'])
+        if form.cleaned_data['birth_date_to']:
+            burials = burials.filter(person__birth_date__lte=form.cleaned_data['birth_date_to'])
+        if form.cleaned_data['death_date_from']:
+            burials = burials.filter(person__death_date__gte=form.cleaned_data['death_date_from'])
+        if form.cleaned_data['death_date_to']:
+            burials = burials.filter(person__death_date__lte=form.cleaned_data['death_date_to'])
+        if form.cleaned_data['burial_date_from']:
+            burials = burials.filter(date_fact__gte=form.cleaned_data['burial_date_from'])
+        if form.cleaned_data['burial_date_to']:
+            burials = burials.filter(date_fact__lte=form.cleaned_data['burial_date_to'])
+        if form.cleaned_data['account_number_from']:
+            burials = burials.filter(account_number__gte=form.cleaned_data['account_number_from'])
+        if form.cleaned_data['account_number_to']:
+            burials = burials.filter(account_number__lte=form.cleaned_data['account_number_to'])
+        if form.cleaned_data['customer']:
+            q = Q(client_person__last_name__icontains=form.cleaned_data['customer'])
+            q |= Q(client_organization__name__icontains=form.cleaned_data['customer'])
+            q |= Q(client_organization__full_name__icontains=form.cleaned_data['customer'])
+            burials = burials.filter(q)
+        if form.cleaned_data['cemetery']:
+            burials = burials.filter(place__cemetery=form.cleaned_data['cemetery'])
+        if form.cleaned_data['area']:
+            burials = burials.filter(place__area=form.cleaned_data['area'])
+        if form.cleaned_data['row']:
+            burials = burials.filter(place__row=form.cleaned_data['row'])
+        if form.cleaned_data['seat']:
+            burials = burials.filter(place__seat=form.cleaned_data['seat'])
+        if form.cleaned_data['no_exhumated']:
+            burials = burials.filter(exhumated=False)
+
+        if form.cleaned_data['records_order_by']:
+            burials = burials.order_by(form.cleaned_data['records_order_by'])
     result = {
         "form": form,
         "object_list": burials,
-        'close': request.GET.get('close'),
-        }
+        "close": request.GET.get('close'),
+    }
 
     return render(request,'burials.html', result )
 
