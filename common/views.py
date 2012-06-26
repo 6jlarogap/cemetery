@@ -47,8 +47,12 @@ def main_page(request):
     """
 
     burials = Burial.objects.all()
-    p, _tmp = UserProfile.objects.get_or_create(user=request.user)
-    form = SearchForm(request.GET or None, initial={'records_order_by': p.records_order_by, 'per_page': p.records_per_page})
+    if request.user.is_authenticated():
+        p, _tmp = UserProfile.objects.get_or_create(user=request.user)
+        initial = {'records_order_by': p.records_order_by, 'per_page': p.records_per_page}
+    else:
+        initial = None
+    form = SearchForm(request.GET or None, initial=initial)
     if form.data and form.is_valid():
         if form.cleaned_data['operation']:
             burials = burials.filter(operation=form.cleaned_data['operation'])
@@ -249,7 +253,6 @@ def new_burial_responsible(request):
     location_form = LocationForm(person=person_form.instance, data=request.POST or None)
 
     if request.POST and person_form.data and person_form.is_valid():
-        print 'location_form.is_valid()', location_form.is_valid(), location_form.errors
         if location_form.is_valid() and location_form.cleaned_data:
             location = location_form.save()
         else:
