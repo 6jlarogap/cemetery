@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
+import datetime
 from django.contrib import messages
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.db.models.query_utils import Q
 from django.shortcuts import redirect, render, get_object_or_404
+from django.utils.safestring import mark_safe
+import math
 
-from cemetery.models import Burial, Place, UserProfile
-from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm
+from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition
+from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm
 from persons.models import DeathCertificate
 
@@ -277,4 +281,191 @@ def profile(request):
     return render(request, 'profile.html', {
         'profile': p,
         'form': form,
+    })
+
+def get_positions(burial):
+    positions = []
+    for product in Service.objects.all().order_by('ordering', 'name'):
+        try:
+            pos = OrderPosition.objects.get(order_product=product, order=burial)
+        except OrderPosition.DoesNotExist:
+            positions.append({
+                'active': product.default,
+                'order_product': product,
+                'price': product.price,
+                'count': 1,
+                'sum': product.price * 1,
+                })
+        else:
+            positions.append({
+                'active': True,
+                'order_product': product,
+                'price': pos.price,
+                'count': pos.count,
+                'sum': pos.price * pos.count,
+                })
+    return positions
+
+@login_required
+@transaction.commit_on_success
+def print_burial(request, pk):
+    """
+    Страница печати документов захоронения.
+    """
+    burial = get_object_or_404(Burial, pk=pk)
+    positions = get_positions(burial)
+    initials = burial.get_print_info()
+
+    def is_same(i, p):
+        i1 = isinstance(i['order_product'], Service) and i['order_product'].name or i['order_product']
+        p1 = isinstance(p['order_product'], Service) and p['order_product'].name or p['order_product']
+        return i1 == p1
+
+    if initials and initials.setdefault('positions', []):
+        for p in positions:
+            if not any(filter(lambda i: is_same(i, p), initials['positions'])):
+                initials['positions'].append(p)
+
+    payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
+    positions_fs = OrderPositionsFormset(initial=initials.get('positions') or positions, data=request.POST or None)
+    print_form = PrintOptionsForm(data=request.POST or None, initial=initials['print'], burial=burial)
+    org = None
+
+    time_check_failed = False
+
+    print_positions = []
+    if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
+        burial.set_print_info({
+            'positions': [f.cleaned_data for f in positions_fs.forms if f.is_valid()],
+            'print': print_form.cleaned_data,
+            })
+        burial.save()
+
+        for f in positions_fs.forms:
+            if f.cleaned_data['active']:
+                print_positions.append(f.initial['order_product'].pk)
+                try:
+                    pos = ServicePosition.objects.get(order_product=f.initial['order_product'], order=burial)
+                except ServicePosition.DoesNotExist:
+                    pos = ServicePosition.objects.create(
+                        order_product=f.initial['order_product'],
+                        order=burial,
+                        price=f.cleaned_data['price'],
+                        count=f.cleaned_data['count'],
+                    )
+                else:
+                    pos.price = f.cleaned_data['price']
+                    pos.count = f.cleaned_data['count']
+                    pos.save()
+
+            else:
+                try:
+                    pos = ServicePosition.objects.get(order_product=f.initial['order_product'], order=burial)
+                except ServicePosition.DoesNotExist:
+                    pass
+                else:
+                    pos.delete()
+
+        transaction.commit()
+
+        payment_form.save()
+
+        positions = get_positions(burial)
+        positions = filter(lambda p: p['order_product'].pk in print_positions, positions)
+
+        burial_creator = u'%s' % burial.creator
+
+        current_user = u'%s' % request.user.userprofile.person
+
+        spaces = mark_safe('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+
+        if print_form.cleaned_data.get('receipt'):
+            return render(request, 'reports/spravka.html', {
+                'burial': burial,
+                'current_user': current_user or spaces,
+                'now': datetime.datetime.now(),
+                'org': org,
+            })
+
+        if print_form.cleaned_data.get('dogovor'):
+
+            return render(request, 'reports/dogovor.html', {
+                'burial': burial,
+                'now': datetime.datetime.now(),
+                'org': org,
+            })
+
+        catafalque_release = ('_____', '_____',)
+        catafalque_time = ''
+        catafalque_hours = None
+        lifters_count = u'н/д'
+
+        try:
+            position = filter(lambda p: u'грузчики' in p['order_product'].name.lower(), positions)[0]
+            lifters_hours = position['count']
+            lifters_count = u'%s %s' % (position['count'], position['order_product'].measure)
+            hours = math.floor(lifters_hours)
+            minutes = math.floor((float(lifters_hours) - math.floor(lifters_hours)) * 60)
+            lifters_hours = datetime.time(int(hours), int(minutes))
+        except IndexError:
+            lifters_hours = 0
+
+        if print_form.cleaned_data.get('catafalque_time'):
+            try:
+                catafalque_hours = filter(lambda p: u'автокатафалк' in p['order_product'].name.lower(), positions)[0]['count']
+            except IndexError:
+                catafalque_hours = 0
+            catafalque_time = map(int, print_form.cleaned_data.get('catafalque_time').split(':'))
+
+        if catafalque_hours:
+            hours = math.floor(catafalque_hours)
+            minutes = math.floor((float(catafalque_hours) - math.floor(catafalque_hours)) * 60)
+            catafalque_hours = datetime.time(int(hours), int(minutes))
+
+            if catafalque_time:
+                delta = datetime.timedelta(0, catafalque_hours.hour * 3600 + catafalque_hours.minute * 60)
+                catafalque_release = datetime.datetime(burial.date_fact.year, burial.date_fact.month, burial.date_fact.day, *catafalque_time) + delta
+
+                if burial.date_fact.time() < datetime.time(*catafalque_time) or catafalque_release.time() < burial.date_fact.time():
+                    if not request.REQUEST.get('skip_time_check'):
+                        time_check_failed = True
+        else:
+            catafalque_hours = None
+
+        if catafalque_hours:
+            lifters_hours = catafalque_hours
+
+        if catafalque_time and isinstance(catafalque_time[0], int):
+            catafalque_time = datetime.time(*catafalque_time)
+            catafalque_time = u' ч. '.join(catafalque_time.strftime(u'%H %M').lstrip('0').strip().split(' ')) + u' мин.'
+
+        if not time_check_failed:
+            return render(request, 'reports/act.html', {
+                'burial': burial,
+                'burial_creator': burial_creator or spaces,
+                'positions': positions,
+                'print_positions': print_positions,
+                'total': float(sum([p['sum'] for p in positions])),
+                'catafalque': print_form.cleaned_data.get('catafalque'),
+                'lifters': print_form.cleaned_data.get('lifters'),
+                'graving': print_form.cleaned_data.get('graving'),
+                'now': datetime.datetime.now(),
+                'org': org,
+                'catafalque_route': print_form.cleaned_data.get('catafalque_route') or '',
+                'catafalque_start': print_form.cleaned_data.get('catafalque_start') or '',
+                'catafalque_time': catafalque_time or '',
+                'catafalque_hours': catafalque_hours and (u' ч. '.join(catafalque_hours.strftime(u'%H %M').lstrip('0').strip().split(' ')) + u' мин.') or '',
+                'lifters_hours': lifters_hours and (u' ч. '.join(lifters_hours.strftime(u'%H %M').lstrip('0').strip().split(' ')) + u' мин.') or '',
+                'lifters_count': lifters_count,
+                'coffin_size': print_form.cleaned_data.get('coffin_size') or '',
+                'print_now': print_form.cleaned_data.get('print_now'),
+                'dop_info': print_form.cleaned_data.get('add_info') or '',
+            })
+
+    return render(request, 'burial_print.html', {
+        'burial': burial,
+        'positions_fs': positions_fs,
+        'payment_form': payment_form,
+        'print_form': print_form,
+        'time_check_failed': time_check_failed,
     })

@@ -118,7 +118,8 @@ class Burial(models.Model):
     """
     account_number = models.CharField(u"Номер в книге учета", max_length=16, null=True, blank=True)
     operation = models.ForeignKey(Operation, verbose_name=u"Операция")
-    date_fact = models.DateField(u"Фактическая дата исполнения", blank=True, null=True)  # Фактическая дата исполнения.
+    date_plan = models.DateField(u"Планируемая дата", blank=True, null=True)
+    date_fact = models.DateField(u"Фактическая дата исполнения", blank=True, null=True)
 
     place = models.ForeignKey(Place)
     person = models.ForeignKey(Person, verbose_name=u"Похороненный", related_name='buried')
@@ -134,7 +135,12 @@ class Burial(models.Model):
     acct_num_str2 = models.CharField(editable=False, null=True, max_length=16)
 
     print_info = models.TextField(editable=False, null=True)
+    payment_type = models.CharField(u"Платеж", max_length=16, choices=[
+        ('nal', u"Нал"),
+        ('beznal', u"Безнал"),
+    ], default='nal', blank=False)
 
+    creator = models.ForeignKey('auth.User', null=True, editable=False)
     deleted = models.BooleanField(editable=False, default=False)  # Удален.
 
     class Meta:
@@ -196,11 +202,11 @@ class Burial(models.Model):
                 'd_date': self.doverennost.date and self.doverennost.date.strftime('%d.%m.%Y') or '',
                 }
 
-        if self.organization:
+        if self.client_organization:
             return u"%(org)s, в лице директора %(ceo)s, действующего на основании %(doc)s" % {
-                'org': self.organization.full_name or self.organization,
-                'ceo': self.organization.ceo_name_who,
-                'doc': self.organization.ceo_document,
+                'org': self.client_organization.full_name or self.client_organization,
+                'ceo': self.client_organization.ceo_name_who,
+                'doc': self.client_organization.ceo_document,
                 }
 
         return self.customer.full_human_name()
@@ -272,6 +278,9 @@ class UserProfile(models.Model):
     catafalque_text = models.TextField(u"Текст в наряде на а/к", blank=True, default='')
     naryad_text = models.TextField(u"Текст во всех нарядах", blank=True, default='')
 
+    person = models.ForeignKey(Person, null=True, editable=False)
+    organization = models.ForeignKey(Organization, null=True, editable=False)
+
     def __unicode__(self):
         return self.user.username
 
@@ -296,4 +305,40 @@ def set_dover(sender, instance, **kwargs):
     instance.number = instance.number.upper()
 models.signals.pre_save.connect(set_dover, sender=Doverennost)
 
+class Service(models.Model):
+    """
+    Продукт в заказе.
+    """
+    name = models.CharField(u"Название продукта", max_length=255)
+    default = models.BooleanField(u"Вкл. по умолчанию", default=False, blank=True)
+    measure = models.CharField(u"Единицы измерения", max_length=50, blank=True)
+    price = models.DecimalField(u"Цена", decimal_places=2, max_digits=10)
+    ordering = models.PositiveSmallIntegerField(u"Сортировка", default=1)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = (u'тип продукта для счет-заказа')
+        verbose_name_plural = (u'типы продуктов для счет-заказа')
+
+class ServicePosition(models.Model):
+    """
+    Позиция в заказе.
+    """
+    burial = models.ForeignKey(Burial)
+    service = models.ForeignKey(Service)
+    count = models.DecimalField(u"Кол-во", decimal_places=2, max_digits=10)
+    price = models.DecimalField(u"Цена", decimal_places=2, max_digits=10)
+
+    @property
+    def sum(self):
+        return self.count * self.price
+
+    def __unicode__(self):
+        return self.uuid
+
+    class Meta:
+        verbose_name = (u'позиция счет-заказа')
+        verbose_name_plural = (u'позиция счет-заказа')
 

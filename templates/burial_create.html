@@ -79,6 +79,9 @@
                         {% endif %}
                         <h2 class="buttons">
                             <button class="btn btn-primary btn-large" disabled="disabled">Сохранить</button>
+                            {% if burial_form.instance.pk %}
+                                <a href="{% url print_burial burial_form.instance.pk %}" class="btn">Документы</a>
+                            {% endif %}
                         </h2>
                     </div><!--/.well -->
                 </div>

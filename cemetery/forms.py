@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.db import models
+from django.forms import formsets
 from django.forms.models import model_to_dict
 
-from cemetery.models import Cemetery, Operation, Place, Burial, UserProfile
+from cemetery.models import Cemetery, Operation, Place, Burial, UserProfile, Service, ServicePosition
 from geo.models import Location, Country, Region, City, Street
 from organizations.models import Doverennost, Organization
 from persons.models import Person, DeathCertificate, PersonID
@@ -254,3 +256,67 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
+
+class OrderPositionForm(forms.ModelForm):
+    active = forms.BooleanField(required=False)
+
+    class Meta:
+        model = ServicePosition
+        fields = ['service', 'count', 'price']
+        widgets = {
+            'service': forms.HiddenInput,
+        }
+
+class BaseOrderPositionsFormset(formsets.BaseFormSet):
+    def __init__(self, *args, **kwargs):
+        if kwargs.get('initial'):
+            real_initial = []
+            for i in kwargs['initial']:
+
+                if isinstance(i['order_product'], Service):
+                    q = models.Q(pk=i['order_product'].pk)
+                else:
+                    q = models.Q(name=i['order_product'])
+                try:
+                    Service.objects.get(q)
+                except Service.DoesNotExist:
+                    pass
+                else:
+                    real_initial.append(i)
+            kwargs['initial'] = real_initial
+
+        super(BaseOrderPositionsFormset, self).__init__(*args, **kwargs)
+
+
+OrderPositionsFormset = forms.formsets.formset_factory(OrderPositionForm, extra=0, formset=BaseOrderPositionsFormset)
+
+class OrderPaymentForm(forms.ModelForm):
+    class Meta:
+        model = Burial
+        fields = ['payment_type', ]
+        widgets = {
+            'payment_type': forms.RadioSelect,
+        }
+
+class PrintOptionsForm(forms.Form):
+    catafalque = forms.BooleanField(label=u"наряд на автокатафалк", required=False, initial=False)
+    lifters = forms.BooleanField(label=u"наряд на грузчиков", required=False, initial=False)
+    graving = forms.BooleanField(label=u"наряд на рытье могилы", required=False, initial=True)
+    receipt = forms.BooleanField(label=u"справка о захоронении", required=False, initial=False)
+    dogovor = forms.BooleanField(label=u"договор ответственного", required=False, initial=False)
+
+    catafalque_route = forms.CharField(label=u"маршрут а/к", required=False, widget=forms.Textarea)
+    catafalque_start = forms.CharField(label=u"подача а/к", required=False)
+    catafalque_time = forms.TimeField(label=u"время а/к", required=False)
+
+    coffin_size = forms.CharField(label=u"размер гроба", required=False)
+
+    print_now = forms.BooleanField(label=u"отправить на печать", required=False)
+
+    add_info = forms.CharField(label=u"доп. инфо", required=False, widget=forms.Textarea)
+
+    def __init__(self, *args, **kwargs):
+        self.burial = kwargs.pop('burial')
+        super(PrintOptionsForm, self).__init__(*args, **kwargs)
+
+
