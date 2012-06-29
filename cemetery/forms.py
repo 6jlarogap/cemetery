@@ -98,7 +98,7 @@ class PersonForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PersonForm, self).__init__(*args, **kwargs)
         self.data = dict(self.data.items())
-        if self.data:
+        if self.data and self.data.get('last_name'):
             person_kwargs = {
                 'first_name__istartswith': self.data.get('first_name', ''),
                 'last_name__istartswith': self.data.get('last_name', ''),

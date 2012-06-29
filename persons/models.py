@@ -16,9 +16,9 @@ class Person(models.Model):
     """
     Физическое лицо (клиент, сотрудник, кто угодно).
     """
-    last_name = models.CharField(u"Фамилия", max_length=128)  # Фамилия.
-    first_name = models.CharField(u"Имя", max_length=30, blank=True)  # Имя.
-    middle_name = models.CharField(u"Отчество", max_length=30, blank=True)  # Отчество.
+    last_name = models.CharField(u"Фамилия", max_length=255)  # Фамилия.
+    first_name = models.CharField(u"Имя", max_length=255, blank=True)  # Имя.
+    middle_name = models.CharField(u"Отчество", max_length=255, blank=True)  # Отчество.
 
     birth_date = models.DateField(u"Дата рождения", blank=True, null=True)
     birth_date_no_month = models.BooleanField(default=False, editable=False)
@@ -99,8 +99,8 @@ class DocumentSource(models.Model):
 class PersonID(models.Model):
     person = models.OneToOneField(Person)
     id_type = models.ForeignKey(IDDocumentType, verbose_name=u"Тип документа*")
-    series = models.CharField(u"Серия*", max_length=4, null=True)
-    number = models.CharField(u"Номер*", max_length=16)
+    series = models.CharField(u"Серия*", max_length=255, null=True)
+    number = models.CharField(u"Номер*", max_length=255)
     source = models.ForeignKey(DocumentSource, verbose_name=u"Кем выдан", blank=True, null=True)
     date = models.DateField(u"Дата выдачи", blank=True, null=True)
 
@@ -122,8 +122,8 @@ class DeathCertificate(models.Model):
 
     person = models.OneToOneField(Person)
 
-    s_number = models.CharField(u"Номер", max_length=30, blank=True, null=True)
-    series = models.CharField(u"Серия", max_length=30, blank=True, null=True)
+    s_number = models.CharField(u"Номер", max_length=255, blank=True, null=True)
+    series = models.CharField(u"Серия", max_length=255, blank=True, null=True)
     release_date = models.DateField(u"Дата выдачи", null=True, blank=True)
     zags = models.ForeignKey(ZAGS, verbose_name=u"ЗАГС*", null=True)
 

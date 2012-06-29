@@ -8,7 +8,7 @@ class Country(models.Model):
     Страна.
     """
 
-    name = models.CharField(u"Название", max_length=24, db_index=True, unique=True)
+    name = models.CharField(u"Название", max_length=255, db_index=True, unique=True)
 
     def __unicode__(self):
         return self.name[:16]
@@ -26,7 +26,7 @@ class Region(models.Model):
     """
 
     country = models.ForeignKey(Country)
-    name = models.CharField(u"Название", max_length=36, db_index=True)
+    name = models.CharField(u"Название", max_length=255, db_index=True)
 
     def __unicode__(self):
         return self.name[:24]
@@ -43,7 +43,7 @@ class City(models.Model):
     """
 
     region = models.ForeignKey(Region)
-    name = models.CharField(u"Название", max_length=36, db_index=True)
+    name = models.CharField(u"Название", max_length=255, db_index=True)
 
     def __unicode__(self):
         return self.name[:24]
@@ -60,7 +60,7 @@ class Street(models.Model):
     """
 
     city = models.ForeignKey(City)  # Город.
-    name = models.CharField(max_length=99, db_index=True)  # Название.
+    name = models.CharField(max_length=255, db_index=True)  # Название.
 
     class Meta:
         ordering = ['city', 'name']
@@ -79,12 +79,12 @@ class Location(models.Model):
     region = models.ForeignKey(Region, verbose_name=u"Регион", blank=True, null=True)
     city = models.ForeignKey(City, verbose_name=u"Город", blank=True, null=True)
     street = models.ForeignKey(Street, verbose_name=u"Улица", blank=True, null=True)
-    post_index = models.CharField(u"Почтовый индекс", max_length=16, blank=True)
+    post_index = models.CharField(u"Почтовый индекс", max_length=255, blank=True)
 
-    house = models.CharField(u"Дом", max_length=16, blank=True)
-    block = models.CharField(u"Корпус", max_length=16, blank=True)
-    building = models.CharField(u"Строение", max_length=16, blank=True)
-    flat = models.CharField(u"Квартира", max_length=16, blank=True)
+    house = models.CharField(u"Дом", max_length=255, blank=True)
+    block = models.CharField(u"Корпус", max_length=255, blank=True)
+    building = models.CharField(u"Строение", max_length=255, blank=True)
+    flat = models.CharField(u"Квартира", max_length=255, blank=True)
     gps_x = models.FloatField(u"Координата X", blank=True, null=True, editable=False)
     gps_y = models.FloatField(u"Координата Y", blank=True, null=True, editable=False)
     info = models.TextField(u"Дополнительная информация", blank=True, null=True)
