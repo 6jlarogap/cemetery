@@ -4,7 +4,7 @@ import sys
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from cemetery.models import Operation, Cemetery
+from cemetery.models import Operation, Cemetery, Burial, Place
 from geo.models import Country, Region, City, Street, Location
 
 from old_common import models as old_models
@@ -17,7 +17,8 @@ class Command(BaseCommand):
         make_option('--skip-zags', dest='skip_zags', default=None, help='Skips ZAGS'),
         make_option('--skip-locations', dest='skip_locations', default=None, help='Skips all geo data'),
         make_option('--skip-persons', dest='skip_persons', default=None, help='Skips Persons'),
-    )
+        make_option('--skip-burials', dest='skip_burials', default=None, help='Skips Burials'),
+        )
 
     def handle(self, *args, **options):
         assert settings.DATABASES.get('old')
@@ -33,6 +34,9 @@ class Command(BaseCommand):
 
         self.import_organizations()
         self.import_cemeteries()
+
+        if options['skip_burials'] is None:
+            self.import_burials()
 
     def import_zags(self):
         for old in old_models.ZAGS.objects.all().using('old'):
@@ -230,3 +234,96 @@ class Command(BaseCommand):
                 )
         print 'Cemeteries:', old_models.Cemetery.objects.all().using('old').count()
 
+    def import_burials(self):
+        for old in old_models.Burial.objects.all().select_related().using('old'):
+            try:
+                Burial.objects.get(account_number=old.account_book_n, place__cemetery__name=old.product.place.cemetery.name)
+            except Burial.DoesNotExist:
+                try:
+                    place = Place.objects.get(
+                        cemetery=Cemetery.objects.get(name=old.product.place.cemetery.name),
+                        row=old.product.place.row,
+                        area=old.product.place.area,
+                        seat=old.product.place.seat,
+                    )
+                except Place.DoesNotExist:
+                    place = Place.objects.create(
+                        cemetery=Cemetery.objects.get(name=old.product.place.cemetery.name),
+                        row=old.product.place.row,
+                        area=old.product.place.area,
+                        seat=old.product.place.seat,
+                        rooms = old.product.place.rooms,
+                        creator=User.objects.all()[0],
+                    )
+                if old.person.location:
+                    kwargs = dict(
+                        post_index=old.person.location.post_index,
+                        house=old.person.location.house,
+                        block=old.person.location.block,
+                        building=old.person.location.building,
+                        flat=old.person.location.flat,
+                        gps_x=old.person.location.gps_x,
+                        gps_y=old.person.location.gps_y,
+                        info=old.person.location.info,
+                    )
+                    if old.person.location.country:
+                        kwargs['country'] = Country.objects.get(name=old.person.location.country.name)
+                    if old.person.location.region:
+                        kwargs['region'] = Region.objects.get(name=old.person.location.region.name)
+                    if old.person.location.city:
+                        kwargs['city'] = City.objects.get(name=old.person.location.city.name, region__name=old.person.location.city.region.name)
+                    if old.person.location.street:
+                        kwargs['street'] = Street.objects.get(name=old.person.location.street.name, city__name=old.person.location.street.city.name)
+
+                    if any(kwargs.values()):
+                        address, _tmp = Location.objects.get_or_create(**kwargs)
+                    else:
+                        address = None
+                else:
+                    address = None
+                try:
+                    person = Person.objects.get(
+                        last_name=old.person.last_name,
+                        first_name=old.person.first_name,
+                        middle_name=old.person.patronymic,
+    
+                        birth_date=old.person.birth_date,
+                        death_date=old.person.death_date,
+                    )
+                except Person.MultipleObjectsReturned:
+                    person = Person.objects.filter(
+                        last_name=old.person.last_name,
+                        first_name=old.person.first_name,
+                        middle_name=old.person.patronymic,
+
+                        birth_date=old.person.birth_date,
+                        death_date=old.person.death_date,
+                    )[0]
+                except Person.DoesNotExist:
+                    person = Person.objects.create(
+                        last_name=old.person.last_name,
+                        first_name=old.person.first_name,
+                        middle_name=old.person.patronymic,
+
+                        birth_date=old.person.birth_date,
+                        birth_date_no_month=old.person.birth_date_no_month,
+                        birth_date_no_day=old.person.birth_date_no_day,
+                        death_date=old.person.death_date,
+
+                        address=address,
+                    )
+                Burial.objects.create(
+                    account_number=old.account_book_n,
+                    operation=Operation.objects.get(op_type=old.operation.op_type),
+                    date_plan=old.date_plan,
+                    date_fact=old.date_fact,
+    
+                    place=place,
+                    person=person,
+    
+                    print_info=old.print_info,
+                    payment_type=old.payment_type,
+                    deleted=old.is_trash,
+                    creator=User.objects.all()[0],
+                )
+        print 'Burials:', old_models.Burial.objects.all().using('old').count()

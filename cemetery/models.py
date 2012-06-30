@@ -17,7 +17,7 @@ class Cemetery(models.Model):
 
     organization = models.ForeignKey(Organization, related_name="cemetery", verbose_name=u'Организация')
     location = models.ForeignKey(Location, blank=True, null=True, verbose_name=u'Адрес')
-    name = models.CharField(u"Название", max_length=99, blank=True)
+    name = models.CharField(u"Название", max_length=255, blank=True)
     creator = models.ForeignKey(User, editable=False)
     date_of_creation = models.DateTimeField(auto_now_add=True)
     ordering = models.PositiveIntegerField(blank=True, default=1, verbose_name=u'Сортировка')
@@ -39,9 +39,9 @@ class Place(models.Model):
     Место.
     """
     cemetery = models.ForeignKey(Cemetery, verbose_name=u"Кладбище")  # Связь с кладбищем.
-    area = models.CharField(u"Участок", max_length=9, blank=True, null=True)  # Участок.
-    row = models.CharField(u"Ряд", max_length=9, blank=True, null=True)  # Ряд.
-    seat = models.CharField(u"Место", max_length=9)  # Место.
+    area = models.CharField(u"Участок", max_length=255, blank=True, null=True)  # Участок.
+    row = models.CharField(u"Ряд", max_length=255, blank=True, null=True)  # Ряд.
+    seat = models.CharField(u"Место", max_length=255)  # Место.
     gps_x = models.FloatField(u"Координата X", blank=True, null=True, editable=False)  # GPS X-ось.
     gps_y = models.FloatField(u"Координата Y", blank=True, null=True, editable=False)  # GPS Y-ось.
 
@@ -100,7 +100,7 @@ class Operation(models.Model):
     Операция
     """
 
-    op_type = models.CharField(u"Имя операции", max_length=100)
+    op_type = models.CharField(u"Имя операции", max_length=255)
     ordering = models.PositiveSmallIntegerField(u"Сортировка", default=1)
 
     def __unicode__(self):
@@ -116,7 +116,7 @@ class Burial(models.Model):
     """
     Захоронение.
     """
-    account_number = models.CharField(u"Номер в книге учета", max_length=16, null=True, blank=True)
+    account_number = models.CharField(u"Номер в книге учета", max_length=255, null=True, blank=True)
     operation = models.ForeignKey(Operation, verbose_name=u"Операция")
     date_plan = models.DateField(u"Планируемая дата", blank=True, null=True)
     date_fact = models.DateField(u"Фактическая дата исполнения", blank=True, null=True)
@@ -130,12 +130,12 @@ class Burial(models.Model):
 
     agent = models.ForeignKey(Agent, blank=True, null=True, related_name='orders')             # Агент Заказчика-юрлица
 
-    acct_num_str1 = models.CharField(editable=False, null=True, max_length=16)
+    acct_num_str1 = models.CharField(editable=False, null=True, max_length=255)
     acct_num_num = models.PositiveIntegerField(editable=False, null=True)
-    acct_num_str2 = models.CharField(editable=False, null=True, max_length=16)
+    acct_num_str2 = models.CharField(editable=False, null=True, max_length=255)
 
     print_info = models.TextField(editable=False, null=True)
-    payment_type = models.CharField(u"Платеж", max_length=16, choices=[
+    payment_type = models.CharField(u"Платеж", max_length=255, choices=[
         ('nal', u"Нал"),
         ('beznal', u"Безнал"),
     ], default='nal', blank=False)
@@ -273,7 +273,7 @@ class UserProfile(models.Model):
     default_region = models.ForeignKey(Region, verbose_name=u"Регион",blank=True, null=True)  # Регион.
     default_city = models.ForeignKey(City, verbose_name=u"Город",blank=True, null=True)  # Город.
     records_per_page = models.PositiveSmallIntegerField(u"Записей на странице",blank=True, null=True,choices=PER_PAGE_VALUES)
-    records_order_by = models.CharField(u"Сортировка по", max_length=50,blank=True, choices=ORDER_BY_VALUES)
+    records_order_by = models.CharField(u"Сортировка по", max_length=255,blank=True, choices=ORDER_BY_VALUES)
 
     catafalque_text = models.TextField(u"Текст в наряде на а/к", blank=True, default='')
     naryad_text = models.TextField(u"Текст во всех нарядах", blank=True, default='')
@@ -311,7 +311,7 @@ class Service(models.Model):
     """
     name = models.CharField(u"Название продукта", max_length=255)
     default = models.BooleanField(u"Вкл. по умолчанию", default=False, blank=True)
-    measure = models.CharField(u"Единицы измерения", max_length=50, blank=True)
+    measure = models.CharField(u"Единицы измерения", max_length=255, blank=True)
     price = models.DecimalField(u"Цена", decimal_places=2, max_digits=10)
     ordering = models.PositiveSmallIntegerField(u"Сортировка", default=1)
 

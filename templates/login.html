@@ -12,12 +12,14 @@ $(function(){
 {% block h1 %}Вход в систему:{% endblock %}
 {% block content %}
     <form method="post" action="">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="/" />
         <p>
-        <label for="id_username">Логин:</label>
-        <input id="id_username" type="text" name="username" maxlength="30" />
+            <label for="id_username">Логин:</label>
+            <input id="id_username" type="text" name="username" maxlength="30" />
         </p>
         <p>
-        <label for="id_password">Пароль:</label> <input type="password" name="password" id="id_password" />
+            <label for="id_password">Пароль:</label> <input type="password" name="password" id="id_password" />
         </p>
         <input type="submit" value="Войти" />
 </form>
