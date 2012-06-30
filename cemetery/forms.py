@@ -130,7 +130,8 @@ class PersonForm(forms.ModelForm):
             self.fields['instance'].widget = forms.HiddenInput()
 
     def full_person_data(self, p):
-        return u'%s (род. %s, адрес: %s), %s' % (p, p.get_birth_date, p.address or '', self.get_person_status(p))
+        params = (p.full_name(), p.get_birth_date().strftime('%d.%m.%Y'), p.address or u'', self.get_person_status(p))
+        return u'%s (род. %s, адрес: %s), %s' % params
 
     def get_person_status(self, p):
         if p.buried.all().count() > 0:
