@@ -285,7 +285,7 @@ class Command(BaseCommand):
                             address, _tmp = Location.objects.get_or_create(**kwargs)
                         except Location.MultipleObjectsReturned:
                             address = Location.objects.filter(**kwargs)[0]
-                else:
+                    else:
                         address = None
                 else:
                     address = None
