@@ -4,9 +4,11 @@ import sys
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from cemetery.models import Operation, Cemetery
 from geo.models import Country, Region, City, Street, Location
 
 from old_common import models as old_models
+from organizations.models import Organization
 from persons.models import ZAGS, DocumentSource, Person
 
 class Command(BaseCommand):
@@ -28,6 +30,9 @@ class Command(BaseCommand):
             self.import_locations()
         if options['skip_persons'] is None:
             self.import_persons()
+
+        self.import_organizations()
+        self.import_cemeteries()
 
     def import_zags(self):
         for old in old_models.ZAGS.objects.all().using('old'):
@@ -164,5 +169,64 @@ class Command(BaseCommand):
 
         print 'Persons:', old_models.Person.objects.all().using('old').count()
 
+    def import_organizations(self):
+        for old in old_models.Operation.objects.all().select_related().using('old'):
+            try:
+                Operation.objects.get(op_type=old.op_type)
+            except Operation.DoesNotExist:
+                Operation.objects.create(op_type=old.op_type, ordering=old.ordering)
+        print 'Operations:', old_models.Operation.objects.all().using('old').count()
 
+        for old in old_models.Organization.objects.all().select_related().using('old'):
+            try:
+                Organization.objects.get(name=old.name, full_name=old.full_name)
+            except Organization.DoesNotExist:
+                Organization.objects.create(
+                    ogrn=old.ogrn,
+                    inn=old.inn,
+                    kpp=old.kpp,
+                    name=old.name,
+                    full_name=old.full_name,
+                    ceo_name=old.ceo_name,
+                    ceo_name_who=old.ceo_name_who,
+                    ceo_document=old.ceo_document,
+                )
+        print 'Organizations:', old_models.Operation.objects.all().using('old').count()
+
+    def import_cemeteries(self):
+        for old in old_models.Cemetery.objects.all().select_related().using('old'):
+            try:
+                Cemetery.objects.get(name=old.name)
+            except Cemetery.DoesNotExist:
+                if old.location:
+                    kwargs = dict(
+                        post_index=old.location.post_index,
+                        house=old.location.house,
+                        block=old.location.block,
+                        building=old.location.building,
+                        flat=old.location.flat,
+                        gps_x=old.location.gps_x,
+                        gps_y=old.location.gps_y,
+                        info=old.location.info,
+                    )
+                    if old.location.country:
+                        kwargs['country'] = Country.objects.get(name=old.location.country.name)
+                    if old.location.region:
+                        kwargs['region'] = Region.objects.get(name=old.location.region.name)
+                    if old.location.city:
+                        kwargs['city'] = City.objects.get(name=old.location.city.name, region__name=old.location.city.region.name)
+                    if old.location.street:
+                        kwargs['street'] = Street.objects.get(name=old.location.street.name, city__name=old.location.street.city.name)
+
+                    address, _tmp = Location.objects.get_or_create(**kwargs)
+                else:
+                    address = None
+                Cemetery.objects.create(
+                    organization=Organization.objects.get(name=old.organization.name),
+                    location=address,
+                    name=old.name,
+                    ordering=old.ordering,
+                    creator=User.objects.all()[0],
+                )
+        print 'Cemeteries:', old_models.Cemetery.objects.all().using('old').count()
 
