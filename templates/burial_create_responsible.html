@@ -26,16 +26,11 @@
                 {{ person_form.birth_date }}
                 {{ person_form.birth_date.errors }}
             </p>
-            <p>
-                {{ person_form.death_date.label_tag }}
-                {{ person_form.death_date }}
-                {{ person_form.death_date.errors }}
-            </p>
             <h2>Адрес</h2>
             <p>
-                {{ location_form.country.label_tag }}
-                {{ location_form.country }}
-                {{ location_form.country.errors }}
+                {{ location_form.city.label_tag }}
+                {{ location_form.city }}
+                {{ location_form.city.errors }}
             </p>
             <p>
                 {{ location_form.region.label_tag }}
@@ -43,9 +38,9 @@
                 {{ location_form.region.errors }}
             </p>
             <p>
-                {{ location_form.city.label_tag }}
-                {{ location_form.city }}
-                {{ location_form.city.errors }}
+                {{ location_form.country.label_tag }}
+                {{ location_form.country }}
+                {{ location_form.country.errors }}
             </p>
             <p>
                 {{ location_form.street.label_tag }}
