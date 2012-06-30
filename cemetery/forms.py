@@ -114,7 +114,7 @@ class PersonForm(forms.ModelForm):
             if self.data.get('instance') not in [None, '', 'NEW']:
                 self.instance = Person.objects.get(pk=self.data.get('instance'))
                 self.fields['instance'].choices = self.INSTANCE_CHOICES + [
-                    (str(p.pk), p) for p in Person.objects.filter(pk=self.data.get('instance'))
+                    (str(p.pk), self.full_person_data(p)) for p in Person.objects.filter(pk=self.data.get('instance'))
                 ]
                 if not self.data.get('selected'):
                     self.data = None
@@ -123,11 +123,14 @@ class PersonForm(forms.ModelForm):
                     self.initial.update({'instance': self.instance.pk})
             else:
                 self.fields['instance'].choices = self.INSTANCE_CHOICES + [
-                    (str(p.pk), p) for p in Person.objects.filter(**person_kwargs)
+                    (str(p.pk), self.full_person_data(p)) for p in Person.objects.filter(**person_kwargs)
                 ]
                 # self.data['instance'] = None
         else:
             self.fields['instance'].widget = forms.HiddenInput()
+
+    def full_person_data(self, p):
+        return u'%s (род. %s, адрес: %s)' % (p, p.get_birth_date, p.address or '')
 
     def is_valid(self):
         if not self.is_bound or not self.data:
