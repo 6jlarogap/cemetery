@@ -121,6 +121,8 @@ class Command(BaseCommand):
                     kwargs['street__name'] = old.location.street.name
                 try:
                     address = Location.objects.get(**kwargs)
+                except Location.MultipleObjectsReturned:
+                    address = Location.objects.filter(**kwargs)[0]
                 except Location.DoesNotExist:
                     address = Location.objects.create(
                         country=old.location.country and Country.objects.get(name=old.location.country.name) or None,
@@ -222,7 +224,10 @@ class Command(BaseCommand):
                     if old.location.street:
                         kwargs['street'] = Street.objects.get(name=old.location.street.name, city__name=old.location.street.city.name)
 
-                    address, _tmp = Location.objects.get_or_create(**kwargs)
+                    try:
+                        address, _tmp = Location.objects.get_or_create(**kwargs)
+                    except Location.MultipleObjectsReturned:
+                        address = Location.objects.filter(**kwargs)[0]
                 else:
                     address = None
                 Cemetery.objects.create(
@@ -276,8 +281,11 @@ class Command(BaseCommand):
                         kwargs['street'] = Street.objects.get(name=old.person.location.street.name, city__name=old.person.location.street.city.name)
 
                     if any(kwargs.values()):
-                        address, _tmp = Location.objects.get_or_create(**kwargs)
-                    else:
+                        try:
+                            address, _tmp = Location.objects.get_or_create(**kwargs)
+                        except Location.MultipleObjectsReturned:
+                            address = Location.objects.filter(**kwargs)[0]
+                else:
                         address = None
                 else:
                     address = None
