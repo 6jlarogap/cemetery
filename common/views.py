@@ -150,12 +150,15 @@ def new_burial_place(request):
     """
     Добавление места захоронения
     """
+    p, _tmp = UserProfile.objects.get_or_create(user=request.user)
     if request.GET.get('instance'):
         instance = Place.objects.get(pk=request.GET['instance'])
+        initial = None
     else:
         instance = None
-    p, _tmp = UserProfile.objects.get_or_create(user=request.user)
-    place_form = PlaceForm(data=request.POST or None, instance=instance, initial={'cemetery': p.default_cemetery})
+        initial = {'cemetery': p.default_cemetery}
+
+    place_form = PlaceForm(data=request.POST or None, instance=instance, initial=initial)
 
     if request.POST and place_form.is_valid():
         place = place_form.save(user=request.user)

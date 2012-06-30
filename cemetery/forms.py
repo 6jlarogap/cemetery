@@ -81,7 +81,6 @@ class BurialForm(forms.ModelForm):
         if commit:
             burial.save()
 
-        print 'burial.client_person, burial.client_organization', burial.client_person, burial.client_organization
         return burial
 
 class PersonForm(forms.ModelForm):
@@ -96,8 +95,16 @@ class PersonForm(forms.ModelForm):
         model = Person
 
     def __init__(self, *args, **kwargs):
+        data = kwargs.get('data') or {}
+        instance_pk = data.get('instance')
+        if instance_pk:
+            kwargs['instance'] = Person.objects.get(pk=instance_pk)
+            kwargs['initial'] = model_to_dict(kwargs['instance'], [], [])
+            kwargs['initial'].update({'instance': instance_pk})
         super(PersonForm, self).__init__(*args, **kwargs)
         self.data = dict(self.data.items())
+        if not any(self.data.values()) or self.data.keys() == ['instance']:
+            self.data = self.initial.copy()
         if self.data and self.data.get('last_name'):
             person_kwargs = {
                 'first_name__istartswith': self.data.get('first_name', ''),
@@ -121,7 +128,6 @@ class PersonForm(forms.ModelForm):
                 # self.data['instance'] = None
         else:
             self.fields['instance'].widget = forms.HiddenInput()
-            self.data['instance'] = None
 
     def is_valid(self):
         if not self.is_bound or not self.data:
