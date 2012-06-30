@@ -77,8 +77,8 @@ class Person(models.Model):
         initials = u""
         if self.first_name:
             initials = u"%s." % self.first_name[:1].upper()
-            if self.patronymic:
-                initials = u"%s%s." % (initials, self.patronymic[:1].upper())
+            if self.middle_name:
+                initials = u"%s%s." % (initials, self.middle_name[:1].upper())
         return initials
 
     def full_name(self):
