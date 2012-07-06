@@ -26,6 +26,7 @@ class Person(models.Model):
     death_date = models.DateField(u"Дата смерти", blank=True, null=True)
 
     address = models.ForeignKey(Location, editable=False, null=True)
+    phones = models.TextField(u"Телефоны", blank=True, null=True)
 
     def __unicode__(self):
         if self.last_name:

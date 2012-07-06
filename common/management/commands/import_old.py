@@ -8,7 +8,7 @@ from cemetery.models import Operation, Cemetery, Burial, Place
 from geo.models import Country, Region, City, Street, Location
 
 from old_common import models as old_models
-from organizations.models import Organization
+from organizations.models import Organization, Agent, Doverennost
 from persons.models import ZAGS, DocumentSource, Person
 
 class Command(BaseCommand):
@@ -18,7 +18,8 @@ class Command(BaseCommand):
         make_option('--skip-locations', dest='skip_locations', default=None, help='Skips all geo data'),
         make_option('--skip-persons', dest='skip_persons', default=None, help='Skips Persons'),
         make_option('--skip-burials', dest='skip_burials', default=None, help='Skips Burials'),
-        )
+        make_option('--skip-responsible', dest='skip_responsible', default=None, help='Skips responsibles'),
+    )
 
     def handle(self, *args, **options):
         assert settings.DATABASES.get('old')
@@ -37,6 +38,9 @@ class Command(BaseCommand):
 
         if options['skip_burials'] is None:
             self.import_burials()
+
+        if options['skip_responsible'] is None:
+            self.import_responsible()
 
     def import_zags(self):
         for old in old_models.ZAGS.objects.all().using('old'):
@@ -335,3 +339,75 @@ class Command(BaseCommand):
                     creator=User.objects.all()[0],
                 )
         print 'Burials:', old_models.Burial.objects.all().using('old').count()
+
+    def import_responsible(self):
+        for old in old_models.Burial.objects.filter(responsible_customer__isnull=False).select_related().using('old'):
+            new_burial = Burial.objects.get(
+                account_number=old.account_book_n,
+                place__cemetery__name=old.product.place.cemetery.name,
+            )
+            try:
+                agent = old.responsible_agent
+                org = old.responsible_agent.organization
+                new_org = Organization.objects.get(name=org.name)
+                try:
+                    new_client = old.customer.organization
+                except (old_models.Organization.DoesNotExist, TypeError, AttributeError):
+                    new_client = new_org
+                kwargs = dict(
+                    first_name=agent.first_name,
+                    middle_name=agent.patronymic,
+                    last_name=agent.last_name,
+                    birth_date=agent.birth_date,
+                    death_date=agent.death_date,
+                )
+                new_agent, _created = Person.objects.get_or_create(**kwargs)
+
+                new_burial.client_organization = new_client
+                new_burial.agent, _created = Agent.objects.get_or_create(person=new_agent, organization=new_org)
+                if old.doverennost:
+                    new_burial.doverennost, _created = Doverennost.objects.get_or_create(
+                        agent=new_burial.agent,
+                        number=old.doverennost.number,
+                        issue_date=old.doverennost.issue_date,
+                        expire_date=old.doverennost.expire_date,
+                    )
+                new_burial.save()
+            except (old_models.Organization.DoesNotExist, TypeError, AttributeError):
+                person = old.responsible_customer.person
+                if person.last_name.strip(' *') == '':
+                    new_person = None
+                else:
+                    kwargs = dict(
+                        first_name=person.first_name,
+                        middle_name=person.patronymic,
+                        last_name=person.last_name,
+                        birth_date=person.birth_date,
+                        death_date=person.death_date,
+                    )
+                    try:
+                        new_person = Person.objects.get(**kwargs)
+                    except Person.MultipleObjectsReturned:
+                        new_person = Person.objects.filter(**kwargs)[0]
+
+                person = old.customer.person
+                if person.last_name.strip(' *') == '':
+                    new_client = None
+                else:
+                    kwargs = dict(
+                        first_name=person.first_name,
+                        middle_name=person.patronymic,
+                        last_name=person.last_name,
+                        birth_date=person.birth_date,
+                        death_date=person.death_date,
+                    )
+                    try:
+                        new_client = Person.objects.get(**kwargs)
+                    except Person.MultipleObjectsReturned:
+                        new_client = Person.objects.filter(**kwargs)[0]
+
+                new_burial.client_person = new_client
+                new_burial.place.responsible = new_person
+                new_burial.save()
+
+        print 'Responsibles:', old_models.Burial.objects.filter(responsible_customer__isnull=False).using('old').count()
