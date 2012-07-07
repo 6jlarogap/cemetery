@@ -23,6 +23,12 @@ $(function() {
     CITY_URL = '/geo/autocomplete/city/';
     STREET_URL = '/geo/autocomplete/street/';
 
+    $('#id_instance_0').live('click', function(){
+        var form = $(this).parents('.well');
+        form.find('.instance_alert').remove();
+        form.prepend('<p class="instance_alert alert">Очистите поля ФИО для нового поиска</p>')
+    });
+
     $('input.autocomplete[name$=country]').attr('autocomplete', 'off').typeahead({
         source: function (typeahead, query) {
             if (query.length < 2) { return }
