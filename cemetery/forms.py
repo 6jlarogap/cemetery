@@ -97,7 +97,7 @@ class PersonForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         data = kwargs.get('data') or {}
         instance_pk = data.get('instance')
-        if instance_pk:
+        if instance_pk and instance_pk not in [None, '', 'NEW']:
             kwargs['instance'] = Person.objects.get(pk=instance_pk)
             kwargs['initial'] = model_to_dict(kwargs['instance'], [], [])
             kwargs['initial'].update({'instance': instance_pk})
