@@ -54,6 +54,9 @@ class Agent(models.Model):
     person = models.ForeignKey(Person)
     organization = models.ForeignKey(Organization, related_name="agents", verbose_name="Организация")
 
+    def __unicode__(self):
+        return u'%s' % self.person
+
 class Doverennost(models.Model):
     agent = models.ForeignKey(Agent, related_name="doverennosti", verbose_name="Доверенность")
 
@@ -62,5 +65,5 @@ class Doverennost(models.Model):
     expire_date = models.DateField(verbose_name="Действует до", blank=True, null=True)
 
     def __unicode__(self):
-        return unicode(self.agent) + ' - ' + self.number
+        return u'%s - %s' % (self.agent, self.number)
 

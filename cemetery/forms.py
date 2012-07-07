@@ -191,6 +191,8 @@ class LocationForm(forms.ModelForm):
                 'city': person.address.city.name,
                 'street': person.address.street.name,
             })
+            if not kwargs.get('data', {}).get('country'):
+                del kwargs['data']
         if kwargs.get('data', {}):
             kwargs['data'] = kwargs['data'] and kwargs['data'].copy() or {}
             if kwargs['data'].get('country'):
