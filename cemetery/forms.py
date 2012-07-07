@@ -185,12 +185,23 @@ class LocationForm(forms.ModelForm):
     def __init__(self, person=None, *args, **kwargs):
         if person and person.address:
             kwargs.update({'instance': person.address})
-            kwargs.setdefault('initial', {}).update({
-                'country': person.address.country.name,
-                'region': person.address.region.name,
-                'city': person.address.city.name,
-                'street': person.address.street.name,
-            })
+            kwargs.setdefault('initial', {})
+            if person.address.country:
+                kwargs['initial'].update({
+                    'country': person.address.country.name,
+                })
+            if person.address.region:
+                kwargs['initial'].update({
+                    'region': person.address.region.name,
+                })
+            if person.address.city:
+                kwargs['initial'].update({
+                    'city': person.address.city.name,
+                })
+            if person.address.street:
+                kwargs['initial'].update({
+                    'street': person.address.street.name,
+                })
             if not kwargs.get('data', {}).get('country'):
                 del kwargs['data']
         if kwargs.get('data', {}):
