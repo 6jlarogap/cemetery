@@ -7,7 +7,7 @@ from django import forms
 
 from cemetery.models import *
 from organizations.models import BankAccount
-from persons.models import ZAGS
+from persons.models import ZAGS, IDDocumentType
 
 class LogEntryAdmin(admin.ModelAdmin):
     list_display = ['action_time', 'object_link', 'user', ]
@@ -89,5 +89,6 @@ admin.site.register(Region)
 admin.site.register(City)
 admin.site.register(Country)
 admin.site.register(ZAGS)
+admin.site.register(IDDocumentType)
 admin.site.register(Person, PersonAdmin)
 admin.site.register(LogEntry, LogEntryAdmin)
