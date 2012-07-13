@@ -2,11 +2,9 @@
     <div class="well">
         Данные сохранены.
         <script type="text/javascript">
-            $(function() {
-                var a  = $('<a href="{% url new_burial_place %}?instance={{ place.pk }}" class="link-place load">{{ place.cemetery }}, {{ place.area }}, {{ place.row }}, {{ place.seat }}</a>');
-                $('.link-place').replaceWith(a);
-                $('#id_place').val({{ place.pk }}).change();
-            });
+            var a  = $('<a href="{% url new_burial_place %}?instance={{ place.pk }}" class="link-place load">{{ place.cemetery }}, {{ place.area }}, {{ place.row }}, {{ place.seat }}</a>');
+            $('.link-place').replaceWith(a);
+            $('#id_place').val({{ place.pk }}).change();
         </script>
     </div><!--/.well -->
 </form>
