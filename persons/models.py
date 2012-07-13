@@ -12,6 +12,10 @@ class IDDocumentType(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        verbose_name = (u'тип документа')
+        verbose_name_plural = (u'типы документов')
+
 class Person(models.Model):
     """
     Физическое лицо (клиент, сотрудник, кто угодно).
