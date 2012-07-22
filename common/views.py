@@ -1000,7 +1000,7 @@ def print_burial(request, uuid):
     """
 
     if request.POST and request.POST.get('notification'):
-        return redirect('print_notification', uuid=uuid)
+        return redirect('print_notification', uuid)
 
     burial = get_object_or_404(Burial, uuid=uuid)
     positions = get_positions(burial)
