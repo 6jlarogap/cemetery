@@ -168,6 +168,7 @@
         </div>
         <input type="submit" value="Распечатать документы">
         <input type="submit" name="receipt" value="Распечатать справку">
+        <input type="submit" name="notification" value="Распечатать уведомление">
         {% if burial.responsible_customer.person.filled %}<input type="submit" name="dogovor" value="Распечатать договор отв.">{% endif %}
         <input type="reset" value="Отмена">
         <a href="{% url edit_burial burial.pk %}"></a>

@@ -977,6 +977,20 @@ def get_positions(burial):
             })
     return positions
 
+
+@login_required
+@is_in_group("edit_burial")
+def print_notification(request, uuid):
+    """
+    Страница печати документов захоронения.
+    """
+
+    burial = get_object_or_404(Burial, uuid=uuid)
+
+    return direct_to_template(request, 'reports/notification.html', {
+        'burial': burial,
+    })
+
 @login_required
 @is_in_group("edit_burial")
 @transaction.commit_on_success
@@ -984,6 +998,10 @@ def print_burial(request, uuid):
     """
     Страница печати документов захоронения.
     """
+
+    if request.POST and request.POST.get('notification'):
+        return redirect('print_notification', uuid=uuid)
+
     burial = get_object_or_404(Burial, uuid=uuid)
     positions = get_positions(burial)
     initials = burial.get_print_info()

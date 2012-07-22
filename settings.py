@@ -119,7 +119,8 @@ INSTALLED_APPS = (
     'pytils',
     'sentry',
     'sentry.client',
-#    'debug_toolbar',
+    'debug_toolbar',
+    'django_extensions',
     
     # Наши приложения
     'common',
