@@ -221,6 +221,19 @@ class LocationForm(forms.ModelForm):
                             kwargs['data']['street'] = Street.objects.get_or_create(name=d['street'], city=city)[0].pk
         super(LocationForm, self).__init__(*args, **kwargs)
 
+    def is_valid(self):
+        result = super(LocationForm, self).is_valid()
+        if not result:
+            if self.data.get('country') and isinstance(self.data['country'], int):
+                self.data['country'] = Country.objects.get_or_create(pk=self.data['country'])
+            if self.data.get('region') and isinstance(self.data['region'], int):
+                self.data['region'] = Region.objects.get_or_create(pk=self.data['region'])
+            if self.data.get('city') and isinstance(self.data['city'], int):
+                self.data['city'] = City.objects.get_or_create(pk=self.data['city'])
+            if self.data.get('street') and isinstance(self.data['street'], int):
+                self.data['street'] = Street.objects.get_or_create(pk=self.data['street'])
+        return result
+
 class DeathCertificateForm(forms.ModelForm):
     class Meta:
         model = DeathCertificate
