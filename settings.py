@@ -26,43 +26,17 @@ DATABASES = {
     }
 }
 
-# Local time zone for this installation. Choices can be found here:
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# although not all choices may be available on all operating systems.
-# On Unix systems, a value of None will cause Django to use the same
-# timezone as the operating system.
-# If running in a Windows environment this must be set to the same as your
-# system time zone.
-#TIME_ZONE = 'Europe/Moscow'
-#TIME_ZONE = 'Europe/Minsk'
-TIME_ZONE = None
+TIME_ZONE = 'Europe/Moscow'
 
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'ru-RU'
 
 SITE_ID = 1
 
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
 USE_I18N = True
-
-# If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale
 USE_L10N = True
 
-# Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = os.path.join(ROOT_PATH, 'media')
-
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash if there is a path component (optional in other cases).
-# Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/media/'
-
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/admin_media/'
 
 # Make this unique, and don't share it with anybody.
@@ -87,7 +61,7 @@ MIDDLEWARE_CLASSES = (
 #    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
-ROOT_URLCONF = 'cemetery.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     os.path.join(ROOT_PATH, 'templates'),
@@ -113,17 +87,18 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
     'south',
-    'django_extensions',
-    'annoying',
-    'simplepagination',
     'pytils',
     'sentry',
     'sentry.client',
-#    'debug_toolbar',
+    'debug_toolbar',
     
     # Наши приложения
     'common',
-
+    'persons',
+    'organizations',
+    'geo',
+    'cemetery',
+    'utils',
 )
 
 INTERNAL_IPS = ['127.0.0.1',] + ['80.70.236.%s' % i for i in range(1, 255)]
@@ -139,14 +114,6 @@ PLACE_PRODUCTTYPE_ID = "60925a32-2add-11e0-8b17-485b39c96dfe"
 #BURIAL_PRODUCTTYPE_ID = 1
 
 
-# Операции.
-OPER_1 = "7d58e9ec-2add-11e0-8b17-485b39c96dfe"  # Захоронение
-OPER_2 = "0df73c7a-a1a5-43d5-a31f-b4fee8c5e50b"  # Почетное захоронение
-OPER_3 = "78672a34-2add-11e0-8b17-485b39c96dfe"  # Захоронение в существующую
-OPER_4 = "732795d6-2add-11e0-8b17-485b39c96dfe"  # Подзахоронение к существующей
-OPER_5 = "6e0492ac-2add-11e0-8b17-485b39c96dfe"  # Урна
-OPER_6 = "c9b7a6b5-12a5-4da5-8242-b9e556bcc6e3"  # Захоронение детское
-
 # Кодировка для файлов обмена.
 CSV_ENCODING = "utf8"
 
@@ -156,7 +123,7 @@ PAGINATION_PER_PAGE = 5
 
 SENTRY_TESTING = True
 
-#DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False}
+DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False}
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = True

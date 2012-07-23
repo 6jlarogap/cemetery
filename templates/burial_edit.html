@@ -1,46 +1,4 @@
-{% extends "journal.html" %}
-{% load adminmedia %}
-{% load my_filters %}
+{% extends "burial_create.html" %}
 
 {% block title %}Редактирование захоронения{% endblock %}
 
-{% block title_h2 %}Редактирование захоронения{% endblock %}
-
-{% block buttons %}
-    {% if user|in_group:"edit_bur_in_adm" %}
-        {{ form.in_trash.label_tag }}{{ form.in_trash }}
-    {% endif %}
-
-    <br />
-    <p>Создано: {{ burial.date_of_creation|date:"d.m.Y H:i" }} пользователем {{ burial.creator.userprofile }}</p>
-    {% if burial.last_change %}
-        <p>Последнее изменение: {{ burial.last_change.action_time|date:"d.m.Y H:i" }} пользователем {{ burial.last_change.user }}</p>
-    {% endif %}
-    <br />
-    <a href="{% url add_burial %}?burial={{ burial.pk }}" target="_blank">Добавить родственное</a>
-    {% if burial.relative_burials and not request.GET.from_separate %}
-        <a href="{% url separate_burial burial.pk %}">Отделить родственное</a>
-    {% endif %}
-    <a href="{% url print_burial burial.pk %}" target="_blank">Документы</a>
-    <br />
-    <input type="submit" value="Сохранить"  tabindex="22">
-    {% if burial.is_trash %}
-        <input type="submit" name="undelete" value="Восстановить"  tabindex="22"/>
-    {% else %}
-        <input type="submit" name="delete" value="Удалить"  tabindex="22"/>
-    {% endif %}
-    <button type="reset" onclick="top.location.href='{{ request.path }}';" tabindex="23">Отмена</button>
-    <a href="/journal/">Назад</a>
-
-
-    <script type="text/javascript">
-        $(function() {
-            $('input[name=delete]').click(function(){
-                return confirm('Точно удалить?');
-            });
-            $('#id_cemetery').change(function(){
-                $('#id_account_book_n, #id_seat').val('');
-;            });
-        })
-    </script>
-{% endblock %}

@@ -14,9 +14,6 @@ from models import *
 from common.models import PersonID, Organization, Agent
 from contrib.constants import UNKNOWN_NAME
 
-from annoying.decorators import autostrip
-
-
 import re
 import string
 import datetime
@@ -134,7 +131,6 @@ class UserChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return obj.get_full_name() or obj.username or obj.email
 
-@autostrip
 class SearchForm(forms.Form):
     """
     Форма поиска на главной странице.
@@ -182,7 +178,6 @@ class ModelAutoTabIndex(forms.ModelForm):
         for i,k in enumerate(self.fields):
             self.fields[k].widget.attrs['tabindex'] = str(i+1)
 
-@autostrip
 class AddressForm(ModelAutoTabIndex):
     class Meta:
         model = Location
@@ -430,7 +425,6 @@ class UnclearDateField(forms.DateField):
             return value
         return value
 
-@autostrip
 class JournalForm(AutoTabIndex):
     """
     Форма журнала - создания нового захоронения.
@@ -646,7 +640,6 @@ class CertificateForm(forms.ModelForm):
         }
 
 
-@autostrip
 class OrderFileCommentForm(forms.Form):
     """
     Форма редактирования комментария к файлу заказу.
@@ -654,7 +647,6 @@ class OrderFileCommentForm(forms.Form):
     comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 90}),
                               label="Комментарий")
 
-@autostrip
 class OrderCommentForm(forms.Form):
     """
     Форма редактирования комментария к заказу.
@@ -670,7 +662,6 @@ class OrderCommentForm(forms.Form):
                 raise forms.ValidationError("Пустой комментарий сохранить нельзя. Нажмите 'удалить'")
         return cd
 
-@autostrip
 class InitalForm(forms.Form):
     """
     Форма ввода данных для инициализации системы.
@@ -854,7 +845,6 @@ class ImportForm(forms.Form):
     csv_file = forms.FileField(label="CSV файл")
 
 
-@autostrip
 class CemeteryForm(forms.Form):
     """
     Форма создания кладбища.
@@ -943,7 +933,6 @@ class CemeteryForm(forms.Form):
         return cd
 
 
-@autostrip
 class NewUserForm(forms.Form):
     """
     Форма создания нового пользователя системы.
@@ -979,7 +968,6 @@ class NewUserForm(forms.Form):
             raise forms.ValidationError("Пароли не совпадают.")
 
 
-@autostrip
 class EditUserForm(forms.ModelForm):
     """
     Форма редактирования пользователя системы.
@@ -1027,71 +1015,48 @@ class EditUserForm(forms.ModelForm):
                 user.save()
         return user
 
-@autostrip
-class UserProfileForm(forms.ModelForm):
-    """
-    Форма значений по умолчанию для профиля пользователя.
-    """
 
-    class Meta:
-        model = UserProfile
-        exclude = ['default_country', 'default_region', 'default_city', ]
-
-    def clean(self):
-        cd = self.cleaned_data
-        cemetery = cd.get("cemetery", None)
-        operation = cd.get("operation", None)
-        if operation and not cemetery:
-            raise forms.ValidationError("Не выбрано кладбище.")
-        if operation:
-            try:
-                spo = SoulProducttypeOperation.objects.get(soul=cemetery.organization.soul_ptr, operation=operation,
-                                                           p_type=settings.PLACE_PRODUCTTYPE_ID)
-            except:
-                raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
-        return cd
-
-class OrderPositionForm(forms.ModelForm):
-    active = forms.BooleanField(required=False)
-
-    class Meta:
-        model = OrderPosition
-        fields = ['order_product', 'count', 'price']
-        widgets = {
-            'order_product': forms.HiddenInput,
-        }
-
-class BaseOrderPositionsFormset(formsets.BaseFormSet):
-    def __init__(self, *args, **kwargs):
-        if kwargs.get('initial'):
-            real_initial = []
-            for i in kwargs['initial']:
-
-                if isinstance(i['order_product'], OrderProduct):
-                    q = models.Q(pk=i['order_product'].pk)
-                else:
-                    q = models.Q(name=i['order_product'])
-                try:
-                    OrderProduct.objects.get(q)
-                except OrderProduct.DoesNotExist:
-                    pass
-                else:
-                    real_initial.append(i)
-            kwargs['initial'] = real_initial
-
-        super(BaseOrderPositionsFormset, self).__init__(*args, **kwargs)
-
-
-OrderPositionsFormset = forms.formsets.formset_factory(OrderPositionForm, extra=0, formset=BaseOrderPositionsFormset)
-
-class OrderPaymentForm(forms.ModelForm):
-    class Meta:
-        model = Order
-        fields = ['payment_type', ]
-        widgets = {
-            'payment_type': forms.RadioSelect,
-        }
-
+#class OrderPositionForm(forms.ModelForm):
+#    active = forms.BooleanField(required=False)
+#
+#    class Meta:
+#        model = OrderPosition
+#        fields = ['order_product', 'count', 'price']
+#        widgets = {
+#            'order_product': forms.HiddenInput,
+#        }
+#
+#class BaseOrderPositionsFormset(formsets.BaseFormSet):
+#    def __init__(self, *args, **kwargs):
+#        if kwargs.get('initial'):
+#            real_initial = []
+#            for i in kwargs['initial']:
+#
+#                if isinstance(i['order_product'], OrderProduct):
+#                    q = models.Q(pk=i['order_product'].pk)
+#                else:
+#                    q = models.Q(name=i['order_product'])
+#                try:
+#                    OrderProduct.objects.get(q)
+#                except OrderProduct.DoesNotExist:
+#                    pass
+#                else:
+#                    real_initial.append(i)
+#            kwargs['initial'] = real_initial
+#
+#        super(BaseOrderPositionsFormset, self).__init__(*args, **kwargs)
+#
+#
+#OrderPositionsFormset = forms.formsets.formset_factory(OrderPositionForm, extra=0, formset=BaseOrderPositionsFormset)
+#
+#class OrderPaymentForm(forms.ModelForm):
+#    class Meta:
+#        model = Order
+#        fields = ['payment_type', ]
+#        widgets = {
+#            'payment_type': forms.RadioSelect,
+#        }
+#
 class PrintOptionsForm(forms.Form):
     catafalque = forms.BooleanField(label=u"наряд на автокатафалк", required=False, initial=False)
     lifters = forms.BooleanField(label=u"наряд на грузчиков", required=False, initial=False)
@@ -1133,17 +1098,3 @@ class IDForm(forms.ModelForm):
             obj.save()
         return obj
 
-
-class PhoneForm(forms.ModelForm):
-    class Meta:
-        model = Phone
-        exclude=( "soul", )
-
-    def __init__(self, *args, **kwargs):
-        super(PhoneForm, self).__init__(*args, **kwargs)
-        self.fields['f_number'].required = False
-
-    def clean_f_number(self):
-        if not self.cleaned_data.get('f_number'):
-            raise forms.ValidationError(u"Обязательное поле")
-        return self.cleaned_data['f_number']

@@ -1,103 +1,110 @@
 {% load my_filters %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
-    <head>
-        <title>{% block title %}{% endblock %}</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="Keywords" content="" />
-        <meta name="Description" content="" />
-        <link rel="stylesheet" type="text/css" href="/media/css/base.css">
-        <link rel="stylesheet" type="text/css" href="/media/css/paginator.css">
-        <style type="text/css">
-            ul.errorlist {
-                margin: 0;
-                padding: 0;
-            }
-            .errorlist li {
-                color: blue;
-                font-size: 14px;
-            }
-        </style>
-        {% if close %} <script type="text/javascript">top.close();</script> {% endif %}
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="Keywords" content="" />
+    <meta name="Description" content="" />
 
-        <script type="text/javascript" src="/media/js/jquery-1.4.4.min.js"></script>
-        <script type="text/javascript">
-            if (top.location.href != '/') {
-                if (navigator.userAgent.toLowerCase().indexOf("chrome") >= 0) {
-                    $(window).load(function(){
-                        $('input:-webkit-autofill').each(function(){
-                            var text = $(this).val();
-                            var name = $(this).attr('name');
-                            $(this).after(this.outerHTML).remove();
-                            $('input[name=' + name + ']').val(text);
-                        });
-                    });
-                }
-            }
-            $(function() { $('input').attr('autocomplete', 'off'); });
+    <!-- Le styles -->
+    <link rel="stylesheet/less" href="/media/less/bootstrap.less">
+    <script src="/media/js/less-1.3.0.min.js"></script>
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+    </style>
+    <link type="text/css" href="/media/css/custom-theme/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+    <link type="text/css" href="/media/css/jquery-ui-timepicker.css" rel="stylesheet" />
 
-            /*
-            logoff_timer = 0;
-            if (top.location.href.search('/login/') == -1) {
-                setInterval(function() {
-                    if (logoff_timer > 3600) {
-                        top.location = '/logout/';
-                    }
-                    logoff_timer += 60;
-                }, 60000);
-            }
+    <link href="/media/css/base.css" rel="stylesheet">
 
-            $(document).mousemove(function() {
-                logoff_timer = 0;
-            });
-            $(document).keydown(function() {
-                logoff_timer = 0;
-            });
-            */
-        </script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-{% block scripts %}{% endblock %}
-    </head>
-    <body>
-        <div id="container">
-            <div id="header">
-                <div id="branding">
-                    <div id="header_menu_main">
-                        {% if user.is_authenticated %}
-                            <a href="/">Поиск</a>&nbsp;&nbsp;|&nbsp;
-                            {% if user|in_group:"journal" or user.is_superuser %}
-                                <a href="/journal/">Журнал</a>
-                            {% endif %}
-                        {% else %}
-                            &nbsp;
-                        {% endif %}
-                    </div>
-                    <div id="header_menu_system">
-                        {% if user.is_authenticated %}
-                            {% if user.is_superuser %}
-                                <a href="/init/">[Инициализация]</a>&nbsp;&nbsp;|&nbsp;
-                            {% endif %}
-                            <a href="/profile/">[Профиль]</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-                            {% if user.is_superuser or user.is_staff %}
-                                <a href="/management/">[Управление]</a>&nbsp;&nbsp;|&nbsp;
-                            {% endif %}
-                            <a href='/?trash=1'>[Корзина]</a>&nbsp;&nbsp;|&nbsp;
-                            <a href="/logout/">[Выход]</a>
-                        {% else %}
-                            <a href="/login/">[Вход]</a>
-                        {% endif %}
-                    </div>
+    {% if close %} <script type="text/javascript">top.close();</script> {% endif %}
+
+    <script type="text/javascript" src="/media/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/media/js/jquery-ui-1.8.6.custom.min.js"></script>
+    <script type="text/javascript" src="/media/js/jquery.ui.timepicker.js"></script>
+
+    <script type="text/javascript" src="/media/js/bootstrap-dropdown.js"></script>
+    <script type="text/javascript" src="/media/js/bootstrap-typeahead.js"></script>
+    <script type="text/javascript" src="/media/js/bootstrap-typeahead-ajax.js"></script>
+
+    <script type="text/javascript" src="/media/js/cemetery.js"></script>
+
+    {% block scripts %}{% endblock %}
+</head>
+<body>
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="/">Cemetery 2.0</a>
+                <div class="btn-group pull-right dropdown" id="auth_menu">
+                    {% if user.is_authenticated %}
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#auth_menu">
+                            <i class="icon-user"></i> {{ user.username }}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url profile %}">Настройки</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url admin:organizations_organization_changelist %}" target="_blank">Организации</a></li>
+                            <li><a href="{% url admin:cemetery_cemetery_changelist %}" target="_blank">Кладбища</a></li>
+                            <li><a href="{% url admin:auth_user_changelist %}" target="_blank">Пользователи</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url ulogout %}">Выйти</a></li>
+                        </ul>
+                    {% else %}
+                        <a class="btn" href="{% url ulogin %}">Войти</a>
+                    {% endif %}
                 </div>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li{% if request.path == '/' %} class="active"{% endif %}><a href="{% url main_page %}">Поиск</a></li>
+                        {% if user.is_authenticated %}
+                            <li{% if request.path == '/create/' %} class="active"{% endif %}><a href="{% url new_burial %}">Ввод данных</a></li>
+                        {% endif %}
+                    </ul>
+                </div><!--/.nav-collapse -->
             </div>
         </div>
-        {% block content %}{% endblock %}
+    </div>
 
-        {% if debug %}
-            <ul>
-                {% for q in sql_queries %}
-                    <li>{{ q.time }}: {{ q.sql }}</li>
+
+    <div class="container-fluid">
+        {% if messages %}
+            <ul class="messages">
+                {% for m in messages %}
+                    <li class="alert alert-{{ m.tags }}">{{ m }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
-    </body>
+
+        {% block content %}{% endblock %}
+
+        {% if debug %}
+            <div class="span12">
+                <ul>
+                    {% for q in sql_queries %}
+                        <li>{{ q.time }}: {{ q.sql }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</body>
 </html>

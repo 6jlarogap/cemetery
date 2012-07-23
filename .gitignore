@@ -8,4 +8,5 @@ contrib/packages/i386/samba/
 .idea
 settings_local.*
 tmp
+ENV
 media/ofiles/
