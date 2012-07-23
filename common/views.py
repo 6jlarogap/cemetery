@@ -134,8 +134,6 @@ def edit_burial(request, pk):
     burial = get_object_or_404(Burial, pk=pk)
     burial_form = BurialForm(data=request.POST or None, instance=burial)
 
-    print request.POST, burial_form.is_valid(), burial_form.errors
-
     if request.POST and burial_form.is_valid():
         burial_form.save()
         messages.success(request, u'Успешно сохранено')
