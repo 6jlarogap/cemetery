@@ -5,6 +5,7 @@ tmp\.*
 .tmp*
 contrib/packages/i386/samba/
 .env
+ENV
 .idea
 settings_local.*
 tmp
