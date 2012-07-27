@@ -15,7 +15,7 @@ from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm
 from persons.models import DeathCertificate
-
+from organizations.models import Organization
 
 def ulogin(request):
     """
@@ -216,6 +216,8 @@ def new_burial_customer(request):
     customer_id_form = CustomerIDForm(data=request.POST or None, prefix='customer_id', initial=org_data)
     doverennost_form = DoverennostForm(data=request.POST or None, prefix='doverennost', initial=org_data)
 
+    organizations = Organization.objects.all()
+
     if request.POST and customer_form.is_valid():
         if customer_form.is_person():
             if person_form.is_valid() and customer_id_form.is_valid():
@@ -248,6 +250,7 @@ def new_burial_customer(request):
         'customer_form': customer_form,
         'customer_id_form': customer_id_form,
         'doverennost_form': doverennost_form,
+        'organizations': organizations,
     })
 
 @login_required

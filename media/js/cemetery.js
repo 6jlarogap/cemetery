@@ -133,6 +133,17 @@ $(function() {
         }
     });
 
+    $('#id_customer-organization').live('change', function() {
+        var options = '<option>---------------</option>';
+        var org_id = $(this).val();
+        var agent;
+        for(var i in ORG_AGENTS[org_id]) {
+            agent = ORG_AGENTS[org_id][i];
+            options += '<option value="'+i+'">'+agent+'</option>';
+        }
+        $('#id_customer-agent_person').html(options)
+    });
+
     $('#id_operation, #id_place, #id_person').change();
 
     $('.errorlist').addClass('alert');

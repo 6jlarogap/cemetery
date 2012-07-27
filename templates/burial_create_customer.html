@@ -140,3 +140,15 @@
         <h2 class="buttons"><button class="btn">{% if person_form.is_selected %}Сохранить{% else %}Далее{% endif %}</button></h2>
     </div><!--/.well -->
 </form>
+
+<script type="text/javascript">
+    ORG_AGENTS = {
+        {% for o in organizations %}
+            {{ o.pk }}: {
+                {% for a in o.agents.all %}
+                    {{ a.pk }}: "{{ a.person }}"{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    }
+</script>
