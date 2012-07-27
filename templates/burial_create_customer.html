@@ -146,7 +146,7 @@
         {% for o in organizations %}
             {{ o.pk }}: {
                 {% for a in o.agents.all %}
-                    {{ a.pk }}: "{{ a.person }}"{% if not forloop.last %},{% endif %}
+                    {{ a.person.pk }}: "{{ a.person }}"{% if not forloop.last %},{% endif %}
                 {% endfor %}
             }{% if not forloop.last %},{% endif %}
         {% endfor %}
