@@ -15,7 +15,7 @@ from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm
 from persons.models import DeathCertificate
-from organizations.models import Organization
+from organizations.models import Organization, Agent
 
 def ulogin(request):
     """
@@ -233,9 +233,10 @@ def new_burial_customer(request):
         else:
             if customer_form.cleaned_data['agent_director'] or doverennost_form.is_valid():
                 org = customer_form.cleaned_data['organization']
-                agent = customer_form.get_agent()
+                agent_person = customer_form.get_agent()
+                agent = Agent.objects.get(organization=org, person=agent_person)
                 if doverennost_form.is_valid():
-                    doverennost = doverennost_form.save()
+                    doverennost = doverennost_form.save(agent=agent)
                 else:
                     doverennost = None
                 return render(request, 'burial_create_customer_org_ok.html', {

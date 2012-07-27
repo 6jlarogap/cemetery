@@ -70,7 +70,7 @@
                             </a>
                         {% endif %}
                         {% if burial_form.instance.client_organization.pk %}
-                            <a href="{% url new_burial_customer %}?customer_type=1&agent_director={% if burial_form.instance.agent %}{% else %}1{% endif %}&organization={{ burial_form.instance.client_organization.pk }}" class="load link-customer">
+                            <a href="{% url new_burial_customer %}?customer_type=1&agent_person={{ burial_form.instance.agent.person.pk }}&agent_director={% if burial_form.instance.agent %}{% else %}1{% endif %}&organization={{ burial_form.instance.client_organization.pk }}" class="load link-customer">
                                 ЮЛ {{ burial_form.instance.client_organization }}
                             </a>
                         {% endif %}

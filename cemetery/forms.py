@@ -289,12 +289,15 @@ class CustomerIDForm(forms.ModelForm):
 class DoverennostForm(forms.ModelForm):
     class Meta:
         model = Doverennost
+        exclude = ['agent', ]
 
-    def save(self, commit=True):
+    def save(self, commit=True, agent=None):
+        self.cleaned_data.update({'agent': agent})
         try:
             d = Doverennost.objects.get(**self.cleaned_data)
         except Doverennost.DoesNotExist:
             d = super(DoverennostForm, self).save(commit=False)
+            d.agent = agent
             if commit:
                 d.save()
         return d

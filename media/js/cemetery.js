@@ -137,11 +137,13 @@ $(function() {
         var options = '<option>---------------</option>';
         var org_id = $(this).val();
         var agent;
+        var val = $('#id_customer-agent_person').val();
         for(var i in ORG_AGENTS[org_id]) {
             agent = ORG_AGENTS[org_id][i];
             options += '<option value="'+i+'">'+agent+'</option>';
         }
-        $('#id_customer-agent_person').html(options)
+        $('#id_customer-agent_person').html(options);
+        $('#id_customer-agent_person').val(val);
     });
 
     $('#id_operation, #id_place, #id_person').change();
