@@ -1,7 +1,7 @@
 #!/bin/sh
 #User for django
 adduser --disabled-password --gecos "" django
-usermod -p $1$KQwQ4Rq7$CtkUF2cjpb9raBQZPjy4J0 django
+#usermod -p '$1$KQwQ4Rq7$CtkUF2cjpb9raBQZPjy4J0' django
 #Copy project files
 mkdir /home/django/projects
 #cp -R ../../cemetery /home/django/projects
@@ -12,7 +12,8 @@ chown -R www-data:www-data /home/django/projects
 cp configs/postgres/pg_hba.conf /etc/postgresql/8.4/main/
 chown postgres:postgres /etc/postgresql/8.4/main/pg_hba.conf
 chmod 640 /etc/postgresql/8.4/main/pg_hba.conf
-/etc/init.d/postgresql restart
+/etc/init.d/postgresql 
+/etc/init.d/postgresql-8.4 
 #Nginx
 cp -R configs/nginx/fastcgi_params /etc/nginx/
 chown root:root /etc/nginx/fastcgi_params
@@ -22,10 +23,10 @@ chown root:root /etc/nginx/sites-available/cemetery
 chmod 644 /etc/nginx/sites-available/cemetery
 ln -s /etc/nginx/sites-available/cemetery /etc/nginx/sites-enabled/
 #User for admin
-adduser --disabled-password --gecos "" soul
-usermod -G admin soul
-usermod -p $1$KQwQ4Rq7$CtkUF2cjpb9raBQZPjy4J0 soul
-mkdir /home/soul/.ssh
+#adduser --disabled-password --gecos "" soul
+#usermod -G admin soul
+#usermod -p '$1$KQwQ4Rq7$CtkUF2cjpb9raBQZPjy4J0' soul
+mkdir -p /home/soul/.ssh
 chown soul:soul /home/soul/.ssh
 chmod 700 /home/soul/.ssh
 cat configs/soul.pub >> /home/soul/.ssh/authorized_keys
@@ -58,10 +59,10 @@ mkdir -p /var/cemetery/terminal
 chown -R www-data:www-data /var/cemetery
 chmod 777 /var/cemetery/terminal
 #--configs
-cp configs/ubuntu/etc/network/interfaces /etc/network/interfaces
-chown root:root /etc/network/interfaces
-chmod 644 /etc/network/interfaces
-/etc/init.d/networking restart
+#cp configs/ubuntu/etc/network/interfaces /etc/network/interfaces
+#chown root:root /etc/network/interfaces
+#chmod 644 /etc/network/interfaces
+#/etc/init.d/networking restart
 cp configs/ubuntu/etc/samba/smb.conf /etc/samba/smb.conf
 chown root:root /etc/samba/smb.conf
 chmod 644 /etc/samba/smb.conf

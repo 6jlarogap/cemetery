@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import os
+import sys, os
+
+PATH = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(PATH)
+
+from django.core.management import setup_environ
+
+import settings
+setup_environ(settings)
+
 import stat
 from contrib.constants import *
 from common.models import Burial
@@ -11,7 +20,7 @@ csv.register_dialect("vostochnoe", delimiter=" ", quotechar='"', quoting=csv.QUO
 burials = Burial.objects.filter(is_trash=False).order_by("person__last_name",
                                                          "person__first_name", "person__patronymic")
 #print burials.count()
-fname = EXPORT2TERMINAL_VOST_FILE + '.partial'
+fname = EXPORT2TERMINAL_FILE + '.partial'
 f = open(fname, "w")
 writer = csv.writer(f, "vostochnoe")
 
@@ -39,4 +48,4 @@ for burial in burials.iterator():
         db.reset_queries()
 f.close()
 os.chmod(fname, stat.S_IWOTH | stat.S_IROTH | stat.S_IWGRP | stat.S_IRGRP | stat.S_IRUSR | stat.S_IWUSR)
-os.rename(fname,EXPORT2TERMINAL_VOST_FILE)
+os.rename(fname,EXPORT2TERMINAL_FILE)
