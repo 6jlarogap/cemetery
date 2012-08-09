@@ -420,9 +420,7 @@ def journal(request):
             oper = None
         form = JournalForm(cem=cem, oper=oper)
     today = datetime.date.today()
-    burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul,
-                            date_of_creation__gte=datetime.datetime(year=today.year,
-                            month=today.month, day=today.day)).order_by('-date_of_creation')[:20]
+    burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul).order_by('-date_of_creation')[:20]
     return direct_to_template(request, 'journal.html', {'form': form, 'object_list': burials, 'phoneset': phoneset})
 
 @login_required
