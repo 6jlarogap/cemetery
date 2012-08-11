@@ -476,3 +476,15 @@ def print_burial(request, pk):
         'print_form': print_form,
         'time_check_failed': time_check_failed,
     })
+
+def view_burial(request, pk):
+    burial = get_object_or_404(Burial, pk=pk)
+    return render(request, 'burial_info.html', {
+        'burial': burial,
+    })
+
+def view_place(request, pk):
+    place = get_object_or_404(Place, pk=pk)
+    return render(request, 'place_info.html', {
+        'place': place,
+    })

@@ -22,6 +22,9 @@ urlpatterns += patterns('common.views',
     url(r'^edit/(?P<pk>.*)/$', 'edit_burial', name='edit_burial'),
     url(r'^print/(?P<pk>.*)/$', 'print_burial', name='print_burial'),
 
+    url(r'^burial/(?P<pk>.*)/$', 'view_burial', name='view_burial'),
+    url(r'^place/(?P<pk>.*)/$', 'view_place', name='view_place'),
+
     url(r'^profile/$', 'profile', name='profile'),
 
     url(r'^login/$', 'ulogin', name='ulogin'),

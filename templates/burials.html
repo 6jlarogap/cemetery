@@ -78,7 +78,8 @@
                         {% if user|in_group:"edit_burial"  %}
                             <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon icon-edit"></i></a>
                         {% endif %}
-                        <a title="к могиле" href="#"><i class="icon icon-map-marker"></i></a>
+                        <a title="карточка" href="{% url view_burial b.pk %}"><i class="icon icon-check"></i></a>
+                        <a title="к могиле" href="{% url view_place b.pk %}"><i class="icon icon-map-marker"></i></a>
                     </td>
                 </tr>
             {% endfor %}

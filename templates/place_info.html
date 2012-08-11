@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load adminmedia %}
+{% load my_filters %}
+
+{% block title %}Место{% endblock %}
+
+{% block content %}
+    <dl>
+        {% if place.cemetery %}
+            <dt>Кладбище</dt>
+            <dd>{{ place.cemetery }}</dd>
+        {% endif %}
+        {% if place.area %}
+            <dt>Участок</dt>
+            <dd>{{ place.area }}</dd>
+        {% endif %}
+        {% if place.row %}
+            <dt>Ряд</dt>
+            <dd>{{ place.row }}</dd>
+        {% endif %}
+        {% if place.seat %}
+            <dt>Место</dt>
+            <dd>{{ place.seat }}</dd>
+        {% endif %}
+    </dl>
+
+    <h3>Захоронения:</h3>
+    <ul>
+        {% for b in place.burial_set.all %}
+            <li><a href="{% url view_burial b.pk %}">{{ b.person }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
