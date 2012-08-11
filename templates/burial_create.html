@@ -125,16 +125,17 @@
                             <td>{{ b.place.seat }}</td>
                             <td>{{ b.place.cemetery.name }}</td>
                             <td>{{ b.operation.op_type }}</td>
-                            {% if b.client_organization %}
-                                <td>
+                            <td>
+                                {% if b.client_organization %}
                                     ЮЛ {{ b.client_organization }}<br/>
                                     {% if b.agent %}{{ b.agent }}{% else %}{{ b.client_organization.ceo|default:"" }}{% endif %}
-                                </td>
-                            {% else %}
-                                <td>
-                                    ФЛ {{ b.client_person }}
-                                </td>
-                            {% endif %}
+                                {% else %}
+                                    {% if b.client_person %}
+                                        ФЛ {{ b.client_person }}
+                                    {% else %}
+                                    {% endif %}
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if b.orderfiles_set.count %}
                                     <small><a title="файл прикреплен"><i class="icon icon-file"></i></a></small>

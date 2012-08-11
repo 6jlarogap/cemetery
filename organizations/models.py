@@ -18,6 +18,7 @@ class Organization(models.Model):
     ceo_name = models.CharField(u"ФИО директора", max_length=255, null=True, blank=True, help_text=u'именительный падеж, напр. ИВАНОВ И.И.')
     ceo_name_who = models.CharField(u"ФИО директора р.п.", max_length=255, null=True, blank=True, help_text=u'родительный падеж, напр. ИВАНОВА И.И.')
     ceo_document = models.CharField(u"Документ директора", max_length=255, null=True, blank=True, help_text=u'на основании чего? например, УСТАВА')
+    phones = models.TextField(u"Телефоны", blank=True, null=True)
 
     def __unicode__(self):
         return self.name or self.full_name or u'Unknown'
@@ -25,12 +26,6 @@ class Organization(models.Model):
     def bank_account(self):
         try:
             return self.bankaccount_set.all()[0]
-        except IndexError:
-            return
-
-    def phone(self):
-        try:
-            return self.phone_set.all()[0]
         except IndexError:
             return
 

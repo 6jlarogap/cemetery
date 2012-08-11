@@ -50,21 +50,24 @@
                     <td>{{ b.place.seat }}</td>
                     <td>{{ b.place.cemetery.name }}</td>
                     <td>{{ b.operation.op_type }}</td>
-                    {% if b.client_organization %}
-                        <td>
+                    <td>
+                        {% if b.client_organization %}
                             ЮЛ {{ b.client_organization }}<br/>
                             {% if b.agent %}{{ b.agent }}{% else %}{{ b.client_organization.ceo|default:"" }}{% endif %}
-                        </td>
-                    {% else %}
-                        <td>
-                            ФЛ {{ b.client_person }}
-                        </td>
-                    {% endif %}
+                        {% else %}
+                            {% if b.client_person %}
+                                ФЛ {{ b.client_person }}
+                            {% else %}
+                            {% endif %}
+                        {% endif %}
+                    </td>
                     <td>
-                        {% for phone in b.customer.phone_set.all  %}
-                            {{ phone.f_number }}
-                            <br>
-                        {%endfor%}
+                        {% if b.client_organization %}
+                            {{ b.client_organization.phones|default:"" }}
+                        {% endif %}
+                        {% if b.client_person %}
+                            {{ b.client_person.phones|default:"" }}
+                        {% endif %}
                     </td>
                     <td>
                         {% for comment in b.ordercomments_set.all %}
@@ -78,7 +81,7 @@
                         {% if user|in_group:"edit_burial"  %}
                             <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon icon-edit"></i></a>
                         {% endif %}
-                        <a title="карточка" href="{% url view_burial b.pk %}"><i class="icon icon-check"></i></a>
+                        <a title="карточка" href="{% url view_burial b.pk %}"><i class="icon icon-list"></i></a>
                         <a title="к могиле" href="{% url view_place b.pk %}"><i class="icon icon-map-marker"></i></a>
                     </td>
                 </tr>

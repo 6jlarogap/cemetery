@@ -94,6 +94,9 @@ class PersonForm(forms.ModelForm):
 
     class Meta:
         model = Person
+        widgets = {
+            'phones': forms.TextInput(),
+        }
 
     def __init__(self, *args, **kwargs):
         data = kwargs.get('data') or {}

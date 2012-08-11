@@ -66,9 +66,6 @@ class OrganizationAgentInline(admin.StackedInline):
 class OrganizationAccountInline(admin.StackedInline):
     model = BankAccount
 
-#class OrganizationPhoneInline(admin.StackedInline):
-#    model = Phone
-
 class OrganizationAdmin(admin.ModelAdmin):
     inlines = [OrganizationAccountInline, OrganizationAgentInline, ]
 
