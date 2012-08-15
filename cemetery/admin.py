@@ -74,12 +74,16 @@ class CemeteryAdmin(admin.ModelAdmin):
     list_display = ['name', 'organization', 'ordering']
     list_editable = ['ordering']
 
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ['name']
+
 admin.site.register(Agent)
 admin.site.register(Burial)
 admin.site.register(Cemetery, CemeteryAdmin)
 admin.site.register(DeathCertificate)
 admin.site.register(Doverennost)
 admin.site.register(Operation)
+admin.site.register(Service, ServiceAdmin)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Location)
 admin.site.register(Region)
