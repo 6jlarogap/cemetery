@@ -190,7 +190,7 @@ class Burial(models.Model):
 
     def full_customer_name(self):
         try:
-            agent = self.responsible_agent
+            agent = self.agent
             org = agent.organization
         except:
             pass
@@ -209,7 +209,7 @@ class Burial(models.Model):
                 'doc': self.client_organization.ceo_document,
             }
 
-        return self.client_person.full_human_name()
+        return self.client_person and self.client_person.full_human_name() or ''
 
     @staticmethod
     def split_parts(self):
