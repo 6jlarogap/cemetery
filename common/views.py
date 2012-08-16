@@ -294,23 +294,23 @@ def get_positions(burial):
     positions = []
     for product in Service.objects.all().order_by('ordering', 'name'):
         try:
-            pos = ServicePosition.objects.get(service=product, order=burial)
+            pos = ServicePosition.objects.get(service=product, burial=burial)
         except ServicePosition.DoesNotExist:
             positions.append({
                 'active': product.default,
-                'order_product': product,
+                'service': product,
                 'price': product.price,
                 'count': 1,
                 'sum': product.price * 1,
-                })
+            })
         else:
             positions.append({
                 'active': True,
-                'order_product': product,
+                'service': product,
                 'price': pos.price,
                 'count': pos.count,
                 'sum': pos.price * pos.count,
-                })
+            })
     return positions
 
 @login_required
