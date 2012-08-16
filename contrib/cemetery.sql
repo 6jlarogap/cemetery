@@ -776,7 +776,7 @@ ALTER TABLE public.common_orderfiles OWNER TO postgres;
 CREATE TABLE common_orderposition (
     uuid character varying(36) NOT NULL,
     order_id character varying(36) NOT NULL,
-    order_product_id character varying(36) NOT NULL,
+    service_id character varying(36) NOT NULL,
     count numeric(10,2) NOT NULL,
     price numeric(10,2) NOT NULL
 );
@@ -14175,7 +14175,7 @@ COPY common_orderfiles (uuid, order_id, ofile, comment, creator_id, date_of_crea
 -- Data for Name: common_orderposition; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY common_orderposition (uuid, order_id, order_product_id, count, price) FROM stdin;
+COPY common_orderposition (uuid, order_id, service_id, count, price) FROM stdin;
 \.
 
 
@@ -14470,8 +14470,8 @@ COPY south_migrationhistory (id, app_name, migration, applied) FROM stdin;
 11	common	0010_agents	2011-08-01 07:45:18.626161+04
 12	common	0011_burial_agents	2011-08-01 07:45:19.653842+04
 13	common	0012_burial_agents_null	2011-08-01 07:45:20.605167+04
-14	common	0013_order_products	2011-08-01 07:45:22.350324+04
-15	common	0014_order_products	2011-08-01 07:45:22.674924+04
+14	common	0013_services	2011-08-01 07:45:22.350324+04
+15	common	0014_services	2011-08-01 07:45:22.674924+04
 16	common	0015_row_blank	2011-08-01 07:45:23.222861+04
 17	common	0016_person_id	2011-08-01 07:45:23.744223+04
 18	common	0017_free_room	2011-08-01 07:45:25.273061+04
@@ -15555,17 +15555,17 @@ CREATE INDEX common_order_operation_id_like ON common_order USING btree (operati
 
 
 --
--- Name: common_order_product_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: common_service_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace:
 --
 
-CREATE INDEX common_order_product_id ON common_order USING btree (product_id);
+CREATE INDEX common_service_id ON common_order USING btree (product_id);
 
 
 --
--- Name: common_order_product_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: common_service_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace:
 --
 
-CREATE INDEX common_order_product_id_like ON common_order USING btree (product_id varchar_pattern_ops);
+CREATE INDEX common_service_id_like ON common_order USING btree (product_id varchar_pattern_ops);
 
 
 --
@@ -15681,17 +15681,17 @@ CREATE INDEX common_orderposition_order_id_like ON common_orderposition USING bt
 
 
 --
--- Name: common_orderposition_order_product_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: common_orderposition_service_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace:
 --
 
-CREATE INDEX common_orderposition_order_product_id ON common_orderposition USING btree (order_product_id);
+CREATE INDEX common_orderposition_service_id ON common_orderposition USING btree (service_id);
 
 
 --
--- Name: common_orderposition_order_product_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: common_orderposition_service_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace:
 --
 
-CREATE INDEX common_orderposition_order_product_id_like ON common_orderposition USING btree (order_product_id varchar_pattern_ops);
+CREATE INDEX common_orderposition_service_id_like ON common_orderposition USING btree (service_id varchar_pattern_ops);
 
 
 --
@@ -16509,11 +16509,11 @@ ALTER TABLE ONLY common_order
 
 
 --
--- Name: common_order_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: common_service_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY common_order
-    ADD CONSTRAINT common_order_product_id_fkey FOREIGN KEY (product_id) REFERENCES common_product(uuid) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_service_id_fkey FOREIGN KEY (product_id) REFERENCES common_product(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -16893,11 +16893,11 @@ ALTER TABLE ONLY common_orderposition
 
 
 --
--- Name: order_product_id_refs_uuid_2512f1d9c2aad998; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: service_id_refs_uuid_2512f1d9c2aad998; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY common_orderposition
-    ADD CONSTRAINT order_product_id_refs_uuid_2512f1d9c2aad998 FOREIGN KEY (order_product_id) REFERENCES common_orderproduct(uuid) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT service_id_refs_uuid_2512f1d9c2aad998 FOREIGN KEY (service_id) REFERENCES common_orderproduct(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

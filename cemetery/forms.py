@@ -329,10 +329,10 @@ class BaseOrderPositionsFormset(formsets.BaseFormSet):
             real_initial = []
             for i in kwargs['initial']:
 
-                if isinstance(i['order_product'], Service):
-                    q = models.Q(pk=i['order_product'].pk)
+                if isinstance(i['service'], Service):
+                    q = models.Q(pk=i['service'].pk)
                 else:
-                    q = models.Q(name=i['order_product'])
+                    q = models.Q(name=i['service'])
                 try:
                     Service.objects.get(q)
                 except Service.DoesNotExist:

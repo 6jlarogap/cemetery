@@ -958,11 +958,11 @@ def get_positions(burial):
     positions = []
     for product in OrderProduct.objects.all().order_by('ordering', 'name'):
         try:
-            pos = OrderPosition.objects.get(order_product=product, order=burial)
+            pos = OrderPosition.objects.get(service=product, order=burial)
         except OrderPosition.DoesNotExist:
             positions.append({
                 'active': product.default,
-                'order_product': product,
+                'service': product,
                 'price': product.price,
                 'count': 1,
                 'sum': product.price * 1,
@@ -970,7 +970,7 @@ def get_positions(burial):
         else:
             positions.append({
                 'active': True,
-                'order_product': product,
+                'service': product,
                 'price': pos.price,
                 'count': pos.count,
                 'sum': pos.price * pos.count,
@@ -989,8 +989,8 @@ def print_burial(request, uuid):
     initials = burial.get_print_info()
 
     def is_same(i, p):
-        i1 = isinstance(i['order_product'], OrderProduct) and i['order_product'].name or i['order_product']
-        p1 = isinstance(p['order_product'], OrderProduct) and p['order_product'].name or p['order_product']
+        i1 = isinstance(i['service'], OrderProduct) and i['service'].name or i['service']
+        p1 = isinstance(p['service'], OrderProduct) and p['service'].name or p['service']
         return i1 == p1
 
     if initials and initials.setdefault('positions', []):
@@ -1019,12 +1019,12 @@ def print_burial(request, uuid):
 
         for f in positions_fs.forms:
             if f.cleaned_data['active']:
-                print_positions.append(f.initial['order_product'].pk)
+                print_positions.append(f.initial['service'].pk)
                 try:
-                    pos = OrderPosition.objects.get(order_product=f.initial['order_product'], order=burial)
+                    pos = OrderPosition.objects.get(service=f.initial['service'], order=burial)
                 except OrderPosition.DoesNotExist:
                     pos = OrderPosition.objects.create(
-                        order_product=f.initial['order_product'],
+                        service=f.initial['service'],
                         order=burial,
                         price=f.cleaned_data['price'],
                         count=f.cleaned_data['count'],
@@ -1036,7 +1036,7 @@ def print_burial(request, uuid):
 
             else:
                 try:
-                    pos = OrderPosition.objects.get(order_product=f.initial['order_product'], order=burial)
+                    pos = OrderPosition.objects.get(service=f.initial['service'], order=burial)
                 except OrderPosition.DoesNotExist:
                     pass
                 else:
@@ -1047,7 +1047,7 @@ def print_burial(request, uuid):
         payment_form.save()
 
         positions = get_positions(burial)
-        positions = filter(lambda p: p['order_product'].pk in print_positions, positions)
+        positions = filter(lambda p: p['service'].pk in print_positions, positions)
 
         try:
             burial_creator = u'%s' % burial.creator.person
@@ -1091,9 +1091,9 @@ def print_burial(request, uuid):
         lifters_count = u'н/д'
 
         try:
-            position = filter(lambda p: u'грузчики' in p['order_product'].name.lower(), positions)[0]
+            position = filter(lambda p: u'грузчики' in p['service'].name.lower(), positions)[0]
             lifters_hours = position['count']
-            lifters_count = u'%s %s' % (position['count'], position['order_product'].measure)
+            lifters_count = u'%s %s' % (position['count'], position['service'].measure)
             hours = math.floor(lifters_hours)
             minutes = math.floor((float(lifters_hours) - math.floor(lifters_hours)) * 60)
             lifters_hours = datetime.time(int(hours), int(minutes))
@@ -1102,7 +1102,7 @@ def print_burial(request, uuid):
 
         if print_form.cleaned_data.get('catafalque_time'):
             try:
-                catafalque_hours = filter(lambda p: u'автокатафалк' in p['order_product'].name.lower(), positions)[0]['count']
+                catafalque_hours = filter(lambda p: u'автокатафалк' in p['service'].name.lower(), positions)[0]['count']
             except IndexError:
                 catafalque_hours = 0
             catafalque_time = map(int, print_form.cleaned_data.get('catafalque_time').split(':'))

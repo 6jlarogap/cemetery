@@ -889,7 +889,7 @@ class Burial(Order):
             data = simplejson.loads(self.print_info)
             for p in data['positions'] or []:
                 try:
-                    p['order_product'] = OrderProduct.objects.get(name=p['order_product'])
+                    p['service'] = OrderProduct.objects.get(name=p['service'])
                 except OrderProduct.DoesNotExist:
                     pass
             return data
@@ -903,7 +903,7 @@ class Burial(Order):
         for p in data['positions']:
             p['price'] = u'%s' % p['price']
             p['count'] = u'%s' % p['count']
-            p['order_product'] = p['order_product'].name
+            p['service'] = p['service'].name
         if data['print']['catafalque_time']:
             data['print']['catafalque_time'] = data['print']['catafalque_time'].strftime('%H:%M')
         self.print_info = simplejson.dumps(data)
@@ -1124,7 +1124,7 @@ class OrderPosition(models.Model):
     """
     uuid = UUIDField(primary_key=True)
     order = models.ForeignKey(Order)
-    order_product = models.ForeignKey(OrderProduct)
+    service = models.ForeignKey(OrderProduct)
     count = models.DecimalField(u"Кол-во", decimal_places=2, max_digits=10)
     price = models.DecimalField(u"Цена", decimal_places=2, max_digits=10)
 

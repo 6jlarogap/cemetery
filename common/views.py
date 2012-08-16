@@ -298,7 +298,7 @@ def get_positions(burial):
         except ServicePosition.DoesNotExist:
             positions.append({
                 'active': product.default,
-                'order_product': product,
+                'service': product,
                 'price': product.price,
                 'count': 1,
                 'sum': product.price * 1,
@@ -306,7 +306,7 @@ def get_positions(burial):
         else:
             positions.append({
                 'active': True,
-                'order_product': product,
+                'service': product,
                 'price': pos.price,
                 'count': pos.count,
                 'sum': pos.price * pos.count,
@@ -324,8 +324,8 @@ def print_burial(request, pk):
     initials = burial.get_print_info()
 
     def is_same(i, p):
-        i1 = isinstance(i['order_product'], Service) and i['order_product'].name or i['order_product']
-        p1 = isinstance(p['order_product'], Service) and p['order_product'].name or p['order_product']
+        i1 = isinstance(i['service'], Service) and i['service'].name or i['service']
+        p1 = isinstance(p['service'], Service) and p['service'].name or p['service']
         return i1 == p1
 
     if initials and initials.setdefault('positions', []):
@@ -341,6 +341,12 @@ def print_burial(request, pk):
     time_check_failed = False
 
     print_positions = []
+
+    print request.POST
+    print 'positions_fs', not positions_fs.is_valid(), positions_fs.errors
+    print 'payment_form', payment_form.is_valid(), payment_form.errors
+    print 'print_form', print_form.is_valid(), print_form.errors
+
     if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
         burial.set_print_info({
             'positions': [f.cleaned_data for f in positions_fs.forms if f.is_valid()],
@@ -350,13 +356,13 @@ def print_burial(request, pk):
 
         for f in positions_fs.forms:
             if f.cleaned_data['active']:
-                print_positions.append(f.initial['order_product'].pk)
+                print_positions.append(f.initial['service'].pk)
                 try:
-                    pos = ServicePosition.objects.get(order_product=f.initial['order_product'], order=burial)
+                    pos = ServicePosition.objects.get(service=f.initial['service'], burial=burial)
                 except ServicePosition.DoesNotExist:
                     pos = ServicePosition.objects.create(
-                        order_product=f.initial['order_product'],
-                        order=burial,
+                        service=f.initial['service'],
+                        burial=burial,
                         price=f.cleaned_data['price'],
                         count=f.cleaned_data['count'],
                     )
@@ -367,7 +373,7 @@ def print_burial(request, pk):
 
             else:
                 try:
-                    pos = ServicePosition.objects.get(order_product=f.initial['order_product'], order=burial)
+                    pos = ServicePosition.objects.get(service=f.initial['service'], burial=burial)
                 except ServicePosition.DoesNotExist:
                     pass
                 else:
@@ -378,7 +384,7 @@ def print_burial(request, pk):
         payment_form.save()
 
         positions = get_positions(burial)
-        positions = filter(lambda p: p['order_product'].pk in print_positions, positions)
+        positions = filter(lambda p: p['service'].pk in print_positions, positions)
 
         burial_creator = u'%s' % burial.creator
 
@@ -408,9 +414,9 @@ def print_burial(request, pk):
         lifters_count = u'н/д'
 
         try:
-            position = filter(lambda p: u'грузчики' in p['order_product'].name.lower(), positions)[0]
+            position = filter(lambda p: u'грузчики' in p['service'].name.lower(), positions)[0]
             lifters_hours = position['count']
-            lifters_count = u'%s %s' % (position['count'], position['order_product'].measure)
+            lifters_count = u'%s %s' % (position['count'], position['service'].measure)
             hours = math.floor(lifters_hours)
             minutes = math.floor((float(lifters_hours) - math.floor(lifters_hours)) * 60)
             lifters_hours = datetime.time(int(hours), int(minutes))
@@ -419,7 +425,7 @@ def print_burial(request, pk):
 
         if print_form.cleaned_data.get('catafalque_time'):
             try:
-                catafalque_hours = filter(lambda p: u'автокатафалк' in p['order_product'].name.lower(), positions)[0]['count']
+                catafalque_hours = filter(lambda p: u'автокатафалк' in p['service'].name.lower(), positions)[0]['count']
             except IndexError:
                 catafalque_hours = 0
             catafalque_time = map(int, print_form.cleaned_data.get('catafalque_time').split(':'))

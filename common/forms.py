@@ -1021,9 +1021,9 @@ class EditUserForm(forms.ModelForm):
 #
 #    class Meta:
 #        model = OrderPosition
-#        fields = ['order_product', 'count', 'price']
+#        fields = ['service', 'count', 'price']
 #        widgets = {
-#            'order_product': forms.HiddenInput,
+#            'service': forms.HiddenInput,
 #        }
 #
 #class BaseOrderPositionsFormset(formsets.BaseFormSet):
@@ -1032,10 +1032,10 @@ class EditUserForm(forms.ModelForm):
 #            real_initial = []
 #            for i in kwargs['initial']:
 #
-#                if isinstance(i['order_product'], OrderProduct):
-#                    q = models.Q(pk=i['order_product'].pk)
+#                if isinstance(i['service'], OrderProduct):
+#                    q = models.Q(pk=i['service'].pk)
 #                else:
-#                    q = models.Q(name=i['order_product'])
+#                    q = models.Q(name=i['service'])
 #                try:
 #                    OrderProduct.objects.get(q)
 #                except OrderProduct.DoesNotExist:

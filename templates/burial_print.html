@@ -82,11 +82,11 @@
             {% for form in positions_fs.forms %}
                 <tr>
                     <td>
-                        {{ form.order_product }}
+                        {{ form.service }}
                         {{ form.active }}{{ form.active.errors }}
                     </td>
-                    <td>{{ form.initial.order_product }}</td>
-                    <td>{{ form.initial.order_product.measure }}</td>
+                    <td>{{ form.initial.service }}</td>
+                    <td>{{ form.initial.service.measure }}</td>
                     <td>{{ form.count }}{{ form.count.errors }}</td>
                     <td>{{ form.price }}{{ form.price.errors }}</td>
                     <td><span class="sum"></span></td>

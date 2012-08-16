@@ -14658,17 +14658,17 @@ CREATE INDEX common_order_operation_id_like ON common_order USING btree (operati
 
 
 --
--- Name: common_order_product_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: common_service_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace:
 --
 
-CREATE INDEX common_order_product_id ON common_order USING btree (product_id);
+CREATE INDEX common_service_id ON common_order USING btree (product_id);
 
 
 --
--- Name: common_order_product_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: common_service_id_like; Type: INDEX; Schema: public; Owner: postgres; Tablespace:
 --
 
-CREATE INDEX common_order_product_id_like ON common_order USING btree (product_id varchar_pattern_ops);
+CREATE INDEX common_service_id_like ON common_order USING btree (product_id varchar_pattern_ops);
 
 
 --
@@ -15345,11 +15345,11 @@ ALTER TABLE ONLY common_order
 
 
 --
--- Name: common_order_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: common_service_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY common_order
-    ADD CONSTRAINT common_order_product_id_fkey FOREIGN KEY (product_id) REFERENCES common_product(uuid) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_service_id_fkey FOREIGN KEY (product_id) REFERENCES common_product(uuid) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

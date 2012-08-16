@@ -165,8 +165,8 @@ class Burial(models.Model):
             data = simplejson.loads(self.print_info)
             for p in data['positions'] or []:
                 try:
-                    p['order_product'] = OrderProduct.objects.get(name=p['order_product'])
-                except OrderProduct.DoesNotExist:
+                    p['service'] = Service.objects.get(name=p['service'])
+                except Service.DoesNotExist:
                     pass
             return data
         else:
@@ -179,7 +179,7 @@ class Burial(models.Model):
         for p in data['positions']:
             p['price'] = u'%s' % p['price']
             p['count'] = u'%s' % p['count']
-            p['order_product'] = p['order_product'].name
+            p['service'] = p['service'].name
         if data['print']['catafalque_time']:
             data['print']['catafalque_time'] = data['print']['catafalque_time'].strftime('%H:%M')
         self.print_info = simplejson.dumps(data)
