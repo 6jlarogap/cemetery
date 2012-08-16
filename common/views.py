@@ -298,7 +298,7 @@ def get_positions(burial):
         except ServicePosition.DoesNotExist:
             positions.append({
                 'active': product.default,
-                'service': product,
+                'order_product': product,
                 'price': product.price,
                 'count': 1,
                 'sum': product.price * 1,
@@ -306,7 +306,7 @@ def get_positions(burial):
         else:
             positions.append({
                 'active': True,
-                'service': product,
+                'order_product': product,
                 'price': pos.price,
                 'count': pos.count,
                 'sum': pos.price * pos.count,
