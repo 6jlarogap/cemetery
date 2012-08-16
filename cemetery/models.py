@@ -192,7 +192,7 @@ class Burial(models.Model):
         try:
             agent = self.responsible_agent
             org = agent.organization
-        except AttributeError:
+        except:
             pass
         else:
             return u"%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s" % {
@@ -200,16 +200,16 @@ class Burial(models.Model):
                 'agent': agent,
                 'd_num': self.doverennost.number or '',
                 'd_date': self.doverennost.date and self.doverennost.date.strftime('%d.%m.%Y') or '',
-                }
+            }
 
         if self.client_organization:
             return u"%(org)s, в лице директора %(ceo)s, действующего на основании %(doc)s" % {
                 'org': self.client_organization.full_name or self.client_organization,
                 'ceo': self.client_organization.ceo_name_who,
                 'doc': self.client_organization.ceo_document,
-                }
+            }
 
-        return self.customer.full_human_name()
+        return self.client_person.full_human_name()
 
     @staticmethod
     def split_parts(self):
