@@ -324,8 +324,8 @@ def print_burial(request, pk):
     initials = burial.get_print_info()
 
     def is_same(i, p):
-        i['service'] = i.get('service', i['order_position'])
-        p['service'] = p.get('service', i['order_position'])
+        i['service'] = i.get('service', i['order_product'])
+        p['service'] = p.get('service', i['order_product'])
         i1 = isinstance(i['service'], Service) and i['service'].name or i['service']
         p1 = isinstance(p['service'], Service) and p['service'].name or p['service']
         return i1 == p1
