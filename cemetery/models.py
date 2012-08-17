@@ -165,8 +165,8 @@ class Burial(models.Model):
             data = simplejson.loads(self.print_info)
             for p in data['positions'] or []:
                 try:
-                    p['service'] = Service.objects.get(name=p['service'])
-                except Service.DoesNotExist:
+                    p['service'] = Service.objects.get(name=p.get('service', p['order_position']))
+                except (Service.DoesNotExist, KeyError):
                     pass
             return data
         else:
