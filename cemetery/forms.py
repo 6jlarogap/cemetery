@@ -99,14 +99,14 @@ class PersonForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        data = kwargs.get('data') or {}
+        data = dict(kwargs.get('data') or {})
         instance_pk = data.get('instance')
         if instance_pk and instance_pk not in [None, '', 'NEW']:
             kwargs['instance'] = Person.objects.get(pk=instance_pk)
             kwargs['initial'] = model_to_dict(kwargs['instance'], [], [])
             kwargs['initial'].update({'instance': instance_pk})
             if data and not data.get('last_name'):
-                old_data = kwargs['data'].copy()
+                old_data = dict(kwargs['data'].copy())
                 old_data.update(kwargs['initial'])
                 kwargs['data'] = old_data
         super(PersonForm, self).__init__(*args, **kwargs)
