@@ -14,7 +14,7 @@ import math
 from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm
-from persons.models import DeathCertificate
+from persons.models import DeathCertificate, PersonID
 from organizations.models import Organization, Agent
 
 def ulogin(request):
@@ -211,7 +211,10 @@ def new_burial_customer(request):
     person_form = PersonForm(data=person_data or None, initial=person_data)
     location_form = LocationForm(person=person_form.instance, initial=person_data, data=request.POST.copy() or None)
 
-    person_id = person_form.instance and person_form.instance.personid or None
+    try:
+        person_id = person_form.instance and person_form.instance.personid or None
+    except PersonID.DoesNotExist:
+        person_id = None
     customer_id_form = CustomerIDForm(data=request.POST.copy() or None, prefix='customer_id', instance=person_id)
 
     org_data = request.REQUEST.get('organization') and request.REQUEST.copy() or None
