@@ -85,7 +85,7 @@ class BurialForm(forms.ModelForm):
         return burial
 
 class PersonForm(forms.ModelForm):
-    instance = forms.ChoiceField(widget=forms.RadioSelect)
+    instance = forms.ChoiceField(widget=forms.RadioSelect, required=False)
 
     INSTANCE_CHOICES = [
         ('', u'Не выбрано'),
@@ -105,6 +105,10 @@ class PersonForm(forms.ModelForm):
             kwargs['instance'] = Person.objects.get(pk=instance_pk)
             kwargs['initial'] = model_to_dict(kwargs['instance'], [], [])
             kwargs['initial'].update({'instance': instance_pk})
+            if data and not data.get('last_name'):
+                old_data = kwargs['data'].copy()
+                old_data.update(kwargs['initial'])
+                kwargs['data'] = old_data
         super(PersonForm, self).__init__(*args, **kwargs)
         self.data = dict(self.data.items())
         if not any(self.data.values()) or self.data.keys() == ['instance']:
@@ -177,51 +181,49 @@ class PersonForm(forms.ModelForm):
         return person
 
 class LocationForm(forms.ModelForm):
+    country_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}))
+    region_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}))
+    city_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}))
+    street_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}), required=False)
+
     class Meta:
         model = Location
-        widgets = {
-            'country': forms.TextInput(attrs={'class': 'autocomplete'}),
-            'region': forms.TextInput(attrs={'class': 'autocomplete'}),
-            'city': forms.TextInput(attrs={'class': 'autocomplete'}),
-            'street': forms.TextInput(attrs={'class': 'autocomplete'}),
-        }
 
     def __init__(self, person=None, *args, **kwargs):
+        kwargs.setdefault('initial', {})
         if person and person.address:
+            kwargs['initial'] = dict(kwargs['initial']).copy()
             kwargs.update({'instance': person.address})
-            kwargs.setdefault('initial', {})
             if person.address.country:
                 kwargs['initial'].update({
-                    'country': person.address.country.name,
+                    'country_name': person.address.country.name,
                 })
             if person.address.region:
                 kwargs['initial'].update({
-                    'region': person.address.region.name,
+                    'region_name': person.address.region.name,
                 })
             if person.address.city:
                 kwargs['initial'].update({
-                    'city': person.address.city.name,
+                    'city_name': person.address.city.name,
                 })
             if person.address.street:
                 kwargs['initial'].update({
-                    'street': person.address.street.name,
+                    'street_name': person.address.street.name,
                 })
-            if kwargs.get('data') and not kwargs['data'].get('country'):
-                del kwargs['data']
         if kwargs.get('data', {}):
             kwargs['data'] = kwargs['data'] and kwargs['data'].copy() or {}
-            if kwargs['data'].get('country'):
+            if kwargs['data'].get('country_name'):
                 d = kwargs['data']
-                country, _tmp = Country.objects.get_or_create(name=d['country'])
+                country, _tmp = Country.objects.get_or_create(name=d['country_name'])
                 kwargs['data']['country'] = country.pk
-                if kwargs.get('data', {}).get('region'):
-                    region, _tmp = Region.objects.get_or_create(name=d['region'], country=country)
+                if kwargs.get('data', {}).get('region_name'):
+                    region, _tmp = Region.objects.get_or_create(name=d['region_name'], country=country)
                     kwargs['data']['region'] = region.pk
-                    if kwargs.get('data', {}).get('city'):
-                        city, _tmp = City.objects.get_or_create(name=d['city'], region=region)
+                    if kwargs.get('data', {}).get('city_name'):
+                        city, _tmp = City.objects.get_or_create(name=d['city_name'], region=region)
                         kwargs['data']['city'] = city.pk
-                        if kwargs.get('data', {}).get('street'):
-                            kwargs['data']['street'] = Street.objects.get_or_create(name=d['street'], city=city)[0].pk
+                        if kwargs.get('data', {}).get('street_name'):
+                            kwargs['data']['street'] = Street.objects.get_or_create(name=d['street_name'], city=city)[0].pk
         super(LocationForm, self).__init__(*args, **kwargs)
 
     def is_valid(self):
@@ -258,17 +260,25 @@ OPF_TYPES = (
 
 class CustomerForm(forms.Form):
     customer_type = forms.ChoiceField(label=u'Организационно-правовая форма', choices=OPF_TYPES)
-    organization = forms.ModelChoiceField(label=u'Организация', queryset=Organization.objects.all())
+    organization = forms.ModelChoiceField(label=u'Организация', queryset=Organization.objects.all(), required=False)
     agent_director = forms.BooleanField(label=u'Директор - агент', required=False)
     agent_person = forms.ModelChoiceField(label=u'Агент', queryset=Person.objects.none(), required=False)
 
     def __init__(self, *args, **kwargs):
         super(CustomerForm, self).__init__(*args, **kwargs)
         qs = Person.objects.filter(agent__organization__isnull=False).distinct()
-        self.fields['agent_person'].queryset = qs
+
+        if self.data.get('customer-agent_person') == '---------------':
+            self.data = self.data.copy()
+            self.data['customer-agent_person'] = None
+
+        if not self.is_person():
+            print 'self.data', self.data
+            self.fields['organization'].required = True
+            self.fields['agent_person'].queryset = qs
 
     def is_person(self):
-        return str(self.cleaned_data['customer_type']) == str(OPF_FIZIK)
+        return str(self.data.get('customer-customer_type', '')) == str(OPF_FIZIK)
 
     def get_agent(self):
         if self.cleaned_data['agent_director']:

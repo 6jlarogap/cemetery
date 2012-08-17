@@ -5,7 +5,8 @@
  * Time: 23:30
  * To change this template use File | Settings | File Templates.
  */
-$(function() {
+
+function setup_address_autocompletes() {
     if (top.location.href != '/') {
         if (navigator.userAgent.toLowerCase().indexOf("chrome") >= 0) {
             $('input:-webkit-autofill').each(function(){
@@ -29,72 +30,98 @@ $(function() {
         form.prepend('<p class="instance_alert alert">Очистите поля ФИО для нового поиска</p>')
     });
 
-    $('input.autocomplete[name$=country]').attr('autocomplete', 'off').typeahead({
+    $('input.autocomplete[name$=country_name]').attr('autocomplete', 'off').typeahead({
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             $.ajax({
                 url: COUNTRY_URL + "?query=" + query,
+                dataType: 'json',
                 success: function(data) {
-                    typeahead.process(data)
+                    typeahead.process(data);
                 }
             });
-        },
-        onselect: function (obj) {
-            console.log(obj);
         }
     });
-    $('input.autocomplete[name$=region]').attr('autocomplete', 'off').typeahead({
+    $('input.autocomplete[name$=region_name]').attr('autocomplete', 'off').typeahead({
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             var input = $(this)[0].$element;
-            var country = input.parents('.well').find('input[name$=country]').val();
+            typeahead.input_el = input;
+            var country = input.parents('.well').find('input[name$=country_name]').val() || '';
             $.ajax({
                 url: REGION_URL + "?query=" + query + "&country=" + country,
+                dataType: 'json',
                 success: function(data) {
-                    typeahead.process(data)
+                    typeahead.process(data);
                 }
             });
         },
-        onselect: function (obj) {
-            console.log(obj);
+        onselect: function(val) {
+            var $country = $(this)[0].$element.parents('form').find('input[name$=country_name]');
+            if (!$country.val()) {
+                $country.val(val.country);
+            }
         }
     });
-    $('input.autocomplete[name$=city]').attr('autocomplete', 'off').typeahead({
+    $('input.autocomplete[name$=city_name]').attr('autocomplete', 'off').typeahead({
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             var input = $(this)[0].$element;
-            var country = input.parents('.well').find('input[name$=country]').val();
-            var region = input.parents('.well').find('input[name$=region]').val();
+            var region = input.parents('.well').find('input[name$=region_name]').val() || '';
+            var country = input.parents('.well').find('input[name$=country_name]').val() || '';
             $.ajax({
                 url: CITY_URL + "?query=" + query + "&country=" + country + "&region=" + region,
+                dataType: 'json',
                 success: function(data) {
-                    typeahead.process(data)
+                    typeahead.process(data);
                 }
             });
         },
-        onselect: function (obj) {
-            console.log(obj);
+        onselect: function(val) {
+            var $region = $(this)[0].$element.parents('form').find('input[name$=region_name]');
+            if (!$region.val()) {
+                $region.val(val.region);
+            }
+            var $country = $(this)[0].$element.parents('form').find('input[name$=country_name]');
+            if (!$country.val()) {
+                $country.val(val.country);
+            }
         }
     });
-    $('input.autocomplete[name$=street]').attr('autocomplete', 'off').typeahead({
+    $('input.autocomplete[name$=street_name]').attr('autocomplete', 'off').typeahead({
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             var input = $(this)[0].$element;
-            var country = input.parents('.well').find('input[name$=country]').val();
-            var region = input.parents('.well').find('input[name$=region]').val();
-            var city = input.parents('.well').find('input[name$=city]').val();
+            var country = input.parents('.well').find('input[name$=country_name]').val() || '';
+            var region = input.parents('.well').find('input[name$=region_name]').val() || '';
+            var city = input.parents('.well').find('input[name$=city_name]').val() || '';
             $.ajax({
                 url: STREET_URL + "?query=" + query + "&country=" + country + "&region=" + region + "&city=" + city,
+                dataType: 'json',
                 success: function(data) {
-                    typeahead.process(data)
+                    typeahead.saved_geo_data = data;
+                    typeahead.process(data);
                 }
             });
         },
-        onselect: function (obj) {
-            console.log(obj);
+        onselect: function(val) {
+            var $city = $(this)[0].$element.parents('form').find('input[name$=city_name]');
+            if (!$city.val()) {
+                $city.val(val.city);
+            }
+            var $region = $(this)[0].$element.parents('form').find('input[name$=region_name]');
+            if (!$region.val()) {
+                $region.val(val.region);
+            }
+            var $country = $(this)[0].$element.parents('form').find('input[name$=country_name]');
+            if (!$country.val()) {
+                $country.val(val.country);
+            }
         }
     });
+}
 
+$(function() {
     updateControls();
 
     $('a.load').live('click', function(){
@@ -104,6 +131,7 @@ $(function() {
             $('#block_empty').fadeIn('fast', function() {
                 $('#id_customer-customer_type').change();
             });
+            setup_address_autocompletes();
         });
         return false;
     });
@@ -134,7 +162,7 @@ $(function() {
     });
 
     $('#id_customer-organization').live('change', function() {
-        var options = '<option>---------------</option>';
+        var options = '<option value="">---------------</option>';
         var org_id = $(this).val();
         var agent;
         var val = $('#id_customer-agent_person').val();
@@ -229,6 +257,7 @@ function updateControls() {
     setTimeout(function() {
         $('#id_customer-agent_director').change();
     }, 100);
+    setup_address_autocompletes();
 }
 
 function updateInnerForm() {
@@ -239,3 +268,7 @@ function updateInnerForm() {
         $('#id_customer-agent_director').change();
     }, 100);
 }
+
+$(function() {
+    setup_address_autocompletes();
+});

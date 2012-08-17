@@ -207,14 +207,16 @@ def new_burial_customer(request):
     """
     Добавление заказчика
     """
-    person_data = request.REQUEST.get('instance') and request.REQUEST or None
-    person_form = PersonForm(data=request.POST or None, initial=person_data)
-    location_form = LocationForm(person=person_form.instance, initial=person_data, data=request.POST or None)
+    person_data = request.REQUEST.get('instance') and dict(request.REQUEST).copy() or None
+    person_form = PersonForm(data=person_data or None, initial=person_data)
+    location_form = LocationForm(person=person_form.instance, initial=person_data, data=request.POST.copy() or None)
 
-    org_data = request.REQUEST.get('organization') and request.REQUEST or None
-    customer_form = CustomerForm(data=request.POST or None, prefix='customer', initial=org_data)
-    customer_id_form = CustomerIDForm(data=request.POST or None, prefix='customer_id', initial=org_data)
-    doverennost_form = DoverennostForm(data=request.POST or None, prefix='doverennost', initial=org_data)
+    person_id = person_form.instance and person_form.instance.personid or None
+    customer_id_form = CustomerIDForm(data=request.POST.copy() or None, prefix='customer_id', instance=person_id)
+
+    org_data = request.REQUEST.get('organization') and request.REQUEST.copy() or None
+    customer_form = CustomerForm(data=request.POST.copy() or None, prefix='customer', initial=org_data)
+    doverennost_form = DoverennostForm(data=request.POST.copy() or None, prefix='doverennost', initial=org_data)
 
     organizations = Organization.objects.all()
 
@@ -259,9 +261,10 @@ def new_burial_responsible(request):
     """
     Добавление ответственного
     """
-    data = request.REQUEST.keys() and request.REQUEST or None
+    data = request.REQUEST.keys() and dict(request.REQUEST.copy()) or None
     person_form = PersonForm(data=data)
-    location_form = LocationForm(person=person_form.instance, data=request.POST or None)
+    loc_data = request.POST and request.POST.get('country_name') and request.POST.copy()
+    location_form = LocationForm(person=person_form.instance, data=loc_data or None)
 
     if request.POST and person_form.data and person_form.is_valid():
         if location_form.is_valid() and location_form.cleaned_data:
@@ -343,11 +346,6 @@ def print_burial(request, pk):
     time_check_failed = False
 
     print_positions = []
-
-    print request.POST
-    print 'positions_fs', not positions_fs.is_valid(), positions_fs.errors
-    print 'payment_form', payment_form.is_valid(), payment_form.errors
-    print 'print_form', print_form.is_valid(), print_form.errors
 
     if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
         burial.set_print_info({
