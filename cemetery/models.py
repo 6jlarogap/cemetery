@@ -179,7 +179,10 @@ class Burial(models.Model):
         for p in data['positions']:
             p['price'] = u'%s' % p['price']
             p['count'] = u'%s' % p['count']
-            p['service'] = p['service'].name
+            try:
+                p['service'] = p['service'].name
+            except KeyError:
+                pass
         if data['print']['catafalque_time']:
             data['print']['catafalque_time'] = data['print']['catafalque_time'].strftime('%H:%M')
         self.print_info = simplejson.dumps(data)
@@ -198,8 +201,8 @@ class Burial(models.Model):
             return u"%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s" % {
                 'org': org.full_name or org,
                 'agent': agent,
-                'd_num': self.doverennost.number or '',
-                'd_date': self.doverennost.date and self.doverennost.date.strftime('%d.%m.%Y') or '',
+                'd_num': self.doverennost and self.doverennost.number or '',
+                'd_date': self.doverennost and self.doverennost.date and self.doverennost.date.strftime('%d.%m.%Y') or '',
             }
 
         if self.client_organization:
