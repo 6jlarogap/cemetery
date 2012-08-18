@@ -120,6 +120,7 @@ class Burial(models.Model):
     operation = models.ForeignKey(Operation, verbose_name=u"Операция")
     date_plan = models.DateField(u"Планируемая дата", blank=True, null=True)
     date_fact = models.DateField(u"Фактическая дата исполнения", blank=True, null=True)
+    time_fact = models.DateField(u"Время исполнения", blank=True, null=True)
 
     place = models.ForeignKey(Place)
     person = models.ForeignKey(Person, verbose_name=u"Похороненный", related_name='buried')

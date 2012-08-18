@@ -268,5 +268,6 @@ function updateInnerForm() {
 }
 
 $(function() {
+    updateControls();
     setup_address_autocompletes();
 });

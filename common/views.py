@@ -130,8 +130,6 @@ def main_page(request):
         "close": request.GET.get('close'),
     }
 
-    print burials.count(), paginate_by
-
     return object_list(request,
         template_name='burials.html',
         queryset=burials,
