@@ -78,6 +78,10 @@
                 <td>Цена</td>
                 <td>Стоимость</td>
             </tr>
+            {{ positions_fs.errors }}
+            {{ payment_form.errors }}
+            {{ print_form.errors }}
+
             {{ positions_fs.management_form }}
             {% for form in positions_fs.forms %}
                 <tr>
@@ -168,7 +172,7 @@
         </div>
         <input type="submit" value="Распечатать документы">
         <input type="submit" name="receipt" value="Распечатать справку">
-        {% if burial.responsible_customer.person.filled %}<input type="submit" name="dogovor" value="Распечатать договор отв.">{% endif %}
+        {% if burial.place.responsible %}<input type="submit" name="dogovor" value="Распечатать договор отв.">{% endif %}
         <input type="reset" value="Отмена">
         <a href="{% url edit_burial burial.pk %}"></a>
     </form>
