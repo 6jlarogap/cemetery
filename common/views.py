@@ -366,11 +366,6 @@ def print_burial(request, pk):
     if initials and initials.setdefault('positions', []):
         for p in positions:
             if not any(filter(lambda i: is_same(i, p), initials['positions'])):
-                s = p.get('service')
-                if isinstance(s, Service):
-                    p['service'] = s.pk
-                if isinstance(s, basestring) and not s.is_digit():
-                    p['service'] = Service.objects.get_or_create(name=s).pk
                 initials['positions'].append(p)
 
     payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)

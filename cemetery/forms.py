@@ -326,6 +326,17 @@ class UserProfileForm(forms.ModelForm):
 class OrderPositionForm(forms.ModelForm):
     active = forms.BooleanField(required=False)
 
+    def __init__(self, *args, **kwargs):
+        if kwargs.get('data'):
+            kwargs['data'] = kwargs['data'].copy()
+            for k,v in kwargs['data'].items():
+                if k.endswith('servicee') and not v.isdigit():
+                    try:
+                        kwargs['data'][k] = Service.objects.get(name=v).pk
+                    except Service.DoesNotExist:
+                        pass
+        super(OrderPositionForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = ServicePosition
         fields = ['service', 'count', 'price']
