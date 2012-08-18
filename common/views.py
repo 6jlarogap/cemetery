@@ -69,8 +69,12 @@ def main_page(request):
         if form.cleaned_data['fio']:
             fio = [f.strip('.') for f in form.cleaned_data['fio'].split(' ')]
             q = Q()
-            for f in fio:
-                q &= Q(person__last_name__icontains=f) | Q(person__first_name__icontains=f) | Q(person__middle_name__icontains=f)
+            if len(fio) > 2:
+                q &= Q(person__middle_name__icontains=fio[2])
+            if len(fio) > 1:
+                q &= Q(person__first_name__icontains=fio[1])
+            if len(fio) > 0:
+                q &= Q(person__last_name__icontains=fio[0])
             burials = burials.filter(q)
         if form.cleaned_data['birth_date_from']:
             burials = burials.filter(person__birth_date__gte=form.cleaned_data['birth_date_from'])
