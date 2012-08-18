@@ -385,13 +385,22 @@ def print_burial(request, pk):
         burial.save()
 
         for f in positions_fs.forms:
+            service = f.initial['service']
+            if isinstance(f.initial['service'], basestring):
+                if f.initial['service'].is_digit():
+                    service = Service.objects.get(pk=f.initial['service'])
+                else:
+                    try:
+                        service = Service.objects.get(name=f.initial['service'])
+                    except Service.DoesNotExist:
+                        pass
             if f.cleaned_data['active']:
-                print_positions.append(f.initial['service'].pk)
+                print_positions.append(service.pk)
                 try:
-                    pos = ServicePosition.objects.get(service=f.initial['service'], burial=burial)
+                    pos = ServicePosition.objects.get(service=service, burial=burial)
                 except ServicePosition.DoesNotExist:
                     pos = ServicePosition.objects.create(
-                        service=f.initial['service'],
+                        service=service,
                         burial=burial,
                         price=f.cleaned_data['price'],
                         count=f.cleaned_data['count'],
@@ -403,7 +412,7 @@ def print_burial(request, pk):
 
             else:
                 try:
-                    pos = ServicePosition.objects.get(service=f.initial['service'], burial=burial)
+                    pos = ServicePosition.objects.get(service=service, burial=burial)
                 except ServicePosition.DoesNotExist:
                     pass
                 else:
