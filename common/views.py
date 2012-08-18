@@ -538,5 +538,5 @@ def view_place(request, pk):
 
 def autocomplete_person(request):
     query = request.GET['query']
-    person_names = Person.objects.filter(last_name__istartswith=query).values_list('last_name', flat=True)
-    return HttpResponse(simplejson.dumps([{'value': p} for p in set(person_names)]), mimetype='text/javascript')
+    persons = Person.objects.filter(last_name__istartswith=query)
+    return HttpResponse(simplejson.dumps([{'value': p.full_human_name()} for p in persons]), mimetype='text/javascript')
