@@ -179,8 +179,6 @@ $(function() {
 
     $('.errorlist').addClass('alert');
 
-    $('#mainform #id_account_book_n_from').parents('p').before('<br/>');
-
     $('#id_customer-customer_type').live('change', function() {
         if ($(this).val() == 1) {
             $('.fields-fizik').slideUp('fast', function() {
@@ -193,7 +191,6 @@ $(function() {
         }
     });
 
-    $('#id_per_page').parents('p').before('<br/>');
     $('#id_per_page').parents('p').find('label, :input').css('display', 'inline');
     $('#id_records_order_by').parents('p').find('label, :input').css('display', 'inline');
 

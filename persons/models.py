@@ -64,14 +64,7 @@ class Person(models.Model):
     unclear_birth_date = property(get_birth_date, set_birth_date)
 
     def full_human_name(self):
-        try:
-            person = self.person
-        except AttributeError:
-            pass
-        else:
-            if person.filled():
-                return ' '.join((person.last_name, person.first_name, person.patronymic))
-            return u'Неизвестно'
+        return ' '.join((self.last_name, self.first_name, self.middle_name)).strip()
 
     def age(self):
         start = self.birth_date

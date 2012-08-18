@@ -9,6 +9,8 @@ from django.db import transaction
 from django.db.models.query_utils import Q
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.safestring import mark_safe
+from django.views.generic.list_detail import object_list
+
 import math
 
 from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition
@@ -51,9 +53,11 @@ def main_page(request):
     """
 
     burials = Burial.objects.all()
+    paginate_by = 10
     if request.user.is_authenticated():
         p, _tmp = UserProfile.objects.get_or_create(user=request.user)
         initial = {'records_order_by': p.records_order_by, 'per_page': p.records_per_page}
+        paginate_by = int(p.records_per_page or paginate_by)
     else:
         initial = None
     form = SearchForm(request.GET or None, initial=initial)
@@ -96,9 +100,7 @@ def main_page(request):
             agents = list(Agent.objects.filter(aq))
 
 
-            print burials.count(), orgs, agents
             burials = burials.filter(q | Q(agent__in=agents) | Q(client_organization__in=orgs)).distinct()
-            print burials.count()
         if form.cleaned_data['responsible']:
             burials = burials.filter(place__responsible__last_name__icontains=form.cleaned_data['responsible'])
         if form.cleaned_data['cemetery']:
@@ -114,13 +116,20 @@ def main_page(request):
 
         if form.cleaned_data['records_order_by']:
             burials = burials.order_by(form.cleaned_data['records_order_by'])
+
     result = {
         "form": form,
-        "object_list": burials,
         "close": request.GET.get('close'),
     }
 
-    return render(request,'burials.html', result )
+    print burials.count(), paginate_by
+
+    return object_list(request,
+        template_name='burials.html',
+        queryset=burials,
+        paginate_by=paginate_by,
+        extra_context=result,
+    )
 
 @login_required
 def new_burial(request):

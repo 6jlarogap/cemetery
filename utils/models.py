@@ -29,12 +29,10 @@ class NotEmptyValidator(MinLengthValidator):
     code = 'not_empty'
 
 PER_PAGE_VALUES = (
-    (5, '5'),
     (10, '10'),
-    (15, '15'),
     (25, '25'),
     (50, '50'),
-    )
+)
 
 ORDER_BY_VALUES = (
     ('person__last_name', '+фамилии'),
