@@ -10,10 +10,12 @@ from django.db.models.query_utils import Q
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.views.generic.list_detail import object_list
+from django.utils import simplejson
+from django.http import HttpResponse
 
 import math
 
-from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition
+from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm
 from persons.models import DeathCertificate, PersonID
@@ -116,6 +118,8 @@ def main_page(request):
 
         if form.cleaned_data['records_order_by']:
             burials = burials.order_by(form.cleaned_data['records_order_by'])
+    else:
+        burials = Burial.objects.none()
 
     result = {
         "form": form,
@@ -520,3 +524,8 @@ def view_place(request, pk):
     return render(request, 'place_info.html', {
         'place': place,
     })
+
+def autocomplete_person(request):
+    query = request.GET['query']
+    person_names = Person.objects.filter(last_name__istartswith=query).values_list('last_name', flat=True)
+    return HttpResponse(simplejson.dumps([{'value': p} for p in set(person_names)]), mimetype='text/javascript')

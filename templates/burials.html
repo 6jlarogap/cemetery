@@ -20,82 +20,111 @@
             </div>
         </div>
     </div>
-    <div class="row-fluid">
-        <table class="burials table table-striped table-bordered">
-            <thead>
-                <th>№ в книге</th>
-                <th>ФИО</th>
-                <th>Дата захоронения</th>
-                <th>Участок</th>
-                <th>Ряд</th>
-                <th>Могила</th>
-                <th>Кладбище</th>
-                <th>Услуга</th>
-                <th>Заказчик</th>
-                <th>Телефон</th>
-                <th>Комментарий</th>
-                <th>Опции</th>
-            </thead>
-            {% for b in object_list %}
-                <tr>
-                    <td>{{ b.account_number }}</td>
-                    <td>
-                        <b> {{ b.person.last_name }}</b>
-                        {{ b.person.first_name }}
-                        {{ b.person.middle_name }}
-                    </td>
-                    <td>{{ b.date_fact|date:"d.m.Y" }}</td>
-                    <td>{{ b.place.area }}</td>
-                    <td>{{ b.place.row }}</td>
-                    <td>{{ b.place.seat }}</td>
-                    <td>{{ b.place.cemetery.name }}</td>
-                    <td>{{ b.operation.op_type }}</td>
-                    <td>
-                        {% if b.client_organization %}
-                            ЮЛ {{ b.client_organization }}<br/>
-                            {% if b.agent %}{{ b.agent.person }}{% else %}{{ b.client_organization.ceo|default:"" }}{% endif %}
-                        {% else %}
-                            {% if b.client_person %}
-                                ФЛ {{ b.client_person }}
-                            {% else %}
-                            {% endif %}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if b.client_organization %}
-                            {{ b.client_organization.phones|default:"" }}
-                        {% endif %}
-                        {% if b.client_person %}
-                            {{ b.client_person.phones|default:"" }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% for comment in b.ordercomments_set.all %}
-                            {{ comment.comment }}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {% if b.orderfiles_set.count %}
-                            <small><a title="файл прикреплен"><i class="icon icon-file"></i></a></small>
-                        {% endif %}
-                        {% if user|in_group:"edit_burial"  %}
-                            <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon icon-edit"></i></a>
-                        {% endif %}
-                        <a title="карточка" href="{% url view_burial b.pk %}"><i class="icon icon-list"></i></a>
-                        <a title="к могиле" href="{% url view_place b.place.pk %}"><i class="icon icon-map-marker"></i></a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
 
-    {% include "paginator.html" %}
+    {% if paginator.count %}
+        <div class="row-fluid">
+            <table class="burials table table-striped table-bordered">
+                <thead>
+                    <th>№ в книге</th>
+                    <th>ФИО</th>
+                    <th>Дата захоронения</th>
+                    <th>Участок</th>
+                    <th>Ряд</th>
+                    <th>Могила</th>
+                    <th>Кладбище</th>
+                    <th>Услуга</th>
+                    <th>Заказчик</th>
+                    <th>Телефон</th>
+                    <th>Комментарий</th>
+                    <th>Опции</th>
+                </thead>
+                {% for b in object_list %}
+                    <tr>
+                        <td>{{ b.account_number }}</td>
+                        <td>
+                            <b> {{ b.person.last_name }}</b>
+                            {{ b.person.first_name }}
+                            {{ b.person.middle_name }}
+                        </td>
+                        <td>{{ b.date_fact|date:"d.m.Y" }}</td>
+                        <td>{{ b.place.area }}</td>
+                        <td>{{ b.place.row }}</td>
+                        <td>{{ b.place.seat }}</td>
+                        <td>{{ b.place.cemetery.name }}</td>
+                        <td>{{ b.operation.op_type }}</td>
+                        <td>
+                            {% if b.client_organization %}
+                                ЮЛ {{ b.client_organization }}<br/>
+                                {% if b.agent %}{{ b.agent.person }}{% else %}{{ b.client_organization.ceo|default:"" }}{% endif %}
+                            {% else %}
+                                {% if b.client_person %}
+                                    ФЛ {{ b.client_person }}
+                                {% else %}
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if b.client_organization %}
+                                {{ b.client_organization.phones|default:"" }}
+                            {% endif %}
+                            {% if b.client_person %}
+                                {{ b.client_person.phones|default:"" }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% for comment in b.ordercomments_set.all %}
+                                {{ comment.comment }}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% if b.orderfiles_set.count %}
+                                <small><a title="файл прикреплен"><i class="icon icon-file"></i></a></small>
+                            {% endif %}
+                            {% if user|in_group:"edit_burial"  %}
+                                <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon icon-edit"></i></a>
+                            {% endif %}
+                            <a title="карточка" href="{% url view_burial b.pk %}"><i class="icon icon-list"></i></a>
+                            <a title="к могиле" href="{% url view_place b.place.pk %}"><i class="icon icon-map-marker"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        {% include "paginator.html" %}
+    {% endif %}
 
     <script type="text/javascript">
         $(function() {
             $('#id_customer').closest('p').before('<br/>');
             $('#id_per_page').closest('p').before($('p.buttons'));
             $('#id_no_exhumated').closest('p').after('<br/>');
+            $('input[type=reset]').click(function() {
+                top.location.href = '?';
+            });
+            $('#id_customer, #id_responsible, #id_fio').attr('autocomplete', 'off').typeahead({
+                source: function (typeahead, query) {
+                    if (query.length < 2) { return }
+                    var input = $(this)[0].$element;
+                    $.ajax({
+                        url: "{% url autocomplete_person %}?query=" + query,
+                        dataType: 'json',
+                        success: function(data) {
+                            typeahead.process(data);
+                        }
+                    });
+                },
+                onselect: function(val) {
+                    var $region = $(this)[0].$element.parents('form').find('input[name$=region_name]');
+                    if (!$region.val()) {
+                        $region.val(val.region);
+                    }
+                    var $country = $(this)[0].$element.parents('form').find('input[name$=country_name]');
+                    if (!$country.val()) {
+                        $country.val(val.country);
+                    }
+                }
+            });
         });
     </script>
 {% endblock %}

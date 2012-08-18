@@ -25,6 +25,8 @@ urlpatterns += patterns('common.views',
     url(r'^burial/(?P<pk>.*)/$', 'view_burial', name='view_burial'),
     url(r'^place/(?P<pk>.*)/$', 'view_place', name='view_place'),
 
+    url(r'^autocomplete/person/$', 'autocomplete_person', name='autocomplete_person'),
+
     url(r'^profile/$', 'profile', name='profile'),
 
     url(r'^login/$', 'ulogin', name='ulogin'),
