@@ -26,6 +26,7 @@ class SearchForm(forms.Form):
     account_number_from = forms.CharField(required=False, max_length=16, label="Номер от")
     account_number_to = forms.CharField(required=False, max_length=16, label="до")
     customer = forms.CharField(required=False, max_length=30, label="Заказчик")
+    responsible = forms.CharField(required=False, max_length=30, label="Отвественный")
     cemetery = forms.ModelChoiceField(required=False, queryset=Cemetery.objects.all(), empty_label="Все", label="Кладбища")
     area = forms.CharField(required=False, max_length=9, label="Участок")
     row = forms.CharField(required=False, max_length=9, label="Ряд")

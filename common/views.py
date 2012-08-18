@@ -84,9 +84,23 @@ def main_page(request):
             burials = burials.filter(account_number__lte=form.cleaned_data['account_number_to'])
         if form.cleaned_data['customer']:
             q = Q(client_person__last_name__icontains=form.cleaned_data['customer'])
-            q |= Q(client_organization__name__icontains=form.cleaned_data['customer'])
-            q |= Q(client_organization__full_name__icontains=form.cleaned_data['customer'])
-            burials = burials.filter(q)
+
+            oq = Q(name__icontains=form.cleaned_data['customer'])
+            oq |= Q(full_name__icontains=form.cleaned_data['customer'])
+            oq |= Q(ceo__last_name__icontains=form.cleaned_data['customer'])
+            orgs = list(Organization.objects.filter(oq))
+
+            aq = Q(person__last_name__icontains=form.cleaned_data['customer'])
+            aq |= Q(organization__name__icontains=form.cleaned_data['customer'])
+            aq |= Q(organization__full_name__icontains=form.cleaned_data['customer'])
+            agents = list(Agent.objects.filter(aq))
+
+
+            print burials.count(), orgs, agents
+            burials = burials.filter(q | Q(agent__in=agents) | Q(client_organization__in=orgs)).distinct()
+            print burials.count()
+        if form.cleaned_data['responsible']:
+            burials = burials.filter(place__responsible__last_name__icontains=form.cleaned_data['responsible'])
         if form.cleaned_data['cemetery']:
             burials = burials.filter(place__cemetery=form.cleaned_data['cemetery'])
         if form.cleaned_data['area']:

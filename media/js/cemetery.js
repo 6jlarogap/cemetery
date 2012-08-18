@@ -143,6 +143,7 @@ $(function() {
             $('#block_empty').html(data);
             $('.errorlist').addClass('alert');
             updateInnerForm();
+            setup_address_autocompletes();
         });
         return false;
     });

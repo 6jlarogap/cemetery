@@ -22,6 +22,10 @@
             <dt>Место</dt>
             <dd>{{ place.seat }}</dd>
         {% endif %}
+        {% if place.responsible %}
+            <dt>Ответственный</dt>
+            <dd>{{ place.responsible }}</dd>
+        {% endif %}
     </dl>
 
     <h3>Захоронения:</h3>
