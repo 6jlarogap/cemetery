@@ -4202,3 +4202,7 @@ a.badge:hover {
 table.burials thead {
     font-size: 0.7em;
 }
+
+#id_time_fact {
+    width: 80px;
+}
