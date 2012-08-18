@@ -15,7 +15,6 @@ class SearchForm(forms.Form):
     """
     Форма поиска на главной странице.
     """
-    operation = forms.ModelChoiceField(required=False, queryset=Operation.objects.all(), label="Услуга", empty_label="Все")
     fio = forms.CharField(required=False, max_length=100, label="ФИО")
     birth_date_from = forms.DateField(required=False, label="Дата рождения с")
     birth_date_to = forms.DateField(required=False, label="по")
@@ -27,13 +26,15 @@ class SearchForm(forms.Form):
     account_number_to = forms.CharField(required=False, max_length=16, label="до")
     customer = forms.CharField(required=False, max_length=30, label="Заказчик")
     responsible = forms.CharField(required=False, max_length=30, label="Отвественный")
+    operation = forms.ModelChoiceField(required=False, queryset=Operation.objects.all(), label="Услуга", empty_label="Все")
     cemetery = forms.ModelChoiceField(required=False, queryset=Cemetery.objects.all(), empty_label="Все", label="Кладбища")
     area = forms.CharField(required=False, max_length=9, label="Участок")
     row = forms.CharField(required=False, max_length=9, label="Ряд")
     seat = forms.CharField(required=False, max_length=9, label="Место")
     no_exhumated = forms.BooleanField(required=False, initial=False, label=u"Убрать эксгумированные")
-    per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label=u"Записей на страницу")
+
     records_order_by = forms.ChoiceField(required=False, choices=ORDER_BY_VALUES, label=u"Сортировка по")
+    per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label=u"Записей на страницу")
 
 class PlaceForm(forms.ModelForm):
     class Meta:
