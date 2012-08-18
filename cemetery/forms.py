@@ -353,7 +353,6 @@ class BaseOrderPositionsFormset(formsets.BaseFormSet):
 
         super(BaseOrderPositionsFormset, self).__init__(*args, **kwargs)
 
-
 OrderPositionsFormset = forms.formsets.formset_factory(OrderPositionForm, extra=0, formset=BaseOrderPositionsFormset)
 
 class OrderPaymentForm(forms.ModelForm):
