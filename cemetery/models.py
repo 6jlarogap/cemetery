@@ -278,6 +278,9 @@ class UserProfile(models.Model):
     records_per_page = models.PositiveSmallIntegerField(u"Записей на странице",blank=True, null=True,choices=PER_PAGE_VALUES)
     records_order_by = models.CharField(u"Сортировка по", max_length=255,blank=True, choices=ORDER_BY_VALUES)
 
+    org_user = models.ForeignKey(Organization, verbose_name=u"Пользователь", blank=True, null=True, related_name='org_users')
+    org_registrator = models.ForeignKey(Organization, verbose_name=u"Регистратор", blank=True, null=True, related_name='org_registrators')
+
     catafalque_text = models.TextField(u"Текст в наряде на а/к", blank=True, default='')
     naryad_text = models.TextField(u"Текст во всех нарядах", blank=True, default='')
 
