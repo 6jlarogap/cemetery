@@ -76,6 +76,10 @@
                 <td>Цена</td>
                 <td>Стоимость</td>
             </tr>
+            {{ positions_fs.errors }}
+            {{ payment_form.errors }}
+            {{ print_form.errors }}
+
             {{ positions_fs.management_form }}
             {% for form in positions_fs.forms %}
                 <tr>
