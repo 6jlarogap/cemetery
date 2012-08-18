@@ -387,7 +387,7 @@ def print_burial(request, pk):
         for f in positions_fs.forms:
             service = f.initial['service']
             if isinstance(f.initial['service'], basestring):
-                if f.initial['service'].is_digit():
+                if f.initial['service'].isdigit():
                     service = Service.objects.get(pk=f.initial['service'])
                 else:
                     try:
