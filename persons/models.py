@@ -83,6 +83,10 @@ class Person(models.Model):
         fio = u"%s %s" % (self.last_name, self.get_initials())
         return fio.strip()
 
+    def full_name_complete(self):
+        fio = u"%s %s %s" % (self.last_name, self.first_name, self.middle_name)
+        return fio.strip()
+
     class Meta:
         ordering = ['last_name', 'first_name', 'middle_name', ]
         verbose_name = (u'физ. лицо')

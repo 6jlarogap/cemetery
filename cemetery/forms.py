@@ -139,12 +139,18 @@ class PersonForm(forms.ModelForm):
             self.fields['instance'].widget = forms.HiddenInput()
 
     def full_person_data(self, p):
+        dates = ''
         if p.get_birth_date():
-            params = (p.full_name(), p.get_birth_date().strftime('%d.%m.%Y'), p.address or u'', self.get_person_status(p))
-            return u'%s (род. %s, адрес: %s), %s' % params
+            if p.death_date:
+                dates = '%s - %s' % (p.get_birth_date().strftime('%d.%m.%Y'), p.death_date.strftime('%d.%m.%Y'))
+            else:
+                dates = u'род. %s' % p.get_birth_date().strftime('%d.%m.%Y'),
         else:
-            params = (p.full_name(), p.address or u'', self.get_person_status(p))
-            return u'%s (адрес: %s), %s' % params
+            if p.death_date:
+                dates = u'ум. %s' % p.death_date.strftime('%d.%m.%Y'),
+
+        params = (p.full_name_complete(), dates, p.address or u'', self.get_person_status(p))
+        return u'%s (%sадрес: %s), Статус: %s' % params
 
     def get_person_status(self, p):
         if p.buried.all().count() > 0:
