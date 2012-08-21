@@ -206,7 +206,7 @@ def new_burial_person(request):
     """
     data = request.REQUEST.keys() and request.REQUEST or None
     person_form = PersonForm(data=data)
-    location_form = LocationForm(person=person_form.instance, data=request.POST.get('country') and request.POST or None)
+    location_form = LocationForm(person=person_form.instance, data=request.POST.get('country_name') and request.POST or None)
 
     try:
         dc = person_form.instance.deathcertificate

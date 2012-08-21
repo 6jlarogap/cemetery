@@ -61,6 +61,11 @@
             </p>
             <h2>Адрес</h2>
             <p>
+                {{ location_form.street.label_tag }}
+                {{ location_form.street_name }}
+                {{ location_form.street.errors }} {{ location_form.street_name.errors }}
+            </p>
+            <p>
                 {{ location_form.city.label_tag }}
                 {{ location_form.city_name }}
                 {{ location_form.city.errors }} {{ location_form.city_name.errors }}
@@ -74,11 +79,6 @@
                 {{ location_form.country.label_tag }}
                 {{ location_form.country_name }}
                 {{ location_form.country.errors }} {{ location_form.country_name.errors }}
-            </p>
-            <p>
-                {{ location_form.street.label_tag }}
-                {{ location_form.street_name }}
-                {{ location_form.street.errors }} {{ location_form.street_name.errors }}
             </p>
             <br/>
             <p class="narrow">

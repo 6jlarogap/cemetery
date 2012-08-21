@@ -13,6 +13,11 @@ class Country(models.Model):
     def __unicode__(self):
         return self.name[:16]
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.name = self.name.capitalize()
+        return super(Country, self).save(*args, **kwargs)
+
     class Meta:
         db_table = "common_geocountry"
         ordering = ['name']
@@ -31,6 +36,11 @@ class Region(models.Model):
     def __unicode__(self):
         return self.name[:24]
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.name = self.name.capitalize()
+        return super(Region, self).save(*args, **kwargs)
+
     class Meta:
         unique_together = (("country", "name"),)
         verbose_name = u'регион'
@@ -47,6 +57,11 @@ class City(models.Model):
 
     def __unicode__(self):
         return self.name[:24]
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.name = self.name.capitalize()
+        return super(City, self).save(*args, **kwargs)
 
     class Meta:
         unique_together = (("region", "name"),)
@@ -67,6 +82,11 @@ class Street(models.Model):
         unique_together = (("city", "name"),)
         verbose_name = (u'улица')
         verbose_name_plural = (u'улицы')
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.name = self.name.capitalize()
+        return super(Street, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
