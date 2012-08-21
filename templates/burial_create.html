@@ -49,7 +49,11 @@
                                 {{ burial_form.instance.place.responsible }}
                             </a>
                         {% else %}
-                            <a href="{% url new_burial_responsible %}" class="load link-responsible">Новый</a>
+                            {% if burial_form.instance.place.pk %}
+                                <a href="{% url new_burial_responsible %}" class="load link-responsible">Новый</a>
+                            {% else %}
+                                <a href="{% url new_burial_responsible %}" class="load link-responsible"></a>
+                            {% endif %}
                         {% endif %}
 
                         <h2>Усопший</h2>
