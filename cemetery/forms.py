@@ -149,6 +149,9 @@ class PersonForm(forms.ModelForm):
             if p.death_date:
                 dates = u'ум. %s' % p.death_date.strftime('%d.%m.%Y')
 
+        if dates:
+            dates = u'%s, ' % dates
+
         params = (p.full_name_complete(), dates, p.address or u'', self.get_person_status(p))
         return u'%s (%sадрес: %s), Статус: %s' % params
 
