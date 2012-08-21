@@ -38,4 +38,10 @@ def autocomplete_streets(request):
         streets = streets.filter(city__region__name__iexact=region)
     if city:
         streets = streets.filter(city__name__iexact=city)
-    return HttpResponse(simplejson.dumps([{'value': s.name, 'city': s.city.name, 'region': s.city.region.name, 'country': s.city.region.country.name} for s in streets]), mimetype='text/javascript')
+    return HttpResponse(simplejson.dumps([{
+        'value': '%s/%s/%s/%s' % (s.name, s.city.name, s.city.region.name, s.city.region.country.name),
+        'street': s.name,
+        'city': s.city.name,
+        'region': s.city.region.name,
+        'country': s.city.region.country.name
+    } for s in streets]), mimetype='text/javascript')

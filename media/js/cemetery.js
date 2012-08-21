@@ -117,6 +117,7 @@ function setup_address_autocompletes() {
             if (!$country.val()) {
                 $country.val(val.country);
             }
+            $(this)[0].$element.val(val.street);
         }
     });
 }
