@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.contrib.auth.models import User
 from django.db import models
 from django.forms import formsets
 from django.forms.models import model_to_dict
@@ -198,13 +199,19 @@ class PersonForm(forms.ModelForm):
         return person
 
 class LocationForm(forms.ModelForm):
-    country_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}))
-    region_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}))
-    city_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}))
-    street_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}), required=False)
+    country_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}), label=u"Страна")
+    region_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}), label=u"Область")
+    city_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}), label=u"Город")
+    street_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'autocomplete'}), required=False, label=u"Улица")
 
     class Meta:
         model = Location
+        widgets = {
+            'country': forms.HiddenInput(),
+            'region': forms.HiddenInput(),
+            'city': forms.HiddenInput(),
+            'street': forms.HiddenInput(),
+        }
 
     def __init__(self, person=None, *args, **kwargs):
         kwargs.setdefault('initial', {})
@@ -227,6 +234,18 @@ class LocationForm(forms.ModelForm):
                 kwargs['initial'].update({
                     'street_name': person.address.street.name,
                 })
+        if kwargs.get('instance', {}):
+            l = kwargs.get('instance', {})
+            street = l.street
+            city = l.city or (street and street.city)
+            region = l.region or (city and city.region)
+            country = l.country or (region and region.country)
+            kwargs.setdefault('initial', {}).update(
+                country_name=country and country.name,
+                region_name=region and region.name,
+                city_name=city and city.name,
+                street_name=street and street.name,
+            )
         if kwargs.get('data', {}):
             kwargs['data'] = kwargs['data'] and kwargs['data'].copy() or {}
             if kwargs['data'].get('country_name'):
@@ -242,6 +261,7 @@ class LocationForm(forms.ModelForm):
                         if kwargs.get('data', {}).get('street_name'):
                             kwargs['data']['street'] = Street.objects.get_or_create(name=d['street_name'], city=city)[0].pk
         super(LocationForm, self).__init__(*args, **kwargs)
+        self.fields.keyOrder = self.fields.keyOrder[-4:] + self.fields.keyOrder[:-4]
 
     def is_valid(self):
         result = super(LocationForm, self).is_valid()
@@ -412,4 +432,53 @@ class PrintOptionsForm(forms.Form):
         self.burial = kwargs.pop('burial')
         super(PrintOptionsForm, self).__init__(*args, **kwargs)
 
+class UserForm(forms.ModelForm):
+    username = forms.SlugField(max_length=255, label=u'Имя пользователя')
+    password1 = forms.CharField(widget=forms.PasswordInput, max_length=255, label=u'Пароль', required=False)
+    password2 = forms.CharField(widget=forms.PasswordInput, max_length=255, label=u'Пароль (еще раз)', required=False)
+
+    class Meta:
+        model = Person
+        fields = ['last_name', 'first_name', 'middle_name', 'phones', ]
+
+    def __init__(self, *args, **kwargs):
+        if kwargs.get('instance'):
+            person = kwargs.get('instance')
+            kwargs.setdefault('initial', {}).update(username=person.user and person.user.username)
+        super(UserForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        if self.cleaned_data['password1'] != self.cleaned_data['password2']:
+            raise forms.ValidationError(u'Пароли не совпадают')
+        return self.cleaned_data
+
+    def save(self, creator=None, *args, **kwargs):
+        person = super(UserForm, self).save(*args, **kwargs)
+        if not person.user:
+            person.user = User()
+        person.user.last_name = self.cleaned_data['last_name'].capitalize()
+        person.user.first_name = self.cleaned_data['first_name'].capitalize()
+        person.user.username = self.cleaned_data['username']
+        person.user.is_staff = True
+
+        if self.cleaned_data['password1']:
+            person.user.set_password(self.cleaned_data['password1'])
+
+        person.user.save()
+        person.user = person.user
+        person.creator = creator
+        person.save()
+        print person.user, person.user.pk
+        return person
+
+class CemeteryForm(forms.ModelForm):
+    class Meta:
+        model = Cemetery
+        fields = ['organization', 'name']
+
+    def save(self, location=None, *args, **kwargs):
+        cemetery = super(CemeteryForm, self).save(*args, **kwargs)
+        cemetery.location = location
+        cemetery.save()
+        return cemetery
 

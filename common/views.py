@@ -5,7 +5,9 @@ import urllib
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models.query_utils import Q
 from django.shortcuts import redirect, render, get_object_or_404
@@ -16,8 +18,8 @@ from django.http import HttpResponse
 
 import math
 
-from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person
-from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm
+from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery
+from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm
 from persons.models import DeathCertificate, PersonID
 from organizations.models import Organization, Agent
@@ -548,3 +550,42 @@ def autocomplete_person(request):
     if request.GET.get('dead'):
         persons = persons.filter(death_date__isnull=False)
     return HttpResponse(simplejson.dumps([{'value': p.full_human_name()} for p in persons]), mimetype='text/javascript')
+
+@user_passes_test(lambda u: u.is_superuser)
+@transaction.commit_on_success
+def management_user(request):
+    """
+    Страница управления пользователями (создание нового, показ существующих).
+    """
+
+    instance = None
+    if request.GET.get('pk'):
+        instance = get_object_or_404(Person, pk=request.GET.get('pk'))
+    form = UserForm(request.POST or None, instance=instance)
+
+    if request.method == 'POST' and form.is_valid():
+        person = form.save(creator=request.user)
+        return redirect(reverse('management_user') + '?pk=%s' % person.pk)
+    users = User.objects.all().order_by('last_name')
+    return render(request, 'management_user.html', {'form': form, "users": users})
+
+@user_passes_test(lambda u: u.is_superuser)
+@transaction.commit_on_success
+def management_cemetery(request):
+    """
+    Страница управления кладбищами.
+    """
+    cemetery = None
+    if request.GET.get('pk'):
+        cemetery = get_object_or_404(Cemetery, pk=request.GET.get('pk'))
+
+    cemetery_form = CemeteryForm(request.POST or None, instance=cemetery)
+    location_form = LocationForm(request.POST or None, instance=cemetery and cemetery.location)
+    if request.method == "POST" and cemetery_form.is_valid() and location_form.is_valid():
+        location = location_form.save()
+        cemetery = cemetery_form.save(location=location)
+        return redirect(reverse('management_cemetery') + '?pk=%s' % cemetery.pk)
+
+    cemeteries = Cemetery.objects.all()
+    return render(request, 'management_add_cemetery.html', {'cemetery_form': cemetery_form, "location_form": location_form, "cemeteries": cemeteries})
+

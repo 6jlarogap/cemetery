@@ -74,6 +74,11 @@ class CemeteryAdmin(admin.ModelAdmin):
     list_display = ['name', 'organization', 'ordering']
     list_editable = ['ordering']
 
+    def save_model(self, request, obj, form, change):
+        if not obj.creator:
+            obj.creator = request.user
+        obj.save()
+
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ['name']
 

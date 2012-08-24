@@ -7,7 +7,8 @@
     <form action="" method="post">
         <!--        <a href="/admin/common/organization/" target="_blank">Управление организациями(админка)</a>-->
         <table>
-            {{ form.as_table }}
+            {{ cemetery_form.as_table }}
+            {{ location_form.as_table }}
             <tfoot>
                 <tr>
                     <td align="right" colspan="2">
@@ -25,7 +26,7 @@
 </div>
 {% if cemeteries %}
 <br>
-<table width="100%">
+<table class="burials table table-striped table-bordered">
     <thead>
         <td width="40%">
             Наименование
@@ -47,10 +48,8 @@
         </td>
         <td width="30%" align="center">
 
-                        <button title="Редактировать" onclick="top.location.href='/management/cemetery/edit/{{ cemetery.uuid }}/';"><img src="/media/edit.png"></button>
+                        <button title="Редактировать" onclick="top.location.href='/management/cemetery/?pk={{ cemetery.pk }}';"><img src="/media/edit.png"></button>
                         &nbsp;
-                        <!--|&nbsp;-->
-                        <!--<button title="Удалить" onclick="if (confirm('Удалить кладбище?')){top.location.href='/management/cemetery/delete/{{ cemetery.uuid }}/';}"><img src="/media/delete.png"></button>-->
     </tr>
     {% endfor %}
 </table>

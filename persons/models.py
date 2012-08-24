@@ -20,6 +20,8 @@ class Person(models.Model):
     """
     Физическое лицо (клиент, сотрудник, кто угодно).
     """
+    user = models.ForeignKey('auth.User', editable=False, null=True)
+
     last_name = models.CharField(u"Фамилия", max_length=255)  # Фамилия.
     first_name = models.CharField(u"Имя", max_length=255, blank=True)  # Имя.
     middle_name = models.CharField(u"Отчество", max_length=255, blank=True)  # Отчество.
@@ -86,6 +88,14 @@ class Person(models.Model):
     def full_name_complete(self):
         fio = u"%s %s %s" % (self.last_name, self.first_name, self.middle_name)
         return fio.strip()
+
+    def save(self, *args, **kwargs):
+        if self.user:
+            if not self.last_name:
+                self.last_name = self.user.last_name
+            if not self.first_name:
+                self.first_name = self.user.first_name
+        super(Person, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['last_name', 'first_name', 'middle_name', ]

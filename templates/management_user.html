@@ -17,7 +17,7 @@
     </div>
     {% if users %}
         <br>
-        <table width="100%">
+        <table class="burials table table-striped table-bordered">
             <thead>
                 <td width="15%">Логин</td>
                 <td width="15%">Фамилия</td>
@@ -30,7 +30,7 @@
                 <td>{{ u.last_name }}</td>
                 <td>{{ u.is_active|yesno }}</td>
                 <td align="center">
-                    <button title="Редактировать" onclick="top.location.href='/management/user/edit/{{ u.userprofile.soul.uuid }}/';"><img src="/media/edit.png"></button>
+                    <button title="Редактировать" onclick="top.location.href='/management/user/?pk={{ u.person_set.all.0.pk }}';"><img src="/media/edit.png"></button>
                     &nbsp;
             </tr>
             {% endfor %}
