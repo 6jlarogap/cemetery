@@ -150,9 +150,9 @@ def new_burial(request):
     burial_form = BurialForm(data=request.POST or None, initial={'operation': p.default_operation})
 
     if request.POST and burial_form.is_valid():
-        burial_form.save()
+        b = burial_form.save()
         messages.success(request, u'Успешно сохранено')
-        return redirect('main_page')
+        return redirect('edit_burial', pk=b.pk)
 
     return render(request, 'burial_create.html', {
         'burial_form': burial_form,
