@@ -15,7 +15,6 @@ class Organization(models.Model):
     name = models.CharField(u"Краткое название организации", max_length=99)                      # Название краткое
     full_name = models.CharField(u"Полное название организации", max_length=255, null=True)      # Название полное
     ceo = models.ForeignKey(Person, verbose_name=u"Директор", null=True, blank=True, limit_choices_to={'death_date__isnull': True})
-    ceo_name = models.CharField(u"ФИО директора", max_length=255, null=True, blank=True, help_text=u'именительный падеж, напр. ИВАНОВ И.И.')
     ceo_name_who = models.CharField(u"ФИО директора р.п.", max_length=255, null=True, blank=True, help_text=u'родительный падеж, напр. ИВАНОВА И.И.')
     ceo_document = models.CharField(u"Документ директора", max_length=255, null=True, blank=True, help_text=u'на основании чего? например, УСТАВА')
     phones = models.TextField(u"Телефоны", blank=True, null=True)
@@ -28,6 +27,10 @@ class Organization(models.Model):
             return self.bankaccount_set.all()[0]
         except IndexError:
             return
+
+    @property
+    def ceo_name(self):
+        return self.ceo and self.ceo.full_human_name() or ''
 
     class Meta:
         ordering = ['name']

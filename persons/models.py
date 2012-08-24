@@ -36,9 +36,9 @@ class Person(models.Model):
         if self.last_name:
             result = self.last_name
             if self.first_name:
-                result += " %s." % self.first_name[0].upper()
+                result += " %s" % self.first_name
                 if self.middle_name:
-                    result += "%s." % self.middle_name[0].upper()
+                    result += "%s" % self.middle_name
         else:
             result = u'Неизвестный'
         return result
