@@ -106,8 +106,12 @@
                 source: function (typeahead, query) {
                     if (query.length < 2) { return }
                     var input = $(this)[0].$element;
+                    var dead = '';
+                    if (input.filter('#id_fio').length) {
+                        dead = '1';
+                    }
                     $.ajax({
-                        url: "{% url autocomplete_person %}?query=" + query,
+                        url: "{% url autocomplete_person %}?query=" + query + '&dead=' + dead,
                         dataType: 'json',
                         success: function(data) {
                             typeahead.process(data);

@@ -131,7 +131,7 @@ def main_page(request):
     result = {
         "form": form,
         "close": request.GET.get('close'),
-        "GET_PARAMS": urllib.urlencode(filter(lambda i: i[0] != 'page', request.GET.items())),
+        "GET_PARAMS": urllib.urlencode([(k, v.encode('utf-8')) for k,v in request.GET.items() if k != 'page']),
     }
 
     return object_list(request,
@@ -542,5 +542,7 @@ def view_place(request, pk):
 
 def autocomplete_person(request):
     query = request.GET['query']
-    persons = Person.objects.filter(last_name__istartswith=query, death_date__isnull=False)
+    persons = Person.objects.filter(last_name__istartswith=query)
+    if request.GET.get('dead'):
+        persons = persons.filter(death_date__isnull=False)
     return HttpResponse(simplejson.dumps([{'value': p.full_human_name()} for p in persons]), mimetype='text/javascript')
