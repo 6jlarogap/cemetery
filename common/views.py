@@ -240,7 +240,7 @@ def new_burial_customer(request):
     """
     Добавление заказчика
     """
-    person_data = request.REQUEST.get('instance') and dict(request.REQUEST).copy() or None
+    person_data = (request.REQUEST.get('instance') or request.REQUEST.get('last_name')) and dict(request.REQUEST).copy() or None
     person_form = PersonForm(data=person_data or None, initial=person_data)
     location_form = LocationForm(person=person_form.instance, initial=person_data, data=request.POST.copy() or None)
 
