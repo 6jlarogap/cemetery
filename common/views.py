@@ -272,7 +272,7 @@ def new_burial_customer(request):
             if customer_form.cleaned_data['agent_director'] or doverennost_form.is_valid():
                 org = customer_form.cleaned_data['organization']
                 agent_person = customer_form.get_agent()
-                agent = Agent.objects.get(organization=org, person=agent_person)
+                agent, _created = Agent.objects.get_or_create(organization=org, person=agent_person)
                 if doverennost_form.is_valid():
                     doverennost = doverennost_form.save(agent=agent)
                 else:
