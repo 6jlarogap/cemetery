@@ -122,6 +122,8 @@ def main_page(request):
 
         if form.cleaned_data['records_order_by']:
             burials = burials.order_by(form.cleaned_data['records_order_by'])
+        if form.cleaned_data['per_page']:
+            paginate_by = int(form.cleaned_data['per_page'])
     else:
         burials = Burial.objects.none()
 
@@ -538,5 +540,5 @@ def view_place(request, pk):
 
 def autocomplete_person(request):
     query = request.GET['query']
-    persons = Person.objects.filter(last_name__istartswith=query)
+    persons = Person.objects.filter(last_name__istartswith=query, death_date__isnull=False)
     return HttpResponse(simplejson.dumps([{'value': p.full_human_name()} for p in persons]), mimetype='text/javascript')
