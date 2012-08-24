@@ -41,7 +41,7 @@ class Place(models.Model):
     cemetery = models.ForeignKey(Cemetery, verbose_name=u"Кладбище")  # Связь с кладбищем.
     area = models.CharField(u"Участок", max_length=255, blank=True, null=True)  # Участок.
     row = models.CharField(u"Ряд", max_length=255, blank=True, null=True)  # Ряд.
-    seat = models.CharField(u"Место", max_length=255)  # Место.
+    seat = models.CharField(u"Место", max_length=255, blank=True, null=True)  # Место.
     gps_x = models.FloatField(u"Координата X", blank=True, null=True, editable=False)  # GPS X-ось.
     gps_y = models.FloatField(u"Координата Y", blank=True, null=True, editable=False)  # GPS Y-ось.
 

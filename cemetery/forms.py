@@ -44,13 +44,16 @@ class PlaceForm(forms.ModelForm):
         filter_fields = ['cemetery', 'row', 'area', 'seat']
         data = dict(filter(lambda i: i[0] in filter_fields, self.cleaned_data.items()))
         try:
-            return Place.objects.get(**data)
+            if self.cleaned_data['seat']:
+                return Place.objects.get(**data)
         except Place.DoesNotExist:
-            place = super(PlaceForm, self).save(commit=False)
-            place.creator = user
-            if commit:
-                place.save()
-            return place
+            pass
+
+        place = super(PlaceForm, self).save(commit=False)
+        place.creator = user
+        if commit:
+            place.save()
+        return place
 
 class BurialForm(forms.ModelForm):
     responsible = forms.ModelChoiceField(queryset=Person.objects.all(), widget=forms.HiddenInput, required=False)
@@ -82,6 +85,10 @@ class BurialForm(forms.ModelForm):
             burial.place.save()
         if commit:
             burial.save()
+
+        if burial.place and not burial.place.seat:
+            burial.place.seat = unicode(burial.pk)
+            burial.place.save()
 
         return burial
 
