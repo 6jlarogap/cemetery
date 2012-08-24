@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from django.contrib import messages
+import urllib
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -130,6 +131,7 @@ def main_page(request):
     result = {
         "form": form,
         "close": request.GET.get('close'),
+        "GET_PARAMS": urllib.urlencode(filter(lambda i: i[0] != 'page', request.GET.items())),
     }
 
     return object_list(request,

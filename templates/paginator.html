@@ -1,15 +1,15 @@
 <div class="pagination">
     <ul>
         {% if page_obj.has_previous %}
-            <li><a href="?page={{ page_obj.previous_page_number }}">предыдущая</a></li>
+            <li><a href="?{{ GET_PARAMS }}&page={{ page_obj.previous_page_number }}">предыдущая</a></li>
         {% endif %}
         {% for p in paginator.page_range %}
             <li{% if p == page_obj.number %} class="active"{% endif %}>
-                <a href="?page={{ p }}">{{ p }}</a>
+                <a href="?{{ GET_PARAMS }}&page={{ p }}">{{ p }}</a>
             </li>
         {% endfor %}
         {% if page_obj.has_next %}
-            <li><a href="?page={{ page_obj.next_page_number }}">следующая</a></li>
+            <li><a href="?{{ GET_PARAMS }}&page={{ page_obj.next_page_number }}">следующая</a></li>
         {% endif %}
     </ul>
 </div>
