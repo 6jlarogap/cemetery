@@ -107,13 +107,13 @@
                 <h2>Последние введенные</h2>
                 <table class="table table-striped table-bordered">
                     <thead>
-                        <th>№ в кн</th>
+                        <th>№ в книге</th>
                         <th>ФИО</th>
-                        <th>Дата захор</th>
-                        <th>Уч</th>
+                        <th>Дата захоронения</th>
+                        <th>Участок</th>
                         <th>Ряд</th>
-                        <th>Мог</th>
-                        <th>Кладб</th>
+                        <th>Могила</th>
+                        <th>Кладбище</th>
                         <th>Услуга</th>
                         <th>Заказчик</th>
                         <th>Опции</th>
@@ -135,7 +135,7 @@
                             <td>
                                 {% if b.client_organization %}
                                     ЮЛ {{ b.client_organization }}<br/>
-                                    {% if b.agent %}{{ b.agent }}{% else %}{{ b.client_organization.ceo|default:"" }}{% endif %}
+                                    {% if b.agent %}{{ b.agent.person }}{% else %}{{ b.client_organization.ceo|default:"" }}{% endif %}
                                 {% else %}
                                     {% if b.client_person %}
                                         ФЛ {{ b.client_person }}
@@ -148,9 +148,10 @@
                                     <small><a title="файл прикреплен"><i class="icon icon-file"></i></a></small>
                                 {% endif %}
                                 {% if user|in_group:"edit_burial"  %}
-                                    <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon-edit"></i> редактировать</a>
+                                    <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon icon-edit"></i></a>
                                 {% endif %}
-                                <a title="к могиле" href="#"><i class="icon icon-map-marker"></i> к могиле</a>
+                                <a title="карточка" href="{% url view_burial b.pk %}"><i class="icon icon-list"></i></a>
+                                <a title="к могиле" href="{% url view_place b.place.pk %}"><i class="icon icon-map-marker"></i></a>
                             </td>
                         </tr>
                     {% endfor %}
