@@ -245,13 +245,16 @@ def new_burial_customer(request):
     """
     person_data = (request.REQUEST.get('instance') or request.REQUEST.get('last_name')) and dict(request.REQUEST).copy() or None
     person_form = PersonForm(data=person_data or None, initial=person_data)
-    location_form = LocationForm(person=person_form.instance, initial=person_data, data=request.POST.copy() or None)
+
+    location_data = request.POST.get('country_name') and request.POST.copy() or None
+    location_form = LocationForm(person=person_form.instance, initial=person_data, data=location_data)
 
     try:
         person_id = person_form.instance and person_form.instance.personid or None
     except PersonID.DoesNotExist:
         person_id = None
-    customer_id_form = CustomerIDForm(data=request.POST.copy() or None, prefix='customer_id', instance=person_id)
+    customer_id_data = request.POST.get('country_name') and request.POST.copy() or None
+    customer_id_form = CustomerIDForm(data=customer_id_data, prefix='customer_id', instance=person_id)
 
     org_data = request.REQUEST.get('organization') and request.REQUEST.copy() or None
     customer_form = CustomerForm(data=request.POST.copy() or None, prefix='customer', initial=org_data)
@@ -261,9 +264,7 @@ def new_burial_customer(request):
 
     if request.POST and customer_form.is_valid():
         if customer_form.is_person():
-            location_form = LocationForm(person=person_form.instance, initial=person_data, data=request.POST.copy() or None)
-            customer_id_form = CustomerIDForm(data=request.POST.copy() or None, prefix='customer_id', instance=person_id)
-            if request.POST.get('country') and person_form.is_valid() and customer_id_form.is_valid():
+            if request.POST.get('country_name') and person_form.is_valid() and customer_id_form.is_valid():
                 if location_form.is_valid() and location_form.cleaned_data:
                     location = location_form.save()
                 else:
