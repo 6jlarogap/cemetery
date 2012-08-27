@@ -564,6 +564,20 @@ def management_user(request):
     instance = None
     if request.GET.get('pk'):
         instance = get_object_or_404(Person, pk=request.GET.get('pk'))
+    elif request.GET.get('user_pk'):
+        user_pk = request.GET.get('user_pk')
+        user = User.objects.get(pk=user_pk)
+        instance = None
+        try:
+            instance = Person.objects.get(user__pk=user_pk)
+        except Person.DoesNotExist:
+            if user.last_name:
+                try:
+                    instance = Person.objects.get(first_name=user.first_name, last_name=user.last_name)
+                except Person.DoesNotExist:
+                    pass
+            if not instance:
+                instance = Person.objects.create(first_name=user.first_name, last_name=user.last_name, user=user)
     form = UserForm(request.POST or None, instance=instance)
 
     if request.method == 'POST' and form.is_valid():

@@ -3,25 +3,14 @@
 {% block title %}Управление кладбищами{% endblock %}
 {% block content %}<h1>Управление кладбищами</h1>
 <h3>Кладбища можно создавать и редактировать.</h3>
-<div id="forms">
+<div id="forms" class="form-horizontal">
     <form action="" method="post">
-        <!--        <a href="/admin/common/organization/" target="_blank">Управление организациями(админка)</a>-->
-        <table>
-            {{ cemetery_form.as_table }}
-            {{ location_form.as_table }}
-            <tfoot>
-                <tr>
-                    <td align="right" colspan="2">
-                        <input type="submit" value="Создать" />
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" colspan="2">
-                        <input type="reset" value="Очистить" />
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+        {{ cemetery_form.as_p }}
+        {% include "burial_location_form.html" %}
+        <h2 class="buttons">
+            <button class="btn btn-primary btn-large">Создать</button>
+            <input type="reset" class="btn" value="Очистить" />
+        </h2>
     </form>
 </div>
 {% if cemeteries %}
@@ -44,12 +33,11 @@
             {{ cemetery.name }}
         </td>
         <td width="30%">
-            {{ cemetery.location }}
+            {{ cemetery.location|default:"" }}
         </td>
         <td width="30%" align="center">
-
-                        <button title="Редактировать" onclick="top.location.href='/management/cemetery/?pk={{ cemetery.pk }}';"><img src="/media/edit.png"></button>
-                        &nbsp;
+            <a title="редактировать" href="/management/cemetery/?pk={{ cemetery.pk }}"><i class="icon icon-edit"></i></a>
+        </td>
     </tr>
     {% endfor %}
 </table>

@@ -440,6 +440,9 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = Person
         fields = ['last_name', 'first_name', 'middle_name', 'phones', ]
+        widgets = {
+            'phones': forms.TextInput()
+        }
 
     def __init__(self, *args, **kwargs):
         if kwargs.get('instance'):
