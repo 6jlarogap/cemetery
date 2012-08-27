@@ -310,7 +310,6 @@ class CustomerForm(forms.Form):
             self.data['customer-agent_person'] = None
 
         if not self.is_person():
-            print 'self.data', self.data
             self.fields['organization'].required = True
             self.fields['agent_person'].queryset = qs
 

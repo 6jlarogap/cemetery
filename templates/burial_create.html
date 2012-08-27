@@ -71,15 +71,16 @@
                         {{ burial_form.client_organization }}
                         {{ burial_form.agent }}
                         {{ burial_form.doverennost }}
-                        {% if burial_form.instance.client_person.pk %}
-                            <a href="{% url new_burial_customer %}?instance={{ burial_form.instance.client_person.pk }}&customer_type=0" class="load link-customer">
-                                ФЛ {{ burial_form.instance.client_person }}
-                            </a>
-                        {% endif %}
                         {% if burial_form.instance.client_organization.pk %}
                             <a href="{% url new_burial_customer %}?customer_type=1&agent_person={{ burial_form.instance.agent.person.pk }}&agent_director={% if burial_form.instance.agent %}{% else %}1{% endif %}&organization={{ burial_form.instance.client_organization.pk }}" class="load link-customer">
                                 ЮЛ {{ burial_form.instance.client_organization }}
                             </a>
+                        {% else %}
+                            {% if burial_form.instance.client_person.pk %}
+                                <a href="{% url new_burial_customer %}?instance={{ burial_form.instance.client_person.pk }}&customer_type=0" class="load link-customer">
+                                    ФЛ {{ burial_form.instance.client_person }}
+                                </a>
+                            {% endif %}
                         {% endif %}
                         {% if not burial_form.instance.client_person.pk and not burial_form.instance.client_organization.pk %}
                             <a href="{% url new_burial_customer %}" class="load link-customer">Новый</a>
