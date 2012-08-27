@@ -8,8 +8,5 @@ env.hosts = ['youmemory.org']
 
 def deploy():
     local('git push')
-    with cd('kaluga'):
-        run('sudo -u www-data git pull')
-        run('sudo -u www-data ./manage.py migrate')
-        run('sudo /etc/init.d/apache2 reload')
-
+    with cd('/home/www-data/django/kaluga2/'):
+        run('sudo -u www-data git pull && sudo /etc/init.d/apache2 reload')

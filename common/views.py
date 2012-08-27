@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import datetime
-from django.contrib import messages
 import urllib
 
 from django.contrib.auth import login, logout
@@ -9,12 +8,14 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import transaction
+from django.db.models import Count
 from django.db.models.query_utils import Q
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.views.generic.list_detail import object_list
 from django.utils import simplejson
 from django.http import HttpResponse
+from django.contrib import messages
 
 import math
 
@@ -548,7 +549,8 @@ def autocomplete_person(request):
     query = request.GET['query']
     persons = Person.objects.filter(last_name__istartswith=query)
     if request.GET.get('dead'):
-        persons = persons.filter(death_date__isnull=False)
+        # persons = persons.filter(death_date__isnull=False)
+        persons = persons.annotate(dead=Count('buried')).filter(dead__gt=0)
     return HttpResponse(simplejson.dumps([{'value': p.full_human_name()} for p in persons]), mimetype='text/javascript')
 
 @user_passes_test(lambda u: u.is_superuser)
