@@ -95,6 +95,9 @@ class Person(models.Model):
                 self.last_name = self.user.last_name
             if not self.first_name:
                 self.first_name = self.user.first_name
+        self.first_name = self.first_name.capitalize()
+        self.last_name = self.last_name.capitalize()
+        self.middle_name = self.middle_name.capitalize()
         super(Person, self).save(*args, **kwargs)
 
     class Meta:
