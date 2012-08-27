@@ -21,7 +21,23 @@ class LogEntryAdmin(admin.ModelAdmin):
     object_link.allow_tags = True
 
 class PersonAdmin(admin.ModelAdmin):
+    list_display = ['last_name', 'first_name', 'middle_name', 'get_unclear_birth_date', 'get_death_date', 'get_address']
+    search_fields = ['last_name', 'first_name', 'middle_name']
     lookup_allowed = lambda *args: True
+
+    def get_unclear_birth_date(self, obj):
+        d = obj.unclear_birth_date
+        return d and d.strftime('%d.%m.%Y') or ''
+    get_unclear_birth_date.short_description = u'Дата рождения'
+
+    def get_death_date(self, obj):
+        d = obj.death_date
+        return d and d.strftime('%d.%m.%Y') or ''
+    get_death_date.short_description = u'Дата смерти'
+
+    def get_address(self, obj):
+        return obj.address or ''
+    get_address.short_description = u'Адрес'
 
 class OrganizationAgentForm(forms.ModelForm):
     last_name = forms.CharField(label=u'Фамилия')
@@ -62,12 +78,14 @@ class OrganizationAgentInline(admin.StackedInline):
     fk_name = 'organization'
     model = Agent
     form = OrganizationAgentForm
+    can_delete = False
 
 class OrganizationAccountInline(admin.StackedInline):
     model = BankAccount
 
 class OrganizationAdmin(admin.ModelAdmin):
     inlines = [OrganizationAccountInline, OrganizationAgentInline, ]
+    raw_id_fields = ['ceo', ]
 
 class CemeteryAdmin(admin.ModelAdmin):
     raw_id_fields = ['organization', 'location', ]
