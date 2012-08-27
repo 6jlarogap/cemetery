@@ -119,7 +119,7 @@ class Burial(models.Model):
     account_number = models.CharField(u"Номер в книге учета", max_length=255, null=True, blank=True)
     operation = models.ForeignKey(Operation, verbose_name=u"Операция")
     date_plan = models.DateField(u"Планируемая дата", blank=True, null=True)
-    date_fact = models.DateField(u"Фактическая дата исполнения", blank=True, null=True)
+    date_fact = models.DateField(u"Фактическая дата исполнения", null=True)
     time_fact = models.TimeField(u"Время исполнения", blank=True, null=True)
 
     place = models.ForeignKey(Place)

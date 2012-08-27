@@ -150,7 +150,13 @@ def new_burial(request):
     Добавление захоронения
     """
     p, _tmp = UserProfile.objects.get_or_create(user=request.user)
-    burial_form = BurialForm(data=request.POST or None, initial={'operation': p.default_operation})
+    date_fact = datetime.date.today() + datetime.timedelta(1)
+    if date_fact.weekday() == 6:
+        date_fact += datetime.timedelta(1)
+    burial_form = BurialForm(data=request.POST or None, initial={
+        'operation': p.default_operation,
+        'date_fact': date_fact,
+    })
 
     if request.POST and burial_form.is_valid():
         b = burial_form.save()
