@@ -551,7 +551,8 @@ def autocomplete_person(request):
     if request.GET.get('dead'):
         # persons = persons.filter(death_date__isnull=False)
         persons = persons.annotate(dead=Count('buried')).filter(dead__gt=0)
-    return HttpResponse(simplejson.dumps([{'value': p.full_human_name()} for p in persons]), mimetype='text/javascript')
+    person_names = list(set([p.full_human_name() for p in persons[:100]]))
+    return HttpResponse(simplejson.dumps([{'value': pn} for pn in person_names]), mimetype='text/javascript')
 
 @user_passes_test(lambda u: u.is_superuser)
 @transaction.commit_on_success
