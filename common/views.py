@@ -313,6 +313,7 @@ def new_burial_responsible(request):
     """
     data = request.REQUEST.keys() and dict(request.REQUEST.copy()) or None
     person_form = PersonForm(data=data)
+    responsible_customer = request.REQUEST.get('responsible_customer')
     loc_data = request.POST and request.POST.get('country_name') and request.POST.copy()
     location_form = LocationForm(person=person_form.instance, data=loc_data or None)
 
@@ -324,11 +325,13 @@ def new_burial_responsible(request):
         person = person_form.save(location=location)
         return render(request, 'burial_create_responsible_ok.html', {
             'person': person,
+            'responsible_customer': responsible_customer,
         })
 
     return render(request, 'burial_create_responsible.html', {
         'person_form': person_form,
         'location_form': location_form,
+        'responsible_customer': responsible_customer,
     })
 
 @login_required
