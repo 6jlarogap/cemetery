@@ -31,59 +31,7 @@
                 {{ person_form.death_date }}
                 {{ person_form.death_date.errors }}
             </p>
-            <h2>Адрес</h2>
-            <p>
-                {{ location_form.street.label_tag }}
-                {{ location_form.street_name }}
-                {{ location_form.street.errors }} {{ location_form.street_name.errors }}
-            </p>
-            <p>
-                {{ location_form.city.label_tag }}
-                {{ location_form.city_name }}
-                {{ location_form.city.errors }} {{ location_form.city_name.errors }}
-            </p>
-            <p>
-                {{ location_form.region.label_tag }}
-                {{ location_form.region_name }}
-                {{ location_form.region.errors }} {{ location_form.region_name.errors }}
-            </p>
-            <p>
-                {{ location_form.country.label_tag }}
-                {{ location_form.country_name }}
-                {{ location_form.country.errors }} {{ location_form.country_name.errors }}
-            </p>
-            <br/>
-            <p class="narrow">
-                {{ location_form.post_index.label_tag }}
-                {{ location_form.post_index }}
-                {{ location_form.post_index.errors }}
-            </p>
-            <p class="narrow">
-                {{ location_form.house.label_tag }}
-                {{ location_form.house }}
-                {{ location_form.house.errors }}
-            </p>
-            <p class="narrow">
-                {{ location_form.block.label_tag }}
-                {{ location_form.block }}
-                {{ location_form.block.errors }}
-            </p>
-            <p class="narrow">
-                {{ location_form.building.label_tag }}
-                {{ location_form.building }}
-                {{ location_form.building.errors }}
-            </p>
-            <p class="narrow">
-                {{ location_form.flat.label_tag }}
-                {{ location_form.flat }}
-                {{ location_form.flat.errors }}
-            </p>
-            <br/>
-            <p class="wide">
-                {{ location_form.info.label_tag }}
-                {{ location_form.info }}
-                {{ location_form.info.errors }}
-            </p>
+            {% include "burial_location_form.html" %}
             <h2>Свидетельство о смерти</h2>
             <p class="narrow">
                 {{ dc_form.series.label_tag }}
