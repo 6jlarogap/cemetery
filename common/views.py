@@ -263,8 +263,7 @@ def new_burial_customer(request):
         if customer_form.is_person():
             location_form = LocationForm(person=person_form.instance, initial=person_data, data=request.POST.copy() or None)
             customer_id_form = CustomerIDForm(data=request.POST.copy() or None, prefix='customer_id', instance=person_id)
-
-            if person_form.is_valid() and customer_id_form.is_valid():
+            if request.POST.get('country') and person_form.is_valid() and customer_id_form.is_valid():
                 if location_form.is_valid() and location_form.cleaned_data:
                     location = location_form.save()
                 else:
