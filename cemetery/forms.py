@@ -95,7 +95,7 @@ class BurialForm(forms.ModelForm):
             burial.save()
 
         if burial.place and not burial.place.seat:
-            burial.place.seat = unicode(burial.pk)
+            burial.place.seat = unicode(burial.account_number or burial.pk)
             burial.place.save()
 
         return burial
