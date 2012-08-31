@@ -48,6 +48,16 @@ class PlaceForm(forms.ModelForm):
     class Meta:
         model = Place
 
+    def clean_account_number(self):
+        a = self.cleaned_data['seat']
+        if not a:
+            return a
+        if len(a) != 8:
+            raise forms.ValidationError(u"Необходимо ровно 8 цифр")
+        if not a.isdigit():
+            raise forms.ValidationError(u"Допустимы только цифры")
+        return a
+
     def save(self, user=None, commit=True):
         filter_fields = ['cemetery', 'row', 'area', 'seat']
         data = dict(filter(lambda i: i[0] in filter_fields, self.cleaned_data.items()))
@@ -77,6 +87,26 @@ class BurialForm(forms.ModelForm):
             'doverennost': forms.HiddenInput(),
             'agent': forms.HiddenInput(),
         }
+
+    def clean_account_number(self):
+        a = self.cleaned_data['account_number']
+        if not a:
+            return a
+        if len(a) != 8:
+            raise forms.ValidationError(u"Необходимо ровно 8 цифр")
+        if not a.isdigit():
+            raise forms.ValidationError(u"Допустимы только цифры")
+
+        place = Place.objects.get(pk=self.data['place'])
+        burials = Burial.objects.all().filter(place__cemetery=place.cemetery)
+        if self.instance:
+            burials = burials.exclude(pk=self.instance.pk)
+        try:
+            burials.filter(account_number=a)[0]
+        except IndexError:
+            return a
+        else:
+            raise forms.ValidationError(u"Этот номер уже используется")
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance')
