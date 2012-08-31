@@ -24,11 +24,11 @@
             </thead>
     	{% for b in object_list %}
 	    <tr>
-	        <td>{{ b.account_book_n }}</td>
+	        <td>{{ b.account_number }}</td>
 	        <td>
                 <b> {{ b.person.last_name }}</b>
 	            {{ b.person.first_name }}
-	            {{ b.person.patronymic }}
+	            {{ b.person.middle_name }}
 	        </td>
 	        <td>
                 {{ b.person.birth_date|date:"d.m.Y"|default:"н.д." }} &ndash; {{ b.person.death_date|date:"d.m.Y"|default:"н.д." }}<br/>
@@ -42,29 +42,25 @@
                     {{ b.person.deathcertificate.zags|default:"" }}
                 {% endif %}
             </td>
-            <td>{{ b.date_fact|date:"H:i" }}</td>
-            <td>{{ b.product.place.area }}</td>
-	        <td>{{ b.product.place.row }}</td>
-	        <td>{{ b.product.place.seat }}</td>
-	        <td>{{ b.product.place.cemetery.name }}</td>
-	        <td>{{ b.product.place.rooms_occupied|default:1 }}/{{ b.product.place.rooms_free }}</td>
-            <td>{{ b.person.location|default:"неизвестен" }}</td>
-            {% if b.organization %}
-                <td>
-                    {{ b.organization }}<br/>
-                    {% if b.responsible_agent %}{{ b.responsible_agent.person }}{% else %}{{ b.ceo_name }}{% endif %}
-                </td>
-            {% else %}
-                <td>
-                    {% if b.customer.person.filled %}
-                        {{ b.customer.person.last_name }}
-                        {{ b.customer.person.first_name }}
-                        {{ b.customer.person.patronymic }}
+            <td>{{ b.time_fact|date:"H:i" }}</td>
+            <td>{{ b.place.area }}</td>
+	        <td>{{ b.place.row }}</td>
+	        <td>{{ b.place.seat }}</td>
+	        <td>{{ b.place.cemetery.name }}</td>
+	        <td>{{ b.place.rooms_occupied|default:1 }}/{{ b.place.rooms_free }}</td>
+            <td>{{ b.person.address|default:"неизвестен" }}</td>
+            <td>
+                {% if b.client_organization %}
+                    ЮЛ {{ b.client_organization }}<br/>
+                    {% if b.agent %}{{ b.agent.person }}{% else %}{{ b.client_organization.ceo|default:"" }}{% endif %}
+                {% else %}
+                    {% if b.client_person %}
+                        ФЛ {{ b.client_person }}
+                    {% else %}
                     {% endif %}
-                    {% if b.customer.person.location.country %}{{ b.customer.person.location }}{% endif %}
-                 </td>
- 	        {% endif %}
-            </tr>
+                {% endif %}
+            </td>
+        </tr>
             {% endfor %}
         </table>
     </body>

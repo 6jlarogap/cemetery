@@ -140,6 +140,11 @@ def main_page(request):
         "GET_PARAMS": urllib.urlencode([(k, v.encode('utf-8')) for k,v in request.GET.items() if k != 'page']),
     }
 
+    if request.REQUEST.get('print'):
+        return render(request, 'burials_print.html', {
+            'object_list': burials,
+        })
+
     return object_list(request,
         template_name='burials.html',
         queryset=burials,
