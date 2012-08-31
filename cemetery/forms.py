@@ -23,7 +23,7 @@ class SearchForm(forms.Form):
     )
 
     fio = forms.CharField(required=False, max_length=100, label="ФИО")
-    customer_type = forms.ChoiceField(choices=CUSTOMER_TYPES, label=u"Тип заказчика")
+    customer_type = forms.ChoiceField(required=False, choices=CUSTOMER_TYPES, label=u"Тип заказчика")
     birth_date_from = forms.DateField(required=False, label="Дата рождения с")
     birth_date_to = forms.DateField(required=False, label="по")
     death_date_from = forms.DateField(required=False, label="Дата смерти с")

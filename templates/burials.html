@@ -119,13 +119,10 @@
                     });
                 },
                 onselect: function(val) {
-                    var $region = $(this)[0].$element.parents('form').find('input[name$=region_name]');
-                    if (!$region.val()) {
-                        $region.val(val.region);
-                    }
-                    var $country = $(this)[0].$element.parents('form').find('input[name$=country_name]');
-                    if (!$country.val()) {
-                        $country.val(val.country);
+                    var $input = $(this)[0].$element;
+                    var last_name = val.value.split(' ')[0];
+                    if (!$input.is('#id_fio')) {
+                        setTimeout(function() { $input.val(last_name); }, 10);
                     }
                 }
             });
