@@ -111,6 +111,10 @@ class DocumentSource(models.Model):
     def __unicode__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.upper()
+        super(DocumentSource, self).save(*args, **kwargs)
+
 class PersonID(models.Model):
     person = models.OneToOneField(Person)
     id_type = models.ForeignKey(IDDocumentType, verbose_name=u"Тип документа*")
@@ -118,6 +122,10 @@ class PersonID(models.Model):
     number = models.CharField(u"Номер*", max_length=255)
     source = models.ForeignKey(DocumentSource, verbose_name=u"Кем выдан", blank=True, null=True)
     date = models.DateField(u"Дата выдачи", blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        self.series = self.series.upper()
+        super(PersonID, self).save(*args, **kwargs)
 
 class ZAGS(models.Model):
     name = models.CharField(u"Название", max_length=255)
@@ -148,4 +156,8 @@ class DeathCertificate(models.Model):
     class Meta:
         verbose_name = (u'свидетельство о смерти')
         verbose_name_plural = (u'свидетельства о смерти')
+
+    def save(self, *args, **kwargs):
+        self.series = self.series.upper()
+        super(DeathCertificate, self).save(*args, **kwargs)
 
