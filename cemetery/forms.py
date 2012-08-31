@@ -16,7 +16,14 @@ class SearchForm(forms.Form):
     """
     Форма поиска на главной странице.
     """
+    CUSTOMER_TYPES = (
+        ('', u"Все"),
+        ('client_person', u"ФЛ"),
+        ('client_organization', u"ЮЛ"),
+    )
+
     fio = forms.CharField(required=False, max_length=100, label="ФИО")
+    customer_type = forms.ChoiceField(choices=CUSTOMER_TYPES, label=u"Тип заказчика")
     birth_date_from = forms.DateField(required=False, label="Дата рождения с")
     birth_date_to = forms.DateField(required=False, label="по")
     death_date_from = forms.DateField(required=False, label="Дата смерти с")

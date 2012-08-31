@@ -70,6 +70,9 @@ def main_page(request):
     if form.data and form.is_valid():
         if form.cleaned_data['operation']:
             burials = burials.filter(operation=form.cleaned_data['operation'])
+        if form.cleaned_data['customer_type']:
+            ct = form.cleaned_data['customer_type']
+            burials = burials.filter(**{ct + '__isnull': False})
         if form.cleaned_data['fio']:
             fio = [f.strip('.') for f in form.cleaned_data['fio'].split(' ')]
             q = Q()
