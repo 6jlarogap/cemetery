@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse
 from django import forms
 
 from cemetery.models import *
+from cemetery.forms import *
+from django.forms.models import modelformset_factory
 from organizations.models import BankAccount
 from persons.models import ZAGS, IDDocumentType
 
@@ -86,6 +88,9 @@ class OrganizationAccountInline(admin.StackedInline):
 class OrganizationAdmin(admin.ModelAdmin):
     inlines = [OrganizationAccountInline, OrganizationAgentInline, ]
     raw_id_fields = ['ceo', ]
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 class CemeteryAdmin(admin.ModelAdmin):
     raw_id_fields = ['organization', 'location', ]

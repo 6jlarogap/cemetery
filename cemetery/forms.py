@@ -483,7 +483,10 @@ class UserForm(forms.ModelForm):
 class CemeteryForm(forms.ModelForm):
     class Meta:
         model = Cemetery
-        fields = ['organization', 'name']
+        fields = ['organization', 'name', 'phones']
+        widgets = {
+            'phones': forms.TextInput(),
+        }
 
     def save(self, location=None, *args, **kwargs):
         cemetery = super(CemeteryForm, self).save(*args, **kwargs)

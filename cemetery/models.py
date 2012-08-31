@@ -21,6 +21,7 @@ class Cemetery(models.Model):
     creator = models.ForeignKey(User, editable=False)
     date_of_creation = models.DateTimeField(auto_now_add=True)
     ordering = models.PositiveIntegerField(blank=True, default=1, verbose_name=u'Сортировка')
+    phones = models.TextField(u"Телефоны", blank=True, null=True)
 
     class Meta:
         ordering = ['ordering', 'name']
