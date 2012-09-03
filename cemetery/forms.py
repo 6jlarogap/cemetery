@@ -23,7 +23,6 @@ class SearchForm(forms.Form):
     )
 
     fio = forms.CharField(required=False, max_length=100, label="ФИО")
-    customer_type = forms.ChoiceField(required=False, choices=CUSTOMER_TYPES, label=u"Тип зак.")
     birth_date_from = forms.DateField(required=False, label="Дата рождения с")
     birth_date_to = forms.DateField(required=False, label="по")
     death_date_from = forms.DateField(required=False, label="Дата смерти с")
@@ -33,6 +32,7 @@ class SearchForm(forms.Form):
     account_number_from = forms.CharField(required=False, max_length=16, label="Номер от")
     account_number_to = forms.CharField(required=False, max_length=16, label="до")
     customer = forms.CharField(required=False, max_length=30, label="Заказчик")
+    customer_type = forms.ChoiceField(required=False, choices=CUSTOMER_TYPES, label=u"Тип зак.")
     responsible = forms.CharField(required=False, max_length=30, label="Ответственный")
     operation = forms.ModelChoiceField(required=False, queryset=Operation.objects.all(), label="Услуга", empty_label="Все")
     cemetery = forms.ModelChoiceField(required=False, queryset=Cemetery.objects.all(), empty_label="Все", label="Кладбища")
