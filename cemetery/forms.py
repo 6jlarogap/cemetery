@@ -162,7 +162,7 @@ class PersonForm(forms.ModelForm):
         if not any(self.data.values()) or self.data.keys() == ['instance']:
             if not self.initial.keys() == ['death_date']:
                 self.data = self.initial.copy()
-        if self.data and self.data.get('last_name'):
+        if self.data and self.data.get('last_name') or self.data.get('instance'):
             person_kwargs = {
                 'first_name__istartswith': self.data.get('first_name', ''),
                 'last_name__istartswith': self.data.get('last_name', ''),
@@ -183,7 +183,6 @@ class PersonForm(forms.ModelForm):
                 self.fields['instance'].choices = self.INSTANCE_CHOICES + [
                     (str(p.pk), self.full_person_data(p)) for p in Person.objects.filter(**person_kwargs)
                 ]
-                # self.data['instance'] = None
         else:
             self.fields['instance'].widget = forms.HiddenInput()
 

@@ -87,7 +87,7 @@ class Person(models.Model):
 
     def full_name_complete(self):
         fio = u"%s %s %s" % (self.last_name, self.first_name, self.middle_name)
-        return fio.strip()
+        return fio.strip() or u"Неизвестный"
 
     def save(self, *args, **kwargs):
         if self.user:
