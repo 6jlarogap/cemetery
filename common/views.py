@@ -109,6 +109,7 @@ def main_page(request):
 
             aq = Q(person__last_name__icontains=form.cleaned_data['customer'])
             aq |= Q(organization__name__icontains=form.cleaned_data['customer'])
+            aq |= Q(organization__ceo__last_name__icontains=form.cleaned_data['customer'])
             aq |= Q(organization__full_name__icontains=form.cleaned_data['customer'])
             agents = list(Agent.objects.filter(aq))
 
