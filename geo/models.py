@@ -2,6 +2,12 @@
 
 from django.db import models
 import datetime
+import re
+
+def cleanup_geo_name(s):
+    s = s.capitalize()
+    s = re.sub(u'(\.\s?)([\wа-я])', lambda m: u''.join(map(lambda g: g.capitalize(), m.groups())), s)
+    return s
 
 class Country(models.Model):
     """
@@ -15,7 +21,7 @@ class Country(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.name = self.name.capitalize()
+            self.name = cleanup_geo_name(self.name)
         return super(Country, self).save(*args, **kwargs)
 
     class Meta:
@@ -38,7 +44,7 @@ class Region(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.name = self.name.capitalize()
+            self.name = cleanup_geo_name(self.name)
         return super(Region, self).save(*args, **kwargs)
 
     class Meta:
@@ -60,7 +66,7 @@ class City(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.name = self.name.capitalize()
+            self.name = cleanup_geo_name(self.name)
         return super(City, self).save(*args, **kwargs)
 
     class Meta:
@@ -85,7 +91,7 @@ class Street(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.name = self.name.capitalize()
+            self.name = cleanup_geo_name(self.name)
         return super(Street, self).save(*args, **kwargs)
 
     def __unicode__(self):
