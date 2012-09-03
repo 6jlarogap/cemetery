@@ -27,11 +27,6 @@
             {{ person_form.instance.errors }}
             {% if person_form.is_selected %}
                 <input type="hidden" name="selected" value="true" />
-                <p>
-                    {{ person_form.phones.label_tag }}
-                    {{ person_form.phones }}
-                    {{ person_form.phones.errors }}
-                </p>
                 <br/>
                 <p>
                     {{ customer_id_form.id_type.label_tag }}
