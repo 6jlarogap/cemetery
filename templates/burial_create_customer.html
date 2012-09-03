@@ -1,6 +1,9 @@
 <form class='form-horizontal in-place' method="POST" action="{% url new_burial_customer %}">
     <div class="well">
         <h2>Заказчик</h2>
+        {{ person_form.non_field_errors }}
+        {{ customer_id_form.non_field_errors }}
+        {{ customer_form.non_field_errors }}
         <p>
             {{ customer_form.customer_type.label_tag }}
             {{ customer_form.customer_type }}

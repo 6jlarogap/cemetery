@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 
 from django import forms
 from django.contrib.auth.models import User
@@ -48,7 +49,7 @@ class PlaceForm(forms.ModelForm):
     class Meta:
         model = Place
 
-    def clean_account_number(self):
+    def clean_seat(self):
         a = self.cleaned_data['seat']
         if not a:
             return a
@@ -56,6 +57,8 @@ class PlaceForm(forms.ModelForm):
             raise forms.ValidationError(u"Необходимо ровно 8 цифр")
         if not a.isdigit():
             raise forms.ValidationError(u"Допустимы только цифры")
+        if int(a[:4]) > datetime.datetime.now().year:
+            raise forms.ValidationError(u"Номер больше текущего года")
         return a
 
     def save(self, user=None, commit=True):
@@ -88,6 +91,11 @@ class BurialForm(forms.ModelForm):
             'agent': forms.HiddenInput(),
         }
 
+    def clean_date_fact(self):
+        if self.cleaned_data['date_fact'] > datetime.datetime.now():
+            raise forms.ValidationError(u"Дата позже текущей")
+        return self.cleaned_data['date_fact']
+
     def clean_account_number(self):
         a = self.cleaned_data['account_number']
         if not a:
@@ -107,6 +115,12 @@ class BurialForm(forms.ModelForm):
             return a
         else:
             raise forms.ValidationError(u"Этот номер уже используется")
+
+    def clean(self):
+        if self.cleaned_data['account_number'] and self.cleaned_data['date_fact']:
+            if str(self.cleaned_data['account_number'])[:4] != str(self.cleaned_data['date_fact'].year):
+                raise forms.ValidationError(u"Номер не соответствует дате")
+        return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance')
@@ -211,6 +225,24 @@ class PersonForm(forms.ModelForm):
         if p.place_set.all().count() > 0:
             return u'Ответственный'
         return u'Н/д'
+
+    def clean_birth_date(self):
+        if self.cleaned_data['birth_date'] and self.cleaned_data['birth_date'] >= datetime.datetime.now():
+            raise forms.ValidationError(u"Дата должна быть раньше текущей")
+        return self.cleaned_data['birth_date']
+
+    def clean_death_date(self):
+        if self.cleaned_data['death_date'] and self.cleaned_data['death_date'] >= datetime.datetime.now():
+            raise forms.ValidationError(u"Дата должна быть раньше текущей")
+        return self.cleaned_data['death_date']
+
+    def clean(self):
+        if self.cleaned_data['birth_date'] and self.cleaned_data['death_date']:
+            if self.cleaned_data['birth_date'] > self.cleaned_data['death_date']:
+                raise forms.ValidationError(u"Дата рождения позже даты смерти")
+            if self.cleaned_data['birth_date'] < self.cleaned_data['death_date'] - datetime.timedelta(365*150):
+                raise forms.ValidationError(u"Дата рождения раньше 150 лет до даты смерти")
+        return self.cleaned_data
 
     def is_valid(self):
         if not self.is_bound or not self.data:
@@ -321,6 +353,18 @@ class DeathCertificateForm(forms.ModelForm):
         model = DeathCertificate
         exclude = ['person']
 
+    def clean_release_date(self):
+        if self.cleaned_data['release_date']:
+            if self.cleaned_data['release_date'] > datetime.datetime.now():
+                raise forms.ValidationError(u"Дата позже текущей")
+
+            death_date = self.data.get('death_date')
+            if death_date:
+                if self.cleaned_data['release_date'] < datetime.datetime.strptime(death_date, '%d.%m.%Y'):
+                    raise forms.ValidationError(u"Дата раньше даты смерти")
+
+        return self.cleaned_data['release_date']
+
     def save(self, person=None, commit=True):
         dc = super(DeathCertificateForm, self).save(commit=False)
         dc.person = person
@@ -368,6 +412,18 @@ class CustomerIDForm(forms.ModelForm):
         model = PersonID
         exclude = ['person']
 
+    def clean_date(self):
+        if self.cleaned_data['date']:
+            if self.cleaned_data['date'] > datetime.datetime.now():
+                raise forms.ValidationError(u"Дата позже текущей")
+
+            death_date = self.data.get('death_date')
+            if death_date:
+                if self.cleaned_data['date'] < datetime.datetime.strptime(death_date, '%d.%m.%Y') - datetime.timedelta(365*75):
+                    raise forms.ValidationError(u"Дата раньше 75 лет до даты смерти")
+
+        return self.cleaned_data['date']
+
     def save(self, person=None, commit=True):
         cid = super(CustomerIDForm, self).save(commit=False)
         cid.person = person
@@ -379,6 +435,16 @@ class DoverennostForm(forms.ModelForm):
     class Meta:
         model = Doverennost
         exclude = ['agent', ]
+
+    def clean_issue_date(self):
+        if self.cleaned_data['issue_date'] and self.cleaned_data['issue_date'] > datetime.datetime.now():
+            raise forms.ValidationError(u"Дата выпуска позже текущей")
+        return self.cleaned_data['issue_date']
+
+    def clean_expire_date(self):
+        if self.cleaned_data['expire_date'] and self.cleaned_data['expire_date'] < datetime.datetime.now():
+            raise forms.ValidationError(u"Срок действия истек")
+        return self.cleaned_data['expire_date']
 
     def save(self, commit=True, agent=None):
         self.cleaned_data.update({'agent': agent})
