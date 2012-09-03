@@ -380,7 +380,7 @@ OPF_TYPES = (
 )
 
 class CustomerForm(forms.Form):
-    customer_type = forms.ChoiceField(label=u'Организационно-правовая форма', choices=OPF_TYPES)
+    customer_type = forms.ChoiceField(label=u'Организационно-правовая форма*', choices=OPF_TYPES)
     organization = forms.ModelChoiceField(label=u'Организация', queryset=Organization.objects.all(), required=False)
     agent_director = forms.BooleanField(label=u'Директор - агент', required=False)
     agent_person = forms.ModelChoiceField(label=u'Агент', queryset=Person.objects.none(), required=False)

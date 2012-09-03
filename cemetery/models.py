@@ -15,7 +15,7 @@ class Cemetery(models.Model):
     Кладбище.
     """
 
-    organization = models.ForeignKey(Organization, related_name="cemetery", verbose_name=u'Организация')
+    organization = models.ForeignKey(Organization, related_name="cemetery", verbose_name=u'Организация*')
     location = models.ForeignKey(Location, blank=True, null=True, verbose_name=u'Адрес')
     name = models.CharField(u"Название", max_length=255, blank=True)
     creator = models.ForeignKey(User, editable=False)
@@ -39,7 +39,7 @@ class Place(models.Model):
     """
     Место.
     """
-    cemetery = models.ForeignKey(Cemetery, verbose_name=u"Кладбище")  # Связь с кладбищем.
+    cemetery = models.ForeignKey(Cemetery, verbose_name=u"Кладбище*")  # Связь с кладбищем.
     area = models.CharField(u"Участок", max_length=255, blank=True, null=True)  # Участок.
     row = models.CharField(u"Ряд", max_length=255, blank=True, null=True)  # Ряд.
     seat = models.CharField(u"Место", max_length=255, blank=True, null=True)  # Место.
@@ -118,13 +118,13 @@ class Burial(models.Model):
     Захоронение.
     """
     account_number = models.CharField(u"Номер в книге учета", max_length=255, null=True, blank=True)
-    operation = models.ForeignKey(Operation, verbose_name=u"Операция")
+    operation = models.ForeignKey(Operation, verbose_name=u"Операция*")
     date_plan = models.DateField(u"Планируемая дата", blank=True, null=True)
-    date_fact = models.DateField(u"Фактическая дата исполнения", null=True)
+    date_fact = models.DateField(u"Фактическая дата исполнения*", null=True)
     time_fact = models.TimeField(u"Время исполнения", blank=True, null=True)
 
     place = models.ForeignKey(Place)
-    person = models.ForeignKey(Person, verbose_name=u"Похороненный", related_name='buried')
+    person = models.ForeignKey(Person, verbose_name=u"Похороненный*", related_name='buried')
 
     client_person = models.ForeignKey(Person, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)
     client_organization = models.ForeignKey(Organization, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)

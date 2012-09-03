@@ -56,7 +56,7 @@ class Agent(models.Model):
         return u'%s' % self.person
 
 class Doverennost(models.Model):
-    agent = models.ForeignKey(Agent, related_name="doverennosti", verbose_name="Доверенность")
+    agent = models.ForeignKey(Agent, related_name="doverennosti", verbose_name="Доверенность*")
 
     number = models.CharField(verbose_name="Номер доверенности", max_length=255, blank=True, null=True)
     issue_date = models.DateField(verbose_name="Дата выдачи", blank=True, null=True)

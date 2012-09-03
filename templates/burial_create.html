@@ -31,7 +31,7 @@
                         </p>
                     </div><!--/.well -->
                     <div class="row-fluid">
-                        <h2>Усопший</h2>
+                        <h2>Усопший*</h2>
                         {{ burial_form.person }}
                         {% if burial_form.instance.person.pk %}
                             <a href="{% url new_burial_person %}?instance={{ burial_form.instance.person.pk }}&dead=1" class="load link-person">
@@ -41,7 +41,7 @@
                             <a href="{% url new_burial_person %}?dead=1" class="load link-person">Новый</a>
                         {% endif %}
 
-                        <h2>Место</h2>
+                        <h2>Место*</h2>
                         {{ burial_form.place }}
                         {% if burial_form.instance.place.pk %}
                             <a href="{% url new_burial_place %}?instance={{ burial_form.instance.place.pk }}" class="load link-place">
@@ -69,7 +69,7 @@
                         <br/>
                         <a href="#" id="copy_responsible_to_client">Тот же Заказчик</a>
 
-                        <h2>Заказчик</h2>
+                        <h2>Заказчик*</h2>
                         {{ burial_form.client_person }}
                         {{ burial_form.client_organization }}
                         {{ burial_form.agent }}
