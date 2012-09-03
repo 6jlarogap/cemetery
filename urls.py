@@ -22,8 +22,10 @@ urlpatterns += patterns('common.views',
     url(r'^edit/(?P<pk>.*)/$', 'edit_burial', name='edit_burial'),
     url(r'^print/(?P<pk>.*)/$', 'print_burial', name='print_burial'),
 
-    url(r'^burial/(?P<pk>.*)/$', 'view_burial', name='view_burial'),
-    url(r'^place/(?P<pk>.*)/$', 'view_place', name='view_place'),
+    url(r'^burial/(?P<pk>[^/]*)/$', 'view_burial', name='view_burial'),
+    url(r'^burial/(?P<pk>[^/]*)/comment/$', 'add_comment', name='add_comment'),
+    url(r'^place/(?P<pk>[^/]*)/$', 'view_place', name='view_place'),
+    url(r'^comment/(?P<pk>[^/]*)/delete/$', 'delete_comment', name='delete_comment'),
 
     url(r'^management/user/$', 'management_user', name='management_user'),
     url(r'^management/cemetery/$', 'management_cemetery', name='management_cemetery'),

@@ -19,9 +19,9 @@ from django.contrib import messages
 
 import math
 
-from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery
+from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery, Comment
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm
-from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm
+from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm, CommentForm
 from persons.models import DeathCertificate, PersonID
 from organizations.models import Organization, Agent
 
@@ -562,9 +562,26 @@ def print_burial(request, pk):
 
 def view_burial(request, pk):
     burial = get_object_or_404(Burial, pk=pk)
+    comment_form = CommentForm(data=request.POST or None, files=request.FILES or None)
     return render(request, 'burial_info.html', {
         'burial': burial,
+        'comment_form': comment_form
     })
+
+@login_required
+def add_comment(request, pk):
+    burial = get_object_or_404(Burial, pk=pk)
+    comment_form = CommentForm(data=request.POST or None, files=request.FILES or None)
+    if comment_form.is_valid():
+        comment_form.save(burial=burial, user=request.user)
+        return redirect('view_burial', pk)
+    return view_burial(request, pk)
+
+def delete_comment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    burial_pk = comment.burial.pk
+    comment.delete()
+    return redirect('view_burial', burial_pk)
 
 def view_place(request, pk):
     place = get_object_or_404(Place, pk=pk)

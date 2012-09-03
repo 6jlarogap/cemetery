@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 from django.db import models
 from django.contrib.auth.models import User, Group
@@ -8,6 +9,7 @@ import datetime
 from geo.models import Location, City, Region, Country
 from organizations.models import Organization, Agent, Doverennost
 from persons.models import Person, DeathCertificate, PersonID
+import pytils
 from utils.models import PER_PAGE_VALUES, ORDER_BY_VALUES
 
 class Cemetery(models.Model):
@@ -219,13 +221,6 @@ class Burial(models.Model):
 
         return self.client_person and self.client_person.full_human_name() or ''
 
-    @staticmethod
-    def split_parts(self):
-        p1, p2, p3 = split_number(self.account_book_n)
-        self.acct_num_str1 = p1
-        self.acct_num_num = p2
-        self.acct_num_str2 = p3
-
     def save(self, *args, **kwargs):
         if not self.account_number:
             self.generate_account_number()
@@ -352,4 +347,22 @@ class ServicePosition(models.Model):
     class Meta:
         verbose_name = (u'позиция счет-заказа')
         verbose_name_plural = (u'позиция счет-заказа')
+
+def comment_file(instance, filename):
+    fname = u'.'.join(map(pytils.translit.slugify, filename.rsplit('.', 1)))
+    return os.path.join('ofiles', str(instance.burial.pk), fname)
+
+class Comment(models.Model):
+    burial = models.ForeignKey(Burial, editable=False)
+    user = models.ForeignKey('auth.User', editable=False)
+    comment = models.TextField(blank=True, verbose_name=u"Комментарий")
+    file = models.FileField(upload_to=comment_file, blank=True, null=True, verbose_name=u"Файл")
+    added = models.DateTimeField(auto_now_add=True)
+
+    def file_name(self):
+        return os.path.basename(self.file.url)
+
+    class Meta:
+        verbose_name = (u'комментарий')
+        verbose_name_plural = (u'комментарии')
 

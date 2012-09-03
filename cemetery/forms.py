@@ -7,7 +7,7 @@ from django.db import models
 from django.forms import formsets
 from django.forms.models import model_to_dict
 
-from cemetery.models import Cemetery, Operation, Place, Burial, UserProfile, Service, ServicePosition
+from cemetery.models import Cemetery, Operation, Place, Burial, UserProfile, Service, ServicePosition, Comment
 from geo.models import Location, Country, Region, City, Street
 from organizations.models import Doverennost, Organization
 from persons.models import Person, DeathCertificate, PersonID
@@ -592,4 +592,19 @@ class CemeteryForm(forms.ModelForm):
         cemetery.location = location
         cemetery.save()
         return cemetery
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        widgets = {
+            'comment': forms.TextInput(),
+        }
+
+    def save(self, burial=None, user=None, commit=True, *args, **kwargs):
+        comment = super(CommentForm, self).save(commit=False, *args, **kwargs)
+        comment.burial = burial
+        comment.user = user
+        if commit:
+            comment.save()
+        return comment
 

@@ -36,4 +36,44 @@
             {% endif %}
         {% endif %}
     </dl>
+
+    <h2>Комментарии</h2>
+
+    <div class="row-fluid">
+        <table class="burials table table-striped table-bordered">
+            <thead>
+                <th>Комментарий</th>
+                <th>Файл</th>
+                <th>Добавлен</th>
+            </thead>
+            {% for c in burial.comment_set.all %}
+                <tr>
+                    <td>{{ c.comment }}</td>
+                    <td>
+                        {% if c.file %}
+                            <a href="{{ c.file.url }}">{{ c.file.name }}</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ c.user }}
+                        {{ c.added|date:"d.m.Y" }}
+                        {% if user.is_superuser %}
+                            <a title="удалить" href="{% url delete_comment c.pk %}"><i class="icon icon-trash"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% if user.is_authenticated %}
+            <h3>Добавить</h3>
+
+            <form action="{% url add_comment burial.pk %}" method="POST" enctype="multipart/form-data">
+                {{ comment_form.as_p }}
+                <p>
+                    <button class="btn btn-primary btn-large">Добавить</button>
+                </p>
+            </form>
+        {% endif %}
+    </div>
+
 {% endblock %}
