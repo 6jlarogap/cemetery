@@ -1,4 +1,4 @@
-<form class='form-horizontal in-place' method="POST" action="{% url new_burial_person %}">
+<form class='form-horizontal in-place' method="POST" action="{% url new_burial_person %}?dead={{ request.GET.dead }}">
     <div class="well">
         <h2>Усопший</h2>
         <p>

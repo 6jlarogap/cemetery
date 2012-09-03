@@ -225,8 +225,14 @@ def new_burial_person(request):
     """
     Добавление усопшего
     """
-    data = request.REQUEST.keys() and request.REQUEST or None
-    person_form = PersonForm(data=data)
+    data = None
+    if request.REQUEST.keys() and request.REQUEST.keys() != ['dead']:
+        data = request.REQUEST
+    initial = {}
+    if request.GET.get('dead'):
+        yesterday = datetime.date.today() - datetime.timedelta(1)
+        initial.update({'death_date': yesterday})
+    person_form = PersonForm(data=data, initial=initial)
     location_form = LocationForm(person=person_form.instance, data=request.POST.get('country_name') and request.POST or None)
 
     try:

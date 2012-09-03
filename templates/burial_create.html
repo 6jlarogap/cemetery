@@ -33,11 +33,11 @@
                         <h2>Усопший</h2>
                         {{ burial_form.person }}
                         {% if burial_form.instance.person.pk %}
-                            <a href="{% url new_burial_person %}?instance={{ burial_form.instance.person.pk }}" class="load link-person">
+                            <a href="{% url new_burial_person %}?instance={{ burial_form.instance.person.pk }}&dead=1" class="load link-person">
                                 {{ burial_form.instance.person }}
                             </a>
                         {% else %}
-                            <a href="{% url new_burial_person %}" class="load link-person">Новый</a>
+                            <a href="{% url new_burial_person %}?dead=1" class="load link-person">Новый</a>
                         {% endif %}
 
                         <h2>Место</h2>

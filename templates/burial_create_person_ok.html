@@ -2,7 +2,7 @@
     <div class="well">
         Данные сохранены.
         <script type="text/javascript">
-            var a  = $('<a href="{% url new_burial_person %}?instance={{ person.pk }}" class="link-person load">{{ person }}</a>');
+            var a  = $('<a href="{% url new_burial_person %}?instance={{ person.pk }}&dead=1" class="link-person load">{{ person }}</a>');
             $('.link-person').replaceWith(a);
             $('#id_person').val({{ person.pk }}).change();
         </script>

@@ -149,16 +149,19 @@ class PersonForm(forms.ModelForm):
         instance_pk = data.get('instance')
         if instance_pk and instance_pk not in [None, '', 'NEW']:
             kwargs['instance'] = Person.objects.get(pk=instance_pk)
+            real_initial = kwargs.get('initial', {}).copy()
             kwargs['initial'] = model_to_dict(kwargs['instance'], [], [])
             kwargs['initial'].update({'instance': instance_pk})
             if data and not data.get('last_name'):
                 old_data = dict(kwargs['data'].copy())
                 old_data.update(kwargs['initial'])
                 kwargs['data'] = old_data
+            kwargs['initial'].update(real_initial)
         super(PersonForm, self).__init__(*args, **kwargs)
         self.data = dict(self.data.items())
         if not any(self.data.values()) or self.data.keys() == ['instance']:
-            self.data = self.initial.copy()
+            if not self.initial.keys() == ['death_date']:
+                self.data = self.initial.copy()
         if self.data and self.data.get('last_name'):
             person_kwargs = {
                 'first_name__istartswith': self.data.get('first_name', ''),
@@ -173,8 +176,9 @@ class PersonForm(forms.ModelForm):
                 if not self.data.get('selected'):
                     self.data = None
                     self.is_bound = False
+                    dead = self.initial and self.initial.get('death_date')
                     self.initial = model_to_dict(self.instance, self._meta.fields, self._meta.exclude)
-                    self.initial.update({'instance': self.instance.pk})
+                    self.initial.update({'instance': self.instance.pk, 'death_date': dead})
             else:
                 self.fields['instance'].choices = self.INSTANCE_CHOICES + [
                     (str(p.pk), self.full_person_data(p)) for p in Person.objects.filter(**person_kwargs)
