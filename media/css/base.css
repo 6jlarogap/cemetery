@@ -6,7 +6,7 @@
 #mainform #id_cemetery { width: 100px; }
 #mainform #id_account_number_from, #mainform #id_account_number_to { width: 75px; }
 #mainform #id_operation { width: 100px; }
-#mainform #id_customer_type { width: 100px; }
+#mainform #id_customer_type { width: 60px; }
 
 #id_row, #id_area, #id_seat { width: 60px; }
 
