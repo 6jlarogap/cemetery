@@ -23,12 +23,6 @@
             <input type="hidden" name="selected" value="true" />
             {% include "burial_location_form.html" %}
         {% endif %}
-        <p>
-            <label>
-                <input type="checkbox" name="responsible_customer" {% if responsible_customer %}checked="1"{% endif %} />
-                Тот же Заказчик
-            </label>
-        </p>
         <h2 class="buttons"><button class="btn">{% if person_form.is_selected %}Сохранить{% else %}Далее{% endif %}</button></h2>
     </div><!--/.well -->
 </form>

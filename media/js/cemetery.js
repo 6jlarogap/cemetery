@@ -208,6 +208,24 @@ $(function() {
         }
     });
 
+    $('#copy_responsible_to_client').live('click', function() {
+        var responsible_id = $('#id_responsible').val();
+        if (!responsible_id) { return }
+
+        var responsible_name = $('.link-responsible').html();
+
+        var a  = $('<a href="/create/customer/?customer_type=0&instance='+responsible_id+'" class="link-customer load">Отв. '+responsible_name+'</a>');
+        $('.link-customer').replaceWith(a);
+
+        $('#id_client_organization').val('').change();
+        $('#id_doverennost').val('').change();
+        $('#id_agent').val('').change();
+
+        $('#id_client_person').val(responsible_id).change();
+
+        return false;
+    });
+
     $('.dropdown-toggle').dropdown();
 });
 
