@@ -78,7 +78,12 @@
                         {% else %}
                             {% if burial_form.instance.client_person.pk %}
                                 <a href="{% url new_burial_customer %}?instance={{ burial_form.instance.client_person.pk }}&customer_type=0" class="load link-customer">
-                                    ФЛ {{ burial_form.instance.client_person }}
+                                    {% if burial_form.instance.client_person == burial_form.instance.place.responsible %}
+                                        Отв.
+                                    {% else %}
+                                        ФЛ
+                                    {% endif %}
+                                    {{ burial_form.instance.client_person }}
                                 </a>
                             {% endif %}
                         {% endif %}
