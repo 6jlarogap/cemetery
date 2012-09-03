@@ -153,6 +153,9 @@ class Burial(models.Model):
     def __unicode__(self):
         return u"захоронение: %s" % self.person.__unicode__()
 
+    def agent_director(self):
+        return self.client_organization and self.agent and self.agent == self.client_organization.ceo
+
     def last_change(self):
         from django.contrib.admin.models import LogEntry, ContentType
         ct = ContentType.objects.get_for_model(Burial)
