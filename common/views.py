@@ -593,8 +593,8 @@ def autocomplete_person(request):
     query = request.GET['query']
     persons = Person.objects.filter(last_name__istartswith=query)
     if request.GET.get('dead'):
-        # persons = persons.filter(death_date__isnull=False)
         persons = persons.annotate(dead=Count('buried')).filter(dead__gt=0)
+    persons = persons.order_by('middle_name', 'first_name', 'last_name')
     person_names = list(set([p.full_human_name() for p in persons[:100]]))
     return HttpResponse(simplejson.dumps([{'value': pn} for pn in person_names]), mimetype='text/javascript')
 

@@ -103,6 +103,7 @@
                 top.location.href = '?';
             });
             $('#id_customer, #id_responsible, #id_fio').attr('autocomplete', 'off').typeahead({
+                items: 20,
                 source: function (typeahead, query) {
                     if (query.length < 2) { return }
                     var input = $(this)[0].$element;

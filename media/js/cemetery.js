@@ -31,6 +31,7 @@ function setup_address_autocompletes() {
     });
 
     $('input.autocomplete[name$=country_name]').attr('autocomplete', 'off').typeahead({
+        items: 20,
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             $.ajax({
@@ -43,6 +44,7 @@ function setup_address_autocompletes() {
         }
     });
     $('input.autocomplete[name$=region_name]').attr('autocomplete', 'off').typeahead({
+        items: 20,
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             var input = $(this)[0].$element;
@@ -64,6 +66,7 @@ function setup_address_autocompletes() {
         }
     });
     $('input.autocomplete[name$=city_name]').attr('autocomplete', 'off').typeahead({
+        items: 20,
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             var input = $(this)[0].$element;
@@ -89,6 +92,7 @@ function setup_address_autocompletes() {
         }
     });
     $('input.autocomplete[name$=street_name]').attr('autocomplete', 'off').typeahead({
+        items: 20,
         source: function (typeahead, query) {
             if (query.length < 2) { return }
             var input = $(this)[0].$element;
