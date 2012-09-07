@@ -230,7 +230,7 @@ def new_burial_person(request):
     if request.GET.get('dead'):
         yesterday = datetime.date.today() - datetime.timedelta(1)
         initial.update({'death_date': yesterday})
-    person_form = PersonForm(data=data, initial=initial)
+    person_form = PersonForm(data=data, initial=initial, dead=request.GET.get('dead'))
     location_form = LocationForm(person=person_form.instance, data=request.POST.get('country_name') and request.POST or None)
 
     try:

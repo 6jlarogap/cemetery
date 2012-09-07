@@ -153,7 +153,7 @@ class PersonForm(forms.ModelForm):
             'phones': forms.TextInput(),
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, dead=None, *args, **kwargs):
         data = dict(kwargs.get('data') or {})
         instance_pk = data.get('instance')
         if instance_pk and instance_pk not in [None, '', 'NEW']:
@@ -189,11 +189,15 @@ class PersonForm(forms.ModelForm):
                     self.initial = model_to_dict(self.instance, self._meta.fields, self._meta.exclude)
                     self.initial.update({'instance': self.instance.pk, 'death_date': dead})
             else:
+                if self.data.get('instance') == 'NEW':
+                    if dead and not self.data.get('death_date') :
+                        self.data['death_date'] = datetime.date.today() - datetime.timedelta(1)
                 self.fields['instance'].choices = self.INSTANCE_CHOICES + [
                     (str(p.pk), self.full_person_data(p)) for p in Person.objects.filter(**person_kwargs)
                 ]
         else:
             self.fields['instance'].widget = forms.HiddenInput()
+        self.initial['death_date'] = datetime.date.today() - datetime.timedelta(1)
 
     def full_person_data(self, p):
         dates = ''
