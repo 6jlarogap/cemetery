@@ -104,15 +104,12 @@ def main_page(request):
 
             oq = Q(name__icontains=form.cleaned_data['customer'])
             oq |= Q(full_name__icontains=form.cleaned_data['customer'])
-            oq |= Q(ceo__last_name__icontains=form.cleaned_data['customer'])
             orgs = list(Organization.objects.filter(oq))
 
             aq = Q(person__last_name__icontains=form.cleaned_data['customer'])
             aq |= Q(organization__name__icontains=form.cleaned_data['customer'])
-            aq |= Q(organization__ceo__last_name__icontains=form.cleaned_data['customer'])
             aq |= Q(organization__full_name__icontains=form.cleaned_data['customer'])
             agents = list(Agent.objects.filter(aq))
-
 
             burials = burials.filter(q | Q(agent__in=agents) | Q(client_organization__in=orgs)).distinct()
         if form.cleaned_data['responsible']:
