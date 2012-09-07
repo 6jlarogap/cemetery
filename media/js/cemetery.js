@@ -227,6 +227,8 @@ $(function() {
 
         $('#id_client_person').val(responsible_id).change();
 
+        $('.link-customer').click();
+
         return false;
     });
 
