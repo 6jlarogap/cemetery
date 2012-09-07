@@ -12,6 +12,9 @@
                     {{ burial_form.non_field_errors }}
                     <div class="row-fluid">
                         <h2>Захоронение</h2>
+                        {% if burial_form.instance.pk %}
+                           <div><a href="{% url view_burial burial_form.instance.pk %}" target="_blank">Карточка</a></div>
+                        {% endif %}
                         <p>
                             {{ burial_form.account_number.label_tag }}
                             {{ burial_form.account_number }}

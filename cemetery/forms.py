@@ -595,6 +595,10 @@ class CommentForm(forms.ModelForm):
             'comment': forms.TextInput(),
         }
 
+    def clean(self):
+        if not self.cleaned_data.get('comment') and not self.cleaned_data.get('file'):
+            raise forms.ValidationError(u"Комментарий пустой")
+
     def save(self, burial=None, user=None, commit=True, *args, **kwargs):
         comment = super(CommentForm, self).save(commit=False, *args, **kwargs)
         comment.burial = burial
