@@ -149,6 +149,7 @@ $(function() {
             $('.errorlist').addClass('alert');
             updateInnerForm();
             setup_address_autocompletes();
+            window.scrollTo(0,0);
         });
         return false;
     });
