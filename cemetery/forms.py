@@ -91,11 +91,6 @@ class BurialForm(forms.ModelForm):
             'agent': forms.HiddenInput(),
         }
 
-    def clean_date_fact(self):
-        if self.cleaned_data['date_fact'] > datetime.date.today():
-            raise forms.ValidationError(u"Дата позже текущей")
-        return self.cleaned_data['date_fact']
-
     def clean_account_number(self):
         a = self.cleaned_data['account_number']
         if not a:
