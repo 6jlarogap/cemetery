@@ -113,9 +113,21 @@ class BurialForm(forms.ModelForm):
             raise forms.ValidationError(u"Этот номер уже используется")
 
     def clean(self):
-        if self.cleaned_data.get('account_number') and self.cleaned_data.get('date_fact'):
-            if str(self.cleaned_data['account_number'])[:4] != str(self.cleaned_data['date_fact'].year):
+        acount_number = self.cleaned_data.get('account_number')
+        if acount_number and self.cleaned_data.get('date_fact'):
+            if str(acount_number)[:4] != str(self.cleaned_data['date_fact'].year):
                 raise forms.ValidationError(u"Номер не соответствует дате")
+
+        customer = self.cleaned_data.get('client_person')
+        if customer and self.cleaned_data.get('date_fact'):
+            if customer.personid.date < self.cleaned_data['date_fact'] - datetime.timedelta(75 * 365):
+                raise forms.ValidationError(u"Дата документа заказчика раньше 75 лет до даты захоронения")
+
+        place = self.cleaned_data.get('place')
+        if place and acount_number:
+            if place.seat and unicode(place.seat) != unicode(acount_number):
+                if self.cleaned_data.get('operation').op_type == 'Захоронение':
+                    raise forms.ValidationError(u"При Захоронении номер в книге учета должен совпадать с номером места")
         return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
@@ -227,17 +239,17 @@ class PersonForm(forms.ModelForm):
         return u'Н/д'
 
     def clean_birth_date(self):
-        if self.cleaned_data['birth_date'] and self.cleaned_data['birth_date'] >= datetime.date.today():
+        if self.cleaned_data.get('birth_date') and self.cleaned_data['birth_date'] >= datetime.date.today():
             raise forms.ValidationError(u"Дата должна быть раньше текущей")
         return self.cleaned_data['birth_date']
 
     def clean_death_date(self):
-        if self.cleaned_data['death_date'] and self.cleaned_data['death_date'] >= datetime.date.today():
+        if self.cleaned_data.get('death_date') and self.cleaned_data['death_date'] >= datetime.date.today():
             raise forms.ValidationError(u"Дата должна быть раньше текущей")
         return self.cleaned_data['death_date']
 
     def clean(self):
-        if self.cleaned_data['birth_date'] and self.cleaned_data['death_date']:
+        if self.cleaned_data.get('birth_date') and self.cleaned_data.get('death_date'):
             if self.cleaned_data['birth_date'] > self.cleaned_data['death_date']:
                 raise forms.ValidationError(u"Дата рождения позже даты смерти")
             if self.cleaned_data['birth_date'] < self.cleaned_data['death_date'] - datetime.timedelta(365*150):
@@ -416,12 +428,6 @@ class CustomerIDForm(forms.ModelForm):
         if self.cleaned_data['date']:
             if self.cleaned_data['date'] > datetime.date.today():
                 raise forms.ValidationError(u"Дата позже текущей")
-
-            death_date = self.data.get('death_date')
-            if death_date:
-                if self.cleaned_data['date'] < datetime.datetime.strptime(death_date, '%d.%m.%Y') - datetime.timedelta(365*75):
-                    raise forms.ValidationError(u"Дата раньше 75 лет до даты смерти")
-
         return self.cleaned_data['date']
 
     def save(self, person=None, commit=True):
