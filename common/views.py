@@ -124,6 +124,10 @@ def main_page(request):
             burials = burials.filter(place__seat=form.cleaned_data['seat'])
         if form.cleaned_data['no_exhumated']:
             burials = burials.filter(exhumated=False)
+        if form.cleaned_data['deleted']:
+            burials = burials.filter(deleted=True)
+        else:
+            burials = burials.filter(deleted=False)
 
         if form.cleaned_data['records_order_by']:
             burials = burials.order_by(form.cleaned_data['records_order_by'])
@@ -185,6 +189,18 @@ def edit_burial(request, pk):
     if request.POST and burial_form.is_valid():
         burial_form.save()
         messages.success(request, u'Успешно сохранено')
+        return redirect('main_page')
+
+    if request.GET.get('delete'):
+        burial.deleted = True
+        burial.save()
+        messages.success(request, u'Удалено')
+        return redirect('main_page')
+
+    if request.GET.get('recover'):
+        burial.deleted = False
+        burial.save()
+        messages.success(request, u'Восстановлено')
         return redirect('main_page')
 
     return render(request, 'burial_edit.html', {

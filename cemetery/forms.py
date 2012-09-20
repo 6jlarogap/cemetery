@@ -41,6 +41,7 @@ class SearchForm(forms.Form):
     row = forms.CharField(required=False, max_length=9, label="Ряд")
     seat = forms.CharField(required=False, max_length=9, label="Место")
     no_exhumated = forms.BooleanField(required=False, initial=False, label=u"Убрать эксгумированные")
+    deleted = forms.BooleanField(required=False, initial=False, label=u"Корзина")
 
     records_order_by = forms.ChoiceField(required=False, choices=ORDER_BY_VALUES, label=u"Сортировка по")
     per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label=u"Записей на страницу")
