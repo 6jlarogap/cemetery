@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load adminmedia %}
 {% load my_filters %}
+{% load pytils_numeral %}
 
 {% block title %}Место{% endblock %}
 
@@ -31,16 +32,22 @@
     <h3>Захоронения:</h3>
     <form action="" method="POST">
         {{ rf.as_p }}
+        <p>Свободно: {{ place.rooms_free }} мест{{ place.rooms_free|choose_plural:"о,а," }}</p>
         {{ pbf.management_form }}
         <table>
             {% for d,f in pbf.pbf_data %}
                 <tr>
                     <td>
                         {{ forloop.counter }}.
-                        {% if d %}
-                            <a href="{% url view_burial d.burial.pk %}">{{ d.burial.person }}</a>
+                        {% if d.burials %}
+                            {% for b in d.burials %}
+                                <a href="{% url view_burial b.pk %}">{{ b.person }}</a>
+                                <a title="открепить" href="?unlink={{ b.pk }}"><i class="icon icon-remove"></i></a>
+                            {% endfor %}
                         {% endif %}
-                        {{ f.burial }}
+                        {% if d.available %}
+                            {{ f.burial }}
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

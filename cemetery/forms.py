@@ -129,6 +129,11 @@ class BurialForm(forms.ModelForm):
             if place.seat and unicode(place.seat) != unicode(acount_number):
                 if self.cleaned_data.get('operation').op_type == 'Захоронение':
                     raise forms.ValidationError(u"При Захоронении номер в книге учета должен совпадать с номером места")
+
+        operation = self.cleaned_data.get('operation')
+        if operation and place:
+            if not operation.is_empty() and place.rooms_free <= 0:
+                raise forms.ValidationError(u"Нет свободных могил в указанном месте")
         return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
@@ -625,6 +630,11 @@ class PlaceRoomsForm(forms.ModelForm):
         model = Place
         fields = ['rooms', ]
 
+    def save(self, *args, **kwargs):
+        place = super(PlaceRoomsForm, self).save(*args, **kwargs)
+        Burial.objects.filter(place=place, grave_id__gte=place.rooms).update(grave_id=None)
+        return place
+
 class PlaceBurialForm(forms.Form):
     burial = forms.ModelChoiceField(queryset=Burial.objects.none(), required=False)
 
@@ -632,20 +642,46 @@ class BasePlaceBurialsBormset(BaseFormSet):
     def __init__(self, place=None, *args, **kwargs):
         self.place = place
         self.filled_burials = place.burial_set.filter(grave_id__isnull=False).order_by('id')
+        self.free_burials = place.burial_set.filter(grave_id__isnull=True).order_by('id')
+
         places_initial = []
         for i in range(place.rooms):
             places_initial.append({})
         for b in self.filled_burials:
-            places_initial[b.grave_id].update(burial=b)
+            places_initial[b.grave_id].setdefault('burials', []).append(b)
+
+        limit = datetime.date.today() - datetime.timedelta(365*20)
+        if self.free_burials:
+            for i,d in enumerate(places_initial):
+                burials = d.get('burials') or []
+                all_empty = lambda b: not b.operation.is_urn() or b.date_fact < limit
+                places_initial[i]['available'] = all(filter(all_empty, burials))
         super(BasePlaceBurialsBormset, self).__init__(initial=places_initial, *args, **kwargs)
 
-        self.free_burials = place.burial_set.filter(grave_id__isnull=True).order_by('id')
         for i, f in enumerate(self.forms):
             if places_initial[i].get('burial'):
                 f.fields['burial'].queryset = place.burial_set.filter(grave_id=i)
             else:
                 f.fields['burial'].queryset = self.free_burials
         self.pbf_data = zip(places_initial, self.forms)
+
+    def clean(self):
+        for i, f in enumerate(self.forms):
+            burial = f.cleaned_data.get('burial')
+            if not burial:
+                continue
+
+            burials = list(Burial.objects.filter(place=self.place, grave_id=i))
+
+            other_here = filter(lambda b: not b.operation.is_empty(), burials)
+            if any(other_here):
+                if burial.operation.is_urn():
+                    pass
+                if burial.operation.is_additional():
+                    limit = datetime.date.today() - datetime.timedelta(20*365)
+                    if any(filter(lambda b: b.date_fact > limit, other_here)):
+                        raise forms.ValidationError(u'Ошибка в позиции %s: попытка подзахоронения в занятую могилу.')
+                raise forms.ValidationError(u'Ошибка в позиции %s: попытка захоронения не-урны в занятую могилу.')
 
     def save(self):
         for i,f in enumerate(self.forms):

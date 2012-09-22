@@ -80,8 +80,15 @@ class Place(models.Model):
         return self.seat
 
     @property
+    def rooms_free(self):
+        return (self.rooms or 0) - (self.rooms_occupied or 0)
+
+    @property
     def rooms_occupied(self):
-        return (self.rooms or 0) - (self.rooms_free or 0)
+        burials = Burial.objects.filter(place=self)
+        limit = datetime.date.today() - datetime.timedelta(20*365)
+        takes_place = lambda b: not b.operation.is_urn() and b.date_fact >= limit
+        return len(filter(takes_place, burials))
 
     def count_burials(self):
         siblings = Burial.objects.filter(
@@ -108,6 +115,15 @@ class Operation(models.Model):
 
     def __unicode__(self):
         return self.op_type[:24]
+
+    def is_empty(self):
+        return self.is_urn() or self.is_additional()
+
+    def is_urn(self):
+        return self.op_type.split(' ')[0] in [u'Урна']
+
+    def is_additional(self):
+        return self.op_type.split(' ')[0] in [u'Подзахоронение']
 
     class Meta:
         ordering = ['ordering', 'op_type']
