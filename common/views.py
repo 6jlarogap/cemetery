@@ -20,7 +20,7 @@ from django.contrib import messages
 import math
 
 from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery, Comment
-from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm
+from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm, PlaceBurialsFormset, PlaceRoomsForm
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm, CommentForm
 from persons.models import DeathCertificate, PersonID
 from organizations.models import Organization, Agent
@@ -596,8 +596,18 @@ def delete_comment(request, pk):
 
 def view_place(request, pk):
     place = get_object_or_404(Place, pk=pk)
+    pbf = PlaceBurialsFormset(data=request.POST or None, place=place)
+    rf = PlaceRoomsForm(data=request.POST or None, instance=place)
+    if request.POST and rf.changed_data and rf.is_valid():
+        rf.save()
+        return redirect('.')
+    if request.POST and pbf.is_valid():
+        pbf.save()
+        return redirect('.')
     return render(request, 'place_info.html', {
         'place': place,
+        'pbf': pbf,
+        'rf': rf,
     })
 
 def autocomplete_person(request):

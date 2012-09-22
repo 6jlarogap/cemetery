@@ -29,9 +29,35 @@
     </dl>
 
     <h3>Захоронения:</h3>
-    <ul>
-        {% for b in place.burial_set.all %}
-            <li><a href="{% url view_burial b.pk %}">{{ b.person }}</a></li>
-        {% endfor %}
-    </ul>
+    <form action="" method="POST">
+        {{ rf.as_p }}
+        {{ pbf.management_form }}
+        <table>
+            {% for d,f in pbf.pbf_data %}
+                <tr>
+                    <td>
+                        {{ forloop.counter }}.
+                        {% if d %}
+                            <a href="{% url view_burial d.burial.pk %}">{{ d.burial.person }}</a>
+                        {% endif %}
+                        {{ f.burial }}
+                    </td>
+                </tr>
+            {% endfor %}
+            {% if pbf.free_burials %}
+                <tr><td><h3>+ непривязанные</h3></td></tr>
+                {% for b in pbf.free_burials %}
+                    <tr>
+                        <td>
+                            {{ forloop.counter }}.
+                            <a href="{% url view_burial b.pk %}">{{ b.person }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+        <h2 class="buttons">
+            <button class="btn btn-primary btn-large">Сохранить</button>
+        </h2>
+    </form>
 {% endblock %}

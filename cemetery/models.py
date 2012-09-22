@@ -126,6 +126,7 @@ class Burial(models.Model):
     time_fact = models.TimeField(u"Время исполнения", blank=True, null=True)
 
     place = models.ForeignKey(Place)
+    grave_id = models.PositiveSmallIntegerField(editable=False, null=True)
     person = models.ForeignKey(Person, verbose_name=u"Похороненный*", related_name='buried')
 
     client_person = models.ForeignKey(Person, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)

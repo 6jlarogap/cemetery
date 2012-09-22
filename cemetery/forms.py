@@ -5,6 +5,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import formsets
+from django.forms.formsets import formset_factory, BaseFormSet
 from django.forms.models import model_to_dict
 
 from cemetery.models import Cemetery, Operation, Place, Burial, UserProfile, Service, ServicePosition, Comment
@@ -619,3 +620,39 @@ class CommentForm(forms.ModelForm):
             comment.save()
         return comment
 
+class PlaceRoomsForm(forms.ModelForm):
+    class Meta:
+        model = Place
+        fields = ['rooms', ]
+
+class PlaceBurialForm(forms.Form):
+    burial = forms.ModelChoiceField(queryset=Burial.objects.none(), required=False)
+
+class BasePlaceBurialsBormset(BaseFormSet):
+    def __init__(self, place=None, *args, **kwargs):
+        self.place = place
+        self.filled_burials = place.burial_set.filter(grave_id__isnull=False).order_by('id')
+        places_initial = []
+        for i in range(place.rooms):
+            places_initial.append({})
+        for b in self.filled_burials:
+            places_initial[b.grave_id].update(burial=b)
+        super(BasePlaceBurialsBormset, self).__init__(initial=places_initial, *args, **kwargs)
+
+        self.free_burials = place.burial_set.filter(grave_id__isnull=True).order_by('id')
+        for i, f in enumerate(self.forms):
+            if places_initial[i].get('burial'):
+                f.fields['burial'].queryset = place.burial_set.filter(grave_id=i)
+            else:
+                f.fields['burial'].queryset = self.free_burials
+        self.pbf_data = zip(places_initial, self.forms)
+
+    def save(self):
+        for i,f in enumerate(self.forms):
+            if f.cleaned_data.get('burial'):
+                f.cleaned_data['burial'].grave_id = i
+                f.cleaned_data['burial'].save()
+            else:
+                self.filled_burials.filter(grave_id=i).update(grave_id=None)
+
+PlaceBurialsFormset = formset_factory(form=PlaceBurialForm, formset=BasePlaceBurialsBormset, extra=0)
