@@ -252,7 +252,8 @@ def new_burial_person(request):
         dc = person_form.instance.deathcertificate
     except (DeathCertificate.DoesNotExist, AttributeError):
         dc = None
-    dc_form = DeathCertificateForm(data=request.POST or None, prefix='dc', instance=dc)
+    dc_data = request.POST.get('death_date') and request.POST or None or None
+    dc_form = DeathCertificateForm(data=dc_data, prefix='dc', instance=dc)
 
     if request.POST and person_form.data and person_form.is_valid() and dc_form.is_valid():
         if location_form.is_valid() and location_form.cleaned_data:
