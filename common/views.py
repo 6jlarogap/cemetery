@@ -14,7 +14,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.views.generic.list_detail import object_list
 from django.utils import simplejson
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 
 import math
@@ -634,11 +634,23 @@ def management_user(request):
     """
 
     instance = None
+    user = None
     if request.GET.get('pk'):
         instance = get_object_or_404(Person, pk=request.GET.get('pk'))
     elif request.GET.get('user_pk'):
         user_pk = request.GET.get('user_pk')
         user = User.objects.get(pk=user_pk)
+
+        if request.GET.get('deactivate'):
+            user.is_active = False
+            user.save()
+            return HttpResponseRedirect('?user_pk=%s' % user.pk)
+
+        if request.GET.get('activate'):
+            user.is_active = True
+            user.save()
+            return HttpResponseRedirect('?user_pk=%s' % user.pk)
+
         instance = None
         try:
             instance = Person.objects.get(user__pk=user_pk)
@@ -656,7 +668,7 @@ def management_user(request):
         person = form.save(creator=request.user)
         return redirect(reverse('management_user') + '?pk=%s' % person.pk)
     users = User.objects.all().order_by('last_name')
-    return render(request, 'management_user.html', {'form': form, "users": users})
+    return render(request, 'management_user.html', {'form': form, "users": users, 'current_user': user})
 
 @user_passes_test(lambda u: u.is_superuser)
 @transaction.commit_on_success

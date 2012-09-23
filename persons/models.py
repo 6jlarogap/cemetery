@@ -22,7 +22,7 @@ class Person(models.Model):
     """
     user = models.ForeignKey('auth.User', editable=False, null=True)
 
-    last_name = models.CharField(u"Фамилия", max_length=255, blank=True)  # Фамилия.
+    last_name = models.CharField(u"Фамилия", max_length=255)  # Фамилия.
     first_name = models.CharField(u"Имя", max_length=255, blank=True)  # Имя.
     middle_name = models.CharField(u"Отчество", max_length=255, blank=True)  # Отчество.
 
