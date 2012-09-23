@@ -68,7 +68,10 @@ class PlaceForm(forms.ModelForm):
         data = dict(filter(lambda i: i[0] in filter_fields, self.cleaned_data.items()))
         try:
             if self.cleaned_data['seat']:
-                return Place.objects.get(**data)
+                try:
+                    return Place.objects.get(**data)
+                except Place.MultipleObjectsReturned:
+                    return Place.objects.filter(**data)[0]
         except Place.DoesNotExist:
             pass
 
