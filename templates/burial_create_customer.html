@@ -76,6 +76,7 @@
                     {{ customer_form.agent_person.label_tag }}
                     {{ customer_form.agent_person }}
                     {{ customer_form.agent_person.errors }}
+                    <a href="#addAgent" role="button" class="btn" data-toggle="modal" id="add_agent_btn">Добавить </a>
                 </p>
                 <p class="narrow">
                     {{ doverennost_form.number.label_tag }}
@@ -98,6 +99,25 @@
     </div><!--/.well -->
 </form>
 
+<div class="modal" id="addAgent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Добавить агента</h3>
+    </div>
+    <div class="modal-body">
+        <form action="{% url new_agent %}" method="POST" id="agent_form">
+            {% csrf_token %}
+            <div class="form-internal">
+                {{ add_agent_form.as_p }}
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+        <button class="btn btn-primary" id="add_commit">Добавить</button>
+    </div>
+</div>
+
 <script type="text/javascript">
     ORG_AGENTS = {
         {% for o in organizations %}
@@ -109,5 +129,12 @@
         {% endfor %}
     }
 
-    $('#id_customer-organization').change();
+    $(function() {
+        $('#add_agent_btn').hide();
+
+        $('#id_customer-organization').change();
+
+        $('#addAgent').modal().modal('hide');
+    });
 </script>
+

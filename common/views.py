@@ -22,6 +22,7 @@ import math
 from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery, Comment
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm, PlaceBurialsFormset, PlaceRoomsForm
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm, CommentForm
+from cemetery.forms import AddAgentForm
 from persons.models import DeathCertificate, PersonID
 from organizations.models import Organization, Agent
 
@@ -292,6 +293,8 @@ def new_burial_customer(request):
     customer_form = CustomerForm(data=request.POST.copy() or None, prefix='customer', initial=org_data)
     doverennost_form = DoverennostForm(data=request.POST.copy() or None, prefix='doverennost', initial=org_data)
 
+    add_agent_form = AddAgentForm(prefix='add_agent')
+
     organizations = Organization.objects.all()
 
     if request.POST and customer_form.is_valid():
@@ -329,6 +332,7 @@ def new_burial_customer(request):
         'customer_form': customer_form,
         'customer_id_form': customer_id_form,
         'doverennost_form': doverennost_form,
+        'add_agent_form': add_agent_form,
         'organizations': organizations,
     })
 
@@ -674,3 +678,10 @@ def management_cemetery(request):
     cemeteries = Cemetery.objects.all()
     return render(request, 'management_add_cemetery.html', {'cemetery_form': cemetery_form, "location_form": location_form, "cemeteries": cemeteries})
 
+@login_required
+def new_agent(request):
+    form = AddAgentForm(data=request.POST or None, prefix='add_agent')
+    if form.is_valid():
+        agent = form.save()
+        return HttpResponse(simplejson.dumps({'pk': agent.pk, 'label': u'%s' % agent.person}), mimetype='application/json')
+    return HttpResponse(form.as_p(), mimetype='text/html')

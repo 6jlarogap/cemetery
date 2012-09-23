@@ -173,6 +173,10 @@ $(function() {
         }
     });
 
+    $('#add_agent_btn').live('click', function() {
+        $('#agent_form .form-internal').load($('#agent_form').attr('action'));
+    });
+
     $('#id_customer-organization').live('change', function() {
         var options = '<option value="">---------------</option>';
         var org_id = $(this).val();
@@ -184,6 +188,34 @@ $(function() {
         }
         $('#id_customer-agent_person').html(options);
         $('#id_customer-agent_person').val(val);
+        if ($('#id_customer-organization').val()) {
+            $('#add_agent_btn').show();
+        }
+    });
+
+    $('#add_commit').live('click', function() {
+        $('#id_add_agent-organization').val($('#id_customer-organization').val());
+        var url = $('#agent_form').attr('action');
+        var send_data = $('#agent_form').serialize();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: send_data,
+            success: function(data) {
+                if (data.pk) {
+                    var opt = '<option value="'+data.pk+'">'+data.label+'</option>';
+                    $('#id_customer-agent_person').append($(opt));
+                    $('#id_customer-agent_person').val(data.pk);
+                    $('#addAgent').modal('hide');
+                } else {
+                    $('#agent_form .form-internal').html(data);
+                }
+            },
+            error: function(err, errType) {
+                console.log(err);
+                alert('Ошибка');
+            }
+        });
     });
 
     $('#id_operation, #id_place, #id_person').change();

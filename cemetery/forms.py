@@ -10,7 +10,7 @@ from django.forms.models import model_to_dict
 
 from cemetery.models import Cemetery, Operation, Place, Burial, UserProfile, Service, ServicePosition, Comment
 from geo.models import Location, Country, Region, City, Street
-from organizations.models import Doverennost, Organization
+from organizations.models import Doverennost, Organization, Agent
 from persons.models import Person, DeathCertificate, PersonID
 from utils.models import PER_PAGE_VALUES, ORDER_BY_VALUES
 
@@ -692,3 +692,15 @@ class BasePlaceBurialsBormset(BaseFormSet):
                 self.filled_burials.filter(grave_id=i).update(grave_id=None)
 
 PlaceBurialsFormset = formset_factory(form=PlaceBurialForm, formset=BasePlaceBurialsBormset, extra=0)
+
+class AddAgentForm(forms.ModelForm):
+    organization = forms.ModelChoiceField(queryset=Organization.objects.all(), widget=forms.HiddenInput)
+
+    class Meta:
+        model = Person
+        exclude = ['death_date']
+        widgets = {'phones': forms.TextInput}
+
+    def save(self, *args, **kwargs):
+        person = super(AddAgentForm, self).save()
+        return Agent.objects.create(person=person, organization=self.cleaned_data['organization'])
