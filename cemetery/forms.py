@@ -566,6 +566,7 @@ class UserForm(forms.ModelForm):
             person = kwargs.get('instance')
             kwargs.setdefault('initial', {}).update(username=person.user and person.user.username)
         super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['last_name'].required = True
 
     def clean(self):
         if self.cleaned_data['password1'] != self.cleaned_data['password2']:
