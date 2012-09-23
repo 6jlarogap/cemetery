@@ -219,7 +219,6 @@ class PersonForm(forms.ModelForm):
                 ]
         else:
             self.fields['instance'].widget = forms.HiddenInput()
-        self.initial['death_date'] = datetime.date.today() - datetime.timedelta(1)
 
     def full_person_data(self, p):
         dates = ''
