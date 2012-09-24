@@ -703,7 +703,7 @@ class AddAgentForm(forms.ModelForm):
 
     class Meta:
         model = Person
-        exclude = ['death_date']
+        exclude = ['death_date', 'birth_date']
         widgets = {'phones': forms.TextInput}
 
     def save(self, *args, **kwargs):

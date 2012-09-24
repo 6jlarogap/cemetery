@@ -693,5 +693,5 @@ def new_agent(request):
     form = AddAgentForm(data=request.POST or None, prefix='add_agent')
     if form.is_valid():
         agent = form.save()
-        return HttpResponse(simplejson.dumps({'pk': agent.pk, 'label': u'%s' % agent.person}), mimetype='application/json')
+        return HttpResponse(simplejson.dumps({'pk': agent.person.pk, 'label': u'%s' % agent.person}), mimetype='application/json')
     return HttpResponse(form.as_p(), mimetype='text/html')
