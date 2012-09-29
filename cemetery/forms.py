@@ -685,12 +685,12 @@ class BasePlaceBurialsFormset(BaseFormSet):
             other_here = filter(lambda b: not b.operation.is_empty(), burials)
             if any(other_here):
                 if burial.operation.is_urn():
-                    pass
+                    continue
                 if burial.operation.is_additional():
                     limit = datetime.date.today() - datetime.timedelta(20*365)
                     if any(filter(lambda b: b.date_fact > limit, other_here)):
-                        raise forms.ValidationError(u'Ошибка в позиции %s: попытка подзахоронения в занятую могилу.')
-                raise forms.ValidationError(u'Ошибка в позиции %s: попытка захоронения не-урны в занятую могилу.')
+                        raise forms.ValidationError(u'Ошибка в позиции %s: попытка подзахоронения в занятую могилу.' % i)
+                raise forms.ValidationError(u'Ошибка в позиции %s: попытка захоронения не-урны в занятую могилу.' % i)
 
     def save(self):
         for i,f in enumerate(self.forms):
