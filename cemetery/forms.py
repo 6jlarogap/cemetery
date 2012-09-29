@@ -647,7 +647,7 @@ class PlaceRoomsForm(forms.ModelForm):
 class PlaceBurialForm(forms.Form):
     burial = forms.ModelChoiceField(queryset=Burial.objects.none(), required=False)
 
-class BasePlaceBurialsBormset(BaseFormSet):
+class BasePlaceBurialsFormset(BaseFormSet):
     def __init__(self, place=None, *args, **kwargs):
         self.place = place
         self.filled_burials = place.burial_set.filter(grave_id__isnull=False).order_by('id')
@@ -700,7 +700,7 @@ class BasePlaceBurialsBormset(BaseFormSet):
             else:
                 self.filled_burials.filter(grave_id=i).update(grave_id=None)
 
-PlaceBurialsFormset = formset_factory(form=PlaceBurialForm, formset=BasePlaceBurialsBormset, extra=0)
+PlaceBurialsFormset = formset_factory(form=PlaceBurialForm, formset=BasePlaceBurialsFormset, extra=0)
 
 class AddAgentForm(forms.ModelForm):
     organization = forms.ModelChoiceField(queryset=Organization.objects.all(), widget=forms.HiddenInput)
