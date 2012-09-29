@@ -5,11 +5,85 @@
 {% block title %}Ввод данных{% endblock %}
 
 {% block content %}
+    {% if burial_form.duplicates_found %}
+        <div class="row-fluid">
+            <table class="burials table table-striped table-bordered">
+                <thead>
+                <th>№ в книге</th>
+                <th>ФИО</th>
+                <th>Дата захоронения</th>
+                <th>Участок</th>
+                <th>Ряд</th>
+                <th>Могила</th>
+                <th>Кладбище</th>
+                <th>Услуга</th>
+                <th>Заказчик</th>
+                <th>Телефон</th>
+                <th>Комментарий</th>
+                <th>Опции</th>
+                </thead>
+                {% for b in burial_form.duplicates_list %}
+                    <tr>
+                        <td>{{ b.account_number }}</td>
+                        <td>
+                            <b> {{ b.person.last_name }}</b>
+                            {{ b.person.first_name }}
+                            {{ b.person.middle_name }}
+                        </td>
+                        <td>{{ b.date_fact|date:"d.m.Y" }}</td>
+                        <td>{{ b.place.area }}</td>
+                        <td>{{ b.place.row }}</td>
+                        <td>{{ b.place.seat }}</td>
+                        <td>{{ b.place.cemetery.name }}</td>
+                        <td>{{ b.operation.op_type }}</td>
+                        <td>
+                            {% if b.client_organization %}
+                                ЮЛ {{ b.client_organization }}<br/>
+                                {% if b.agent %}{{ b.agent.person }}{% else %}{{ b.client_organization.ceo|default:"" }}{% endif %}
+                            {% else %}
+                                {% if b.client_person %}
+                                    ФЛ {{ b.client_person }}
+                                {% else %}
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if b.client_organization %}
+                                {{ b.client_organization.phones|default:"" }}
+                            {% endif %}
+                            {% if b.client_person %}
+                                {{ b.client_person.phones|default:"" }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% for comment in b.ordercomments_set.all %}
+                                {{ comment.comment }}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% if b.orderfiles_set.count %}
+                                <small><a title="файл прикреплен"><i class="icon icon-file"></i></a></small>
+                            {% endif %}
+                            {% if user|in_group:"edit_burial"  %}
+                                <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon icon-edit"></i></a>
+                            {% endif %}
+                            <a title="карточка" href="{% url view_burial b.pk %}"><i class="icon icon-list"></i></a>
+                            <a title="к могиле" href="{% url view_place b.place.pk %}"><i class="icon icon-map-marker"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
     <div class="row-fluid">
         <div class="span3">
             <form class='form-horizontal main-add' method="POST">
                 <div class="well">
                     {{ burial_form.non_field_errors }}
+                    {% if burial_form.duplicates_found %}
+                        <p>{{ burial_form.allow_duplicates.label_tag }}</p>
+                        <p>{{ burial_form.allow_duplicates }}</p>
+                    {% endif %}
                     <div class="row-fluid">
                         <h2>Захоронение</h2>
                         {% if burial_form.instance.pk %}

@@ -83,6 +83,7 @@ class PlaceForm(forms.ModelForm):
         return place
 
 class BurialForm(forms.ModelForm):
+    allow_duplicates = forms.BooleanField(required=False, initial=False, label=u"Да, сохранить дубликат")
     responsible = forms.ModelChoiceField(queryset=Person.objects.all(), widget=forms.HiddenInput, required=False)
 
     class Meta:
@@ -141,6 +142,23 @@ class BurialForm(forms.ModelForm):
         if operation and place:
             if not operation.is_empty() and place.rooms_free <= 0:
                 raise forms.ValidationError(u"Нет свободных могил в указанном месте")
+
+        duplicates = Burial.objects.filter(
+            date_fact = self.cleaned_data['date_fact'],
+            place__cemetery = self.cleaned_data['place'].cemetery,
+            person__first_name = self.cleaned_data['person'].first_name,
+            person__last_name = self.cleaned_data['person'].last_name,
+            person__middle_name = self.cleaned_data['person'].middle_name,
+            person__birth_date = self.cleaned_data['person'].birth_date,
+            person__death_date = self.cleaned_data['person'].death_date,
+        )
+        if self.instance and self.instance.pk:
+            duplicates = duplicates.exclude(pk=self.instance.pk)
+        if duplicates.exists() and not self.cleaned_data['allow_duplicates']:
+            self.duplicates_found = True
+            self.duplicates_list = duplicates
+            raise forms.ValidationError(u"Обнаружены дубликаты")
+
         return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
