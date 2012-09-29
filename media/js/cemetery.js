@@ -184,12 +184,31 @@ $(function() {
         var val = $('#id_customer-agent_person').val();
         for(var i in ORG_AGENTS[org_id]) {
             agent = ORG_AGENTS[org_id][i];
-            options += '<option value="'+i+'">'+agent+'</option>';
+            options += '<option value="'+i+'">'+agent.name+'</option>';
         }
         $('#id_customer-agent_person').html(options);
         $('#id_customer-agent_person').val(val);
         if ($('#id_customer-organization').val()) {
             $('#add_agent_btn').show();
+        }
+
+        $('#id_customer-agent_person').change();
+    });
+
+    $('#id_customer-agent_person').live('change', function() {
+        var org_id = $('#id_customer-organization').val();
+        var agent_id = $('#id_customer-agent_person').val();
+        var agent = ORG_AGENTS[org_id][agent_id];
+        if (agent) {
+            if (!$('#id_doverennost-number').val()) {
+                $('#id_doverennost-number').val(agent.dov_number);
+            }
+            if (!$('#id_doverennost-issue_date').val()) {
+                $('#id_doverennost-issue_date').val(agent.issue_date);
+            }
+            if (!$('#id_doverennost-expire_date').val()) {
+                $('#id_doverennost-expire_date').val(agent.expire_date);
+            }
         }
     });
 
@@ -293,6 +312,7 @@ function makeDatePicker(obj) {
     if (now.getMonth() == 11 && now.getDate() > 20) {
         $('input#id_burial_date').datepicker('option', 'yearRange', '1900:' +  (now_year + 1));
     }
+    $('input#id_doverennost-expire_date').datepicker('option', 'yearRange', (now_year - 10) + ':' +  (now_year + 10));
 }
 
 function makeTimePicker(obj) {

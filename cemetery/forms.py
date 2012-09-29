@@ -3,6 +3,7 @@ import datetime
 
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.forms import formsets
 from django.forms.formsets import formset_factory, BaseFormSet
@@ -126,8 +127,11 @@ class BurialForm(forms.ModelForm):
 
         customer = self.cleaned_data.get('client_person')
         if customer and self.cleaned_data.get('date_fact'):
-            if customer.personid.date < self.cleaned_data['date_fact'] - datetime.timedelta(75 * 365):
-                raise forms.ValidationError(u"Дата документа заказчика раньше 75 лет до даты захоронения")
+            try:
+                if customer.personid.date < self.cleaned_data['date_fact'] - datetime.timedelta(75 * 365):
+                    raise forms.ValidationError(u"Дата документа заказчика раньше 75 лет до даты захоронения")
+            except ObjectDoesNotExist:
+                pass
 
         place = self.cleaned_data.get('place')
         if place and place.seat:
@@ -145,6 +149,11 @@ class BurialForm(forms.ModelForm):
 
             if operation.is_empty() and not place.seat:
                 raise forms.ValidationError(u"Для указанного типа захоронения необходим номер места")
+
+        if self.cleaned_data['date_fact'] and self.cleaned_data['doverennost']:
+            if self.cleaned_data['date_fact'] >= datetime.date.today():
+                if self.cleaned_data['agent'] and not self.cleaned_data['doverennost']:
+                    raise forms.ValidationError(u"Для неархивных захоронений необходимы данные доверенности агента")
 
         duplicates = Burial.objects.filter(
             date_fact = self.cleaned_data['date_fact'],

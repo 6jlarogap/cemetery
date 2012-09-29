@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 
 from django.db import models
 
@@ -54,6 +55,12 @@ class Agent(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.person
+
+    def doverennost(self):
+        try:
+            return self.doverennosti.filter(expire_date__gt=datetime.datetime.now()).order_by('issue_date')[0]
+        except IndexError:
+            return
 
 class Doverennost(models.Model):
     agent = models.ForeignKey(Agent, related_name="doverennosti", verbose_name="Доверенность*")
