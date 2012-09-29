@@ -22,9 +22,7 @@
             {{ place_form.seat.errors }}
         </p>
         <p>
-            {{ place_form.rooms.label_tag }}
-            {{ place_form.rooms }}
-            {{ place_form.rooms.errors }}
+            Мест доступно: {% if place_form.instance.pk %}{{ place_form.instance.rooms }}{% else %}1 (по умолчанию){% endif %}
         </p>
         <h2 class="buttons"><button class="btn">Сохранить</button></h2>
     </div><!--/.well -->

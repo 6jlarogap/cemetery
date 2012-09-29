@@ -46,6 +46,7 @@
                             {% endfor %}
                         {% endif %}
                         {% if d.available %}
+                            {{ f.burial.errors }}
                             {{ f.burial }}
                         {% endif %}
                     </td>

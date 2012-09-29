@@ -50,6 +50,7 @@ class SearchForm(forms.Form):
 class PlaceForm(forms.ModelForm):
     class Meta:
         model = Place
+        exclude = ['rooms', ]
 
     def clean_seat(self):
         a = self.cleaned_data['seat']
