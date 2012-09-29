@@ -167,10 +167,9 @@ class Burial(models.Model):
     class Meta:
         verbose_name = (u'захоронение')
         verbose_name_plural = (u'захоронения')
-        #ordering = ['person__last_name',]
 
     def __unicode__(self):
-        return u"захоронение: %s" % self.person.__unicode__()
+        return u"%s: %s" % (self.operation, self.person)
 
     def agent_director(self):
         return self.client_organization and self.agent and self.agent.person == self.client_organization.ceo
