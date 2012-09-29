@@ -38,6 +38,7 @@
             {% for d,f in pbf.pbf_data %}
                 <tr>
                     <td>
+                        {{ f.non_field_errors }}
                         {{ forloop.counter }}.
                         {% if d.burials %}
                             {% for b in d.burials %}
