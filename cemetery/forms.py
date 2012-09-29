@@ -143,6 +143,9 @@ class BurialForm(forms.ModelForm):
             if not operation.is_empty() and place.rooms_free <= 0:
                 raise forms.ValidationError(u"Нет свободных могил в указанном месте")
 
+            if operation.is_empty() and not place.seat:
+                raise forms.ValidationError(u"Для указанного типа захоронения необходим номер места")
+
         duplicates = Burial.objects.filter(
             date_fact = self.cleaned_data['date_fact'],
             place__cemetery = self.cleaned_data['place'].cemetery,

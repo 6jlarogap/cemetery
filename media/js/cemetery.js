@@ -266,6 +266,11 @@ $(function() {
     });
 
     $('.dropdown-toggle').dropdown();
+
+    $('#id_cemetery').live('change', function() {
+        $(this).closest('.well').find('input').val('');
+        $('#place_rooms').text('1');
+    })
 });
 
 function makeDatePicker(obj) {
