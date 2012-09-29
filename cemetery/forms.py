@@ -665,7 +665,7 @@ class BasePlaceBurialsFormset(BaseFormSet):
                 burials = d.get('burials') or []
                 all_empty = lambda b: not b.operation.is_urn() or b.date_fact < limit
                 places_initial[i]['available'] = all(filter(all_empty, burials))
-        super(BasePlaceBurialsBormset, self).__init__(initial=places_initial, *args, **kwargs)
+        super(BasePlaceBurialsFormset, self).__init__(initial=places_initial, *args, **kwargs)
 
         for i, f in enumerate(self.forms):
             if places_initial[i].get('burial'):
