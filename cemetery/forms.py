@@ -128,10 +128,13 @@ class BurialForm(forms.ModelForm):
                 raise forms.ValidationError(u"Дата документа заказчика раньше 75 лет до даты захоронения")
 
         place = self.cleaned_data.get('place')
-        if place and acount_number:
-            if place.seat and unicode(place.seat) != unicode(acount_number):
-                if self.cleaned_data.get('operation').op_type == 'Захоронение':
-                    raise forms.ValidationError(u"При Захоронении номер в книге учета должен совпадать с номером места")
+        if place and place.seat:
+            if self.cleaned_data.get('operation').op_type == 'Захоронение':
+                others = Burial.objects.filter(place=place)
+                if self.instance and self.instance.pk:
+                    others = others.exclude(pk=self.instance.pk)
+                if others.exists():
+                    raise forms.ValidationError(u"Место не пустое, Операция не должна быть \"Захоронение\"")
 
         operation = self.cleaned_data.get('operation')
         if operation and place:
