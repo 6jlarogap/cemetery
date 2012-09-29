@@ -11,7 +11,10 @@
         <dt>Операция</dt>
         <dd>{{ burial.operation }}</dd>
         <dt>Место</dt>
-        <dd><a title="к могиле" href="{% url view_place burial.place.pk %}">Кладбище: {{ burial.place.cemetery }}, участок: {{ burial.place.area }}, место {{ burial.place.seat }}</a></dd>
+        <dd>
+            <a title="к могиле" href="{% url view_place burial.place.pk %}">Кладбище: {{ burial.place.cemetery }}, участок: {{ burial.place.area }}, место {{ burial.place.seat }}</a>
+            <a class="btn btn-primary" href="{% url new_burial %}?place={{ burial.place.pk }}">Добавить родственное</a>
+        </dd>
         <dt>Усопший</dt>
         <dd>{{ burial.person }}</dd>
 

@@ -23,11 +23,19 @@
             <dt>Место</dt>
             <dd>{{ place.seat }}</dd>
         {% endif %}
+        <dt></dt>
+        <dd>
+            <a class="btn btn-primary" href="{% url new_burial %}?place={{ place.pk }}">Добавить родственное</a>
+        </dd>
         {% if place.responsible %}
             <dt>Ответственный</dt>
             <dd>{{ place.responsible }}</dd>
         {% endif %}
     </dl>
+
+    <h2 class="buttons">
+
+    </h2>
 
     <h3>Захоронения:</h3>
     <form action="" method="POST">

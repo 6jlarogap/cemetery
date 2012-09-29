@@ -19,7 +19,7 @@ from django.contrib import messages
 
 import math
 
-from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery, Comment
+from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery, Comment, Operation
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm, PlaceBurialsFormset, PlaceRoomsForm
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm, CommentForm
 from cemetery.forms import AddAgentForm
@@ -162,10 +162,21 @@ def new_burial(request):
     date_fact = datetime.date.today() + datetime.timedelta(1)
     if date_fact.weekday() == 6:
         date_fact += datetime.timedelta(1)
-    burial_form = BurialForm(data=request.POST or None, initial={
-        'operation': p.default_operation,
-        'date_fact': date_fact,
-    })
+
+    place = None
+    if request.GET.get('place'):
+        place = Place.objects.get(pk=request.GET.get('place'))
+
+    tmp_b = Burial()
+    if place:
+        tmp_b.place = place
+    if p.default_operation:
+        tmp_b.operation = p.default_operation
+    elif place:
+        tmp_b.operation = Operation.objects.filter(op_type__istartswith=u"Подзахоронение")[0]
+    tmp_b.date_fact = date_fact
+
+    burial_form = BurialForm(data=request.POST or None, instance=tmp_b)
 
     if request.POST and burial_form.is_valid():
         b = burial_form.save()
