@@ -34,7 +34,10 @@
         {{ rf.as_p }}
         <p>Свободно: {{ place.rooms_free }} мест{{ place.rooms_free|choose_plural:"о,а," }}</p>
         {{ pbf.management_form }}
+
+        {{ pbf.is_bound }}
         {{ pbf.is_valid }}
+        {{ pbf.non_form_errors }}
         {{ pbf.errors }}
         <table>
             {% for d,f in pbf.pbf_data %}
