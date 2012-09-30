@@ -213,7 +213,7 @@ $(function() {
     $('#id_customer-agent_person').live('change', function() {
         var org_id = $('#id_customer-organization').val();
         var agent_id = $('#id_customer-agent_person').val();
-        var agent = ORG_AGENTS[org_id][agent_id];
+        var agent = ORG_AGENTS && ORG_AGENTS[org_id] && ORG_AGENTS[org_id][agent_id];
         if (agent) {
             if (!$('#id_doverennost-number').val()) {
                 $('#id_doverennost-number').val(agent.dov_number);
