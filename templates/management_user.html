@@ -9,10 +9,12 @@
             {{ form.as_p }}
             <h2 class="buttons">
                 <button class="btn btn-primary btn-large">{% if current_user %}Сохранить{% else %}Создать{% endif %}</button>
-                {% if current_user.is_active %}
-                    <a href="?user_pk={{ request.GET.user_pk }}&deactivate=1" class="btn btn-danger">Деактивировать</a>
-                {% else %}
-                    <a href="?user_pk={{ request.GET.user_pk }}&activate=1" class="btn btn-success">Активировать</a>
+                {% if current_user %}
+                    {% if current_user.is_active %}
+                        <a href="?user_pk={{ request.GET.user_pk }}&deactivate=1" class="btn btn-danger">Деактивировать</a>
+                    {% else %}
+                        <a href="?user_pk={{ request.GET.user_pk }}&activate=1" class="btn btn-success">Активировать</a>
+                    {% endif %}
                 {% endif %}
                 <input type="reset" class="btn" value="Очистить" />
             </h2>
@@ -42,6 +44,18 @@
     <script type="text/javascript">
         $(function(){
             $('#id_username').closest('p').before('<br/>');
+            {% if current_user %}
+                $('#id_password1').closest('p').before('<a class="btn" href="#" id="show_pass">сменить пароль</a>')
+
+                $('#id_password1').closest('p').addClass('pass');
+                $('#id_password2').closest('p').addClass('pass');
+
+                $('p.pass').hide();
+                $('#show_pass').click(function() {
+                    $('p.pass').fadeIn();
+                    $(this).hide();
+                });
+            {% endif %}
         });
     </script>
 {% endblock %}

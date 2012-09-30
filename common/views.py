@@ -653,12 +653,14 @@ def management_user(request):
         if request.GET.get('deactivate'):
             user.is_active = False
             user.save()
-            return HttpResponseRedirect('?user_pk=%s' % user.pk)
+            messages.success(request, u'Данные сохранены успешно')
+            return redirect('management_user')
 
         if request.GET.get('activate'):
             user.is_active = True
             user.save()
-            return HttpResponseRedirect('?user_pk=%s' % user.pk)
+            messages.success(request, u'Данные сохранены успешно')
+            return redirect('management_user')
 
         instance = None
         try:
@@ -675,7 +677,8 @@ def management_user(request):
 
     if request.method == 'POST' and form.is_valid():
         person = form.save(creator=request.user)
-        return redirect(reverse('management_user') + '?pk=%s' % person.pk)
+        messages.success(request, u'Данные сохранены успешно')
+        return redirect('management_user')
     users = User.objects.all().order_by('last_name')
     return render(request, 'management_user.html', {'form': form, "users": users, 'current_user': user})
 
