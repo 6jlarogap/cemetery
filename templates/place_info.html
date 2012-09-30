@@ -40,7 +40,7 @@
     <h3>Захоронения:</h3>
     <form action="" method="POST">
         {{ rf.as_p }}
-        <p>Свободно: {{ place.rooms_free }} мест{{ place.rooms_free|choose_plural:"о,а," }}</p>
+        <p>Свободно для захоронения: {{ place.rooms_free }} мест{{ place.rooms_free|choose_plural:"о,а," }}</p>
         {{ pbf.management_form }}
         {{ pbf.non_form_errors }}
         <table>
