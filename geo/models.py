@@ -80,7 +80,7 @@ class Street(models.Model):
     Улица.
     """
 
-    city = models.ForeignKey(City)  # Город.
+    city = models.ForeignKey(City)
     name = models.CharField(max_length=255, db_index=True)  # Название.
 
     class Meta:
@@ -101,10 +101,10 @@ class Location(models.Model):
     """
     Адрес.
     """
-    country = models.ForeignKey(Country, verbose_name=u"Страна", blank=True, null=True)
-    region = models.ForeignKey(Region, verbose_name=u"Регион", blank=True, null=True)
-    city = models.ForeignKey(City, verbose_name=u"Город", blank=True, null=True)
-    street = models.ForeignKey(Street, verbose_name=u"Улица", blank=True, null=True)
+    country = models.ForeignKey(Country, verbose_name=u"Страна", blank=True, null=True, on_delete=models.SET_NULL)
+    region = models.ForeignKey(Region, verbose_name=u"Регион", blank=True, null=True, on_delete=models.SET_NULL)
+    city = models.ForeignKey(City, verbose_name=u"Город", blank=True, null=True, on_delete=models.SET_NULL)
+    street = models.ForeignKey(Street, verbose_name=u"Улица", blank=True, null=True, on_delete=models.SET_NULL)
     post_index = models.CharField(u"Почтовый индекс", max_length=255, blank=True)
 
     house = models.CharField(u"Дом", max_length=255, blank=True)

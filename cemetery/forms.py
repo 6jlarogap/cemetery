@@ -385,18 +385,18 @@ class LocationForm(forms.ModelForm):
             )
         if kwargs.get('data', {}):
             kwargs['data'] = kwargs['data'] and kwargs['data'].copy() or {}
-            if kwargs['data'].get('country_name'):
+            if kwargs['data'].get('country_name').strip():
                 d = kwargs['data']
-                country, _tmp = Country.objects.get_or_create(name=d['country_name'])
+                country, _tmp = Country.objects.get_or_create(name=d['country_name'].strip())
                 kwargs['data']['country'] = country.pk
-                if kwargs.get('data', {}).get('region_name'):
-                    region, _tmp = Region.objects.get_or_create(name=d['region_name'], country=country)
+                if kwargs.get('data', {}).get('region_name').strip():
+                    region, _tmp = Region.objects.get_or_create(name=d['region_name'].strip(), country=country)
                     kwargs['data']['region'] = region.pk
-                    if kwargs.get('data', {}).get('city_name'):
-                        city, _tmp = City.objects.get_or_create(name=d['city_name'], region=region)
+                    if kwargs.get('data', {}).get('city_name').strip():
+                        city, _tmp = City.objects.get_or_create(name=d['city_name'].strip(), region=region)
                         kwargs['data']['city'] = city.pk
-                        if kwargs.get('data', {}).get('street_name'):
-                            kwargs['data']['street'] = Street.objects.get_or_create(name=d['street_name'], city=city)[0].pk
+                        if kwargs.get('data', {}).get('street_name').strip():
+                            kwargs['data']['street'] = Street.objects.get_or_create(name=d['street_name'].strip(), city=city)[0].pk
         super(LocationForm, self).__init__(*args, **kwargs)
         self.fields.keyOrder = self.fields.keyOrder[-4:] + self.fields.keyOrder[:-4]
 

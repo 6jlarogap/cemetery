@@ -129,6 +129,21 @@ function setup_address_autocompletes() {
 $(function() {
     updateControls();
 
+    $('input.autocomplete[name$=city_name]').live('change', function() {
+        $(this).closest('.well').find('input.autocomplete[name$=street_name]').val('');
+    });
+
+    $('input.autocomplete[name$=region_name]').live('change', function() {
+        $(this).closest('.well').find('input.autocomplete[name$=street_name]').val('');
+        $(this).closest('.well').find('input.autocomplete[name$=city_name]').val('');
+    });
+
+    $('input.autocomplete[name$=country_name]').live('change', function() {
+        $(this).closest('.well').find('input.autocomplete[name$=street_name]').val('');
+        $(this).closest('.well').find('input.autocomplete[name$=city_name]').val('');
+        $(this).closest('.well').find('input.autocomplete[name$=region_name]').val('');
+    });
+
     $('a.load').live('click', function(){
         $('#block_empty').hide();
         $('#block_empty').load(this.href, function() {
