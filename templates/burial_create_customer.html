@@ -125,7 +125,7 @@
                 {% for a in o.agents.all %}
                     {{ a.person.pk }}: {
                         name: "{{ a.person }}",
-                        dov_num: "{{ a.doverennost.number|default:"" }}",
+                        dov_number: "{{ a.doverennost.number|default:"" }}",
                         issue_date: "{{ a.doverennost.issue_date|date:"d.m.Y"|default:"" }}",
                         expire_date: "{{ a.doverennost.expire_date|date:"d.m.Y"|default:"" }}"
                     }{% if not forloop.last %},{% endif %}
