@@ -52,6 +52,7 @@ class Region(models.Model):
         verbose_name = u'регион'
         verbose_name_plural = u'регионы'
         db_table = "common_georegion"
+        ordering = ['name']
 
 class City(models.Model):
     """
@@ -74,6 +75,7 @@ class City(models.Model):
         verbose_name = u'населенный пункт'
         verbose_name_plural = u'населенные пункты'
         db_table = "common_geocity"
+        ordering = ['name']
 
 class Street(models.Model):
     """
@@ -84,7 +86,7 @@ class Street(models.Model):
     name = models.CharField(max_length=255, db_index=True)  # Название.
 
     class Meta:
-        ordering = ['city', 'name']
+        ordering = ['name']
         unique_together = (("city", "name"),)
         verbose_name = (u'улица')
         verbose_name_plural = (u'улицы')
