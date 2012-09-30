@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from common.forms import UnclearDateField
 
 from django import forms
 from django.contrib.auth.models import User
@@ -197,6 +198,7 @@ class BurialForm(forms.ModelForm):
 
 class PersonForm(forms.ModelForm):
     instance = forms.ChoiceField(widget=forms.RadioSelect, required=False)
+    birth_date = UnclearDateField(label=u"Дата рождения", required=False)
 
     INSTANCE_CHOICES = [
         ('', u'Не выбрано'),
@@ -214,6 +216,8 @@ class PersonForm(forms.ModelForm):
         instance_pk = data.get('instance')
         if instance_pk and instance_pk not in [None, '', 'NEW']:
             kwargs['instance'] = Person.objects.get(pk=instance_pk)
+            kwargs['instance'].birth_date = kwargs['instance'].unclear_birth_date
+
             real_initial = kwargs.get('initial', {}).copy()
             kwargs['initial'] = model_to_dict(kwargs['instance'], [], [])
             kwargs['initial'].update({'instance': instance_pk})
@@ -222,6 +226,7 @@ class PersonForm(forms.ModelForm):
                 old_data.update(kwargs['initial'])
                 kwargs['data'] = old_data
             kwargs['initial'].update(real_initial)
+
         super(PersonForm, self).__init__(*args, **kwargs)
         self.data = dict(self.data.items())
         if not any(self.data.values()) or self.data.keys() == ['instance']:
@@ -243,7 +248,11 @@ class PersonForm(forms.ModelForm):
                     self.is_bound = False
                     dead = self.initial and self.initial.get('death_date')
                     self.initial = model_to_dict(self.instance, self._meta.fields, self._meta.exclude)
-                    self.initial.update({'instance': self.instance.pk, 'death_date': dead})
+                    self.initial.update({
+                        'instance': self.instance.pk,
+                        'death_date': dead,
+                        'birth_date': self.instance.unclear_birth_date
+                    })
             else:
                 if self.data.get('instance') == 'NEW':
                     if dead and not self.data.get('death_date') :
@@ -320,6 +329,8 @@ class PersonForm(forms.ModelForm):
         if self.instance:
             person.pk = self.instance.pk
         person.address = location
+        person.birth_date_no_month = person.birth_date and self.fields['birth_date'].widget.no_month or False
+        person.birth_date_no_day = person.birth_date and self.fields['birth_date'].widget.no_day or False
         if commit:
             person.save()
         return person
@@ -627,7 +638,6 @@ class UserForm(forms.ModelForm):
         person.user = person.user
         person.creator = creator
         person.save()
-        print person.user, person.user.pk
         return person
 
 class CemeteryForm(forms.ModelForm):

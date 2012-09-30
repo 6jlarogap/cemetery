@@ -38,3 +38,7 @@ h2.buttons { margin-top: 1em; }
 span.move-left { position: relative; left: -20px; }
 
 ul.messages { list-style: none; }
+
+select#id_birth_date_day { width: 40px; }
+select#id_birth_date_month { width: 90px; }
+select#id_birth_date_year { width: 70px; }
