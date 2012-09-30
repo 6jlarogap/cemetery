@@ -176,7 +176,7 @@ class BurialForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance')
-        if instance and instance.place and instance.place.responsible:
+        if instance and instance.pk and instance.place and instance.place.responsible:
             kwargs.setdefault('initial', {}).update({
                 'responsible': instance.place.responsible,
             })
