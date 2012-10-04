@@ -137,7 +137,7 @@ class BurialForm(forms.ModelForm):
         place = self.cleaned_data.get('place')
         if place and place.seat:
             if self.cleaned_data.get('operation').op_type == 'Захоронение':
-                others = Burial.objects.filter(place=place)
+                others = Burial.objects.filter(place=place, operation__op_type='Захоронение')
                 if self.instance and self.instance.pk:
                     others = others.exclude(pk=self.instance.pk)
                 if others.exists():
