@@ -675,6 +675,8 @@ def management_user(request):
                 instance = Person.objects.create(first_name=user.first_name, last_name=user.last_name, user=user)
     form = UserForm(request.POST or None, instance=instance)
 
+    print form.is_valid() or form.errors
+
     if request.method == 'POST' and form.is_valid():
         person = form.save(creator=request.user)
         messages.success(request, u'Данные сохранены успешно')
