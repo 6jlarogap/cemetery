@@ -2,7 +2,7 @@
 import datetime
 
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.forms import formsets
@@ -598,6 +598,7 @@ class PrintOptionsForm(forms.Form):
 
 class UserForm(forms.ModelForm):
     username = forms.SlugField(max_length=255, label=u'Имя пользователя')
+    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), label=u'Группы', required=False, widget=forms.CheckboxSelectMultiple)
     password1 = forms.CharField(widget=forms.PasswordInput, max_length=255, label=u'Пароль', required=False)
     password2 = forms.CharField(widget=forms.PasswordInput, max_length=255, label=u'Пароль (еще раз)', required=False)
 
@@ -611,7 +612,10 @@ class UserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         if kwargs.get('instance'):
             person = kwargs.get('instance')
-            kwargs.setdefault('initial', {}).update(username=person.user and person.user.username)
+            kwargs.setdefault('initial', {}).update(
+                username=person.user and person.user.username,
+                groups=person.user and person.user.groups.all(),
+            )
         super(UserForm, self).__init__(*args, **kwargs)
         self.fields['last_name'].required = True
         if not self.instance or not self.instance.pk:
@@ -629,6 +633,7 @@ class UserForm(forms.ModelForm):
         person.user.last_name = self.cleaned_data['last_name'].capitalize()
         person.user.first_name = self.cleaned_data['first_name'].capitalize()
         person.user.username = self.cleaned_data['username']
+        person.user.groups = self.cleaned_data['groups']
         person.user.is_staff = True
 
         if self.cleaned_data['password1']:

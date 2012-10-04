@@ -44,6 +44,7 @@
     <script type="text/javascript">
         $(function(){
             $('#id_username').closest('p').before('<br/>');
+            $('label[for=id_groups_0]').closest('p').before('<br/>');
             {% if current_user %}
                 $('#id_password1').closest('p').before('<a class="btn" href="#" id="show_pass">сменить пароль</a>')
 
