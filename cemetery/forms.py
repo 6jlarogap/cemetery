@@ -137,10 +137,10 @@ class BurialForm(forms.ModelForm):
         place = self.cleaned_data.get('place')
         if place and place.seat:
             if self.cleaned_data.get('operation').op_type == 'Захоронение':
-                others = Burial.objects.filter(place=place, operation__op_type='Захоронение')
+                others = Burial.objects.filter(place=place).select_related()
                 if self.instance and self.instance.pk:
                     others = others.exclude(pk=self.instance.pk)
-                if others.exists():
+                if any(filter(lambda o: not o.operation.is_empty(), others)):
                     raise forms.ValidationError(u"Место не пустое, Операция не должна быть \"Захоронение\"")
 
         operation = self.cleaned_data.get('operation')
