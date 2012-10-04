@@ -20,7 +20,7 @@ from django.contrib import messages
 import math
 
 from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery, Comment, Operation
-from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm, PlaceBurialsFormset, PlaceRoomsForm
+from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm, PlaceBurialsFormset, PlaceRoomsForm, OrganizationForm, AccountsFormset, AgentsFormset
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm, CommentForm
 from cemetery.forms import AddAgentForm
 from persons.models import DeathCertificate, PersonID
@@ -701,6 +701,38 @@ def management_cemetery(request):
 
     cemeteries = Cemetery.objects.all()
     return render(request, 'management_add_cemetery.html', {'cemetery_form': cemetery_form, "location_form": location_form, "cemeteries": cemeteries})
+
+@user_passes_test(lambda u: u.is_superuser)
+@transaction.commit_on_success
+def management_org(request):
+    """
+    Страница управления организациями.
+    """
+    org = None
+    if request.GET.get('pk'):
+        org = get_object_or_404(Organization, pk=request.GET.get('pk'))
+
+    org_form = OrganizationForm(data=request.POST or None, instance=org)
+    location_form = LocationForm(data=request.POST or None, instance=org and org.location)
+    accounts_formset = AccountsFormset(data=request.POST or None, instance=org, prefix='accounts')
+    agents_formset = AgentsFormset(data=request.POST or None, instance=org, prefix='agents')
+    if request.method == "POST" and org_form.is_valid() and location_form.is_valid() and agents_formset.is_valid() and accounts_formset.is_valid():
+        location = location_form.save()
+        org = org_form.save(location=location)
+        accounts_formset = AccountsFormset(data=request.POST or None, instance=org, prefix='accounts')
+        agents_formset = AgentsFormset(data=request.POST or None, instance=org, prefix='agents')
+        accounts_formset.save()
+        agents_formset.save()
+        return redirect(reverse('management_org') + '?pk=%s' % org.pk)
+
+    orgs = Organization.objects.all()
+    return render(request, 'management_add_org.html', {
+        'org_form': org_form,
+        "location_form": location_form,
+        'accounts_formset': accounts_formset,
+        'agents_formset': agents_formset,
+        "orgs": orgs,
+    })
 
 @login_required
 def new_agent(request):

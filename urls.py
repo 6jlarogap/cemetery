@@ -29,6 +29,7 @@ urlpatterns += patterns('common.views',
     url(r'^comment/(?P<pk>[^/]*)/delete/$', 'delete_comment', name='delete_comment'),
 
     url(r'^management/user/$', 'management_user', name='management_user'),
+    url(r'^management/org/$', 'management_org', name='management_org'),
     url(r'^management/cemetery/$', 'management_cemetery', name='management_cemetery'),
 
     url(r'^autocomplete/person/$', 'autocomplete_person', name='autocomplete_person'),

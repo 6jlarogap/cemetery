@@ -19,6 +19,7 @@ class Organization(models.Model):
     ceo_name_who = models.CharField(u"ФИО директора р.п.", max_length=255, null=True, blank=True, help_text=u'родительный падеж, напр. ИВАНОВА И.И.')
     ceo_document = models.CharField(u"Документ директора", max_length=255, null=True, blank=True, help_text=u'на основании чего? например, УСТАВА')
     phones = models.TextField(u"Телефоны", blank=True, null=True)
+    location = models.ForeignKey('geo.Location', blank=True, null=True, verbose_name=u'Адрес')
 
     def __unicode__(self):
         return self.name or self.full_name or u'Unknown'

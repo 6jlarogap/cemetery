@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import datetime
-from common.forms import UnclearDateField
 
 from django import forms
 from django.contrib.auth.models import User
@@ -8,11 +7,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.forms import formsets
 from django.forms.formsets import formset_factory, BaseFormSet
-from django.forms.models import model_to_dict
+from django.forms.models import model_to_dict, inlineformset_factory
 
+from common.forms import UnclearDateField
 from cemetery.models import Cemetery, Operation, Place, Burial, UserProfile, Service, ServicePosition, Comment
 from geo.models import Location, Country, Region, City, Street
-from organizations.models import Doverennost, Organization, Agent
+from organizations.models import Doverennost, Organization, Agent, BankAccount
 from persons.models import Person, DeathCertificate, PersonID
 from utils.models import PER_PAGE_VALUES, ORDER_BY_VALUES
 
@@ -654,6 +654,20 @@ class CemeteryForm(forms.ModelForm):
         cemetery.save()
         return cemetery
 
+class OrganizationForm(forms.ModelForm):
+    class Meta:
+        model = Organization
+        exclude = ['location']
+        widgets = {
+            'phones': forms.TextInput(),
+        }
+
+    def save(self, location=None, *args, **kwargs):
+        org = super(OrganizationForm, self).save(*args, **kwargs)
+        org.location = location
+        org.save()
+        return org
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -751,3 +765,41 @@ class AddAgentForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         person = super(AddAgentForm, self).save()
         return Agent.objects.create(person=person, organization=self.cleaned_data['organization'])
+
+class OrganizationAgentForm(forms.ModelForm):
+    last_name = forms.CharField(label=u'Фамилия')
+    first_name = forms.CharField(required=False, label=u'Имя')
+    middle_name = forms.CharField(required=False, label=u'Отчество')
+
+    class Meta:
+        model = Agent
+        fields = ['id']
+
+    def __init__(self, *args, **kwargs):
+        if kwargs.get('instance'):
+            i = kwargs.get('instance')
+            kwargs.setdefault('initial', {}).update({
+                'last_name': i.person.last_name,
+                'middle_name': i.person.middle_name,
+                'first_name': i.person.first_name,
+                })
+        super(OrganizationAgentForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        obj = super(OrganizationAgentForm, self).save(commit=commit)
+        if self.instance.person_id:
+            self.instance.person.last_name = self.cleaned_data['last_name']
+            self.instance.person.middle_name = self.cleaned_data['middle_name']
+            self.instance.person.first_name = self.cleaned_data['first_name']
+            self.instance.person.save()
+        else:
+            self.instance.person = Person.objects.create(
+                last_name=self.cleaned_data['last_name'],
+                middle_name=self.cleaned_data['middle_name'],
+                first_name=self.cleaned_data['first_name']
+            )
+            self.instance.save()
+        return obj
+
+AccountsFormset = inlineformset_factory(Organization, BankAccount)
+AgentsFormset = inlineformset_factory(Organization, Agent, form=OrganizationAgentForm, can_delete=False)

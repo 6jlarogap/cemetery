@@ -41,57 +41,6 @@ class PersonAdmin(admin.ModelAdmin):
         return obj.address or ''
     get_address.short_description = u'Адрес'
 
-class OrganizationAgentForm(forms.ModelForm):
-    last_name = forms.CharField(label=u'Фамилия')
-    first_name = forms.CharField(required=False, label=u'Имя')
-    middle_name = forms.CharField(required=False, label=u'Отчество')
-
-    class Meta:
-        model = Agent
-        fields = ['id']
-
-    def __init__(self, *args, **kwargs):
-        if kwargs.get('instance'):
-            i = kwargs.get('instance')
-            kwargs.setdefault('initial', {}).update({
-                'last_name': i.person.last_name,
-                'middle_name': i.person.middle_name,
-                'first_name': i.person.first_name,
-            })
-        super(OrganizationAgentForm, self).__init__(*args, **kwargs)
-
-    def save(self, commit=True):
-        obj = super(OrganizationAgentForm, self).save(commit=commit)
-        if self.instance.person_id:
-            self.instance.person.last_name = self.cleaned_data['last_name']
-            self.instance.person.middle_name = self.cleaned_data['middle_name']
-            self.instance.person.first_name = self.cleaned_data['first_name']
-            self.instance.person.save()
-        else:
-            self.instance.person = Person.objects.create(
-                last_name=self.cleaned_data['last_name'],
-                middle_name=self.cleaned_data['middle_name'],
-                first_name=self.cleaned_data['first_name']
-            )
-            self.instance.save()
-        return obj
-
-class OrganizationAgentInline(admin.StackedInline):
-    fk_name = 'organization'
-    model = Agent
-    form = OrganizationAgentForm
-    can_delete = False
-
-class OrganizationAccountInline(admin.StackedInline):
-    model = BankAccount
-
-class OrganizationAdmin(admin.ModelAdmin):
-    inlines = [OrganizationAccountInline, OrganizationAgentInline, ]
-    raw_id_fields = ['ceo', ]
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
 class CemeteryAdmin(admin.ModelAdmin):
     raw_id_fields = ['organization', 'location', ]
     list_display = ['name', 'organization', 'ordering']
@@ -112,7 +61,6 @@ admin.site.register(DeathCertificate)
 admin.site.register(Doverennost)
 admin.site.register(Operation)
 admin.site.register(Service, ServiceAdmin)
-admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(ZAGS)
 admin.site.register(IDDocumentType)
 admin.site.register(Person, PersonAdmin)
