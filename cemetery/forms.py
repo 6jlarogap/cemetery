@@ -737,8 +737,6 @@ class BasePlaceBurialsFormset(BaseFormSet):
             if f.cleaned_data.get('burial'):
                 f.cleaned_data['burial'].grave_id = i
                 f.cleaned_data['burial'].save()
-            else:
-                self.filled_burials.filter(grave_id=i).update(grave_id=None)
 
 PlaceBurialsFormset = formset_factory(form=PlaceBurialForm, formset=BasePlaceBurialsFormset, extra=0)
 

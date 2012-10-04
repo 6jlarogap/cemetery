@@ -29,7 +29,12 @@
         </dd>
         {% if place.responsible %}
             <dt>Ответственный</dt>
-            <dd>{{ place.responsible }}</dd>
+            <dd>
+                {{ place.responsible }}
+                {% if place.responsible.phones %}
+                    (тел. {{ place.responsible.phones }})
+                {% endif %}
+            </dd>
         {% endif %}
     </dl>
 
@@ -68,7 +73,7 @@
                     <tr>
                         <td>
                             {{ forloop.counter }}.
-                            <a href="{% url view_burial b.pk %}">{{ b.person }}</a>
+                            <a href="{% url view_burial b.pk %}">{{ b }}</a>
                         </td>
                     </tr>
                 {% endfor %}
