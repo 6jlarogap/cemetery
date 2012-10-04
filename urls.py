@@ -33,6 +33,7 @@ urlpatterns += patterns('common.views',
     url(r'^management/cemetery/$', 'management_cemetery', name='management_cemetery'),
 
     url(r'^autocomplete/person/$', 'autocomplete_person', name='autocomplete_person'),
+    url(r'^autocomplete/doc_source/$', 'autocomplete_doc_source', name='autocomplete_doc_source'),
 
     url(r'^profile/$', 'profile', name='profile'),
 

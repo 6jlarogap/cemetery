@@ -23,7 +23,7 @@ from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm, PlaceBurialsFormset, PlaceRoomsForm, OrganizationForm, AccountsFormset, AgentsFormset
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm, CommentForm
 from cemetery.forms import AddAgentForm
-from persons.models import DeathCertificate, PersonID
+from persons.models import DeathCertificate, PersonID, DocumentSource
 from organizations.models import Organization, Agent
 
 def ulogin(request):
@@ -634,6 +634,12 @@ def autocomplete_person(request):
     persons = persons.order_by('middle_name', 'first_name', 'last_name')
     person_names = list(set([p.full_human_name() for p in persons[:100]]))
     return HttpResponse(simplejson.dumps([{'value': pn} for pn in person_names]), mimetype='text/javascript')
+
+def autocomplete_doc_source(request):
+    query = request.GET['query']
+    ds = DocumentSource.objects.filter(name__istartswith=query).order_by('name', )
+    ds_names = list(set([p.name for p in ds[:100]]))
+    return HttpResponse(simplejson.dumps([{'value': pn} for pn in ds_names]), mimetype='text/javascript')
 
 @user_passes_test(lambda u: u.is_superuser)
 @transaction.commit_on_success

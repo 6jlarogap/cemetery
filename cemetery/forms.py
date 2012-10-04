@@ -13,7 +13,7 @@ from common.forms import UnclearDateField
 from cemetery.models import Cemetery, Operation, Place, Burial, UserProfile, Service, ServicePosition, Comment
 from geo.models import Location, Country, Region, City, Street
 from organizations.models import Doverennost, Organization, Agent, BankAccount
-from persons.models import Person, DeathCertificate, PersonID
+from persons.models import Person, DeathCertificate, PersonID, DocumentSource
 from utils.models import PER_PAGE_VALUES, ORDER_BY_VALUES
 
 class SearchForm(forms.Form):
@@ -127,7 +127,7 @@ class BurialForm(forms.ModelForm):
                 raise forms.ValidationError(u"Номер не соответствует дате")
 
         customer = self.cleaned_data.get('client_person')
-        if customer and self.cleaned_data.get('date_fact'):
+        if customer and customer.personid and customer.personid.date and self.cleaned_data.get('date_fact'):
             try:
                 if customer.personid.date < self.cleaned_data['date_fact'] - datetime.timedelta(75 * 365):
                     raise forms.ValidationError(u"Дата документа заказчика раньше 75 лет до даты захоронения")
@@ -473,9 +473,23 @@ class CustomerForm(forms.Form):
             return self.cleaned_data['agent_person']
 
 class CustomerIDForm(forms.ModelForm):
+    source = forms.CharField(label=u'Кем выдан')
+
     class Meta:
         model = PersonID
         exclude = ['person']
+
+    def __init__(self, *args, **kwargs):
+        cid = kwargs.get('instance')
+        if cid:
+            kwargs.setdefault('initial', {}).update(source=cid.source)
+        super(CustomerIDForm, self).__init__(*args, **kwargs)
+
+    def clean_source(self):
+        ds = None
+        if self.cleaned_data['source']:
+            ds, _ = DocumentSource.objects.get_or_create(name=self.cleaned_data['source'])
+        return ds
 
     def clean_date(self):
         if self.cleaned_data['date']:

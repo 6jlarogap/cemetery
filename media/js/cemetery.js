@@ -23,6 +23,7 @@ function setup_address_autocompletes() {
     REGION_URL = '/geo/autocomplete/region/';
     CITY_URL = '/geo/autocomplete/city/';
     STREET_URL = '/geo/autocomplete/street/';
+    DOCS_SOURCE_URL = '/autocomplete/doc_source/';
 
     $('#id_instance_0').live('click', function(){
         var form = $(this).parents('.well');
@@ -122,6 +123,19 @@ function setup_address_autocompletes() {
                 $country.val(val.country);
             }
             $(this)[0].$element.val(val.street);
+        }
+    });
+    $('#id_customer_id-source').attr('autocomplete', 'off').typeahead({
+        items: 100,
+        source: function (typeahead, query) {
+            if (query.length < 2) { return }
+            $.ajax({
+                url: DOCS_SOURCE_URL + "?query=" + query,
+                dataType: 'json',
+                success: function(data) {
+                    typeahead.process(data);
+                }
+            });
         }
     });
 }
