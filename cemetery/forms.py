@@ -383,20 +383,41 @@ class LocationForm(forms.ModelForm):
                 city_name=city and city.name,
                 street_name=street and street.name,
             )
+
+        def intellectual_get_or_create(data_name, ModelKlass, **kwargs):
+            objects_alike = []
+            objects_exact = []
+            dn = data_name.strip()
+            for c in ModelKlass.objects.filter(**kwargs):
+                if dn.upper() == c.name.upper():
+                    objects_exact.append(c.name)
+
+                if dn.strip('.').upper() in c.name.strip('.').upper() or c.name.strip('.').upper() in dn.strip('.').upper():
+                    objects_alike.append(c.name)
+
+            if any(objects_exact):
+                return ModelKlass.objects.get(name=objects_exact[0], **kwargs)
+            if len(objects_alike) == 1:
+                return ModelKlass.objects.get(name=objects_alike[0], **kwargs)
+            else:
+                return ModelKlass.objects.create(name=dn, **kwargs)
+
         if kwargs.get('data', {}):
             kwargs['data'] = kwargs['data'] and kwargs['data'].copy() or {}
             if kwargs['data'].get('country_name').strip():
                 d = kwargs['data']
-                country, _tmp = Country.objects.get_or_create(name=d['country_name'].strip())
+
+                country = intellectual_get_or_create(d['country_name'], Country)
                 kwargs['data']['country'] = country.pk
                 if kwargs.get('data', {}).get('region_name').strip():
-                    region, _tmp = Region.objects.get_or_create(name=d['region_name'].strip(), country=country)
+                    region = intellectual_get_or_create(d['region_name'], Region, country=country)
                     kwargs['data']['region'] = region.pk
                     if kwargs.get('data', {}).get('city_name').strip():
-                        city, _tmp = City.objects.get_or_create(name=d['city_name'].strip(), region=region)
+                        city = intellectual_get_or_create(d['city_name'], City, region=region)
                         kwargs['data']['city'] = city.pk
                         if kwargs.get('data', {}).get('street_name').strip():
-                            kwargs['data']['street'] = Street.objects.get_or_create(name=d['street_name'].strip(), city=city)[0].pk
+                            street = intellectual_get_or_create(d['street_name'], Street, city=city)
+                            kwargs['data']['street'] = street.pk
         super(LocationForm, self).__init__(*args, **kwargs)
         self.fields.keyOrder = self.fields.keyOrder[-4:] + self.fields.keyOrder[:-4]
 
