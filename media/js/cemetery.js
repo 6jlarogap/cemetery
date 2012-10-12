@@ -247,10 +247,12 @@ $(function() {
             }
         }
         $('#id_customer-agent_doverennost').html(options);
-        if ($('#id_agent').val() == agent.agent_pk) {
-            $('#id_customer-agent_doverennost').val($('#id_doverennost').val() || agent.cur_dov);
-        } else {
-            $('#id_customer-agent_doverennost').val(agent.cur_dov);
+        if (agent) {
+            if ($('#id_agent').val() == agent.agent_pk) {
+                $('#id_customer-agent_doverennost').val($('#id_doverennost').val() || agent.cur_dov);
+            } else {
+                $('#id_customer-agent_doverennost').val(agent.cur_dov);
+            }
         }
     });
 
