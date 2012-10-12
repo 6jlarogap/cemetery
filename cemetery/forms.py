@@ -389,6 +389,10 @@ class LocationForm(forms.ModelForm):
             objects_exact = []
             dn = data_name.strip()
             for c in ModelKlass.objects.filter(**kwargs):
+                if dn == c.name:
+                    objects_exact.append(c.name)
+
+            for c in ModelKlass.objects.filter(**kwargs):
                 if dn.upper() == c.name.upper():
                     objects_exact.append(c.name)
 
