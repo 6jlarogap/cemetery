@@ -170,10 +170,10 @@ def new_burial(request):
     tmp_b = Burial()
     if place:
         tmp_b.place = place
-    if p.default_operation:
-        tmp_b.operation = p.default_operation
-    elif place:
         tmp_b.operation = Operation.objects.filter(op_type__istartswith=u"Подзахоронение")[0]
+    elif p.default_operation:
+        tmp_b.operation = p.default_operation
+
     tmp_b.date_fact = date_fact
 
     burial_form = BurialForm(data=request.POST or None, instance=tmp_b)
