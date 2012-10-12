@@ -300,7 +300,7 @@ def new_burial_customer(request):
 
     org_data = request.REQUEST.get('organization') and request.REQUEST.copy() or None
     customer_form = CustomerForm(data=request.POST.copy() or None, prefix='customer', initial=org_data)
-    doverennost_form = DoverennostForm(data=request.POST.copy() or None, prefix='doverennost', initial=org_data)
+    doverennost_form = DoverennostForm()
 
     add_agent_form = AddAgentForm(prefix='add_agent')
 
@@ -319,14 +319,14 @@ def new_burial_customer(request):
                     'person': person,
                 })
         else:
-            if customer_form.cleaned_data['agent_director'] or doverennost_form.is_valid():
+            if customer_form.cleaned_data['agent_director'] or customer_form.cleaned_data['agent_doverennost']:
                 org = customer_form.cleaned_data['organization']
                 agent_person = customer_form.get_agent()
                 doverennost = None
                 if agent_person:
                     agent, _created = Agent.objects.get_or_create(organization=org, person=agent_person)
-                    if doverennost_form.is_valid():
-                        doverennost = doverennost_form.save(agent=agent)
+                    if customer_form.cleaned_data['agent_doverennost']:
+                        doverennost = customer_form.cleaned_data['agent_doverennost']
                 else:
                     agent = None
                 return render(request, 'burial_create_customer_org_ok.html', {
@@ -747,5 +747,22 @@ def new_agent(request):
     form = AddAgentForm(data=request.POST or None, prefix='add_agent')
     if form.is_valid():
         agent = form.save()
-        return HttpResponse(simplejson.dumps({'pk': agent.person.pk, 'label': u'%s' % agent.person}), mimetype='application/json')
+        return HttpResponse(simplejson.dumps({
+            'pk': agent.person.pk,
+            'label': u'%s' % agent.person,
+            'agent_pk': agent.pk,
+            'cur_dov': None,
+            'dover_dict': dict([(d.pk, u'%s' % d) for d in agent.doverennosti.all()]),
+        }), mimetype='application/json')
+    return HttpResponse(form.as_p(), mimetype='text/html')
+
+@login_required
+def new_dover(request):
+    form = DoverennostForm(data=request.POST or None, prefix='add_dover')
+    if form.is_valid():
+        dover = form.save()
+        return HttpResponse(simplejson.dumps({
+            'pk': dover.pk,
+            'label': u'%s' % dover,
+        }), mimetype='application/json')
     return HttpResponse(form.as_p(), mimetype='text/html')

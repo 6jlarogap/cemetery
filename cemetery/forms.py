@@ -474,6 +474,7 @@ class CustomerForm(forms.Form):
     organization = forms.ModelChoiceField(label=u'Организация', queryset=Organization.objects.all(), required=False)
     agent_director = forms.BooleanField(label=u'Директор - агент', required=False)
     agent_person = forms.ModelChoiceField(label=u'Агент', queryset=Person.objects.none(), required=False)
+    agent_doverennost = forms.ModelChoiceField(label=u'Доверенность', queryset=Doverennost.objects.none(), required=False)
 
     def __init__(self, *args, **kwargs):
         super(CustomerForm, self).__init__(*args, **kwargs)
@@ -486,9 +487,17 @@ class CustomerForm(forms.Form):
         if not self.is_person():
             self.fields['organization'].required = True
             self.fields['agent_person'].queryset = qs
+            if not self.is_agent_director():
+                self.fields['agent_doverennost'].required = True
+                agent = self.data.get('customer-agent_person', '')
+                if agent:
+                    self.fields['agent_doverennost'].queryset = Doverennost.objects.filter(agent__person__pk=agent)
 
     def is_person(self):
         return str(self.data.get('customer-customer_type', '')) == str(OPF_FIZIK)
+
+    def is_agent_director(self):
+        return bool(self.data.get('customer-agent_director', ''))
 
     def get_agent(self):
         if self.cleaned_data['agent_director']:
@@ -530,27 +539,25 @@ class CustomerIDForm(forms.ModelForm):
         return cid
 
 class DoverennostForm(forms.ModelForm):
+    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), widget=forms.HiddenInput)
+
     class Meta:
         model = Doverennost
-        exclude = ['agent', ]
 
     def clean_issue_date(self):
         if self.cleaned_data['issue_date'] and self.cleaned_data['issue_date'] > datetime.date.today():
             raise forms.ValidationError(u"Дата выпуска позже текущей")
         return self.cleaned_data['issue_date']
 
-    def clean_expire_date(self):
-        if self.cleaned_data['expire_date'] and self.cleaned_data['expire_date'] < datetime.date.today():
-            raise forms.ValidationError(u"Срок действия истек")
-        return self.cleaned_data['expire_date']
-
     def save(self, commit=True, agent=None):
-        self.cleaned_data.update({'agent': agent})
+        if agent:
+            self.cleaned_data.update({'agent': agent})
         try:
             d = Doverennost.objects.get(**self.cleaned_data)
         except Doverennost.DoesNotExist:
             d = super(DoverennostForm, self).save(commit=False)
-            d.agent = agent
+            if agent:
+                d.agent = agent
             if commit:
                 d.save()
         return d

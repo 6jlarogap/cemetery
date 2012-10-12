@@ -206,6 +206,13 @@ $(function() {
         $('#agent_form .form-internal').load($('#agent_form').attr('action'));
     });
 
+    $('#add_dover_btn').live('click', function() {
+        $('#dover_form .form-internal').load($('#dover_form').attr('action'), function() {
+            updateControls();
+            $('#id_customer-agent_person').change();
+        });
+    });
+
     $('#id_customer-organization').live('change', function() {
         var options = '<option value="">---------------</option>';
         var org_id = $(this).val();
@@ -219,6 +226,7 @@ $(function() {
         $('#id_customer-agent_person').val(val);
         if ($('#id_customer-organization').val()) {
             $('#add_agent_btn').show();
+            $('#add_dover_btn').show();
         }
 
         $('#id_customer-agent_person').change();
@@ -228,16 +236,21 @@ $(function() {
         var org_id = $('#id_customer-organization').val();
         var agent_id = $('#id_customer-agent_person').val();
         var agent = ORG_AGENTS && ORG_AGENTS[org_id] && ORG_AGENTS[org_id][agent_id];
+
+        $('#id_customer-agent_doverennost option').remove();
+        var options = '<option value="">---------------</option>';
         if (agent) {
-            if (!$('#id_doverennost-number').val()) {
-                $('#id_doverennost-number').val(agent.dov_number);
+            $('#id_add_dover-agent').val(agent.agent_pk);
+            var dov_list = agent['dover'];
+            for(var i in dov_list) {
+                options += '<option value="'+i+'">'+dov_list[i]+'</option>';
             }
-            if (!$('#id_doverennost-issue_date').val()) {
-                $('#id_doverennost-issue_date').val(agent.issue_date);
-            }
-            if (!$('#id_doverennost-expire_date').val()) {
-                $('#id_doverennost-expire_date').val(agent.expire_date);
-            }
+        }
+        $('#id_customer-agent_doverennost').html(options);
+        if ($('#id_agent').val() == agent.agent_pk) {
+            $('#id_customer-agent_doverennost').val($('#id_doverennost').val() || agent.cur_dov);
+        } else {
+            $('#id_customer-agent_doverennost').val(agent.cur_dov);
         }
     });
 
@@ -255,8 +268,38 @@ $(function() {
                     $('#id_customer-agent_person').append($(opt));
                     $('#id_customer-agent_person').val(data.pk);
                     $('#addAgent').modal('hide');
+                    ORG_AGENTS[org_id][data.pk] = {
+                        name: data.label,
+                        agent_pk: data.agent_pk,
+                        cur_dov: data.cur_dov,
+                        dover: data.dover_dict
+                    }
                 } else {
                     $('#agent_form .form-internal').html(data);
+                }
+            },
+            error: function(err, errType) {
+                console.log(err);
+                alert('Ошибка');
+            }
+        });
+    });
+
+    $('#add_dover').live('click', function() {
+        var url = $('#dover_form').attr('action');
+        var send_data = $('#dover_form').serialize();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: send_data,
+            success: function(data) {
+                if (data.pk) {
+                    var opt = '<option value="'+data.pk+'">'+data.label+'</option>';
+                    $('#id_customer-agent_doverennost').append($(opt));
+                    $('#id_customer-agent_doverennost').val(data.pk);
+                    $('#addDover').modal('hide');
+                } else {
+                    $('#dover_form .form-internal').html(data);
                 }
             },
             error: function(err, errType) {
@@ -341,7 +384,8 @@ function makeDatePicker(obj) {
     if (now.getMonth() == 11 && now.getDate() > 20) {
         $('input#id_burial_date').datepicker('option', 'yearRange', '1900:' +  (now_year + 1));
     }
-    $('input#id_doverennost-expire_date').datepicker('option', 'yearRange', (now_year - 10) + ':' +  (now_year + 10));
+    $('#id_add_dover-issue_date').datepicker('option', 'yearRange', (now_year - 10) + ':' +  (now_year + 1));
+    $('#id_add_dover-expire_date').datepicker('option', 'yearRange', (now_year - 10) + ':' +  (now_year + 10));
 }
 
 function makeTimePicker(obj) {

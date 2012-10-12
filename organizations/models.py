@@ -71,5 +71,10 @@ class Doverennost(models.Model):
     expire_date = models.DateField(verbose_name="Действует до", blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s - %s' % (self.agent, self.number)
+        return u'%s (%s - %s) - %s' % (self.number, self.issue_date, self.expire_date, self.agent)
+
+    class Meta:
+        ordering = ['-issue_date']
+        verbose_name = (u'доверенность')
+        verbose_name_plural = (u'доверенности')
 

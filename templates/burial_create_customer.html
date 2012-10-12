@@ -79,19 +79,10 @@
                     <a href="#addAgent" role="button" class="btn" data-toggle="modal" id="add_agent_btn">Добавить </a>
                 </p>
                 <p class="narrow">
-                    {{ doverennost_form.number.label_tag }}
-                    {{ doverennost_form.number }}
-                    {{ doverennost_form.number.errors }}
-                </p>
-                <p class="narrow">
-                    {{ doverennost_form.issue_date.label_tag }}
-                    {{ doverennost_form.issue_date }}
-                    {{ doverennost_form.issue_date.errors }}
-                </p>
-                <p>
-                    {{ doverennost_form.expire_date.label_tag }}
-                    {{ doverennost_form.expire_date }}
-                    {{ doverennost_form.expire_date.errors }}
+                    {{ customer_form.agent_doverennost.label_tag }}
+                    {{ customer_form.agent_doverennost }}
+                    {{ customer_form.agent_doverennost.errors }}
+                    <a href="#addDover" role="button" class="btn" data-toggle="modal" id="add_dover_btn">Добавить </a>
                 </p>
             </div>
         </div>
@@ -118,6 +109,25 @@
     </div>
 </div>
 
+<div class="modal" id="addDover" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Добавить доверенность</h3>
+    </div>
+    <div class="modal-body">
+        <form action="{% url new_dover %}" method="POST" id="dover_form">
+            {% csrf_token %}
+            <div class="form-internal">
+                {{ doverennost_form.as_p }}
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+        <button class="btn btn-primary" id="add_dover">Добавить</button>
+    </div>
+</div>
+
 <script type="text/javascript">
     ORG_AGENTS = {
         {% for o in organizations %}
@@ -125,9 +135,13 @@
                 {% for a in o.agents.all %}
                     {{ a.person.pk }}: {
                         name: "{{ a.person }}",
-                        dov_number: "{{ a.doverennost.number|default:"" }}",
-                        issue_date: "{{ a.doverennost.issue_date|date:"d.m.Y"|default:"" }}",
-                        expire_date: "{{ a.doverennost.expire_date|date:"d.m.Y"|default:"" }}"
+                        agent_pk: {{ a.pk }},
+                        cur_dov: {{ a.doverennosti.all.0.pk|default:"null" }},
+                        dover: {
+                            {% for d in a.doverennosti.all %}
+                                {{ d.pk }}: "{{ d }}"{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        }
                     }{% if not forloop.last %},{% endif %}
                 {% endfor %}
             }{% if not forloop.last %},{% endif %}
@@ -136,10 +150,12 @@
 
     $(function() {
         $('#add_agent_btn').hide();
+        $('#add_dover_btn').hide();
 
         $('#id_customer-organization').change();
 
         $('#addAgent').modal().modal('hide');
+        $('#addDover').modal().modal('hide');
     });
 </script>
 
