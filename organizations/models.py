@@ -71,7 +71,7 @@ class Doverennost(models.Model):
     expire_date = models.DateField(verbose_name="Действует до", blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s (%s - %s) - %s' % (self.number, self.issue_date, self.expire_date, self.agent)
+        return u'%s (%s - %s) - %s' % (self.number, self.issue_date.strftime('%d.%m.%Y'), self.expire_date.strftime('%d.%m.%Y'), self.agent)
 
     class Meta:
         ordering = ['-issue_date']
