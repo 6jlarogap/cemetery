@@ -169,7 +169,7 @@ class Burial(models.Model):
         verbose_name_plural = (u'захоронения')
 
     def __unicode__(self):
-        return u"%s %s: %s" % (self.operation, self.account_number, self.person)
+        return u"%s рег. № %s: %s" % (self.operation, self.account_number, self.person)
 
     def agent_director(self):
         return self.client_organization and self.agent and self.agent.person == self.client_organization.ceo
