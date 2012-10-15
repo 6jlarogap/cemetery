@@ -257,7 +257,7 @@ $(function() {
     });
 
     $('#add_commit').live('click', function() {
-        $('#id_add_agent-organization').val($('#id_customer-organization').val());
+        $('#id_add_dover-agent').val($('#id_customer-agent_person').val());
         var url = $('#agent_form').attr('action');
         var send_data = $('#agent_form').serialize();
         $.ajax({
@@ -267,15 +267,16 @@ $(function() {
             success: function(data) {
                 if (data.pk) {
                     var opt = '<option value="'+data.pk+'">'+data.label+'</option>';
+                    var org_id = $('#id_customer-organization').val();
                     $('#id_customer-agent_person').append($(opt));
                     $('#id_customer-agent_person').val(data.pk);
-                    $('#addAgent').modal('hide');
                     ORG_AGENTS[org_id][data.pk] = {
                         name: data.label,
                         agent_pk: data.agent_pk,
                         cur_dov: data.cur_dov,
                         dover: data.dover_dict
                     }
+                    $('#addAgent').modal('hide');
                 } else {
                     $('#agent_form .form-internal').html(data);
                 }
@@ -297,8 +298,11 @@ $(function() {
             success: function(data) {
                 if (data.pk) {
                     var opt = '<option value="'+data.pk+'">'+data.label+'</option>';
+                    var org_id = $('#id_customer-organization').val();
+                    var agent_pk = $('#id_customer-agent_person').val();
                     $('#id_customer-agent_doverennost').append($(opt));
                     $('#id_customer-agent_doverennost').val(data.pk);
+                    ORG_AGENTS[org_id][agent_pk]['dover'][data.pk] = data.label;
                     $('#addDover').modal('hide');
                 } else {
                     $('#dover_form .form-internal').html(data);
