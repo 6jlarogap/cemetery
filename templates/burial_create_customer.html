@@ -137,11 +137,11 @@
                         name: "{{ a.person }}",
                         agent_pk: {{ a.pk }},
                         cur_dov: {{ a.doverennosti.all.0.pk|default:"null" }},
-                        dover: {
+                        dover: [
                             {% for d in a.doverennosti.all %}
-                                {{ d.pk }}: "{{ d }}"{% if not forloop.last %},{% endif %}
+                                {pk: {{ d.pk }}, label: "{{ d }}"}{% if not forloop.last %},{% endif %}
                             {% endfor %}
-                        }
+                        ]
                     }{% if not forloop.last %},{% endif %}
                 {% endfor %}
             }{% if not forloop.last %},{% endif %}

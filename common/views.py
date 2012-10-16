@@ -752,7 +752,7 @@ def new_agent(request):
             'label': u'%s' % agent.person,
             'agent_pk': agent.pk,
             'cur_dov': None,
-            'dover_dict': dict([(d.pk, u'%s' % d) for d in agent.doverennosti.all()]),
+            'dover_dict': [{'pk': d.pk, 'label': u'%s' % d} for d in agent.doverennosti.all()],
         }), mimetype='application/json')
     return HttpResponse(form.as_p(), mimetype='text/html')
 

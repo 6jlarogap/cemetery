@@ -243,7 +243,7 @@ $(function() {
             $('#id_add_dover-agent').val(agent.agent_pk);
             var dov_list = agent['dover'];
             for(var i in dov_list) {
-                options += '<option value="'+i+'">'+dov_list[i]+'</option>';
+                options += '<option value="'+dov_list[i].pk+'">'+dov_list[i].label+'</option>';
             }
         }
         $('#id_customer-agent_doverennost').html(options);
@@ -302,7 +302,7 @@ $(function() {
                     var agent_pk = $('#id_customer-agent_person').val();
                     $('#id_customer-agent_doverennost').append($(opt));
                     $('#id_customer-agent_doverennost').val(data.pk);
-                    ORG_AGENTS[org_id][agent_pk]['dover'][data.pk] = data.label;
+                    ORG_AGENTS[org_id][agent_pk]['dover'].push({pk: data.pk, label: data.label});
                     $('#addDover').modal('hide');
                 } else {
                     $('#dover_form .form-internal').html(data);
