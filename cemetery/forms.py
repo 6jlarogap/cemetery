@@ -151,6 +151,11 @@ class BurialForm(forms.ModelForm):
             if operation.is_empty() and not place.seat:
                 raise forms.ValidationError(u"Для указанного типа захоронения необходим номер места")
 
+            if operation.is_empty() and self.cleaned_data['date_fact']:
+                min_date = min([b.date_fact for b in place.burial_set.all() if not b.operation.is_empty()], None)
+                if min_date and self.cleaned_data['date_fact'] < min_date:
+                    raise forms.ValidationError(u"В указанном месте должно быть хотя бы одно Захоронение раньше, чем это Подзахоронение")
+
         if self.cleaned_data['date_fact'] and self.cleaned_data['doverennost']:
             if self.cleaned_data['date_fact'] >= datetime.date.today():
                 if self.cleaned_data['agent'] and not self.cleaned_data['doverennost']:
