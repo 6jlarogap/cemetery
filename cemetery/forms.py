@@ -385,26 +385,19 @@ class LocationForm(forms.ModelForm):
             )
 
         def intellectual_get_or_create(data_name, ModelKlass, **kwargs):
-            objects_alike = []
-            objects_exact = []
+            """
+            Not so intellectual yet
+            """
             dn = data_name.strip()
-            for c in ModelKlass.objects.filter(**kwargs):
-                if dn == c.name:
-                    objects_exact.append(c.name)
-
-            for c in ModelKlass.objects.filter(**kwargs):
-                if dn.upper() == c.name.upper():
-                    objects_exact.append(c.name)
-
-                if dn.strip('.').upper() in c.name.strip('.').upper() or c.name.strip('.').upper() in dn.strip('.').upper():
-                    objects_alike.append(c.name)
-
-            if any(objects_exact):
-                return ModelKlass.objects.get(name=objects_exact[0], **kwargs)
-            if len(objects_alike) == 1:
-                return ModelKlass.objects.get(name=objects_alike[0], **kwargs)
-            else:
-                return ModelKlass.objects.create(name=dn, **kwargs)
+            try:
+                return ModelKlass.objects.get(name=dn, **kwargs)
+            except ModelKlass.MultipleObjectsReturned:
+                return ModelKlass.objects.filter(name=dn, **kwargs)[0]
+            except ModelKlass.DoesNotExist:
+                try:
+                    return ModelKlass.objects.filter(name__iexact=dn, **kwargs)[0]
+                except IndexError:
+                    return ModelKlass.objects.create(name=dn, **kwargs)
 
         if kwargs.get('data', {}):
             kwargs['data'] = kwargs['data'] and kwargs['data'].copy() or {}
