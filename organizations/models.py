@@ -66,7 +66,7 @@ class Agent(models.Model):
 class Doverennost(models.Model):
     agent = models.ForeignKey(Agent, related_name="doverennosti", verbose_name="Доверенность*")
 
-    number = models.CharField(verbose_name="Номер доверенности", max_length=255, blank=True, null=True)
+    number = models.CharField(verbose_name="Номер доверенности", max_length=255, null=True)
     issue_date = models.DateField(verbose_name="Дата выдачи", blank=True, null=True)
     expire_date = models.DateField(verbose_name="Действует до", blank=True, null=True)
 

@@ -156,6 +156,13 @@ class BurialForm(forms.ModelForm):
                 if self.cleaned_data['agent'] and not self.cleaned_data['doverennost']:
                     raise forms.ValidationError(u"Для неархивных захоронений необходимы данные доверенности агента")
 
+        if self.cleaned_data['date_fact'] and self.cleaned_data['doverennost']:
+            dov = self.cleaned_data['doverennost']
+            if dov.expire_date and self.cleaned_data['date_fact'] > dov.expire_date:
+                raise forms.ValidationError(u"Дата окончания действия доверенности раньше даты захоронения")
+            if dov.issue_date and self.cleaned_data['date_fact'] < dov.issue_date:
+                raise forms.ValidationError(u"Дата выпуска доверенности позже даты захоронения")
+
         duplicates = Burial.objects.filter(
             date_fact = self.cleaned_data['date_fact'],
             place__cemetery = self.cleaned_data['place'].cemetery,
@@ -541,6 +548,11 @@ class DoverennostForm(forms.ModelForm):
         if self.cleaned_data['issue_date'] and self.cleaned_data['issue_date'] > datetime.date.today():
             raise forms.ValidationError(u"Дата выпуска позже текущей")
         return self.cleaned_data['issue_date']
+
+    def clean(self):
+        if self.cleaned_data.get('issue_date') and self.cleaned_data.get('expire_date') and self.cleaned_data['issue_date'] > self.cleaned_data['expire_date']:
+            raise forms.ValidationError(u"Дата выпуска позже даты окончания")
+        return self.cleaned_data
 
     def save(self, commit=True, agent=None):
         if agent:

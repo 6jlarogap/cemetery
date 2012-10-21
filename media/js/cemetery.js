@@ -279,6 +279,7 @@ $(function() {
                     $('#addAgent').modal('hide');
                 } else {
                     $('#agent_form .form-internal').html(data);
+                    updateControls();
                 }
             },
             error: function(err, errType) {
@@ -306,6 +307,7 @@ $(function() {
                     $('#addDover').modal('hide');
                 } else {
                     $('#dover_form .form-internal').html(data);
+                    updateControls();
                 }
             },
             error: function(err, errType) {
