@@ -23,10 +23,12 @@
             <dt>Место</dt>
             <dd>{{ place.seat }}</dd>
         {% endif %}
-        <dt></dt>
-        <dd>
-            <a class="btn btn-primary" href="{% url new_burial %}?place={{ place.pk }}">Добавить родственное</a>
-        </dd>
+        {% if user|has_perm:"cemetery.edit_burial"  %}
+            <dt></dt>
+            <dd>
+                <a class="btn btn-primary" href="{% url new_burial %}?place={{ place.pk }}">Добавить родственное</a>
+            </dd>
+        {% endif %}
         {% if place.responsible %}
             <dt>Ответственный</dt>
             <dd>
@@ -57,12 +59,16 @@
                         {% if d.burials %}
                             {% for b in d.burials %}
                                 <a href="{% url view_burial b.pk %}">{{ b }}</a>
-                                <a title="открепить" href="?unlink={{ b.pk }}"><i class="icon icon-remove"></i></a>
+                                {% if user|has_perm:"cemetery.edit_burial"  %}
+                                    <a title="открепить" href="?unlink={{ b.pk }}"><i class="icon icon-remove"></i></a>
+                                {% endif %}
                             {% endfor %}
                         {% endif %}
                         {% if d.available %}
                             {{ f.burial.errors }}
-                            {{ f.burial }}
+                            {% if user|has_perm:"can_edit_burial"  %}
+                                {{ f.burial }}
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>
@@ -79,8 +85,10 @@
                 {% endfor %}
             {% endif %}
         </table>
-        <h2 class="buttons">
-            <button class="btn btn-primary btn-large">Сохранить</button>
-        </h2>
+        {% if user|has_perm:"cemetery.edit_burial"  %}
+            <h2 class="buttons">
+                <button class="btn btn-primary btn-large">Сохранить</button>
+            </h2>
+        {% endif %}
     </form>
 {% endblock %}

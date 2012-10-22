@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{%  load my_filters %}
+{% load my_filters %}
 {% block title %}Управление персоналом{% endblock %}
 {% block content %}
 <h1>Управление персоналом</h1>
@@ -26,6 +26,7 @@
             <thead>
                 <td width="15%">Логин</td>
                 <td width="15%">Фамилия</td>
+                <td width="15%">Группы</td>
                 <td width="5%">Активен</td>
                 <td width="10%" align="center">Опции</td>
             </thead>
@@ -33,6 +34,7 @@
             <tr>
                 <td>{{ u.username }}</td>
                 <td>{{ u.last_name }}</td>
+                <td>{{ u.groups.all|join:", " }}</td>
                 <td>{{ u.is_active|yesno }}</td>
                 <td align="center">
                     <a title="редактировать" href="/management/user/?user_pk={{ u.pk }}"><i class="icon icon-edit"></i></a>

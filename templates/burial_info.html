@@ -13,7 +13,9 @@
         <dt>Место</dt>
         <dd>
             <a title="к могиле" href="{% url view_place burial.place.pk %}">Кладбище: {{ burial.place.cemetery }}, участок: {{ burial.place.area }}, место {{ burial.place.seat }}</a>
-            <a class="btn btn-primary" href="{% url new_burial %}?place={{ burial.place.pk }}">Добавить родственное</a>
+            {% if user|has_perm:"cemetery.edit_burial"  %}
+                <a class="btn btn-primary" href="{% url new_burial %}?place={{ burial.place.pk }}">Добавить родственное</a>
+            {% endif %}
         </dd>
         <dt>Усопший</dt>
         <dd>{{ burial.person }}</dd>
@@ -61,7 +63,7 @@
                         <td>
                             {{ c.user }}
                             {{ c.added|date:"d.m.Y" }}
-                            {% if user.is_superuser %}
+                            {% if user|has_perm:"cemetery.delete_comment" %}
                                 <a title="удалить" href="{% url delete_comment c.pk %}"><i class="icon icon-trash"></i></a>
                             {% endif %}
                         </td>
