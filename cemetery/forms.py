@@ -158,8 +158,10 @@ class BurialForm(forms.ModelForm):
 
         if self.cleaned_data['date_fact'] and self.cleaned_data['doverennost']:
             if self.cleaned_data['date_fact'] >= datetime.date.today():
-                if self.cleaned_data['agent'] and not self.cleaned_data['doverennost']:
-                    raise forms.ValidationError(u"Для неархивных захоронений необходимы данные доверенности агента")
+                if self.cleaned_data['agent']:
+                    dov =  self.cleaned_data['doverennost']
+                    if not dov or not dov.number or not dov.issue_date or not dov.expire_date:
+                        raise forms.ValidationError(u"Для неархивных захоронений необходимы данные доверенности агента")
 
         if self.cleaned_data['date_fact'] and self.cleaned_data['doverennost']:
             dov = self.cleaned_data['doverennost']
