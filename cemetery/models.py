@@ -225,7 +225,7 @@ class Burial(models.Model):
                 'org': org.full_name or org,
                 'agent': agent,
                 'd_num': self.doverennost and self.doverennost.number or '',
-                'd_date': self.doverennost and self.doverennost.date and self.doverennost.date.strftime('%d.%m.%Y') or '',
+                'd_date': self.doverennost and self.doverennost.issue_date and self.doverennost.issue_date.strftime('%d.%m.%Y') or '',
             }
 
         if self.client_organization:
