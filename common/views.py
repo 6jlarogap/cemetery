@@ -443,7 +443,7 @@ def print_burial(request, pk):
         burial.set_print_info({
             'positions': [f.cleaned_data for f in positions_fs.forms if f.is_valid()],
             'print': print_form.cleaned_data,
-            })
+        })
         burial.save()
 
         for f in positions_fs.forms:

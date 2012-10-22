@@ -151,7 +151,7 @@
     //Первоначальное заполнение списка услуг.
     $(function(){
         //Фокус в нужное поле.
-        $("#id_account_book_n").focus();
+        $("#id_account_number").focus();
 
         $("#id_hoperation").val($("#id_operation option:selected").val());
         $("#id_operation").html("");
@@ -266,7 +266,7 @@
             </thead>
             {% for b in duplicates %}
                 <tr>
-                    <td>{{ b.account_book_n }}</td>
+                    <td>{{ b.account_number }}</td>
                     <td>
                         <b> {{ b.person.last_name }}</b>
                         {{ b.person.first_name }}
@@ -319,15 +319,15 @@
         </td>
     </tr>
     <tr>
-        <td class="free_form">{{ form.account_book_n.label_tag }}</td>
+        <td class="free_form">{{ form.account_number.label_tag }}</td>
         <td class="free_form">{{ form.burial_date.label_tag }}</td>
         <td >{% if burial %}{{ form.exhumated_date.label_tag }}{% endif %}</td>
     </tr>
     <tr>
         <td >
-            {{ form.account_book_n.errors }}{{ form.account_book_n }}
+            {{ form.account_number.errors }}{{ form.account_number }}
             <br/>
-            {{ form.account_book_n.help_text }}
+            {{ form.account_number.help_text }}
         </td>
         <td >{{ form.burial_date.errors }}{{ form.burial_date }}<br/>{{ form.burial_time.errors }}{{ form.burial_time }}</td>
         <td >{{ form.exhumated_date.errors }}{% if burial %}{{ form.exhumated_date }}{% endif %}</td>
@@ -722,7 +722,7 @@
             </thead>
             {% for b in object_list %}
                 <tr>
-                    <td>{{ b.account_book_n }}</td>
+                    <td>{{ b.account_number }}</td>
                     <td>
                         <b> {{ b.person.last_name }}</b>
                         {{ b.person.first_name }}

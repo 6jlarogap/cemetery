@@ -589,7 +589,7 @@ class OrderPositionForm(forms.ModelForm):
         if kwargs.get('data'):
             kwargs['data'] = kwargs['data'].copy()
             for k,v in kwargs['data'].items():
-                if k.endswith('servicee') and not v.isdigit():
+                if k.endswith('service') and not v.isdigit():
                     try:
                         kwargs['data'][k] = Service.objects.get(name=v).pk
                     except Service.DoesNotExist:

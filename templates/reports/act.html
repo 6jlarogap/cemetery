@@ -59,7 +59,9 @@
 </TR>
 <TR>
     <TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Адрес</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000" COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{% if not burial.responsible_agent %}{{ burial.customer.location|default:"" }}{% endif %}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000" COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">
+        {% if burial.client_person %}{{ burial.client_person.address|default:"" }}{% endif %}
+    </FONT></TD>
 </TR>
 <TR>
     <TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Фамилия, имя, отчество умершего</FONT></TD>
@@ -96,7 +98,7 @@
     <TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">в</FONT></TD>
     <TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">{{ burial.date_fact|date:"H" }}ч {{ burial.date_fact|date:"i" }}мин. </FONT></TD>
     <TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">на кладбище:</FONT></TD>
-    <TD STYLE="border-bottom: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.product.place.cemetery }}</FONT></TD>
+    <TD STYLE="border-bottom: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.place.cemetery }}</FONT></TD>
 </TR>
 <TR>
     <TD COLSPAN="9" STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Маршрут движения с/транспорта: {{ catafalque_route|default:"" }}</FONT></TD>
@@ -128,9 +130,9 @@
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=3 ALIGN=LEFT VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ p.service }}</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM ><FONT SIZE=1 COLOR="#000000">{{ p.service.measure }}</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM ><FONT COLOR="#000000">{% if p.service.name == 'Рытье могилы' %}Размер гроба: {{ coffin_size }}{% endif %}</FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=center VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
-            <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.price|floatformat:"-2" }}</FONT></TD>
-            <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.sum|floatformat:"-2" }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=center VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"2" }}</FONT></TD>
+            <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.price|floatformat:"2" }}</FONT></TD>
+            <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.sum|floatformat:"2" }}</FONT></TD>
         </TR>
     {% endfor %}
 {% else %}
@@ -246,7 +248,7 @@
 <TR>
     <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000"><BR></FONT></TD>
     <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=7 ALIGN=RIGHT VALIGN=BOTTOM SDNUM="1033;0;@"><B><FONT COLOR="#000000">Итого (сумма прописью)</FONT></B></TD>
-    <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM><FONT COLOR="#000000">{% if total %}{{ total|floatformat:"-2" }}{% endif %}</FONT></TD>
+    <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM><FONT COLOR="#000000">{% if total %}{{ total|floatformat:"2" }}{% endif %}</FONT></TD>
 </TR>
 <TR>
     <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
@@ -321,7 +323,7 @@
 </TR>
 <TR>
     <TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=35 ALIGN=CENTER VALIGN=BOTTOM>
-        <B><I><FONT SIZE=5 COLOR="#000000">Счёт-заказ №{{ burial.account_book_n }}/{{ burial.product.place.cemetery }}
+        <B><I><FONT SIZE=5 COLOR="#000000">Счёт-заказ №{{ burial.account_number }}/{{ burial.place.cemetery }}
         </FONT></I></B></TD>
 </TR>
 <TR>
@@ -349,7 +351,7 @@
 </TR>
 <TR>
     <TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Адрес</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000" COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{% if not burial.responsible_agent %}{{ burial.customer.location|default:"" }}{% endif %}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000" COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">{% if burial.client_person %}{{ burial.client_person.address|default:"" }}{% endif %}</FONT></TD>
 </TR>
 <TR>
     <TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Фамилия, имя, отчество умершего</FONT></TD>
@@ -386,7 +388,7 @@
     <TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">в</FONT></TD>
     <TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">{{ burial.date_fact|date:"H" }}ч {{ burial.date_fact|date:"i" }}мин. </FONT></TD>
     <TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">на кладбище:</FONT></TD>
-    <TD STYLE="border-bottom: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.product.place.cemetery }}</FONT></TD>
+    <TD STYLE="border-bottom: 1px solid #000000" COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">{{ burial.place.cemetery }}</FONT></TD>
 </TR>
 <TR>
     <TD COLSPAN="9" STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Маршрут движения с/транспорта: {{ catafalque_route|default:"" }}</FONT></TD>
@@ -418,9 +420,9 @@
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=3 ALIGN=LEFT VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000">{{ p.service }}</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM ><FONT SIZE=1 COLOR="#000000">{{ p.service.measure }}</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM ><FONT COLOR="#000000">{% if p.service.name == 'Рытье могилы' %}Размер гроба: {{ coffin_size }}{% endif %}</FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=center VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
-            <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.price|floatformat:"-2" }}</FONT></TD>
-            <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.sum|floatformat:"-2" }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=center VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"2" }}</FONT></TD>
+            <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.price|floatformat:"2" }}</FONT></TD>
+            <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.sum|floatformat:"2" }}</FONT></TD>
         </TR>
     {% endfor %}
 {% else %}
@@ -536,7 +538,7 @@
 <TR>
     <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=20 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000"><BR></FONT></TD>
     <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=7 ALIGN=RIGHT VALIGN=BOTTOM SDNUM="1033;0;@"><B><FONT COLOR="#000000">Итого (сумма прописью)</FONT></B></TD>
-    <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM><FONT COLOR="#000000">{% if total %}{{ total|floatformat:"-2" }}{% endif %}</FONT></TD>
+    <TD STYLE="padding-right:0.5em; border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=right VALIGN=BOTTOM><FONT COLOR="#000000">{% if total %}{{ total|floatformat:"2" }}{% endif %}</FONT></TD>
 </TR>
 <TR>
     <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=20 ALIGN=LEFT VALIGN=BOTTOM><FONT COLOR="#000000"><BR></FONT></TD>
@@ -628,7 +630,7 @@
         <TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=19 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Мы, нижеподписавшиеся:</FONT></TD>
     </TR>
     <TR>
-        <TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=19 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">_______________________________________________________________________________ представитель Исполнителя, _______________________________________________________________________________ представитель Заказчика, - составили настоящий акт о том, что на &laquo;____&raquo; _________ 20___г. подтверждаем, что Исполнителем были выполнены качественно и в полном объеме работы согласно счета-заказа № {{ burial.account_book_n }}/{{ burial.product.place.cemetery }} по захоронению умершего {{ burial.person.full_human_name }} на кладбище {{ burial.product.place.cemetery }}</FONT></TD>
+        <TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=19 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">_______________________________________________________________________________ представитель Исполнителя, _______________________________________________________________________________ представитель Заказчика, - составили настоящий акт о том, что на &laquo;____&raquo; _________ 20___г. подтверждаем, что Исполнителем были выполнены качественно и в полном объеме работы согласно счета-заказа № {{ burial.account_number }}/{{ burial.place.cemetery }} по захоронению умершего {{ burial.person.full_human_name }} на кладбище {{ burial.place.cemetery }}</FONT></TD>
     </TR>
     <TR>
         <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=43 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">№ п/п</FONT></TD>
@@ -641,7 +643,7 @@
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=19 ALIGN=CENTER VALIGN=TOP SDVAL="1" SDNUM="1033;"><FONT COLOR="#000000">{{ forloop.counter }}</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=LEFT VALIGN=MIDDLE  SDNUM="1033;0;@"><FONT COLOR="#000000">{{ p.service }}</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM ><FONT SIZE=1 COLOR="#000000">{{ p.service.measure }}</FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=center VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=center VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"2" }}</FONT></TD>
         </TR>
     {% empty %}
         <TR>
@@ -790,7 +792,7 @@
         <TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=19 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Мы, нижеподписавшиеся:</FONT></TD>
     </TR>
     <TR>
-        <TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=19 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">_______________________________________________________________________________ представитель Исполнителя, _______________________________________________________________________________ представитель Заказчика, - составили настоящий акт о том, что на &laquo;____&raquo; _________ 20___г. подтверждаем, что Исполнителем были выполнены качественно и в полном объеме работы согласно счета-заказа № {{ burial.account_book_n }}/{{ burial.product.place.cemetery }} по захоронению умершего {{ burial.person.full_human_name }} на кладбище {{ burial.product.place.cemetery }}</FONT></TD>
+        <TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=19 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">_______________________________________________________________________________ представитель Исполнителя, _______________________________________________________________________________ представитель Заказчика, - составили настоящий акт о том, что на &laquo;____&raquo; _________ 20___г. подтверждаем, что Исполнителем были выполнены качественно и в полном объеме работы согласно счета-заказа № {{ burial.account_number }}/{{ burial.place.cemetery }} по захоронению умершего {{ burial.person.full_human_name }} на кладбище {{ burial.place.cemetery }}</FONT></TD>
     </TR>
     <TR>
         <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=43 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000">№ п/п</FONT></TD>
@@ -803,7 +805,7 @@
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=19 ALIGN=CENTER VALIGN=TOP SDVAL="1" SDNUM="1033;"><FONT COLOR="#000000">{{ forloop.counter }}</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ALIGN=LEFT VALIGN=MIDDLE  SDNUM="1033;0;@"><FONT COLOR="#000000">{{ p.service }}</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=CENTER VALIGN=BOTTOM ><FONT SIZE=1 COLOR="#000000">{{ p.service.measure }}</FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=center VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"-2" }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=center VALIGN=BOTTOM ><FONT COLOR="#000000">{{ p.count|floatformat:"2" }}</FONT></TD>
         </TR>
     {% empty %}
         <TR>
@@ -956,7 +958,7 @@
     </TR>
     <TR>
         <TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=35 ALIGN=CENTER VALIGN=BOTTOM>
-            <B><I><FONT SIZE=5 COLOR="#000000">Наряд № {{ burial.account_book_n }}/{{ burial.product.place.cemetery }}/т
+            <B><I><FONT SIZE=5 COLOR="#000000">Наряд № {{ burial.account_number }}/{{ burial.place.cemetery }}/т
             </FONT></I></B></TD>
     </TR>
     <TR>
@@ -1000,14 +1002,14 @@
     </TR>
     <TR>
         <TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Номер могилы</FONT></TD>
-        <TD STYLE="border-top: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.account_book_n }}</FONT></TD>
+        <TD STYLE="border-top: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.account_number }}</FONT></TD>
         <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
         <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
         <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
     </TR>
     <TR>
         <TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Похороны состоятся </FONT></TD>
-        <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP colspan="6"><FONT COLOR="#000000" STYLE="font-size: 170%"> {{ burial.date_fact|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.   в {{ burial.date_fact|date:"H" }}ч {{ burial.date_fact|date:"i" }}мин.  на кладбище: {{ burial.product.place.cemetery }} <br/> <br/> <br/></FONT></TD>
+        <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP colspan="6"><FONT COLOR="#000000" STYLE="font-size: 170%"> {{ burial.date_fact|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г.   в {{ burial.date_fact|date:"H" }}ч {{ burial.date_fact|date:"i" }}мин.  на кладбище: {{ burial.place.cemetery }} <br/> <br/> <br/></FONT></TD>
     </TR>
     <TR>
         <TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Заказ принял ____________________________________________________________</FONT></TD>
@@ -1073,7 +1075,7 @@
         </TR>
         <TR>
             <TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=35 ALIGN=CENTER VALIGN=BOTTOM>
-                <B><I><FONT SIZE=5 COLOR="#000000">Наряд № {{ burial.account_book_n }}/{{ burial.product.place.cemetery }}/а
+                <B><I><FONT SIZE=5 COLOR="#000000">Наряд № {{ burial.account_number }}/{{ burial.place.cemetery }}/а
                 </FONT></I></B></TD>
         </TR>
         <TR>
@@ -1117,7 +1119,9 @@
         </TR>
         <TR>
             <TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Время использования</FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ catafalque_time|default:"__________________" }} / {{ catafalque_hours }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000; " COLSPAN=6 ALIGN=CENTER VALIGN=MIDDLE SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">
+                {{ catafalque_time|default:"__________________" }} / {{ catafalque_hours }}</FONT>
+            </TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -1128,7 +1132,7 @@
             <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">в</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.date_fact|date:"H" }}ч {{ burial.date_fact|date:"i" }}мин. </FONT></TD>
             <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">на кладбище:</FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000; " COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.product.place.cemetery }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000; " COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.place.cemetery }}</FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -1222,7 +1226,7 @@
         </TR>
         <TR>
             <TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=35 ALIGN=CENTER VALIGN=BOTTOM>
-                <B><I><FONT SIZE=5 COLOR="#000000">Наряд № {{ burial.account_book_n }}/{{ burial.product.place.cemetery }}/г
+                <B><I><FONT SIZE=5 COLOR="#000000">Наряд № {{ burial.account_number }}/{{ burial.place.cemetery }}/г
                 </FONT></I></B></TD>
         </TR>
         <TR>
@@ -1277,7 +1281,7 @@
             <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">в</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.date_fact|date:"H" }}ч {{ burial.date_fact|date:"i" }}мин. </FONT></TD>
             <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">на кладбище:</FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000; " COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.product.place.cemetery }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000; " COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.place.cemetery }}</FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -1364,7 +1368,7 @@
         </TR>
         <TR>
             <TD STYLE="border-left: 1px solid #000000" COLSPAN=9 HEIGHT=35 ALIGN=CENTER VALIGN=BOTTOM>
-                <B><I><FONT SIZE=5 COLOR="#000000">Наряд № {{ burial.account_book_n }}/{{ burial.product.place.cemetery }}/м
+                <B><I><FONT SIZE=5 COLOR="#000000">Наряд № {{ burial.account_number }}/{{ burial.place.cemetery }}/м
                 </FONT></I></B></TD>
         </TR>
         <TR>
@@ -1401,23 +1405,23 @@
         </TR>
         <TR>
             <TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Адрес</FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000; " COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.person.location|default:"" }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000; " COLSPAN=7 ALIGN=CENTER VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.person.address|default:"" }}</FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
         </TR>
         <TR>
             <TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Могила </FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000" ALIGN=center colspan="3" VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.product.place.seat }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000" ALIGN=center colspan="3" VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.place.seat }}</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000" ALIGN=RIGHT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">№</FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000" ALIGN=center colspan="3" VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.account_book_n }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000" ALIGN=center colspan="3" VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.account_number }}</FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
         </TR>
         <TR>
             <TD STYLE="border-left: 1px solid #000000" COLSPAN=2 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Участок №</FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000" ALIGN=center colspan="3" VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.product.place.area }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000" ALIGN=center colspan="3" VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.place.area }}</FONT></TD>
             <TD ALIGN=RIGHT VALIGN=BOTTOM SDNUM="1033;0;@"><FONT COLOR="#000000">размер гроба</FONT></TD>
             <TD STYLE="border-top: 1px solid #000000" ALIGN=center VALIGN=BOTTOM SDNUM="1033;0;@" colspan=3><FONT COLOR="#000000" STYLE="font-size: 170%">{{ coffin_size|default:"" }}</FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
@@ -1441,7 +1445,7 @@
             <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">в</FONT></TD>
             <TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.date_fact|date:"H" }}ч {{ burial.date_fact|date:"i" }}мин. </FONT></TD>
             <TD ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">на кладбище:</FONT></TD>
-            <TD STYLE="border-top: 1px solid #000000; " COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.product.place.cemetery }}</FONT></TD>
+            <TD STYLE="border-top: 1px solid #000000; " COLSPAN=2 ALIGN=CENTER VALIGN=TOP><FONT COLOR="#000000" STYLE="font-size: 170%">{{ burial.place.cemetery }}</FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
             <TD ALIGN=LEFT VALIGN=MIDDLE><FONT COLOR="#000000"><BR></FONT></TD>
