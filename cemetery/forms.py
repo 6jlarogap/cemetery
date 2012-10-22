@@ -145,7 +145,7 @@ class BurialForm(forms.ModelForm):
 
         operation = self.cleaned_data.get('operation')
         if operation and place:
-            if not operation.is_empty() and place.rooms_free <= 0:
+            if not operation.is_empty() and place.rooms_free <= 0 and (not self.instance or self.instance.operation != operation):
                 raise forms.ValidationError(u"Нет свободных могил в указанном месте")
 
             if operation.is_empty() and not place.seat:
