@@ -215,20 +215,26 @@ class Burial(models.Model):
         return self.organization and self.organization.ceo_name or ''
 
     def full_customer_name(self):
+        org = self.client_organization
         try:
             agent = self.agent
-            org = agent.organization
         except:
             pass
         else:
-            return u"%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s" % {
-                'org': org.full_name or org,
-                'agent': agent,
-                'd_num': self.doverennost and self.doverennost.number or '',
-                'd_date': self.doverennost and self.doverennost.issue_date and self.doverennost.issue_date.strftime('%d.%m.%Y') or '',
-            }
+            if self.doverennost.number:
+                return u"%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s" % {
+                    'org': org.full_name or org,
+                    'agent': agent,
+                    'd_num': self.doverennost and self.doverennost.number or '',
+                    'd_date': self.doverennost and self.doverennost.issue_date and self.doverennost.issue_date.strftime('%d.%m.%Y') or '',
+                }
+            else:
+                return u"%(org)s, в лице агента %(agent)s" % {
+                    'org': org.full_name or org,
+                    'agent': agent,
+                }
 
-        if self.client_organization:
+        if org:
             return u"%(org)s, в лице директора %(ceo)s, действующего на основании %(doc)s" % {
                 'org': self.client_organization.full_name or self.client_organization,
                 'ceo': self.client_organization.ceo_name_who,
