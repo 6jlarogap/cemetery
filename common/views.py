@@ -154,6 +154,7 @@ def main_page(request):
     )
 
 @login_required
+@user_passes_test(lambda u: u.has_perm('cemetery.add_burial'))
 def new_burial(request):
     """
     Добавление захоронения
@@ -188,6 +189,7 @@ def new_burial(request):
         'last_entered': Burial.objects.all().order_by('-id')[:10],
     })
 
+@user_passes_test(lambda u: u.has_perm('cemeetry.edit_burial'))
 @login_required
 def edit_burial(request, pk):
     """
@@ -641,7 +643,7 @@ def autocomplete_doc_source(request):
     ds_names = list(set([p.name for p in ds[:100]]))
     return HttpResponse(simplejson.dumps([{'value': pn} for pn in ds_names]), mimetype='text/javascript')
 
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.has_perm('auth.add_user'))
 @transaction.commit_on_success
 def management_user(request):
     """
@@ -690,7 +692,7 @@ def management_user(request):
     users = User.objects.all().order_by('last_name')
     return render(request, 'management_user.html', {'form': form, "users": users, 'current_user': user})
 
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.has_perm('cemetery.add_cemetery'))
 @transaction.commit_on_success
 def management_cemetery(request):
     """
@@ -710,7 +712,7 @@ def management_cemetery(request):
     cemeteries = Cemetery.objects.all()
     return render(request, 'management_add_cemetery.html', {'cemetery_form': cemetery_form, "location_form": location_form, "cemeteries": cemeteries})
 
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.has_perm('organizations.add_organization'))
 @transaction.commit_on_success
 def management_org(request):
     """

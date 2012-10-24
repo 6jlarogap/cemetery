@@ -89,7 +89,7 @@
                 <div class="nav-collapse">
                     <ul class="nav">
                         <li{% if request.path == '/' %} class="active"{% endif %}><a href="{% url main_page %}">Поиск</a></li>
-                        {% if user|has_perm:"can_add_burial" %}
+                        {% if user|has_perm:"cemetery.add_burial" %}
                             <li{% if request.path == '/create/' %} class="active"{% endif %}><a href="{% url new_burial %}">Ввод данных</a></li>
                         {% endif %}
                     </ul>
