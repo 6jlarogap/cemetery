@@ -105,6 +105,10 @@ class Place(models.Model):
         return  '%s, %s, %s (%s)' % (self.area, self.row, self.seat,
                                      self.cemetery)
 
+    class Meta:
+        verbose_name = (u'место на кладбище')
+        verbose_name_plural = (u'места на кладбище')
+
 class Operation(models.Model):
     """
     Операция
