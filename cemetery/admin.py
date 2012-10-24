@@ -54,8 +54,14 @@ class CemeteryAdmin(admin.ModelAdmin):
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ['name']
 
+class PlaceAdmin(admin.ModelAdmin):
+    list_display = ['cemetery', 'area', 'row', 'seat', 'rooms']
+    search_fields = ['seat']
+    list_filter = ['cemetery', ]
+
 admin.site.register(Cemetery, CemeteryAdmin)
 admin.site.register(Operation)
+admin.site.register(Place, PlaceAdmin)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(ZAGS)
 admin.site.register(IDDocumentType)
