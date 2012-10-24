@@ -296,6 +296,8 @@ class PersonForm(forms.ModelForm):
         return u'%s (%sадрес: %s), Статус: %s' % params
 
     def get_person_status(self, p):
+        if p.buried.filter(exhumated_date__isnull=False).count() > 0:
+            return u'Эксгумированный'
         if p.buried.all().count() > 0:
             return u'Усопший'
         if p.ordr_customer.all().count() > 0:

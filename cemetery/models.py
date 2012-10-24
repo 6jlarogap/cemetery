@@ -144,6 +144,7 @@ class Burial(models.Model):
     date_plan = models.DateField(u"Планируемая дата", blank=True, null=True)
     date_fact = models.DateField(u"Фактическая дата исполнения*", null=True)
     time_fact = models.TimeField(u"Время исполнения", blank=True, null=True)
+    exhumated_date = models.DateField(u"Дата эксгумации", blank=True, null=True)
 
     place = models.ForeignKey(Place)
     grave_id = models.PositiveSmallIntegerField(editable=False, null=True)

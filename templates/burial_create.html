@@ -109,6 +109,16 @@
                             {{ burial_form.date_fact.errors }}
                             {{ burial_form.time_fact.errors }}
                         </p>
+                        <div>
+                            <a id="show_exhumation" class="btn">Эксгумация</a>
+                        </div>
+                        <p class="narrow" id="exhumation_block">
+                            {{ burial_form.exhumated_date.label_tag }}
+                            {{ burial_form.exhumated_date }}
+                            {{ burial_form.exhumated_date.errors }}
+                            <a id="clean_exhumation" class="btn">очистить</a>
+                        </p>
+
                     </div><!--/.well -->
                     <div class="row-fluid">
                         <h2>Усопший*</h2>

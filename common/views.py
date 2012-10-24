@@ -122,7 +122,7 @@ def main_page(request):
         if form.cleaned_data['seat']:
             burials = burials.filter(place__seat=form.cleaned_data['seat'])
         if form.cleaned_data['no_exhumated']:
-            burials = burials.filter(exhumated=False)
+            burials = burials.filter(exhumated_date__isnull=True)
         if form.cleaned_data['deleted']:
             burials = burials.filter(deleted=True)
         else:

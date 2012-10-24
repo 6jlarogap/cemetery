@@ -158,6 +158,20 @@ $(function() {
         $(this).closest('.well').find('input.autocomplete[name$=region_name]').val('');
     });
 
+    $('#clean_exhumation').click(function() {
+        $('#id_exhumated_date').val('')
+    });
+
+    if ($('#exhumation_block input').val()) {
+        $('#show_exhumation').hide();
+    } else {
+        $('#exhumation_block').hide();
+        $('#show_exhumation').click(function() {
+            $('#exhumation_block').show();
+            $('#show_exhumation').hide();
+        });
+    }
+
     $('a.load').live('click', function(){
         $('#block_empty').hide();
         $('#block_empty').load(this.href, function() {
