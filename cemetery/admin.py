@@ -54,14 +54,9 @@ class CemeteryAdmin(admin.ModelAdmin):
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ['name']
 
-admin.site.register(Agent)
-admin.site.register(Burial)
 admin.site.register(Cemetery, CemeteryAdmin)
-admin.site.register(DeathCertificate)
-admin.site.register(Doverennost)
 admin.site.register(Operation)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(ZAGS)
 admin.site.register(IDDocumentType)
-admin.site.register(Person, PersonAdmin)
 admin.site.register(LogEntry, LogEntryAdmin)

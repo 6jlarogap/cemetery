@@ -680,7 +680,7 @@ class UserForm(forms.ModelForm):
             self.fields['password1'].required = True
 
     def clean(self):
-        if self.cleaned_data['password1'] != self.cleaned_data['password2']:
+        if self.cleaned_data.get('password1') and self.cleaned_data['password1'] != self.cleaned_data['password2']:
             raise forms.ValidationError(u'Пароли не совпадают')
         return self.cleaned_data
 
@@ -694,7 +694,7 @@ class UserForm(forms.ModelForm):
         person.user.groups = self.cleaned_data['groups']
         person.user.is_staff = True
 
-        if self.cleaned_data['password1']:
+        if self.cleaned_data.get('password1'):
             person.user.set_password(self.cleaned_data['password1'])
 
         person.user.save()
