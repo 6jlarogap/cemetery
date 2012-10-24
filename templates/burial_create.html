@@ -87,7 +87,10 @@
                     <div class="row-fluid">
                         <h2>Захоронение</h2>
                         {% if burial_form.instance.pk %}
-                           <div><a href="{% url view_burial burial_form.instance.pk %}" target="_blank">Карточка</a></div>
+                            <div><a href="{% url view_burial burial_form.instance.pk %}" target="_blank">Карточка</a></div>
+                            <div id="place_link"><a href="{% url view_place burial_form.instance.place.pk %}" target="_blank">Карточка места</a></div>
+                        {% else %}
+                            <div id="top_place_link"></div>
                         {% endif %}
                         <p>
                             {{ burial_form.account_number.label_tag }}

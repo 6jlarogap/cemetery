@@ -165,7 +165,8 @@ class BurialForm(forms.ModelForm):
 
         if self.cleaned_data['date_fact'] and self.cleaned_data['doverennost']:
             dov = self.cleaned_data['doverennost']
-            if dov.expire_date and self.cleaned_data['date_fact'] > dov.expire_date:
+            doc_date = min(self.cleaned_data['date_fact'], datetime.date.today())
+            if dov.expire_date and doc_date > dov.expire_date:
                 raise forms.ValidationError(u"Дата окончания действия доверенности раньше даты захоронения")
             if dov.issue_date and self.cleaned_data['date_fact'] < dov.issue_date:
                 raise forms.ValidationError(u"Дата выпуска доверенности позже даты захоронения")

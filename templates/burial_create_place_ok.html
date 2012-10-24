@@ -9,6 +9,8 @@
             var ra  = $('<a href="{% url new_burial_responsible %}?instance={{ place.responsible.pk }}" class="link-responsible load">{{ place.responsible }}</a>');
             $('.link-responsible').replaceWith(ra);
             $('#id_responsible').val({{ place.responsible.pk }}).change();
+
+            $('#top_place_link').html('<a href="{% url view_place place.pk %}" target="_blank">Карточка места</a>')
         </script>
     </div><!--/.well -->
 </form>

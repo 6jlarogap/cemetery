@@ -59,6 +59,7 @@
                         {% if d.burials %}
                             {% for b in d.burials %}
                                 <a href="{% url view_burial b.pk %}">{{ b }}</a>
+                                (<a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>)
                                 {% if user|has_perm:"cemetery.edit_burial"  %}
                                     <a title="открепить" href="?unlink={{ b.pk }}"><i class="icon icon-remove"></i></a>
                                 {% endif %}
@@ -80,6 +81,7 @@
                         <td>
                             {{ forloop.counter }}.
                             <a href="{% url view_burial b.pk %}">{{ b }}</a>
+                            (<a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>)
                         </td>
                     </tr>
                 {% endfor %}
