@@ -778,8 +778,9 @@ class PlaceBurialForm(forms.Form):
 class BasePlaceBurialsFormset(BaseFormSet):
     def __init__(self, place=None, *args, **kwargs):
         self.place = place
-        self.filled_burials = place.burial_set.filter(grave_id__isnull=False).order_by('id')
-        self.free_burials = place.burial_set.filter(grave_id__isnull=True).order_by('id')
+        self.filled_burials = place.burial_set.filter(grave_id__isnull=False, exhumated_date__isnull=True).order_by('id')
+        self.free_burials = place.burial_set.filter(grave_id__isnull=True, exhumated_date__isnull=True).order_by('id')
+        self.exhumated_burials = place.burial_set.filter(exhumated_date__isnull=False).order_by('id')
 
         places_initial = []
         for i in range(place.rooms):
@@ -797,7 +798,7 @@ class BasePlaceBurialsFormset(BaseFormSet):
 
         for i, f in enumerate(self.forms):
             if places_initial[i].get('burial'):
-                f.fields['burial'].queryset = place.burial_set.filter(grave_id=i)
+                f.fields['burial'].queryset = place.burial_set.filter(grave_id=i, exhumated_date__isnull=True)
             else:
                 f.fields['burial'].queryset = self.free_burials
         self.pbf_data = zip(places_initial, self.forms)
@@ -808,7 +809,7 @@ class BasePlaceBurialsFormset(BaseFormSet):
             if not burial:
                 continue
 
-            burials = list(Burial.objects.filter(place=self.place, grave_id=i))
+            burials = list(Burial.objects.filter(place=self.place, grave_id=i, exhumated_date__isnull=True))
 
             other_here = filter(lambda b: not b.operation.is_empty(), burials)
             if any(other_here):

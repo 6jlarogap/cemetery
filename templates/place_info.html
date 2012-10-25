@@ -86,6 +86,19 @@
                     </tr>
                 {% endfor %}
             {% endif %}
+            {% if pbf.exhumated_burials %}
+                <tr><td><h3>+ эксгумированные</h3></td></tr>
+                {% for b in pbf.exhumated_burials %}
+                    <tr>
+                        <td>
+                            {{ forloop.counter }}.
+                            <a href="{% url view_burial b.pk %}">{{ b }}</a>
+                            ({% if b.exhumated_date %}Эксгумировано, {% endif %}<a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>)
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+
         </table>
         {% if user|has_perm:"cemetery.edit_burial"  %}
             <h2 class="buttons">

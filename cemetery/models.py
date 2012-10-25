@@ -85,7 +85,7 @@ class Place(models.Model):
 
     @property
     def rooms_occupied(self):
-        burials = Burial.objects.filter(place=self)
+        burials = Burial.objects.filter(place=self, exhumated__date__isnull=True)
         limit = datetime.date.today() - datetime.timedelta(20*365)
         takes_place = lambda b: not b.operation.is_urn() and b.date_fact >= limit
         return len(filter(takes_place, burials))
@@ -256,7 +256,10 @@ class Burial(models.Model):
             self.date_fact = datetime.datetime.now()
 
         self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)
-        # self.split_parts(self)
+
+        if self.exhumated_date:
+            self.grave_id = None
+
         super(Burial, self).save(*args, **kwargs)
 
     def generate_account_number(self):
