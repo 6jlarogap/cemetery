@@ -67,6 +67,17 @@ class Place(models.Model):
         if self.rooms is None:
             self.rooms = 1
 
+        if self.cemetery and self.seat:
+            clones = Place.objects.filter(cemetery=self.cemetery, area=self.area, row=self.row, seat=self.seat)
+            if self.pk:
+                clones = clones.exclude(pk=self.pk)
+            if clones.exists():
+                c = clones[0]
+                self.burial_set.all().update(place=c)
+                if self.pk:
+                    self.delete()
+                return c
+
         super(Place, self).save(*args, **kwargs)
 
     def generate_seat(self):
