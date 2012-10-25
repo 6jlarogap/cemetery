@@ -237,7 +237,7 @@ class Burial(models.Model):
         except:
             pass
         else:
-            if self.doverennost.number:
+            if self.doverennost and self.doverennost.number:
                 return u"%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s" % {
                     'org': org.full_name or org,
                     'agent': agent,
