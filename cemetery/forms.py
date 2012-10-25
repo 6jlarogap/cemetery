@@ -121,9 +121,9 @@ class BurialForm(forms.ModelForm):
             raise forms.ValidationError(u"Этот номер уже используется")
 
     def clean(self):
-        acount_number = self.cleaned_data.get('account_number')
-        if acount_number and self.cleaned_data.get('date_fact'):
-            if str(acount_number)[:4] != str(self.cleaned_data['date_fact'].year):
+        account_number = self.cleaned_data.get('account_number')
+        if account_number and self.cleaned_data.get('date_fact'):
+            if str(account_number)[:4] != str(self.cleaned_data['date_fact'].year):
                 raise forms.ValidationError(u"Номер не соответствует дате")
 
         customer = self.cleaned_data.get('client_person')
@@ -155,6 +155,14 @@ class BurialForm(forms.ModelForm):
                 min_date = min([b.date_fact for b in place.burial_set.all() if not b.operation.is_empty()], None)
                 if min_date and self.cleaned_data['date_fact'] < min_date:
                     raise forms.ValidationError(u"В указанном месте должно быть хотя бы одно Захоронение раньше, чем это Подзахоронение")
+
+        if self.cleaned_data['date_fact'] and self.cleaned_data['exhumated_date']:
+            if self.cleaned_data['date_fact'] >= self.cleaned_data['exhumated_date']:
+                raise forms.ValidationError(u"Дата эксгумации должна быть позже даты захоронения")
+
+        place = self.cleaned_data.get('place')
+        if account_number and place and place.seat != account_number and operation.op_type == u'Захоронение':
+            raise forms.ValidationError(u"Для Захоронений номер места должен совпадать с учетным номером захоронения")
 
         if self.cleaned_data['date_fact'] and self.cleaned_data['doverennost']:
             if self.cleaned_data['date_fact'] >= datetime.date.today():
