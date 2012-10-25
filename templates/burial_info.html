@@ -13,7 +13,7 @@
         <dt>Место</dt>
         <dd>
             <a title="к могиле" href="{% url view_place burial.place.pk %}">Кладбище: {{ burial.place.cemetery }}, участок: {{ burial.place.area }}, место {{ burial.place.seat }}</a>
-            {% if user|has_perm:"cemetery.edit_burial"  %}
+            {% if user|has_perm:"cemetery.add_burial"  %}
                 <a class="btn btn-primary" href="{% url new_burial %}?place={{ burial.place.pk }}">Добавить родственное</a>
             {% endif %}
         </dd>

@@ -59,7 +59,7 @@
                         {% if d.burials %}
                             {% for b in d.burials %}
                                 <a href="{% url view_burial b.pk %}">{{ b }}</a>
-                                ({% if b.exhumated_date %}Эксгумировано, {% endif %}<a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>)
+                                ({% if b.exhumated_date %}Эксгумировано, {% endif %}{% if user|has_perm:"cemetery.add_burial" %}<a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>{% endif %})
                                 {% if user|has_perm:"cemetery.edit_burial"  %}
                                     <a title="открепить" href="?unlink={{ b.pk }}"><i class="icon icon-remove"></i></a>
                                 {% endif %}
@@ -81,7 +81,7 @@
                         <td>
                             {{ forloop.counter }}.
                             <a href="{% url view_burial b.pk %}">{{ b }}</a>
-                            ({% if b.exhumated_date %}Эксгумировано, {% endif %}<a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>)
+                            ({% if b.exhumated_date %}Эксгумировано, {% endif %}{% if user|has_perm:"cemetery.add_burial" %}<a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>{% endif %})
                         </td>
                     </tr>
                 {% endfor %}
@@ -93,7 +93,7 @@
                         <td>
                             {{ forloop.counter }}.
                             <a href="{% url view_burial b.pk %}">{{ b }}</a>
-                            ({% if b.exhumated_date %}Эксгумировано, {% endif %}<a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>)
+                            ({% if b.exhumated_date %}Эксгумировано, {% endif %}{% if user|has_perm:"cemetery.add_burial" %}<a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>{% endif %})
                         </td>
                     </tr>
                 {% endfor %}

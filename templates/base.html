@@ -76,7 +76,7 @@
                             {% if user.is_superuser %}
                                 <li><a href="{% url admin:index %}" target="_blank">Прочие данные</a></li>
                             {% endif %}
-                            {% if user|has_perm:"auth.edit_user"  %}
+                            {% if user|has_perm:"auth.add_user"  %}
                                 <li><a href="{% url management_user %}" target="_blank">Пользователи</a></li>
                             {% endif %}
                             <li class="divider"></li>
