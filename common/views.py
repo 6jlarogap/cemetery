@@ -189,7 +189,7 @@ def new_burial(request):
         'last_entered': Burial.objects.all().order_by('-id')[:10],
     })
 
-@user_passes_test(lambda u: u.has_perm('cemeetry.add_burial'))
+@user_passes_test(lambda u: u.has_perm('cemetery.add_burial'))
 @login_required
 def edit_burial(request, pk):
     """

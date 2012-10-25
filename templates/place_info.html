@@ -63,6 +63,7 @@
                                 {% if user|has_perm:"cemetery.edit_burial"  %}
                                     <a title="открепить" href="?unlink={{ b.pk }}"><i class="icon icon-remove"></i></a>
                                 {% endif %}
+                                <br/>
                             {% endfor %}
                         {% endif %}
                         {% if d.available %}
