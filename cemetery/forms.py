@@ -717,7 +717,7 @@ class UserForm(forms.ModelForm):
 class CemeteryForm(forms.ModelForm):
     class Meta:
         model = Cemetery
-        fields = ['organization', 'name', 'phones']
+        fields = ['organization', 'name', 'phones', 'ordering']
         widgets = {
             'phones': forms.TextInput(),
         }

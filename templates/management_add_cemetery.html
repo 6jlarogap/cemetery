@@ -23,6 +23,9 @@
         <td width="30%">
             Адрес
         </td>
+        <td width="10%">
+            Сортировка
+        </td>
         <td width="30%" align="center">
             Опции
         </td>
@@ -34,6 +37,9 @@
         </td>
         <td width="30%">
             {{ cemetery.location|default:"" }}
+        </td>
+        <td width="10%">
+            {{ cemetery.ordering }}
         </td>
         <td width="30%" align="center">
             <a title="редактировать" href="/management/cemetery/?pk={{ cemetery.pk }}"><i class="icon icon-edit"></i></a>

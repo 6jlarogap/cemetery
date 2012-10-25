@@ -73,7 +73,7 @@
                             {% if user|has_perm:"cemetery.add_service"  %}
                                 <li><a href="{% url admin:cemetery_service_changelist %}" target="_blank">Услуги для с/з</a></li>
                             {% endif %}
-                            {% if user.is_staff  %}
+                            {% if user.is_superuser %}
                                 <li><a href="{% url admin:index %}" target="_blank">Прочие данные</a></li>
                             {% endif %}
                             {% if user|has_perm:"auth.edit_user"  %}
