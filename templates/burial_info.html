@@ -39,6 +39,10 @@
                 <dt>Агент</dt>
                 <dd>{{ burial.agent }}</dd>
             {% endif %}
+            {% if burial.exhumated_date %}
+                <dt>Эксгумировано</dt>
+                <dd>{{ burial.exhumated_date|date:'d.m.Y' }}{% if b.grave_id %}, было место {{ b.grave_id }}{% endif %}</dd>
+            {% endif %}
         {% endif %}
     </dl>
 

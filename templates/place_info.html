@@ -94,7 +94,12 @@
                         <td>
                             {{ forloop.counter }}.
                             <a href="{% url view_burial b.pk %}">{{ b }}</a>
-                            ({% if b.exhumated_date %}Эксгумировано, {% endif %}{% if user|has_perm:"cemetery.add_burial" %}<a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>{% endif %})
+                            ({% if b.exhumated_date %}Эксгумировано,
+                                {% if b.grave_id %}было место {{ b.grave_id }}, {% endif %}
+                            {% endif %}
+                            {% if user|has_perm:"cemetery.add_burial" %}
+                                <a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>
+                            {% endif %})
                         </td>
                     </tr>
                 {% endfor %}

@@ -268,9 +268,6 @@ class Burial(models.Model):
 
         self.last_sync_date = datetime.datetime(2000, 1, 1, 0, 0)
 
-        if self.exhumated_date:
-            self.grave_id = None
-
         super(Burial, self).save(*args, **kwargs)
 
     def generate_account_number(self):
