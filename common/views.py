@@ -619,8 +619,11 @@ def view_place(request, pk):
     if request.POST and rf.changed_data and rf.is_valid():
         rf.save()
         return redirect('.')
-    if request.POST and pbf.is_valid():
-        pbf.save()
+    if request.POST:
+        if pbf.is_valid():
+            pbf.save()
+        else:
+            place.save()
         return redirect('.')
     return render(request, 'place_info.html', {
         'place': place,
