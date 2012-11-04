@@ -127,9 +127,13 @@ class BurialForm(forms.ModelForm):
                 raise forms.ValidationError(u"Номер не соответствует дате")
 
         customer = self.cleaned_data.get('client_person')
-        if customer and customer.personid and customer.personid.date and self.cleaned_data.get('date_fact'):
+        try:
+            personid = customer.personid
+        except ObjectDoesNotExist:
+            personid = None
+        if customer and personid and personid.date and self.cleaned_data.get('date_fact'):
             try:
-                if customer.personid.date < self.cleaned_data['date_fact'] - datetime.timedelta(75 * 365):
+                if personid.date < self.cleaned_data['date_fact'] - datetime.timedelta(75 * 365):
                     raise forms.ValidationError(u"Дата документа заказчика раньше 75 лет до даты захоронения")
             except ObjectDoesNotExist:
                 pass
