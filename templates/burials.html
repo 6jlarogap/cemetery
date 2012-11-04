@@ -51,7 +51,12 @@
                         <td>{{ b.place.row }}</td>
                         <td>{{ b.place.seat }}</td>
                         <td>{{ b.place.cemetery.name }}</td>
-                        <td>{{ b.operation.op_type }}</td>
+                        <td>
+                            {{ b.operation.op_type }}
+                            {% if b.exhumated_date %}
+                                Эксгумирован
+                            {% endif %}
+                        </td>
                         <td>
                             {% if b.client_organization %}
                                 ЮЛ {{ b.client_organization }}<br/>
