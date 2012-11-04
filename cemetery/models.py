@@ -98,7 +98,7 @@ class Place(models.Model):
     def rooms_occupied(self):
         burials = Burial.objects.filter(place=self, exhumated_date__isnull=True)
         limit = datetime.date.today() - datetime.timedelta(20*365)
-        takes_place = lambda b: not b.operation.is_urn() and b.date_fact >= limit
+        takes_place = lambda b: not b.operation.is_empty() and b.date_fact >= limit
         return len(filter(takes_place, burials))
 
     def count_burials(self):
