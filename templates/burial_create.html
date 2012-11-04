@@ -130,7 +130,9 @@
                             </a>
                             <script type="text/javascript">
                                 $(function() {
-                                    $('.load.link-person').click();
+                                    setTimeout(function() {
+                                        $('.load.link-person').click();
+                                    }, 100);
                                 });
                             </script>
                         {% else %}
