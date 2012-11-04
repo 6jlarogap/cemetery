@@ -33,7 +33,7 @@
             <dt>Ответственный</dt>
             <dd>
                 {{ place.responsible }}
-                {% if place.responsible.phones %}
+                {% if place.responsible.phones and user|has_perm:"cemetery.add_burial" %}
                     (тел. {{ place.responsible.phones }})
                 {% endif %}
             </dd>
