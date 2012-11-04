@@ -701,6 +701,14 @@ class UserForm(forms.ModelForm):
         if not self.instance or not self.instance.pk:
             self.fields['password1'].required = True
 
+    def clean_username(self):
+        users = User.objects.filter(username=self.cleaned_data['username'])
+        if self.instance and self.instance.pk:
+            users = users.exclude(pk=self.instance.pk)
+        if users.exists():
+            raise forms.ValidationError(u'Имя пользователя уже занято')
+        return self.cleaned_data['username']
+
     def clean(self):
         if self.cleaned_data.get('password1') and self.cleaned_data['password1'] != self.cleaned_data['password2']:
             raise forms.ValidationError(u'Пароли не совпадают')
