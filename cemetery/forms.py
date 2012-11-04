@@ -152,8 +152,6 @@ class BurialForm(forms.ModelForm):
             old_empty = not self.instance or not self.instance.operation or self.instance.operation.is_empty()
             global_change = not self.instance or self.instance.operation != operation or self.instance.place != place
             rooms_free = place.rooms_free
-            if self.instance and self.instance.pk and self.instance.place == place:
-                rooms_free += 1
             if not operation.is_empty() and old_empty and rooms_free <= 0 and global_change:
                 raise forms.ValidationError(u"Нет свободных могил в указанном месте")
 
