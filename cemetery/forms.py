@@ -128,7 +128,7 @@ class BurialForm(forms.ModelForm):
 
         customer = self.cleaned_data.get('client_person')
         try:
-            personid = customer.personid
+            personid = customer and customer.personid or None
         except ObjectDoesNotExist:
             personid = None
         if customer and personid and personid.date and self.cleaned_data.get('date_fact'):
