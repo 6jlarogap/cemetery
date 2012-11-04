@@ -27,6 +27,7 @@ class SearchForm(forms.Form):
     )
 
     fio = forms.CharField(required=False, max_length=100, label="ФИО")
+    no_last_name = forms.BooleanField(required=False, initial=False, label=u"С неизвестной фамилией")
     birth_date_from = forms.DateField(required=False, label="Дата рождения с")
     birth_date_to = forms.DateField(required=False, label="по")
     death_date_from = forms.DateField(required=False, label="Дата смерти с")
@@ -149,12 +150,16 @@ class BurialForm(forms.ModelForm):
 
         operation = self.cleaned_data.get('operation')
         if operation and place:
-            old_empty = not self.instance or not self.instance.operation or self.instance.operation.is_empty()
+            try:
+                instance_op = self.instance.operation
+            except ObjectDoesNotExist:
+                instance_op = None
+            old_empty = not self.instance or not instance_op or instance_op.is_empty()
             try:
                 instance_place = self.instance.place
             except ObjectDoesNotExist:
                 instance_place = None
-            global_change = not self.instance or not self.instance.pk or self.instance.operation != operation or instance_place != place
+            global_change = not self.instance or not self.instance.pk or instance_op != operation or instance_place != place
             rooms_free = place.rooms_free
             if not operation.is_empty() and old_empty and rooms_free <= 0 and global_change:
                 raise forms.ValidationError(u"Нет свободных могил в указанном месте")
@@ -237,6 +242,7 @@ class BurialForm(forms.ModelForm):
 class PersonForm(forms.ModelForm):
     instance = forms.ChoiceField(widget=forms.RadioSelect, required=False)
     birth_date = UnclearDateField(label=u"Дата рождения", required=False)
+    skip_last_name = forms.BooleanField(label=u"Фамилия не известна", initial=False, required=False)
 
     INSTANCE_CHOICES = [
         ('', u'Не выбрано'),
@@ -270,7 +276,7 @@ class PersonForm(forms.ModelForm):
         if not any(self.data.values()) or self.data.keys() == ['instance']:
             if not self.initial.keys() == ['death_date']:
                 self.data = self.initial.copy()
-        if self.data and self.data.get('last_name') or self.data.get('instance'):
+        if self.data and self.data.get('last_name') or self.data.get('instance') or self.data.get('skip_last_name'):
             person_kwargs = {
                 'first_name__istartswith': self.data.get('first_name', ''),
                 'last_name__istartswith': self.data.get('last_name', ''),
@@ -300,6 +306,13 @@ class PersonForm(forms.ModelForm):
                 ]
         else:
             self.fields['instance'].widget = forms.HiddenInput()
+
+        if self.instance and not self.instance.last_name:
+            self.fields['last_name'].required = False
+            self.fields['skip_last_name'].initial = True
+
+        if self.data and self.data.get('skip_last_name'):
+            self.fields['last_name'].required = False
 
     def full_person_data(self, p):
         dates = ''
@@ -368,6 +381,8 @@ class PersonForm(forms.ModelForm):
         person = super(PersonForm, self).save(commit=False)
         if self.instance:
             person.pk = self.instance.pk
+        if self.cleaned_data.get('skip_last_name') and not self.cleaned_data.get('last_name'):
+            person.last_name = ''
         person.address = location
         person.birth_date_no_month = person.birth_date and self.fields['birth_date'].widget.no_month or False
         person.birth_date_no_day = person.birth_date and self.fields['birth_date'].widget.no_day or False

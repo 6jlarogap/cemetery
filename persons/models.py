@@ -35,7 +35,7 @@ class Person(models.Model):
     phones = models.TextField(u"Телефоны", blank=True, null=True)
 
     def __unicode__(self):
-        if self.last_name:
+        if self.last_name.strip():
             result = self.last_name
             if self.first_name:
                 result += " %s" % self.first_name

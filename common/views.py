@@ -123,6 +123,9 @@ def main_page(request):
             burials = burials.filter(place__seat=form.cleaned_data['seat'])
         if form.cleaned_data['no_exhumated']:
             burials = burials.filter(exhumated_date__isnull=True)
+        if form.cleaned_data['no_last_name']:
+            burials = burials.filter(person__last_name='')
+
         if form.cleaned_data['deleted']:
             burials = burials.filter(deleted=True)
         else:
