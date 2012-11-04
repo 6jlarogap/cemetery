@@ -172,7 +172,11 @@ class BurialForm(forms.ModelForm):
                 raise forms.ValidationError(u"Дата эксгумации должна быть позже даты захоронения")
 
         place = self.cleaned_data.get('place')
-        if account_number and place and place.seat and place.seat != account_number and operation.op_type == u'Захоронение':
+        if account_number:
+            an = account_number
+        else:
+            an = Burial(place=self.cleaned_data['place']).generate_account_number()
+        if an and place and place.seat and place.seat != an and operation.op_type == u'Захоронение':
             raise forms.ValidationError(u"Для Захоронений номер места должен совпадать с учетным номером захоронения")
 
         if self.cleaned_data['date_fact'] and self.cleaned_data['doverennost']:

@@ -239,7 +239,7 @@ class Burial(models.Model):
         else:
             if not org:
                 org = agent.organization
-                
+
             if self.doverennost and self.doverennost.number:
                 return u"%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s" % {
                     'org': org.full_name or org,
