@@ -542,9 +542,10 @@ def print_burial(request, pk):
                 delta = datetime.timedelta(0, catafalque_hours.hour * 3600 + catafalque_hours.minute * 60)
                 catafalque_release = datetime.datetime(burial.date_fact.year, burial.date_fact.month, burial.date_fact.day, *catafalque_time) + delta
 
-                if burial.time_fact < datetime.time(*catafalque_time) or catafalque_release.time() < burial.time_fact:
-                    if not request.REQUEST.get('skip_time_check'):
-                        time_check_failed = True
+                if burial.time_fact:
+                    if burial.time_fact < datetime.time(*catafalque_time) or catafalque_release.time() < burial.time_fact:
+                        if not request.REQUEST.get('skip_time_check'):
+                            time_check_failed = True
         else:
             catafalque_hours = None
 
