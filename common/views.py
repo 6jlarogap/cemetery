@@ -706,8 +706,8 @@ def management_cemetery(request):
     if request.GET.get('pk'):
         cemetery = get_object_or_404(Cemetery, pk=request.GET.get('pk'))
 
-    cemetery_form = CemeteryForm(request.POST or None, instance=cemetery)
-    location_form = LocationForm(request.POST or None, instance=cemetery and cemetery.location)
+    cemetery_form = CemeteryForm(data=request.POST or None, instance=cemetery)
+    location_form = LocationForm(data=request.POST or None, instance=cemetery and cemetery.location)
     if request.method == "POST" and cemetery_form.is_valid() and location_form.is_valid():
         location = location_form.save()
         cemetery = cemetery_form.save(location=location)
