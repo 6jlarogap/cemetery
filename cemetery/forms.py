@@ -706,7 +706,6 @@ class UserForm(forms.ModelForm):
         person.user.last_name = self.cleaned_data['last_name'].capitalize()
         person.user.first_name = self.cleaned_data['first_name'].capitalize()
         person.user.username = self.cleaned_data['username']
-        person.user.groups = self.cleaned_data['groups']
         person.user.is_staff = True
 
         if self.cleaned_data.get('password1'):
@@ -716,6 +715,10 @@ class UserForm(forms.ModelForm):
         person.user = person.user
         person.creator = creator
         person.save()
+
+        person.user.groups = self.cleaned_data['groups']
+        person.user.save()
+
         return person
 
 class CemeteryForm(forms.ModelForm):
