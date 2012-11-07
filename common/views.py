@@ -184,6 +184,8 @@ def new_burial(request):
 
     if request.POST and burial_form.is_valid():
         b = burial_form.save()
+        b.editor = request.user
+        b.save()
         messages.success(request, u'Успешно сохранено')
         return redirect('edit_burial', pk=b.pk)
 
@@ -202,7 +204,9 @@ def edit_burial(request, pk):
     burial_form = BurialForm(data=request.POST or None, instance=burial)
 
     if request.POST and burial_form.is_valid():
-        burial_form.save()
+        b = burial_form.save()
+        b.editor = request.user
+        b.save()
         messages.success(request, u'Успешно сохранено')
         return redirect('main_page')
 
@@ -214,6 +218,7 @@ def edit_burial(request, pk):
 
     if request.GET.get('recover'):
         burial.deleted = False
+        burial.editor = request.user
         burial.save()
         messages.success(request, u'Восстановлено')
         return redirect('main_page')
@@ -412,6 +417,14 @@ def get_positions(burial):
                 'sum': pos.price * pos.count,
             })
     return positions
+
+@login_required
+def print_notification(request, pk):
+    burial = get_object_or_404(Burial, pk=pk)
+
+    return render(request, 'reports/notification.html', {
+        'burial': burial,
+    })
 
 @login_required
 @transaction.commit_on_success

@@ -23,6 +23,7 @@ urlpatterns += patterns('common.views',
     url(r'^create/responsible/$', 'new_burial_responsible', name='new_burial_responsible'),
     url(r'^edit/(?P<pk>.*)/$', 'edit_burial', name='edit_burial'),
     url(r'^print/(?P<pk>.*)/$', 'print_burial', name='print_burial'),
+    url(r'^print/(?P<pk>.*)/notification/$', 'print_notification', name='print_notification'),
 
     url(r'^burial/(?P<pk>[^/]*)/$', 'view_burial', name='view_burial'),
     url(r'^burial/(?P<pk>[^/]*)/comment/$', 'add_comment', name='add_comment'),

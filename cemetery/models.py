@@ -177,7 +177,9 @@ class Burial(models.Model):
         ('beznal', u"Безнал"),
     ], default='nal', blank=False)
 
+    added = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now)
     creator = models.ForeignKey('auth.User', null=True, editable=False)
+    editor = models.ForeignKey('auth.User', null=True, editable=False, related_name='edited_burials')
     deleted = models.BooleanField(editable=False, default=False)  # Удален.
 
     class Meta:
@@ -190,6 +192,10 @@ class Burial(models.Model):
     def agent_director(self):
         return self.client_organization and self.agent and self.agent.person == self.client_organization.ceo
 
+    def editor_name(self):
+        u = self.editor or self.creator
+        return u and u.person_set.all[0].get_initials()
+
     def last_change(self):
         from django.contrib.admin.models import LogEntry, ContentType
         ct = ContentType.objects.get_for_model(Burial)
@@ -198,6 +204,11 @@ class Burial(models.Model):
         except IndexError:
             return None
 
+    def client_address(self):
+        if self.client_person:
+            return self.client_person.address
+        elif self.client_organization:
+            return self.client_organization.location
 
     def get_print_info(self):
         if self.print_info:
@@ -232,6 +243,7 @@ class Burial(models.Model):
 
     def full_customer_name(self):
         org = self.client_organization
+        agent = None
         try:
             agent = self.agent
         except:
@@ -240,18 +252,19 @@ class Burial(models.Model):
             if not org:
                 org = agent.organization
 
-            if self.doverennost and self.doverennost.number:
-                return u"%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s" % {
-                    'org': org.full_name or org,
-                    'agent': agent,
-                    'd_num': self.doverennost and self.doverennost.number or '',
-                    'd_date': self.doverennost and self.doverennost.issue_date and self.doverennost.issue_date.strftime('%d.%m.%Y') or '',
-                }
-            else:
-                return u"%(org)s, в лице агента %(agent)s" % {
-                    'org': org.full_name or org,
-                    'agent': agent,
-                }
+            if agent:
+                if self.doverennost and self.doverennost.number:
+                    return u"%(org)s, в лице агента %(agent)s, действующего на основании доверенности №%(d_num)s от %(d_date)s" % {
+                        'org': org.full_name or org,
+                        'agent': agent,
+                        'd_num': self.doverennost and self.doverennost.number or '',
+                        'd_date': self.doverennost and self.doverennost.issue_date and self.doverennost.issue_date.strftime('%d.%m.%Y') or '',
+                    }
+                else:
+                    return u"%(org)s, в лице агента %(agent)s" % {
+                        'org': org.full_name or org,
+                        'agent': agent,
+                    }
 
         if org:
             return u"%(org)s, в лице директора %(ceo)s, действующего на основании %(doc)s" % {
