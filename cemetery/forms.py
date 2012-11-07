@@ -265,7 +265,7 @@ class PersonForm(forms.ModelForm):
             real_initial = kwargs.get('initial', {}).copy()
             kwargs['initial'] = model_to_dict(kwargs['instance'], [], [])
             kwargs['initial'].update({'instance': instance_pk})
-            if data and not data.get('last_name') and not self.data.get('skip_last_name'):
+            if data and not data.get('last_name') and not data.get('skip_last_name'):
                 old_data = dict(kwargs['data'].copy())
                 old_data.update(kwargs['initial'])
                 kwargs['data'] = old_data
