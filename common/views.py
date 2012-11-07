@@ -20,7 +20,7 @@ from django.contrib import messages
 import math
 
 from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery, Comment, Operation
-from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm, PlaceBurialsFormset, PlaceRoomsForm, OrganizationForm, AccountsFormset, AgentsFormset
+from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm, PlaceBurialsFormset, PlaceRoomsForm, OrganizationForm, AccountsFormset, AgentsFormset, CeoForm
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm, CommentForm
 from cemetery.forms import AddAgentForm
 from persons.models import DeathCertificate, PersonID, DocumentSource
