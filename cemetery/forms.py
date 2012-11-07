@@ -301,9 +301,12 @@ class PersonForm(forms.ModelForm):
                 if self.data.get('instance') == 'NEW':
                     if dead and not self.data.get('death_date') :
                         self.data['death_date'] = datetime.date.today() - datetime.timedelta(1)
-                self.fields['instance'].choices = self.INSTANCE_CHOICES + [
-                    (str(p.pk), self.full_person_data(p)) for p in Person.objects.filter(**person_kwargs)
-                ]
+                if self.data and self.data.get('skip_last_name'):
+                    self.fields['instance'].choices = self.INSTANCE_CHOICES
+                else:
+                    self.fields['instance'].choices = self.INSTANCE_CHOICES + [
+                        (str(p.pk), self.full_person_data(p)) for p in Person.objects.filter(**person_kwargs)
+                    ]
         else:
             self.fields['instance'].widget = forms.HiddenInput()
 

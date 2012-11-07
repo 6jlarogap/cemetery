@@ -184,6 +184,15 @@ $(function() {
         return false;
     });
 
+    $('#id_last_name').live('keyup', function() {
+        var $check = $(this).closest('.well').find('#id_skip_last_name');
+        if ($(this).val()) {
+            $check.removeAttr('checked');
+        } else {
+            $check.attr('checked', '1');
+        }
+    });
+
     $('form.in-place').live('submit', function(){
         var url = $(this).attr('action');
         var data = $(this).serialize();
