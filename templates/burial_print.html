@@ -62,7 +62,7 @@
     <div id="free_form">
     <form action="" method="post" enctype="multipart/form-data" target="_blank">
         {{ form.non_field_errors }}
-        <table width="800">
+        <table width="800" {% if not user|has_perm:"cemetery.add_serviceposition" %}style="display: none;"{% endif %}>
             <tr>
                 <td colspan="6">
                     <h2>Счет-заказ</h2>
@@ -96,6 +96,8 @@
                     {{ payment_form.payment_type }}{{ payment_form.payment_type.errors }}
                 </td>
             </tr>
+        </table>
+        <table width="800">
             <tr>
                 <td colspan="6">
                     <h2>Наряды</h2>
