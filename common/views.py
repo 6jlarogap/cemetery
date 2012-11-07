@@ -747,11 +747,16 @@ def management_org(request):
 
     org_form = OrganizationForm(data=request.POST or None, instance=org)
     location_form = LocationForm(data=request.POST or None, instance=org and org.location)
+    ceo_form = CeoForm(data=request.POST or None, instance=org and org.ceo)
     accounts_formset = AccountsFormset(data=request.POST or None, instance=org, prefix='accounts')
     agents_formset = AgentsFormset(data=request.POST or None, instance=org, prefix='agents')
     if request.method == "POST" and org_form.is_valid() and location_form.is_valid() and agents_formset.is_valid() and accounts_formset.is_valid():
         location = location_form.save()
-        org = org_form.save(location=location)
+        if ceo_form.is_valid():
+            ceo = ceo_form.save()
+        else:
+            ceo = None
+        org = org_form.save(location=location, ceo=ceo)
         accounts_formset = AccountsFormset(data=request.POST or None, instance=org, prefix='accounts')
         agents_formset = AgentsFormset(data=request.POST or None, instance=org, prefix='agents')
         accounts_formset.save()
@@ -762,6 +767,7 @@ def management_org(request):
     return render(request, 'management_add_org.html', {
         'org_form': org_form,
         "location_form": location_form,
+        'ceo_form': ceo_form,
         'accounts_formset': accounts_formset,
         'agents_formset': agents_formset,
         "orgs": orgs,

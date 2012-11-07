@@ -769,17 +769,23 @@ class CemeteryForm(forms.ModelForm):
         cemetery.save()
         return cemetery
 
+class CeoForm(forms.ModelForm):
+    class Meta:
+        model = Person
+        fields = ['last_name', 'first_name', 'middle_name']
+
 class OrganizationForm(forms.ModelForm):
     class Meta:
         model = Organization
-        exclude = ['location']
+        exclude = ['location', 'ceo']
         widgets = {
             'phones': forms.TextInput(),
         }
 
-    def save(self, location=None, *args, **kwargs):
+    def save(self, location=None, ceo=None, *args, **kwargs):
         org = super(OrganizationForm, self).save(*args, **kwargs)
         org.location = location
+        org.ceo = ceo
         org.save()
         return org
 
