@@ -8,6 +8,9 @@
         {{ org_form.as_p }}
         {% include "burial_location_form.html" %}
 
+        <h3>Директор</h3>
+        {{ ceo_form.as_p }}
+
         <h3>Агенты</h3>
         {{ agents_formset.management_form }}
         {% for f in agents_formset.forms %}
