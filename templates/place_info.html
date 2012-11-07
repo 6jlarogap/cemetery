@@ -62,7 +62,7 @@
                                 {% if b.exhumated_date or user|has_perm:"cemetery.add_burial" %}
                                     ({% if b.exhumated_date %}Эксгумировано, {% endif %}{% if user|has_perm:"cemetery.add_burial" %}<a href="{% url edit_burial b.pk %}"><i class="icon icon-edit"></i> правка</a>{% endif %})
                                 {% endif %}
-                                {% if user|has_perm:"cemetery.edit_burial"  %}
+                                {% if user|has_perm:"cemetery.add_burial"  %}
                                     <a title="открепить" href="?unlink={{ b.pk }}"><i class="icon icon-remove"></i></a>
                                 {% endif %}
                                 <br/>
@@ -70,7 +70,7 @@
                         {% endif %}
                         {% if d.available %}
                             {{ f.burial.errors }}
-                            {% if user|has_perm:"can_edit_burial"  %}
+                            {% if user|has_perm:"cemetery.add_burial"  %}
                                 {{ f.burial }}
                             {% endif %}
                         {% endif %}
