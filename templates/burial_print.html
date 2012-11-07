@@ -169,6 +169,7 @@
         {% endif %}
         {% if user|has_perm:"cemetery.add_cemetery" or user|has_perm:"cemetery.add_burial"  %}
             <input type="submit" name="receipt" value="Распечатать справку">
+            <input type="submit" name="notification" value="Распечатать уведомление">
         {% endif %}
         {% if user|has_perm:"cemetery.add_burial"  %}
             <input type="submit" name="dogovor" value="Распечатать договор отв.">

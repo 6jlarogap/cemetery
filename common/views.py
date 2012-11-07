@@ -432,6 +432,9 @@ def print_burial(request, pk):
     """
     Страница печати документов захоронения.
     """
+    if request.POST and request.POST.get('notification'):
+        return redirect('print_notification', pk)
+
     burial = get_object_or_404(Burial, pk=pk)
     positions = get_positions(burial)
     initials = burial.get_print_info()
