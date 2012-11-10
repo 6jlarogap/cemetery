@@ -160,7 +160,7 @@
             </tr>
         </table>
         <br />
-        <div>
+        <div {% if not user|has_perm:"cemetery.add_serviceposition" %}style="display: none;"{% endif %}>
             {{ print_form.add_info.label_tag }}
             {{ print_form.add_info }}{{ print_form.add_info.errors }}
         </div>
