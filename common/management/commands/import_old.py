@@ -98,7 +98,7 @@ class Command(BaseCommand):
         if old_streets.count() > Street.objects.all().count():
             for old in old_streets:
                 try:
-                    Street.objects.filter(Q(name=old.name) | Q(name=cleanup_geo_name(old.name)), Q(city__name=old.city.name) | Q(city__name=cleanup_geo_name(old.city.name))[0])
+                    Street.objects.filter(Q(name=old.name) | Q(name=cleanup_geo_name(old.name)), Q(city__name=old.city.name) | Q(city__name=cleanup_geo_name(old.city.name)))[0]
                 except IndexError:
                     Street.objects.create(name=old.name, city=City.objects.filter(
                         Q(name=old.city.name) | Q(name=cleanup_geo_name(old.city.name)),
