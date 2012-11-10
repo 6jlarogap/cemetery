@@ -48,7 +48,7 @@ class Command(BaseCommand):
         print 'ZAGS:', old_models.ZAGS.objects.all().using('old').count()
 
         for old in old_models.DocumentSource.objects.all().using('old'):
-            DocumentSource.objects.get_or_create(name=old.name)
+            DocumentSource.objects.get_or_create(name=old.name.upper())
         print 'DocumentSource:', old_models.DocumentSource.objects.all().using('old').count()
 
     def import_users(self):
