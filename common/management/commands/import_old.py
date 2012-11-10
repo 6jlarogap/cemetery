@@ -404,7 +404,11 @@ class Command(BaseCommand):
                     birth_date=agent.birth_date,
                     death_date=agent.death_date,
                 )
-                new_agent, _created = Person.objects.get_or_create(**kwargs)
+
+                try:
+                    new_agent = Person.objects.filter(**kwargs)[0]
+                except IndexError:
+                    new_agent = Person.objects.create(**kwargs)
 
                 new_burial.client_organization = new_client
                 new_burial.agent, _created = Agent.objects.get_or_create(person=new_agent, organization=new_org)
