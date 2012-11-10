@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from cemetery.models import Operation, Cemetery, Burial, Place
-from geo.models import Country, Region, City, Street, Location
+from django.db.models import Q
+from geo.models import Country, Region, City, Street, Location, cleanup_geo_name
 
 from old_common import models as old_models
 from organizations.models import Organization, Agent, Doverennost
@@ -69,23 +70,26 @@ class Command(BaseCommand):
 
     def import_locations(self):
         for old in old_models.GeoCountry.objects.all().using('old'):
-            Country.objects.get_or_create(name=old.name)
+            try:
+                Country.objects.filter(Q(name=old.name) | Q(name=cleanup_geo_name(old.name)))[0]
+            except IndexError:
+                Country.objects.create(name=old.name)
         print 'Countries:', old_models.GeoCountry.objects.all().using('old').count()
 
         for old in old_models.GeoRegion.objects.all().select_related().using('old'):
             try:
-                Region.objects.get(name=old.name)
-            except Region.DoesNotExist:
-                Region.objects.create(name=old.name, country=Country.objects.get(name=old.country.name))
+                Region.objects.filter(Q(name=old.name) | Q(name=cleanup_geo_name(old.name)))[0]
+            except IndexError:
+                Region.objects.create(name=old.name, country=Country.objects.filter(Q(name=old.country.name) | Q(name=cleanup_geo_name(old.country.name)))[0])
         print 'Regions:', old_models.GeoRegion.objects.all().using('old').count()
 
         old_cities = old_models.GeoCity.objects.all().select_related(depth=1).using('old')
         if old_cities.count() > City.objects.all().count():
             for old in old_cities:
                 try:
-                    City.objects.get(name=old.name, region__name=old.region.name)
-                except City.DoesNotExist:
-                    City.objects.create(name=old.name, region=Region.objects.get(name=old.region.name))
+                    City.objects.filter(Q(name=old.name) | Q(name=cleanup_geo_name(old.name)), Q(region__name=old.region.name) | Q(region__name=cleanup_geo_name(old.region.name)))[0]
+                except IndexError:
+                    City.objects.create(name=old.name, region=Region.objects.filter(Q(name=old.region.name) | Q(name=cleanup_geo_name(old.region.name)))[0])
             print 'Cities:', old_models.GeoCity.objects.all().using('old').count()
         else:
             print 'Cities skipped'
@@ -94,9 +98,12 @@ class Command(BaseCommand):
         if old_streets.count() > Street.objects.all().count():
             for old in old_streets:
                 try:
-                    Street.objects.get(name=old.name, city__name=old.city.name)
-                except Street.DoesNotExist:
-                    Street.objects.create(name=old.name, city=City.objects.get(name=old.city.name, region__name=old.city.region.name))
+                    Street.objects.filter(Q(name=old.name) | Q(name=cleanup_geo_name(old.name)), Q(city__name=old.city.name) | Q(city__name=cleanup_geo_name(old.city.name)))[0]
+                except IndexError:
+                    Street.objects.create(name=old.name, city=City.objects.filter(
+                        Q(name=old.city.name) | Q(name=cleanup_geo_name(old.city.name)),
+                        Q(region__name=old.city.region.name) | Q(region__name=cleanup_geo_name(old.city.region.name))
+                    ))
             print 'Streets:', old_models.Street.objects.all().using('old').count()
         else:
             print 'Streets skipped'
