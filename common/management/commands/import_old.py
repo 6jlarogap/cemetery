@@ -135,11 +135,35 @@ class Command(BaseCommand):
                 except Location.MultipleObjectsReturned:
                     address = Location.objects.filter(**kwargs)[0]
                 except Location.DoesNotExist:
+                    if old.location.country:
+                        country = Country.objects.filter(Q(name=old.location.country.name) | Q(name=cleanup_geo_name(old.location.country.name)))[0]
+                    else:
+                        country = None
+                    if old.location.region:
+                        region = Region.objects.filter(Q(name=old.location.region.name) | Q(name=cleanup_geo_name(old.location.region.name)))[0]
+                    else:
+                        region = None
+                    if old.location.city:
+                        city = City.objects.filter(
+                            Q(name=old.location.city.name) | Q(name=cleanup_geo_name(old.location.city.name)),
+                            Q(region__name=old.location.region.name) | Q(region__name=cleanup_geo_name(old.location.region.name))
+                        )[0]
+                    else:
+                        city = None
+                    if old.location.street:
+                        street = Street.objects.filter(
+                            Q(name=old.location.street.name) | Q(name=cleanup_geo_name(old.location.street.name)),
+                            Q(city__name=old.location.city.name) | Q(city__name=cleanup_geo_name(old.location.city.name))
+                        )[0]
+                    else:
+                        street = None
+
+
                     address = Location.objects.create(
-                        country=old.location.country and Country.objects.get(name=old.location.country.name) or None,
-                        region=old.location.region and Region.objects.get(name=old.location.region.name) or None,
-                        city=old.location.city and City.objects.get(name=old.location.city.name, region__name=old.location.region.name) or None,
-                        street=old.location.street and Street.objects.get(name=old.location.street.name, city__name=old.location.city.name) or None,
+                        country=country,
+                        region=region,
+                        city=city,
+                        street=street,
                         post_index=old.location.post_index,
                         house=old.location.house,
                         block=old.location.block,
@@ -227,13 +251,19 @@ class Command(BaseCommand):
                         info=old.location.info,
                     )
                     if old.location.country:
-                        kwargs['country'] = Country.objects.get(name=old.location.country.name)
+                        kwargs['country'] = Country.objects.filter(Q(name=old.location.country.name) | Q(name=cleanup_geo_name(old.location.country.name)))[0]
                     if old.location.region:
-                        kwargs['region'] = Region.objects.get(name=old.location.region.name)
+                        kwargs['region'] = Region.objects.filter(Q(name=old.location.region.name) | Q(name=cleanup_geo_name(old.location.region.name)),)[0]
                     if old.location.city:
-                        kwargs['city'] = City.objects.get(name=old.location.city.name, region__name=old.location.city.region.name)
+                        kwargs['city'] = City.objects.filter(
+                            Q(name=old.location.city.name) | Q(name=cleanup_geo_name(old.location.city.name)),
+                            Q(region__name=old.location.region.name) | Q(region__name=cleanup_geo_name(old.location.region.name)),
+                        )[0]
                     if old.location.street:
-                        kwargs['street'] = Street.objects.get(name=old.location.street.name, city__name=old.location.street.city.name)
+                        kwargs['street'] = Street.objects.filter(
+                            Q(name=old.location.street.name) | Q(name=cleanup_geo_name(old.location.street.name)),
+                            Q(city__name=old.location.street.city.name) | Q(city__name=cleanup_geo_name(old.location.street.city.name)),
+                        )[0]
 
                     try:
                         address, _tmp = Location.objects.get_or_create(**kwargs)
@@ -283,13 +313,19 @@ class Command(BaseCommand):
                         info=old.person.location.info,
                     )
                     if old.person.location.country:
-                        kwargs['country'] = Country.objects.get(name=old.person.location.country.name)
+                        kwargs['country'] = Country.objects.filter(Q(name=old.person.location.country.name) | Q(name=cleanup_geo_name(old.person.location.country.name)))[0]
                     if old.person.location.region:
-                        kwargs['region'] = Region.objects.get(name=old.person.location.region.name)
+                        kwargs['region'] = Region.objects.filter(Q(name=old.person.location.region.name) | Q(name=cleanup_geo_name(old.person.location.region.name)))[0]
                     if old.person.location.city:
-                        kwargs['city'] = City.objects.get(name=old.person.location.city.name, region__name=old.person.location.city.region.name)
+                        kwargs['city'] = City.objects.filter(
+                            Q(name=old.person.location.city.name) | Q(name=cleanup_geo_name(old.person.location.city.name)),
+                            Q(region__name=old.person.location.region.name) | Q(region__name=cleanup_geo_name(old.person.location.region.name)),
+                        )[0]
                     if old.person.location.street:
-                        kwargs['street'] = Street.objects.get(name=old.person.location.street.name, city__name=old.person.location.street.city.name)
+                        kwargs['street'] = Street.objects.filter(
+                            Q(name=old.person.location.street.name) | Q(name=cleanup_geo_name(old.person.location.street.name)),
+                            Q(city__name=old.person.location.street.city.name) | Q(city__name=cleanup_geo_name(old.person.location.street.city.name)),
+                        )[0]
 
                     if any(kwargs.values()):
                         try:
