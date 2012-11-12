@@ -165,12 +165,12 @@
             {{ print_form.add_info }}{{ print_form.add_info.errors }}
         </div>
         {% if user|has_perm:"cemetery.add_place" %}
-            <input type="submit" value="Распечатать документы">
+            <input type="submit" value="Распечатать документы" />
         {% endif %}
-        <input type="submit" name="receipt" value="Распечатать справку">
-        <input type="submit" name="notification" value="Распечатать уведомление">
-        {% if user|has_perm:"cemetery.add_burial"  %}
-            <input type="submit" name="dogovor" value="Распечатать договор отв.">
+        <input type="submit" name="receipt" value="Распечатать справку" />
+        {% if user|has_perm:"cemetery.add_burial" %}
+            <input type="submit" name="notification" value="Распечатать уведомление" />
+            <input type="submit" name="dogovor" value="Распечатать договор отв." />
         {% endif %}
         <input type="reset" value="Отмена">
         <a href="{% url edit_burial burial.pk %}"></a>
