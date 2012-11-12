@@ -167,7 +167,9 @@
         {% if user|has_perm:"cemetery.add_place" %}
             <input type="submit" value="Распечатать документы" />
         {% endif %}
-        <input type="submit" name="receipt" value="Распечатать справку" />
+        {% if not burial.exhumated_date %}
+            <input type="submit" name="receipt" value="Распечатать справку" />
+        {% endif %}
         {% if user|has_perm:"cemetery.add_burial" %}
             <input type="submit" name="notification" value="Распечатать уведомление" />
             <input type="submit" name="dogovor" value="Распечатать договор отв." />
