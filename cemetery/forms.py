@@ -65,6 +65,8 @@ class PlaceForm(forms.ModelForm):
             raise forms.ValidationError(u"Допустимы только цифры")
         if int(a[:4]) > datetime.datetime.now().year:
             raise forms.ValidationError(u"Номер больше текущего года")
+        if a.endswwith('0000'):
+            raise forms.ValidationError(u"Последние 4 цифры не могут быть нулями")
         return a
 
     def save(self, user=None, commit=True):

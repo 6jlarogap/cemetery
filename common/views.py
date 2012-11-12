@@ -663,7 +663,7 @@ def view_place(request, pk):
         else:
             place.save()
         return redirect('.')
-    
+
     return render(request, 'place_info.html', {
         'place': place,
         'pbf': pbf,
