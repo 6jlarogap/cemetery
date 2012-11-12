@@ -206,7 +206,7 @@ def edit_burial(request, pk):
     burial_form.data = burial_form.data.copy()
 
     if not request.user.is_superuser:
-        burial_form.fields['account_number'].widget.attr['disabled'] = '1'
+        burial_form.fields['account_number'].widget.attrs['disabled'] = '1'
         burial_form.data['account_number'] = burial.account_number
 
     if request.POST and burial_form.is_valid():
