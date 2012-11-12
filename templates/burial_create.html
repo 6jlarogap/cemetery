@@ -64,10 +64,11 @@
                             {% if b.orderfiles_set.count %}
                                 <small><a title="файл прикреплен"><i class="icon icon-file"></i></a></small>
                             {% endif %}
-                            {% if user|in_group:"edit_burial"  %}
+                            {% if user|has_perm:"cemetery.add_burial"  %}
                                 <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon icon-edit"></i></a>
                             {% endif %}
                             <a title="карточка" href="{% url view_burial b.pk %}"><i class="icon icon-list"></i></a>
+                            <a title="документы" href="{% url print_burial b.pk %}"><i class="icon icon-print"></i></a>
                             <a title="к могиле" href="{% url view_place b.place.pk %}"><i class="icon icon-map-marker"></i></a>
                         </td>
                     </tr>
@@ -257,6 +258,7 @@
                                     <a title="редактировать" target="_blank" href='{% url edit_burial b.pk %}'><i class="icon icon-edit"></i></a>
                                 {% endif %}
                                 <a title="карточка" href="{% url view_burial b.pk %}"><i class="icon icon-list"></i></a>
+                                <a title="документы" href="{% url print_burial b.pk %}"><i class="icon icon-print"></i></a>
                                 <a title="к могиле" href="{% url view_place b.place.pk %}"><i class="icon icon-map-marker"></i></a>
                             </td>
                         </tr>
