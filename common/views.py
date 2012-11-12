@@ -643,18 +643,27 @@ def view_place(request, pk):
     place = get_object_or_404(Place, pk=pk)
     pbf = PlaceBurialsFormset(data=request.POST or None, place=place)
     rf = PlaceRoomsForm(data=request.POST or None, instance=place)
+
+    if request.GET.get('delete_responsible'):
+        place.responsible = None
+        place.save()
+        return redirect('.')
+
     if request.GET.get('unlink'):
         Burial.objects.filter(place=place, pk=request.GET.get('unlink')).update(grave_id=None)
         return redirect('.')
+
     if request.POST and rf.changed_data and rf.is_valid():
         rf.save()
         return redirect('.')
+
     if request.POST:
         if pbf.is_valid():
             pbf.save()
         else:
             place.save()
         return redirect('.')
+    
     return render(request, 'place_info.html', {
         'place': place,
         'pbf': pbf,
