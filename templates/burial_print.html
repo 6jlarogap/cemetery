@@ -164,13 +164,11 @@
             {{ print_form.add_info.label_tag }}
             {{ print_form.add_info }}{{ print_form.add_info.errors }}
         </div>
-        {% if user|has_perm:"cemetery.add_cemetery"  %}
+        {% if user|has_perm:"cemetery.add_place" %}
             <input type="submit" value="Распечатать документы">
         {% endif %}
-        {% if user|has_perm:"cemetery.add_cemetery" or user|has_perm:"cemetery.add_burial"  %}
-            <input type="submit" name="receipt" value="Распечатать справку">
-            <input type="submit" name="notification" value="Распечатать уведомление">
-        {% endif %}
+        <input type="submit" name="receipt" value="Распечатать справку">
+        <input type="submit" name="notification" value="Распечатать уведомление">
         {% if user|has_perm:"cemetery.add_burial"  %}
             <input type="submit" name="dogovor" value="Распечатать договор отв.">
         {% endif %}
