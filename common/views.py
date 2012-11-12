@@ -203,6 +203,12 @@ def edit_burial(request, pk):
     burial = get_object_or_404(Burial, pk=pk)
     burial_form = BurialForm(data=request.POST or None, instance=burial)
 
+    burial_form.data = burial_form.data.copy()
+
+    if not request.user.is_superuser:
+        burial_form.fields['account_number'].widget.attr['disabled'] = '1'
+        burial_form.data['account_number'] = burial.account_number
+
     if request.POST and burial_form.is_valid():
         b = burial_form.save()
         b.editor = request.user
