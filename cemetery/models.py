@@ -194,7 +194,7 @@ class Burial(models.Model):
 
     def editor_name(self):
         u = self.editor or self.creator
-        return u and u.person_set.all[0].get_initials()
+        return u and u.person_set.all[0].full_name()
 
     def last_change(self):
         from django.contrib.admin.models import LogEntry, ContentType
