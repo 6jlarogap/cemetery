@@ -148,6 +148,9 @@ class BurialForm(forms.ModelForm):
                 if any(filter(lambda o: not o.operation.is_empty(), others)):
                     raise forms.ValidationError(u"Место не пустое, Операция не должна быть \"Захоронение\"")
 
+            if account_number and account_number < place.seat:
+                raise forms.ValidationError(u"Рег. № меньше номера места")
+
         operation = self.cleaned_data.get('operation')
         if operation and place:
             try:
