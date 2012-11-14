@@ -164,7 +164,7 @@
             {{ print_form.add_info.label_tag }}
             {{ print_form.add_info }}{{ print_form.add_info.errors }}
         </div>
-        {% if user|has_perm:"cemetery.add_place" %}
+        {% if user|has_perm:"cemetery.add_serviceposition" %}
             <input type="submit" value="Распечатать документы" />
         {% endif %}
         {% if not burial.exhumated_date %}
