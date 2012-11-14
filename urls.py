@@ -24,6 +24,7 @@ urlpatterns += patterns('common.views',
     url(r'^edit/(?P<pk>\d+)/$', 'edit_burial', name='edit_burial'),
     url(r'^print/(?P<pk>\d+)/$', 'print_burial', name='print_burial'),
     url(r'^print/(?P<pk>\d+)/notification/$', 'print_notification', name='print_notification'),
+    url(r'^print/cats/$', 'print_catafalques', name='print_catafalques'),
 
     url(r'^burial/(?P<pk>[^/]*)/$', 'view_burial', name='view_burial'),
     url(r'^burial/(?P<pk>[^/]*)/comment/$', 'add_comment', name='add_comment'),

@@ -22,7 +22,7 @@ import math
 from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery, Comment, Operation
 from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm, PlaceBurialsFormset, PlaceRoomsForm, OrganizationForm, AccountsFormset, AgentsFormset, CeoForm
 from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm, CommentForm
-from cemetery.forms import AddAgentForm
+from cemetery.forms import AddAgentForm, CatafalquesPrintForm
 from persons.models import DeathCertificate, PersonID, DocumentSource
 from organizations.models import Organization, Agent
 
@@ -431,6 +431,22 @@ def print_notification(request, pk):
     return render(request, 'reports/notification.html', {
         'burial': burial,
     })
+
+
+@login_required
+def print_catafalques(request):
+    f = CatafalquesPrintForm(data=request.GET or None)
+    if f.is_valid():
+        d = f.cleaned_data['date']
+        burials = Burial.objects.filter(date_fact=d)
+        return render(request, 'reports/catafalque_request.html', {
+            'burials': burials,
+            'date': d,
+        })
+    else:
+        return render(request, 'catafalques_form.html', {
+            'form': f,
+        })
 
 @login_required
 @transaction.commit_on_success

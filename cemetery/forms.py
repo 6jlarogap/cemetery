@@ -936,3 +936,6 @@ class OrganizationAgentForm(forms.ModelForm):
 
 AccountsFormset = inlineformset_factory(Organization, BankAccount)
 AgentsFormset = inlineformset_factory(Organization, Agent, form=OrganizationAgentForm, can_delete=False)
+
+class CatafalquesPrintForm(forms.Form):
+    date = forms.DateField(label=u"Дата")

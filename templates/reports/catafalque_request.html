@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html>
   <head>
+      {% load pytils_dt %}
     <meta http-equiv="content-type" content=
     "text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content=
@@ -67,8 +68,7 @@ body{font-family:arial,sans,sans-serif;margin:0}body,body td,.tblGenFixed,.tblGe
                 </p>
               </td>
               <td colspan="9" class='s1'>
-                Заявка на а/катафалки <span class=
-                'annotation'>[1]</span>
+                Заявка на а/катафалки
               </td>
               <td style='display:none;'></td>
               <td style='display:none;'></td>
@@ -86,8 +86,7 @@ body{font-family:arial,sans,sans-serif;margin:0}body,body td,.tblGenFixed,.tblGe
                 </p>
               </td>
               <td colspan="9" class='s2'>
-                на "____"_______________20___г. <span class=
-                'annotation'>[2]</span>
+                на {{ date|ru_strftime:'"%d" %B %Y' }}г.
               </td>
               <td style='display:none;'></td>
               <td style='display:none;'></td>
@@ -124,15 +123,13 @@ body{font-family:arial,sans,sans-serif;margin:0}body,body td,.tblGenFixed,.tblGe
                 № п/п
               </td>
               <td class='s7'>
-                Время подачи а/к <span class=
-                'annotation'>[3]</span>
+                Время подачи а/к
               </td>
               <td class='s8'>
-                Время использования а/к <span class=
-                'annotation'>[4]</span>
+                Время использования а/к
               </td>
               <td colspan="6" class='s8'>
-                Маршрут а/к <span class='annotation'>[5]</span>
+                Маршрут а/к
               </td>
               <td style='display:none;'></td>
               <td style='display:none;'></td>
@@ -140,11 +137,11 @@ body{font-family:arial,sans,sans-serif;margin:0}body,body td,.tblGenFixed,.tblGe
               <td style='display:none;'></td>
               <td style='display:none;'></td>
             </tr>
+            {% for b in burials %}
+            {% if b.catafalque_data %}
             <tr>
               <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
+                {{ forloop.counter }}
               </td>
               <td class='s9'></td>
               <td class='s10'></td>
@@ -156,101 +153,20 @@ body{font-family:arial,sans,sans-serif;margin:0}body,body td,.tblGenFixed,.tblGe
               <td style='display:none;'></td>
               <td style='display:none;'></td>
             </tr>
+            {% endif %}
+            {% endfor %}
             <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s9'></td>
-              <td class='s10'></td>
-              <td class='s11'></td>
-              <td colspan="6" class='s12'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s9'></td>
-              <td class='s10'></td>
-              <td class='s11'></td>
-              <td colspan="6" class='s12'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s9'></td>
-              <td class='s10'></td>
-              <td class='s11'></td>
-              <td colspan="6" class='s12'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s9'></td>
-              <td class='s10'></td>
-              <td class='s11'></td>
-              <td colspan="6" class='s12'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s9'></td>
-              <td class='s10'></td>
-              <td class='s11'></td>
-              <td colspan="6" class='s12'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:20px;'>
-                  .
-                </p>
-              </td>
-              <td class='s9'></td>
-              <td class='s10'></td>
-              <td class='s11'></td>
-              <td colspan="6" class='s12'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
+                <td class="hd">
+                </td>
+                <td class='s9'></td>
+                <td class='s10'></td>
+                <td class='s11'></td>
+                <td colspan="6" class='s12'></td>
+                <td style='display:none;'></td>
+                <td style='display:none;'></td>
+                <td style='display:none;'></td>
+                <td style='display:none;'></td>
+                <td style='display:none;'></td>
             </tr>
             <tr>
               <td class="hd">
@@ -258,14 +174,9 @@ body{font-family:arial,sans,sans-serif;margin:0}body,body td,.tblGenFixed,.tblGe
                   .
                 </p>
               </td>
-              <td class='s13'>
-                Заявку
-                составил______________________________________________________________
+              <td class='s13' colspan="5">
+                Заявку составил______________________________________________________________
               </td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
               <td class='s14'></td>
               <td colspan="3" class='s15'>
                 (________________________________)
