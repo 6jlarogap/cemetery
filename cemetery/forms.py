@@ -111,6 +111,9 @@ class BurialForm(forms.ModelForm):
             raise forms.ValidationError(u"Необходимо ровно 8 цифр")
         if not a.isdigit():
             raise forms.ValidationError(u"Допустимы только цифры")
+        if a.endswith('0000'):
+            raise forms.ValidationError(u"Последние 4 цифры не могут быть нулями")
+
 
         place = Place.objects.get(pk=self.data['place'])
         burials = Burial.objects.all().filter(place__cemetery=place.cemetery)
