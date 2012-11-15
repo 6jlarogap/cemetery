@@ -608,6 +608,13 @@ def print_burial(request, pk):
         if catafalque_hours:
             lifters_hours = catafalque_hours
 
+        burial.set_print_info({
+            'positions': [f.cleaned_data for f in positions_fs.forms if f.is_valid()],
+            'print': print_form.cleaned_data,
+            'catafalque_hours': catafalque_hours,
+        })
+        burial.save()
+
         if catafalque_time and isinstance(catafalque_time[0], int):
             catafalque_time = datetime.time(*catafalque_time)
             catafalque_time = u' ч. '.join(catafalque_time.strftime(u'%H %M').lstrip('0').strip().split(' ')) + u' мин.'

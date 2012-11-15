@@ -781,12 +781,12 @@
     {% if burial.get_print_info.print.catafalque_start %}
     <tr class="ro3">
         <td style="text-align:left;width:0.6984in; " class="ce6">{{ forloop.counter }}</td>
-        <td style="text-align:left;width:0.8146in; " class="ce14">{{ burial.get_print_info.print.catafalque_start }} </td>
-        <td style="text-align:left;width:1.0346in; " class="ce19">{{ burial.get_print_info.print.catafalque_time }} </td>
+        <td style="text-align:left;width:0.8146in; " class="ce14">{{ burial.get_print_info.print.catafalque_time }} </td>
+        <td style="text-align:left;width:1.0346in; " class="ce19">{{ burial.get_print_info.catafalque_hours }} </td>
         <td style="text-align:left;width:3.8209in; " class="ce22">{{ burial.get_print_info.print.catafalque_route }} </td>
         <td style="text-align:left;width:1.002in; " class="ce25">{{ burial.place.cemetery }} </td>
-        <td style="text-align:left;width:1.002in; " class="ce25">{{ burial.person.full_name }} </td>
-        <td style="text-align:left;width:1.002in; " class="ce25">{{ burial.editor_name }} </td>
+        <td style="text-align:left;width:1.002in; " class="ce25">{{ burial.person.full_name|default:"" }} </td>
+        <td style="text-align:left;width:1.002in; " class="ce25">{{ burial.editor_name|default:"" }} </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:0.6984in; " class="Default"> </td>
