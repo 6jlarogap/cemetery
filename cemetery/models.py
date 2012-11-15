@@ -254,7 +254,7 @@ class Burial(models.Model):
         except:
             pass
         else:
-            if not org:
+            if not org and agent:
                 org = agent.organization
 
             if agent:
