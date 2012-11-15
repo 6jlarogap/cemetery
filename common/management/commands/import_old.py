@@ -1,10 +1,10 @@
 from optparse import make_option
 import sys
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from cemetery.models import Operation, Cemetery, Burial, Place
+from cemetery.models import Operation, Cemetery, Burial, Place, Service, ServicePosition
 from django.db.models import Q
 from geo.models import Country, Region, City, Street, Location, cleanup_geo_name
 
@@ -42,6 +42,8 @@ class Command(BaseCommand):
 
         if options['skip_responsible'] is None:
             self.import_responsible()
+
+        self.import_stuff()
 
     def import_zags(self):
         for old in old_models.ZAGS.objects.all().using('old'):
@@ -95,7 +97,7 @@ class Command(BaseCommand):
             print 'Cities skipped'
 
         old_streets = old_models.Street.objects.all().select_related(depth=1).using('old')
-        if old_streets.count() > Street.objects.all().count():
+        if old_streets.count() != Street.objects.all().count():
             for old in old_streets:
                 try:
                     Street.objects.filter(Q(name=old.name) | Q(name=cleanup_geo_name(old.name)), Q(city__name=old.city.name) | Q(city__name=cleanup_geo_name(old.city.name)))[0]
@@ -459,3 +461,41 @@ class Command(BaseCommand):
                 new_burial.save()
 
         print 'Responsibles:', old_models.Burial.objects.filter(responsible_customer__isnull=False).using('old').count()
+
+    def import_stuff(self):
+        for old in User.objects.all().using('old'):
+            try:
+                u = User.objects.get(username=old.username)
+            except User.DoesNotExist:
+                u = User.objects.create(
+                    username=old.username,
+                    email=old.email,
+                    password=old.password,
+                )
+            for g in old.groups.all():
+                u.groups.add(Group.objects.get_or_create(name=g.name)[0])
+        print 'Users:', User.objects.all().using('old').count()
+
+        for old in old_models.OrderProduct.objects.all().using('old'):
+            Service.objects.get_or_create(
+                name = old.name,
+                default = old.name,
+                measure = old.measure,
+                price = old.price,
+                ordering = old.ordering,
+            )
+        print 'Services:', old_models.OrderProduct.objects.all().using('old').count()
+
+        for old in old_models.OrderPosition.objects.all().using('old'):
+            try:
+                service = Service.objects.filter(name=old.service.name)[0]
+            except old_models.OrderProduct.DoesNotExist:
+                pass
+            else:
+                ServicePosition.objects.get_or_create(
+                    burial = Burial.objects.get(account_number=old.order.burial.account_book_n, place__cemetery__name=old.order.product.place.cemetery.name),
+                    service = service,
+                    count = old.count,
+                    price = old.price,
+                )
+        print 'ServicePositions:', old_models.OrderPosition.objects.all().using('old').count()

@@ -91,8 +91,9 @@
                         <li{% if request.path == '/' %} class="active"{% endif %}><a href="{% url main_page %}">Поиск</a></li>
                         {% if user|has_perm:"cemetery.add_burial" %}
                             <li{% if request.path == '/create/' %} class="active"{% endif %}><a href="{% url new_burial %}">Ввод данных</a></li>
+                        {% endif %}
+                        {% if user|has_perm:"cemetery.add_serviceposition" %}
                             <li{% if request.path == '/print/cats/' %} class="active"{% endif %}><a href="{% url print_catafalques %}">Заявка на катафалки</a></li>
-
                         {% endif %}
                     </ul>
                 </div><!--/.nav-collapse -->
