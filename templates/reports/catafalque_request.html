@@ -1,659 +1,909 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html>
-  <head>
-      {% load pytils_dt %}
-    <meta http-equiv="content-type" content=
-    "text/html; charset=utf-8">
-    <meta http-equiv="X-UA-Compatible" content=
-    "IE=8;IE=9;chrome=1;">
-    <meta name='lsq' content='1'>
-    <meta name='trixrows' content='37'>
-    <meta name='trixr1' content='0'>
-    <meta name='trixr2' content='37'>
-    <meta name='trixdiv' content='20'>
-    <meta name='trixcnt' content='2'>
-    <meta name='trixlast' content='17'>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
+        "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--This file was converted to xhtml by OpenOffice.org - see http://xml.openoffice.org/odf2xhtml for more info.-->
+<head profile="http://dublincore.org/documents/dcmi-terms/">
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+    <title xml:lang="en-US">- no title specified</title>
+    <meta name="DCTERMS.title" content="" xml:lang="en-US"/>
+    <meta name="DCTERMS.language" content="en-US" scheme="DCTERMS.RFC4646"/>
+    <meta name="DCTERMS.source" content="http://xml.openoffice.org/odf2xhtml"/>
+    <meta name="DCTERMS.creator" content="Лариса"/>
+    <meta name="DCTERMS.issued" content="2012-09-30T00:08:19" scheme="DCTERMS.W3CDTF"/>
+    <meta name="DCTERMS.contributor" content="Лариса"/>
+    <meta name="DCTERMS.modified" content="2012-11-14T00:04:13" scheme="DCTERMS.W3CDTF"/>
+    <meta name="DCTERMS.provenance" content="" xml:lang="en-US"/>
+    <meta name="DCTERMS.subject" content="," xml:lang="en-US"/>
+    <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" hreflang="en"/>
+    <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" hreflang="en"/>
+    <link rel="schema.DCTYPE" href="http://purl.org/dc/dcmitype/" hreflang="en"/>
+    <link rel="schema.DCAM" href="http://purl.org/dc/dcam/" hreflang="en"/>
     <style type="text/css">
-html {overflow:visible};
+        @page {
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show
+        }
+
+        td, th {
+            vertical-align: top;
+            font-size: 10pt;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            clear: both
+        }
+
+        ol, ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        <!--
+        "li span.odfLiEnd"
+        -
+        IE
+
+        7
+        issue-->
+	li span. {
+            clear: both;
+            line-height: 0;
+            width: 0;
+            height: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        span.footnodeNumber {
+            padding-right: 1em;
+        }
+
+        span.annotation_style_by_filter {
+            font-size: 95%;
+            font-family: Arial;
+            background-color: #fff000;
+            margin: 0;
+            border: 0;
+            padding: 0;
+        }
+
+        * {
+            margin: 0;
+        }
+
+        .ta1 {
+            writing-mode: lr-tb;
+        }
+
+        .Default {
+            font-family: Arial Cyr;
+            padding: 0.028in;
+        }
+
+        .ce1 {
+            padding: 0.028in;
+            font-family: Arial;
+            border-bottom-style: none;
+            background-color: transparent;
+            border-left-width: 0, 0321cm;
+            border-left-style: solid;
+            border-left-color: #000000;
+            border-right-width: 0, 0321cm;
+            border-right-style: solid;
+            border-right-color: #000000;
+            border-top-width: 0, 0321cm;
+            border-top-style: solid;
+            border-top-color: #000000;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 11pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: bold;
+        }
+
+        .ce10 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-style: none;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 14pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce11 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-style: none;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 10pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: bold;
+        }
+
+        .ce12 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-style: none;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+        }
+
+        .ce13 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-width: 0, 0109cm;
+            border-style: solid;
+            border-color: #000000;
+            vertical-align: middle;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 9pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce14 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-width: 0, 0109cm;
+            border-style: solid;
+            border-color: #000000;
+            vertical-align: top;
+            margin-left: 0in;
+            writing-mode: page;
+        }
+
+        .ce15 {
+            padding: 0.028in;
+            font-family: Arial;
+            border-bottom-style: none;
+            background-color: transparent;
+            border-left-style: none;
+            border-right-style: none;
+            border-top-width: 0, 0109cm;
+            border-top-style: solid;
+            border-top-color: #000000;
+            vertical-align: top;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 11pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce16 {
+            padding: 0.028in;
+            font-family: Arial;
+            border-bottom-width: 0, 0321cm;
+            border-bottom-style: solid;
+            border-bottom-color: #000000;
+            background-color: transparent;
+            border-left-style: none;
+            border-right-style: none;
+            border-top-style: none;
+            vertical-align: top;
+            text-align: left ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 8pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce17 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+        }
+
+        .ce18 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-width: 0, 0109cm;
+            border-style: solid;
+            border-color: #000000;
+            vertical-align: middle;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 9pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce19 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-width: 0, 0109cm;
+            border-style: solid;
+            border-color: #000000;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+        }
+
+        .ce2 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-bottom-style: none;
+            border-left-width: 0, 0321cm;
+            border-left-style: solid;
+            border-left-color: #000000;
+            border-right-width: 0, 0321cm;
+            border-right-style: solid;
+            border-right-color: #000000;
+            border-top-style: none;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 14pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce20 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-style: none;
+            vertical-align: middle;
+            text-align: left ! important;
+            margin-left: 0in;
+            writing-mode: page;
+        }
+
+        .ce21 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-bottom-width: 0, 0109cm;
+            border-bottom-style: solid;
+            border-bottom-color: #000000;
+            border-left-width: 0, 0109cm;
+            border-left-style: solid;
+            border-left-color: #000000;
+            border-right-style: none;
+            border-top-width: 0, 0109cm;
+            border-top-style: solid;
+            border-top-color: #000000;
+            vertical-align: middle;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 9pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce22 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-bottom-width: 0, 0109cm;
+            border-bottom-style: solid;
+            border-bottom-color: #000000;
+            border-left-width: 0, 0109cm;
+            border-left-style: solid;
+            border-left-color: #000000;
+            border-right-style: none;
+            border-top-width: 0, 0109cm;
+            border-top-style: solid;
+            border-top-color: #000000;
+            vertical-align: middle;
+            margin-left: 0in;
+            writing-mode: page;
+        }
+
+        .ce23 {
+            padding: 0.028in;
+            font-family: Arial;
+            border-bottom-width: 0, 0321cm;
+            border-bottom-style: solid;
+            border-bottom-color: #000000;
+            background-color: transparent;
+            border-left-style: none;
+            border-right-style: none;
+            border-top-style: none;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 8pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce24 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-style: none;
+        }
+
+        .ce25 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-width: 0, 0109cm;
+            border-style: solid;
+            border-color: #000000;
+            vertical-align: middle;
+            margin-left: 0in;
+            writing-mode: page;
+        }
+
+        .ce26 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-bottom-style: none;
+            background-color: transparent;
+            border-left-style: none;
+            border-right-width: 0, 0321cm;
+            border-right-style: solid;
+            border-right-color: #000000;
+            border-top-style: none;
+            vertical-align: top;
+            margin-left: 0in;
+            writing-mode: page;
+        }
+
+        .ce27 {
+            padding: 0.028in;
+            font-family: Arial;
+            border-bottom-width: 0, 0321cm;
+            border-bottom-style: solid;
+            border-bottom-color: #000000;
+            background-color: transparent;
+            border-left-style: none;
+            border-right-width: 0, 0321cm;
+            border-right-style: solid;
+            border-right-color: #000000;
+            border-top-style: none;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 8pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce28 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            background-color: transparent;
+            border-style: none;
+            vertical-align: top;
+            margin-left: 0in;
+            writing-mode: page;
+        }
+
+        .ce29 {
+            padding: 0.028in;
+            font-family: Arial;
+            border-bottom-style: none;
+            background-color: transparent;
+            border-left-style: none;
+            border-right-width: 0, 0321cm;
+            border-right-style: solid;
+            border-right-color: #000000;
+            border-top-width: 0, 0321cm;
+            border-top-style: solid;
+            border-top-color: #000000;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 11pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: bold;
+        }
+
+        .ce3 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-bottom-style: none;
+            border-left-width: 0, 0321cm;
+            border-left-style: solid;
+            border-left-color: #000000;
+            border-right-width: 0, 0321cm;
+            border-right-style: solid;
+            border-right-color: #000000;
+            border-top-style: none;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 10pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: bold;
+        }
+
+        .ce30 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-bottom-style: none;
+            border-left-style: none;
+            border-right-width: 0, 0321cm;
+            border-right-style: solid;
+            border-right-color: #000000;
+            border-top-style: none;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 14pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce31 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-bottom-style: none;
+            border-left-style: none;
+            border-right-width: 0, 0321cm;
+            border-right-style: solid;
+            border-right-color: #000000;
+            border-top-style: none;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 10pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: bold;
+        }
+
+        .ce32 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-bottom-style: none;
+            border-left-style: none;
+            border-right-width: 0, 0321cm;
+            border-right-style: solid;
+            border-right-color: #000000;
+            border-top-style: none;
+        }
+
+        .ce33 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            font-size: 10pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce34 {
+            padding: 0.028in;
+            font-family: Arial;
+            vertical-align: top;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 8pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce4 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-bottom-style: none;
+            border-left-width: 0, 0321cm;
+            border-left-style: solid;
+            border-left-color: #000000;
+            border-right-style: none;
+            border-top-style: none;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+        }
+
+        .ce5 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-bottom-width: 0, 0109cm;
+            border-bottom-style: solid;
+            border-bottom-color: #000000;
+            border-left-width: 0, 0321cm;
+            border-left-style: solid;
+            border-left-color: #000000;
+            border-right-width: 0, 0109cm;
+            border-right-style: solid;
+            border-right-color: #000000;
+            border-top-width: 0, 0109cm;
+            border-top-style: solid;
+            border-top-color: #000000;
+            vertical-align: middle;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 9pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce6 {
+            padding: 0.028in;
+            font-family: Arial Cyr;
+            border-bottom-width: 0, 0109cm;
+            border-bottom-style: solid;
+            border-bottom-color: #000000;
+            border-left-width: 0, 0321cm;
+            border-left-style: solid;
+            border-left-color: #000000;
+            border-right-width: 0, 0109cm;
+            border-right-style: solid;
+            border-right-color: #000000;
+            border-top-width: 0, 0109cm;
+            border-top-style: solid;
+            border-top-color: #000000;
+            vertical-align: top;
+            margin-left: 0in;
+            writing-mode: page;
+        }
+
+        .ce7 {
+            padding: 0.028in;
+            font-family: Arial;
+            border-bottom-style: none;
+            background-color: transparent;
+            border-left-width: 0, 0321cm;
+            border-left-style: solid;
+            border-left-color: #000000;
+            border-right-style: none;
+            border-top-width: 0, 0109cm;
+            border-top-style: solid;
+            border-top-color: #000000;
+            vertical-align: top;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 11pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce8 {
+            padding: 0.028in;
+            font-family: Arial;
+            border-bottom-width: 0, 0321cm;
+            border-bottom-style: solid;
+            border-bottom-color: #000000;
+            background-color: transparent;
+            border-left-width: 0, 0321cm;
+            border-left-style: solid;
+            border-left-color: #000000;
+            border-right-style: none;
+            border-top-style: none;
+            vertical-align: top;
+            text-align: left ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 8pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: normal;
+        }
+
+        .ce9 {
+            padding: 0.028in;
+            font-family: Arial;
+            border-bottom-style: none;
+            background-color: transparent;
+            border-left-style: none;
+            border-right-style: none;
+            border-top-width: 0, 0321cm;
+            border-top-style: solid;
+            border-top-color: #000000;
+            vertical-align: top;
+            text-align: center ! important;
+            margin-left: 0in;
+            writing-mode: page;
+            font-size: 11pt;
+            font-style: normal;
+            text-shadow: none;
+            text-decoration: none ! important;
+            font-weight: bold;
+        }
+
+        .co1 {
+            width: 0.6984in;
+        }
+
+        .co2 {
+            width: 0.8146in;
+        }
+
+        .co3 {
+            width: 1.0346in;
+        }
+
+        .co4 {
+            width: 3.8209in;
+        }
+
+        .co5 {
+            width: 1.002in;
+        }
+
+        .ro1 {
+            height: 0.2083in;
+        }
+
+        .ro2 {
+            height: 0.25in;
+        }
+
+        .ro3 {
+            height: 0.1772in;
+        }
+
+        .ro4 {
+            height: 0.2917in;
+        }
+
+        .ro5 {
+            height: 0.5102in;
+        }
+
+        .ro6 {
+            height: 0.2189in;
+        }
+
+        .ro7 {
+            height: 0.198in;
+        }
+
+        .ro8 {
+            height: 0.1874in;
+        }
+
+        <!--
+        ODF styles with no properties representable as CSS
+
+        -->
+        {
+        }
     </style>
-    <style type="text/css">
-.tblGenFixed td {padding:0 3px;overflow:hidden;white-space:normal;letter-spacing:0;word-spacing:0;background-color:#fff;z-index:1;border-top:0px none;border-left:0px none;border-bottom:1px solid #CCC;border-right:1px solid #CCC;} .dn {display:none} .tblGenFixed td.s37 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:left;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:;} .tblGenFixed td.s36 {background-color:white;font-family:arial,sans,sans-serif;font-size:110.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:left;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:;border-left:1px solid black;} .tblGenFixed td.s35 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:1px solid black;border-bottom:;} .tblGenFixed td.s34 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:;border-left:1px solid black;} .tblGenFixed td.s33 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:bold;font-style:normal;color:#000000;text-decoration:none;text-align:right;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:1px solid black;border-bottom:1px solid black;border-left:1px solid black;} .tblGenFixed td.s32 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:1px solid black;border-bottom:1px solid black;} .tblGenFixed td.s31 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:1px solid black;border-bottom:1px solid black;border-left:1px solid black;} .tblGenFixed td.s30 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;text-decoration:none;vertical-align:bottom;white-space:normal;overflow:hidden;text-indent:0px;padding-left:3px;border-right:1px solid black;border-bottom:1px solid black;} .tblGenFixed td.s29 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;text-decoration:none;vertical-align:bottom;white-space:normal;overflow:hidden;text-indent:0px;padding-left:3px;border-right:;border-bottom:1px solid black;} .tblGenFixed td.s27 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:middle;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:1px solid black;border-bottom:1px solid black;} .tblGenFixed td.s28 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;text-decoration:none;vertical-align:bottom;white-space:normal;overflow:hidden;text-indent:0px;padding-left:3px;border-right:;border-bottom:1px solid black;border-left:1px solid #CCC;} .tblGenFixed td.s9 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:1px solid black;border-bottom:1px solid black;border-left:1px solid black;} .tblGenFixed td.s25 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:1px solid black;border-left:1px solid black;} .tblGenFixed td.s26 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:middle;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:1px solid black;border-bottom:1px solid black;border-left:1px solid black;} .tblGenFixed td.s23 {background-color:white;font-family:arial,sans,sans-serif;font-size:120.0%;font-weight:bold;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:;border-left:1px solid black;} .tblGenFixed td.s7 {background-color:white;font-family:arial,sans,sans-serif;font-size:90.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:middle;white-space:normal;overflow:hidden;text-indent:0px;padding-left:3px;border-right:1px solid black;border-bottom:1px solid black;} .tblGenFixed td.s8 {background-color:white;font-family:arial,sans,sans-serif;font-size:90.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:middle;white-space:normal;overflow:hidden;text-indent:0px;padding-left:3px;border-right:1px solid black;border-bottom:1px solid black;} .tblGenFixed td.s24 {background-color:white;font-family:arial,sans,sans-serif;font-size:110.0%;font-weight:bold;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:;border-left:1px solid black;} .tblGenFixed td.s21 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;text-decoration:none;vertical-align:bottom;white-space:normal;overflow:hidden;text-indent:0px;padding-left:3px;border-right:;border-bottom:1px solid black;border-left:1px solid #CCC;} .tblGenFixed td.s5 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:1px solid black;border-bottom:1px solid black;} .tblGenFixed td.s22 {background-color:white;font-family:arial,sans,sans-serif;font-size:110.0%;font-weight:bold;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:;border-left:1px solid black;} .tblGenFixed td.s6 {background-color:white;font-family:arial,sans,sans-serif;font-size:90.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:middle;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:1px solid black;border-bottom:1px solid black;border-left:1px solid black;} .tblGenFixed td.s3 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:1px solid black;border-left:1px solid black;} .tblGenFixed td.s4 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;text-decoration:none;vertical-align:bottom;white-space:normal;overflow:hidden;text-indent:0px;padding-left:3px;border-right:;border-bottom:1px solid black;} .tblGenFixed td.s20 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;text-decoration:none;vertical-align:bottom;white-space:normal;overflow:hidden;text-indent:0px;padding-left:3px;border-right:;border-bottom:;border-left:1px solid #CCC;} .tblGenFixed td.s0 {background-color:white;font-family:arial,sans,sans-serif;font-size:110.0%;font-weight:bold;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-top:1px solid black;border-right:;border-bottom:;border-left:1px solid black;} .tblGenFixed td.s2 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:bold;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:;border-left:1px solid black;} .tblGenFixed td.s1 {background-color:white;font-family:arial,sans,sans-serif;font-size:140.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:;border-left:1px solid black;} .tblGenFixed td.s16 {background-color:white;font-family:arial,sans,sans-serif;font-size:80.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:left;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:1px solid black;border-left:1px solid black;} .tblGenFixed td.s17 {background-color:white;font-family:arial,sans,sans-serif;font-size:80.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:left;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:1px solid black;} .tblGenFixed td.s18 {background-color:white;font-family:arial,sans,sans-serif;font-size:80.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:1px solid black;} .tblGenFixed td.s19 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;text-decoration:none;vertical-align:bottom;white-space:normal;overflow:hidden;text-indent:0px;padding-left:3px;border-right:;border-bottom:;border-left:1px solid #CCC;} .tblGenFixed td.s12 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:middle;white-space:normal;overflow:hidden;text-indent:0px;padding-left:3px;border-right:1px solid black;border-bottom:1px solid black;} .tblGenFixed td.s13 {background-color:white;font-family:arial,sans,sans-serif;font-size:110.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:left;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:;border-left:1px solid black;} .tblGenFixed td.s14 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;text-decoration:none;vertical-align:bottom;white-space:normal;overflow:hidden;text-indent:0px;padding-left:3px;border-right:;border-bottom:;} .tblGenFixed td.s15 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:left;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:;border-bottom:;} .tblGenFixed td.s10 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;vertical-align:top;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:1px solid black;border-bottom:1px solid black;} .tblGenFixed td.s11 {background-color:white;font-family:arial,sans,sans-serif;font-size:100.0%;font-weight:normal;font-style:normal;color:#000000;text-decoration:none;text-align:center;vertical-align:bottom;white-space:nowrap;overflow:hidden;text-indent:3px;padding-left:0px;border-right:1px solid black;border-bottom:1px solid black;} 
-    </style>
-    <style type="text/css">
-body{font-family:arial,sans,sans-serif;margin:0}body,body td,.tblGenFixed,.tblGeneric{font-size:13px}.dn{display:none}.tblGenFixed td.comment{background-image:url('https://ssl.gstatic.com/docs/spreadsheets/comment.gif');background-position:top right;background-repeat:no-repeat}.tblGenFixed td{padding:0 3px;overflow:hidden;white-space:normal;letter-spacing:0;word-spacing:0;background-color:#fff;z-index:1;border:1px #ccc solid;border-top:0;border-left:0;vertical-align:bottom}.tblGenFixed td.hd{padding:0;border-right:0;background-color:#c8c8c8}.tblGenFixed tr.rShim td,.tblGenFixed td.rShim{padding:0;border-bottom:0}.divFrozRowHead .tblGenFixed td.hd,.divRowHead .tblGenFixed td.hd{background-color:#e8eef7;width:35px;text-align:center;vertical-align:middle;font-size:8pt;color:#333;border-style:solid;border-color:#c8c8c8;border-width:0 1px 1px 0}#tblMain td.hd p,.colHeadTable td.hd p{margin:0;width:0;overflow:hidden;font-size:0}td.rShim{width:35px;height:0;border-right:1px #c8c8c8 solid}.divColHead .tblGenFixed tr.hd td,.tblGenFixed .sortBar{background-color:#e8eef7;text-align:center;vertical-align:middle;font-size:8pt;color:#333;border-style:solid;border-color:#c8c8c8;border-width:0 1px 1px 0}.divColHead .tblGenFixed tr.hd td{height:20px}.divColHead .tblGenFixed tr.hd td.on,.divRowHead .tblGenFixed tr.on td.hd{background-color:#c8c8c8}.divColHead .tblGenFixed tr.hd td{border-bottom:1px solid #9fc2fd}.divColHead .tblGenFixed tr.hd td.first{border-right:none}.tblGenFixed .sortBar{background-image:url('https://ssl.gstatic.com/docs/spreadsheets/gradient-12.gif');background-repeat:repeat-x;height:12px;padding-right:5px;padding-left:5px;text-align:right;z-index:1;overflow:hidden;white-space:nowrap}.FF .sortBar{height:13px}.tblGenFixed td.headerEnd{background-color:#e8eef7;border:none}.IE .divRowHead .tblGenFixed tr.equalize td{overflow:visible!important;white-space:normal;text-indent:0;padding:0 3px}.FF .divColHead .tblGenFixed td.hd{padding-bottom:1px}.FF .divColHead .tblGenFixed tr.hd td.hd,.FF .divRowHead .tblGenFixed td.hd{padding-bottom:0}.tblGenFixed{table-layout:fixed;border-collapse:collapse;border-style:none;border-spacing:0px;width:0px;border-bottom:1px #ccc solid}.disclaimer{padding-left:12px;font-size:11px;background-color:#efefef;color:#676767;border-left:0px none;border-bottom:1px solid #c0c0c0;border-right:0px none;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}.disclaimerTop{padding-top:6px;padding-bottom:6px;padding-left:6px;border-top:1px solid #c0c0c0}.disclaimer a{color:#77c;padding-left:3px}td.num{text-align:right}.waffle-image-div{position:relative}.waffle-image-cell{display:block;position:absolute;left:-3px} 
-    </style>
-    <title></title>
-  </head>
-  <body style='border:0px;margin:0px'>
-    <table border="0" cellpadding="0" cellspacing="0" id='tblMain'>
-      <tr>
-        <td>
-          <table border="0" cellpadding="0" cellspacing="0" class=
-          'tblGenFixed' id='tblMain_0'>
-            <tr class='rShim'>
-              <td class='rShim' style='width:0;'></td>
-              <td class='rShim' style='width:64px;'></td>
-              <td class='rShim' style='width:74px;'></td>
-              <td class='rShim' style='width:120px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:19px;'>
-                  .
-                </p>
-              </td>
-              <td colspan="9" class='s0'>
-                Муниципальное автономное учреждение
-                "Калугаблагоустройство"
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:23px;'>
-                  .
-                </p>
-              </td>
-              <td colspan="9" class='s1'>
-                Заявка на а/катафалки
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td colspan="9" class='s2'>
-                на {{ date|ru_strftime:'"%d" %B %Y' }}г.
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:48px;'>
-                  .
-                </p>
-              </td>
-              <td class='s3'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s5'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:31px;'>
-                  .
-                </p>
-              </td>
-              <td class='s6'>
-                № п/п
-              </td>
-              <td class='s7'>
-                Время подачи а/к
-              </td>
-              <td class='s8'>
-                Время использования а/к
-              </td>
-              <td colspan="6" class='s8'>
-                Маршрут а/к
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            {% for b in burials %}
-            {% if b.catafalque_data %}
-            <tr>
-              <td class="hd">
-                {{ forloop.counter }}
-              </td>
-              <td class='s9'></td>
-              <td class='s10'></td>
-              <td class='s11'></td>
-              <td colspan="6" class='s12'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            {% endif %}
-            {% endfor %}
-            <tr>
-                <td class="hd">
-                </td>
-                <td class='s9'></td>
-                <td class='s10'></td>
-                <td class='s11'></td>
-                <td colspan="6" class='s12'></td>
-                <td style='display:none;'></td>
-                <td style='display:none;'></td>
-                <td style='display:none;'></td>
-                <td style='display:none;'></td>
-                <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:18px;'>
-                  .
-                </p>
-              </td>
-              <td class='s13' colspan="5">
-                Заявку составил______________________________________________________________
-              </td>
-              <td class='s14'></td>
-              <td colspan="3" class='s15'>
-                (________________________________)
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:17px;'>
-                  .
-                </p>
-              </td>
-              <td class='s16'></td>
-              <td class='s17'></td>
-              <td class='s17'></td>
-              <td colspan="3" class='s18'>
-                (подпись приемщика заказа)
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td colspan="3" class='s18'>
-                (расшифровка подписи)
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s19'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s20'></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:17px;'>
-                  .
-                </p>
-              </td>
-              <td class='s21'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:19px;'>
-                  .
-                </p>
-              </td>
-              <td colspan="9" class='s22'>
-                Муниципальное автономное учреждение
-                "Калугаблагоустройство" <span class=
-                'annotation'>[6]</span>
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:20px;'>
-                  .
-                </p>
-              </td>
-              <td colspan="9" class='s23'>
-                Реестр оказанных ритуальных услуг
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:19px;'>
-                  .
-                </p>
-              </td>
-              <td colspan="9" class='s24'>
-                за период с "___"_____________20___г. по
-                "____"________________20___г.
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-          </table>
+</head>
+{% load pytils_dt %}
+<body dir="ltr"
+      style="max-width:8.2681in;margin-top:0.9839in; margin-bottom:0.9839in; margin-left:0.748in; margin-right:0.748in; writing-mode:lr-tb; ">
+<table border="0" cellspacing="0" cellpadding="0" class="ta1">
+    <colgroup>
+        <col width="78"/>
+        <col width="90"/>
+        <col width="115"/>
+        <col width="424"/>
+        <col width="111"/>
+        <col width="111"/>
+        <col width="111"/>
+        <col width="111"/>
+        <col width="111"/>
+        <col width="78"/>
+    </colgroup>
+    <tr class="ro1">
+        <td colspan="9" style="text-align:left;width:0.6984in; " class="ce1"><p>{{ org.name }}</p></td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    <tr class="ro2">
+        <td colspan="9" style="text-align:left;width:0.6984in; " class="ce2"><p>Заявка на а/катафалки</p></td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    <tr class="ro3">
+        <td colspan="9" style="text-align:left;width:0.6984in; " class="ce3"><p>на {{ date|ru_strftime:'"%d" %B %Y' }}г.</p></td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    <tr class="ro4">
+        <td style="text-align:left;width:0.6984in; " class="ce4"> </td>
+        <td style="text-align:left;width:0.8146in; " class="ce12"> </td>
+        <td style="text-align:left;width:1.0346in; " class="ce12"> </td>
+        <td style="text-align:left;width:3.8209in; " class="ce20"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce24"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce24"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce24"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce24"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce32"> </td>
+        <td style="text-align:left;width:0.6984in; " class="ce33"> </td>
+    </tr>
+    <tr class="ro5">
+        <td style="text-align:left;width:0.6984in; " class="ce5"><p>№ п/п</p></td>
+        <td style="text-align:left;width:0.8146in; " class="ce13"><p>Время подачи а/к</p></td>
+        <td style="text-align:left;width:1.0346in; " class="ce18"><p>Время использования а/к</p></td>
+        <td style="text-align:left;width:3.8209in; " class="ce21"><p>Маршрут а/к</p></td>
+        <td style="text-align:left;width:1.002in; " class="ce18"><p>Кладбище</p></td>
+        <td style="text-align:left;width:1.002in; " class="ce18"><p>ФИО усопшего</p></td>
+        <td style="text-align:left;width:1.002in; " class="ce18"><p>ФИО приемщика заказов</p></td>
+        <td style="text-align:left;width:1.002in; " class="ce18"><p>Примечание</p></td>
+        <td style="text-align:left;width:1.002in; " class="ce18"><p>№ а/к</p></td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    {% for burial in burials %}
+    {% if burial.get_print_info.print.catafalque_start %}
+    <tr class="ro3">
+        <td style="text-align:left;width:0.6984in; " class="ce6">{{ forloop.counter }}</td>
+        <td style="text-align:left;width:0.8146in; " class="ce14">{{ burial.get_print_info.print.catafalque_start }} </td>
+        <td style="text-align:left;width:1.0346in; " class="ce19">{{ burial.get_print_info.print.catafalque_time }} </td>
+        <td style="text-align:left;width:3.8209in; " class="ce22">{{ burial.get_print_info.print.catafalque_route }} </td>
+        <td style="text-align:left;width:1.002in; " class="ce25">{{ burial.place.cemetery }} </td>
+        <td style="text-align:left;width:1.002in; " class="ce25">{{ burial.person.full_name }} </td>
+        <td style="text-align:left;width:1.002in; " class="ce25">{{ burial.editor_name }} </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+    <tr class="ro3">
+        <td style="text-align:left;width:0.6984in; " class="ce6"> </td>
+        <td style="text-align:left;width:0.8146in; " class="ce14"> </td>
+        <td style="text-align:left;width:1.0346in; " class="ce19"> </td>
+        <td style="text-align:left;width:3.8209in; " class="ce22"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    <tr class="ro3">
+        <td style="text-align:left;width:0.6984in; " class="ce6"> </td>
+        <td style="text-align:left;width:0.8146in; " class="ce14"> </td>
+        <td style="text-align:left;width:1.0346in; " class="ce19"> </td>
+        <td style="text-align:left;width:3.8209in; " class="ce22"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    <tr class="ro3">
+        <td style="text-align:left;width:0.6984in; " class="ce6"> </td>
+        <td style="text-align:left;width:0.8146in; " class="ce14"> </td>
+        <td style="text-align:left;width:1.0346in; " class="ce19"> </td>
+        <td style="text-align:left;width:3.8209in; " class="ce22"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    <tr class="ro3">
+        <td style="text-align:left;width:0.6984in; " class="ce6"> </td>
+        <td style="text-align:left;width:0.8146in; " class="ce14"> </td>
+        <td style="text-align:left;width:1.0346in; " class="ce19"> </td>
+        <td style="text-align:left;width:3.8209in; " class="ce22"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    <tr class="ro3">
+        <td style="text-align:left;width:0.6984in; " class="ce6"> </td>
+        <td style="text-align:left;width:0.8146in; " class="ce14"> </td>
+        <td style="text-align:left;width:1.0346in; " class="ce19"> </td>
+        <td style="text-align:left;width:3.8209in; " class="ce22"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    <tr class="ro6">
+        <td style="text-align:left;width:0.6984in; " class="ce6"> </td>
+        <td style="text-align:left;width:0.8146in; " class="ce14"> </td>
+        <td style="text-align:left;width:1.0346in; " class="ce19"> </td>
+        <td style="text-align:left;width:3.8209in; " class="ce22"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce25"> </td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    <tr class="ro7">
+        <td colspan="6" style="text-align:left;width:0.6984in; " class="ce7"><p>Заявку
+            составил______________________________________________________________</p></td>
+        <td colspan="3" style="text-align:left;width:1.002in; " class="ce26"><p>(________________________________)</p>
         </td>
-      </tr>
-      <tr>
-        <td>
-          <table border="0" cellpadding="0" cellspacing="0" class=
-          'tblGenFixed' id='tblMain_1'>
-            <tr class='rShim'>
-              <td class='rShim' style='width:0;'></td>
-              <td class='rShim' style='width:64px;'></td>
-              <td class='rShim' style='width:74px;'></td>
-              <td class='rShim' style='width:120px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-              <td class='rShim' style='width:91px;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s25'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s4'></td>
-              <td class='s5'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s26'>
-                Дата с/з
-              </td>
-              <td class='s27'>
-                Номер с/з
-              </td>
-              <td class='s27'>
-                Заказчик
-              </td>
-              <td colspan="2" class='s27'>
-                Вид услуги
-              </td>
-              <td style='display:none;'></td>
-              <td class='s27'>
-                …
-              </td>
-              <td colspan="2" class='s27'>
-                Вид услуги
-              </td>
-              <td style='display:none;'></td>
-              <td class='s27'>
-                Итого
-              </td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s28'></td>
-              <td class='s29'></td>
-              <td class='s30'></td>
-              <td class='s27'>
-                количество
-              </td>
-              <td class='s27'>
-                сумма (руб.)
-              </td>
-              <td class='s27'>
-                …
-              </td>
-              <td class='s27'>
-                количество
-              </td>
-              <td class='s27'>
-                сумма (руб.)
-              </td>
-              <td class='s27'>
-                (сумма (руб.))
-              </td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s31'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s31'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s31'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s31'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s31'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s31'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s31'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s31'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s31'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s31'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td colspan="3" class='s33'>
-                Итого:
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-              <td class='s32'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:16px;'>
-                  .
-                </p>
-              </td>
-              <td class='s34'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s14'></td>
-              <td class='s35'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:18px;'>
-                  .
-                </p>
-              </td>
-              <td class='s36'>
-                Реестр
-                составил______________________________________________________________
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td colspan="3" class='s37'>
-                (________________________________)
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-            <tr>
-              <td class="hd">
-                <p style='height:17px;'>
-                  .
-                </p>
-              </td>
-              <td class='s16'></td>
-              <td class='s17'></td>
-              <td class='s17'></td>
-              <td colspan="3" class='s18'>
-                (подпись )
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-              <td colspan="3" class='s18'>
-                (расшифровка подписи)
-              </td>
-              <td style='display:none;'></td>
-              <td style='display:none;'></td>
-            </tr>
-          </table>
-          <div class='annotations'>
-            [1] <span>Составляется обязательно!!!</span><br>
-            [2] <span>Указывается дата, для которой составляется
-            заявка (как правило, это следующий календарный
-            день)</span><br>
-            [3] <span>Данные из с/з (время "с_____")</span><br>
-            [4] <span>Данные из с/з (= из наряда), указывается в
-            часах)</span><br>
-            [5] <span>Данные из с/з (= из наряда)</span><br>
-            [6] <span>Реестр составляется только по тем с/з, у
-            которых вид оплаты - "безнал"!!! Данные упорядочиваются
-            по дате. Если такой отчет реализовать сложно, то
-            отложим до лучших времен.</span><br>
-          </div>
-        </td>
-      </tr>
-    </table>
-  </body>
+        <td style="text-align:left;width:0.6984in; " class="ce34"> </td>
+    </tr>
+    <tr class="ro8">
+        <td style="text-align:left;width:0.6984in; " class="ce8"> </td>
+        <td style="text-align:left;width:0.8146in; " class="ce16"> </td>
+        <td style="text-align:left;width:1.0346in; " class="ce16"> </td>
+        <td colspan="3" style="text-align:left;width:3.8209in; " class="ce23"><p>(подпись приемщика заказа)</p></td>
+        <td colspan="3" style="text-align:left;width:1.002in; " class="ce27"><p>(расшифровка подписи)</p></td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    <tr class="ro3">
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+        <td style="text-align:left;width:0.8146in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.0346in; " class="ce17"> </td>
+        <td style="text-align:left;width:3.8209in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce17"> </td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+    <tr class="ro3">
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+        <td style="text-align:left;width:0.8146in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.0346in; " class="ce17"> </td>
+        <td style="text-align:left;width:3.8209in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce17"> </td>
+        <td style="text-align:left;width:1.002in; " class="ce17"> </td>
+        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+    </tr>
+</table>
+</body>
 </html>
