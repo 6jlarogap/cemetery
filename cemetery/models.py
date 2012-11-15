@@ -235,7 +235,7 @@ class Burial(models.Model):
             p['price'] = u'%s' % p['price']
             p['count'] = u'%s' % p['count']
             try:
-                p['service'] = p['service'].name
+                p['service'] = isinstance(p['service'], basestring) and p['service'] or p['service'].name
             except KeyError:
                 pass
         if data['print']['catafalque_time']:
