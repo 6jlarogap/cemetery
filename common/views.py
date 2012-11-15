@@ -440,12 +440,18 @@ def print_notification(request, pk):
 @login_required
 def print_catafalques(request):
     f = CatafalquesPrintForm(data=request.GET or None)
+    try:
+        org = request.user.userprofile.org_user
+    except:
+        org = None
+
     if f.is_valid():
         d = f.cleaned_data['date']
         burials = Burial.objects.filter(date_fact=d)
         return render(request, 'reports/catafalque_request.html', {
             'burials': burials,
             'date': d,
+            'org': org,
         })
     else:
         return render(request, 'catafalques_form.html', {
