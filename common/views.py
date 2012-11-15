@@ -427,9 +427,13 @@ def get_positions(burial):
 @login_required
 def print_notification(request, pk):
     burial = get_object_or_404(Burial, pk=pk)
-
+    try:
+        org = request.user.userprofile.org_registrator
+    except:
+        org = None
     return render(request, 'reports/notification.html', {
         'burial': burial,
+        'org': org,
     })
 
 
@@ -541,6 +545,10 @@ def print_burial(request, pk):
         spaces = mark_safe('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
 
         if print_form.cleaned_data.get('receipt'):
+            try:
+                org = request.user.userprofile.org_registrator
+            except:
+                org = None
             return render(request, 'reports/spravka.html', {
                 'burial': burial,
                 'current_user': current_user or spaces,
@@ -549,7 +557,10 @@ def print_burial(request, pk):
             })
 
         if print_form.cleaned_data.get('dogovor'):
-
+            try:
+                org = request.user.userprofile.org_registrator
+            except:
+                org = None
             return render(request, 'reports/dogovor.html', {
                 'burial': burial,
                 'now': datetime.datetime.now(),
