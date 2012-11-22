@@ -264,28 +264,28 @@ def main_page(request):
         io = StringIO()
         writer = csv.writer(io, "4mysql")
         for b in burials:
-            writer.writerow(
+            writer.writerow(map(lambda u: u.encode(settings.CSV_ENCODING), [
                 u"",
-                u"%s" % b.account_book_n,
-                u"%s" % b.person.last_name or '',
-                u"%s" % b.person.first_name or '',
-                u"%s" % b.person.patronymic or '',
+                u"%s" % (b.account_book_n, ),
+                u"%s" % (b.person.last_name or '', ),
+                u"%s" % (b.person.first_name or '', ),
+                u"%s" % (b.person.patronymic or '', ),
                 u"",
-                u"%s" % b.date_fact.strftime("%Y-%m-%d"),
-                u"%s" % b.product.place.area or '',
-                u"%s" % b.product.place.row or '',
-                u"%s" % b.product.place.seat or '',
-                u"%s" % b.customer.person.last_name or '',
-                u"%s" % b.customer.person.first_name or '',
-                u"%s" % b.customer.person.patronymic or '',
+                u"%s" % (b.date_fact, ),
+                u"%s" % (b.product.place.area or '', ),
+                u"%s" % (b.product.place.row or '', ),
+                u"%s" % (b.product.place.seat or '', ),
+                u"%s" % (b.customer.person.last_name or '', ),
+                u"%s" % (b.customer.person.first_name or '', ),
+                u"%s" % (b.customer.person.patronymic or '', ),
                 u"",
-                u"%s" % b.person.location.city or '',
-                u"%s" % b.person.location.street or '',
-                u"%s" % b.person.location.house or '',
-                u"%s" % b.person.location.block or '',
-                u"%s" % b.person.location.flat or '',
-                u"%s" % b.product.operation,
-            )
+                u"%s" % (b.person.location and b.person.location.city or '', ),
+                u"%s" % (b.person.location and b.person.location.street or '', ),
+                u"%s" % (b.person.location and b.person.location.house or '', ),
+                u"%s" % (b.person.location and b.person.location.block or '', ),
+                u"%s" % (b.person.location and b.person.location.flat or '', ),
+                u"%s" % (b.operation or '', ),
+            ]))
         return HttpResponse(io.get_value(), mimetype='text/csv')
 
     to_print = request.GET.get("print", "")
