@@ -193,7 +193,10 @@ def main_page(request):
 #        if cd["death_date_to"]:
 #            burials = burials.filter(person__birth_date__lte=cd["death_date_to"])
         if cd["operation"]:
-            burials = burials.filter(operation=cd["operation"])
+            if cd["exclude_operation"]:
+                burials = burials.exclude(operation=cd["operation"])
+            else:
+                burials = burials.filter(operation=cd["operation"])
         if cd["burial_date_from"]:
             burials = burials.filter(date_fact__gte=cd["burial_date_from"])
             if not cd["burial_date_to"]:
@@ -448,9 +451,7 @@ def journal(request):
             oper = None
         form = JournalForm(cem=cem, oper=oper)
     today = datetime.date.today()
-    burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul,
-                            date_of_creation__gte=datetime.datetime(year=today.year,
-                            month=today.month, day=today.day)).order_by('-date_of_creation')[:20]
+    burials = Burial.objects.filter(is_trash=False, creator=request.user.userprofile.soul).order_by('-date_of_creation')[:20]
     return direct_to_template(request, 'journal.html', {'form': form, 'object_list': burials, 'phoneset': phoneset})
 
 @login_required

@@ -79,13 +79,8 @@ class SearchForm(forms.Form):
     fio = forms.CharField(required=False, max_length=100, label="ФИО")
     cemetery = forms.ModelChoiceField(required=False, queryset=Cemetery.objects.all(),
                                       empty_label="Все", label="Кладбища")
-#    birth_date_from = forms.DateField(required=False, label="Дата рождения с", widget=CalendarWidget)
-#    birth_date_to = forms.DateField(required=False, label="Дата рождения по", widget=CalendarWidget)
-#    death_date_from = forms.DateField(required=False, label="Дата смерти с", widget=CalendarWidget)
-#    death_date_to = forms.DateField(required=False, label="Дата смерти по", widget=CalendarWidget)
     burial_date_from = forms.DateField(required=False, label="Дата захоронения с", widget=CalendarWidget)
     burial_date_to = forms.DateField(required=False, label="Дата захоронения по", widget=CalendarWidget)
-#    death_certificate = forms.CharField(required=False, max_length=30, label="Номер свидетельства о смерти")
     account_book_n_from = forms.CharField(required=False, max_length=16, label="Номер в книге учета от и до")
     account_book_n_to = forms.CharField(required=False, max_length=16, label="Номер в книге учета до")
     customer = forms.CharField(required=False, max_length=30, label="Фамилия заказчика")
@@ -106,6 +101,7 @@ class SearchForm(forms.Form):
                                        label="Сортировка по")
     page = forms.IntegerField(required=False, widget=forms.HiddenInput, label="Страница")
     operation = forms.ModelChoiceField(required=False, queryset=Operation.objects.all(), label="Услуга", empty_label="Все")
+    exclude_operation = forms.BooleanField(required=False, label=u"кроме выбранной")
 
 
 @autostrip
