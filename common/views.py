@@ -286,7 +286,9 @@ def main_page(request):
                 u"%s" % (b.person.location and b.person.location.flat or '', ),
                 u"%s" % (b.operation or '', ),
             ]))
-        return HttpResponse(io.get_value(), mimetype='text/csv')
+        result = HttpResponse(io.getvalue(), mimetype='text/csv')
+        result['Content-Disposition'] = 'attachment; filename="export.csv"'
+        return result
 
     to_print = request.GET.get("print", "")
     if to_print == u"1":
