@@ -1354,7 +1354,10 @@ def import_csv(request):
                         city, street, house, block, flat,
                         comment) = l
                         # ID записи в таблице MySQL.
-                        str_id = int(str_id)
+                        try:
+                            str_id = int(str_id)
+                        except ValueError:
+                            pass
                         # Номер в книге учета.
                         n = n.decode(settings.CSV_ENCODING).strip().lower()
                         # Фамилия захороненного.
