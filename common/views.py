@@ -264,27 +264,29 @@ def main_page(request):
         io = StringIO()
         writer = csv.writer(io, "4mysql")
         for b in burials:
+            b0 = Burial.objects.get(pk=b.pk)
+            comments = u'\n'.join([oc.comment for oc in b0.ordercomments_set.all()])
             writer.writerow(map(lambda u: u.encode(settings.CSV_ENCODING), [
                 u"",
-                u"%s" % (b.account_book_n, ),
-                u"%s" % (b.person.last_name or '', ),
-                u"%s" % (b.person.first_name or '', ),
-                u"%s" % (b.person.patronymic or '', ),
+                u"%s" % (b0.account_book_n, ),
+                u"%s" % (b0.person.last_name or '', ),
+                u"%s" % (b0.person.first_name or '', ),
+                u"%s" % (b0.person.patronymic or '', ),
                 u"",
-                u"%s" % (b.date_fact, ),
-                u"%s" % (b.product.place.area or '', ),
-                u"%s" % (b.product.place.row or '', ),
-                u"%s" % (b.product.place.seat or '', ),
-                u"%s" % (b.customer.person.last_name or '', ),
-                u"%s" % (b.customer.person.first_name or '', ),
-                u"%s" % (b.customer.person.patronymic or '', ),
+                u"%s" % (b0.date_fact, ),
+                u"%s" % (b0.product.place.area or '', ),
+                u"%s" % (b0.product.place.row or '', ),
+                u"%s" % (b0.product.place.seat or '', ),
+                u"%s" % (b0.customer.person.last_name or '', ),
+                u"%s" % (b0.customer.person.first_name or '', ),
+                u"%s" % (b0.customer.person.patronymic or '', ),
                 u"",
-                u"%s" % (b.person.location and b.person.location.city or '', ),
-                u"%s" % (b.person.location and b.person.location.street or '', ),
-                u"%s" % (b.person.location and b.person.location.house or '', ),
-                u"%s" % (b.person.location and b.person.location.block or '', ),
-                u"%s" % (b.person.location and b.person.location.flat or '', ),
-                u"%s" % (b.operation or '', ),
+                u"",
+                u"%s" % (b0.person.location and b0.person.location.street or '', ),
+                u"%s" % (b0.person.location and b0.person.location.house or '', ),
+                u"%s" % (b0.person.location and b0.person.location.block or '', ),
+                u"%s" % (b0.person.location and b0.person.location.flat or '', ),
+                u"%s" % (comments or '', ),
             ]))
         result = HttpResponse(io.getvalue(), mimetype='text/csv')
         result['Content-Disposition'] = 'attachment; filename="export.csv"'

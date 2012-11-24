@@ -6,7 +6,10 @@ from models import GeoRegion, Street, ProductType, ProductComments, Order, Opera
 from models import UserProfile, ProductFiles, Product, GeoCity, DeathCertificate, OrderFiles, OrderComments
 
 class PersonAdmin(admin.ModelAdmin):
-#    exclude = ("creator", "location")
+    search_fields = ['last_name', 'first_name', 'patronymic']
+    raw_id_fields = ['location', 'creator']
+    list_display = ['last_name', 'first_name', 'patronymic', 'location']
+
     def get_form(self, request, obj=None, **kwargs):
         if request.user.is_superuser:
             self.exclude = ()
