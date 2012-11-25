@@ -132,6 +132,12 @@ class BurialForm(forms.ModelForm):
             if str(account_number)[:4] != str(self.cleaned_data['date_fact'].year):
                 raise forms.ValidationError(u"Номер не соответствует дате")
 
+        if not account_number:
+            try:
+                account_number = Burial.objects.all().order_by('-account_number')[0].account_number + 1
+            except IndexError:
+                pass
+
         customer = self.cleaned_data.get('client_person')
         try:
             personid = customer and customer.personid or None
