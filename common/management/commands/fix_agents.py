@@ -2,7 +2,7 @@ from optparse import make_option
 import sys
 
 from django.core.management.base import BaseCommand
-from cemetery.models import Burial
+from cemetery_app.models import Burial
 
 from organizations.models import Organization, Agent
 from persons.models import Person

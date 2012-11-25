@@ -5,8 +5,8 @@ from django.contrib.admin.models import LogEntry
 from django.core.urlresolvers import reverse
 from django import forms
 
-from cemetery.models import *
-from cemetery.forms import *
+from cemetery_app.models import *
+from cemetery_app.forms import *
 from django.forms.models import modelformset_factory
 from organizations.models import BankAccount
 from persons.models import ZAGS, IDDocumentType

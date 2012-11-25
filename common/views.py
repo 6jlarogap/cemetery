@@ -19,10 +19,10 @@ from django.contrib import messages
 
 import math
 
-from cemetery.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery, Comment, Operation
-from cemetery.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm, PlaceBurialsFormset, PlaceRoomsForm, OrganizationForm, AccountsFormset, AgentsFormset, CeoForm
-from cemetery.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm, CommentForm
-from cemetery.forms import AddAgentForm, CatafalquesPrintForm
+from cemetery_app.models import Burial, Place, UserProfile, Service, ServicePosition, Person, Cemetery, Comment, Operation
+from cemetery_app.forms import SearchForm, PlaceForm, BurialForm, PersonForm, LocationForm, DeathCertificateForm, OrderPaymentForm, OrderPositionsFormset, PrintOptionsForm, UserForm, CemeteryForm, PlaceBurialsFormset, PlaceRoomsForm, OrganizationForm, AccountsFormset, AgentsFormset, CeoForm
+from cemetery_app.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm, CommentForm
+from cemetery_app.forms import AddAgentForm, CatafalquesPrintForm
 from persons.models import DeathCertificate, PersonID, DocumentSource
 from organizations.models import Organization, Agent
 
@@ -157,7 +157,7 @@ def main_page(request):
     )
 
 @login_required
-@user_passes_test(lambda u: u.has_perm('cemetery.add_burial'))
+@user_passes_test(lambda u: u.has_perm('cemetery_app.add_burial'))
 def new_burial(request):
     """
     Добавление захоронения
@@ -194,7 +194,7 @@ def new_burial(request):
         'last_entered': Burial.objects.all().order_by('-id')[:10],
     })
 
-@user_passes_test(lambda u: u.has_perm('cemetery.add_burial'))
+@user_passes_test(lambda u: u.has_perm('cemetery_app.add_burial'))
 @login_required
 def edit_burial(request, pk):
     """
@@ -774,7 +774,7 @@ def management_user(request):
     users = User.objects.all().order_by('last_name')
     return render(request, 'management_user.html', {'form': form, "users": users, 'current_user': user})
 
-@user_passes_test(lambda u: u.has_perm('cemetery.add_cemetery'))
+@user_passes_test(lambda u: u.has_perm('cemetery_app.add_cemetery'))
 @transaction.commit_on_success
 def management_cemetery(request):
     """

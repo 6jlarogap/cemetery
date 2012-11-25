@@ -64,13 +64,13 @@
                             {% if user|has_perm:"organizations.add_organization"  %}
                                 <li><a href="{% url management_org %}" target="_blank">Организации</a></li>
                             {% endif %}
-                            {% if user|has_perm:"cemetery.add_cemetery"  %}
+                            {% if user|has_perm:"cemetery_app.add_cemetery"  %}
                                 <li><a href="{% url management_cemetery %}" target="_blank">Кладбища</a></li>
                             {% endif %}
-                            {% if user|has_perm:"cemetery.add_operation"  %}
+                            {% if user|has_perm:"cemetery_app.add_operation"  %}
                                 <li><a href="{% url admin:cemetery_operation_changelist %}" target="_blank">Услуги</a></li>
                             {% endif %}
-                            {% if user|has_perm:"cemetery.add_service"  %}
+                            {% if user|has_perm:"cemetery_app.add_service"  %}
                                 <li><a href="{% url admin:cemetery_service_changelist %}" target="_blank">Услуги для с/з</a></li>
                             {% endif %}
                             {% if user.is_superuser %}
@@ -89,10 +89,10 @@
                 <div class="nav-collapse">
                     <ul class="nav">
                         <li{% if request.path == '/' %} class="active"{% endif %}><a href="{% url main_page %}">Поиск</a></li>
-                        {% if user|has_perm:"cemetery.add_burial" %}
+                        {% if user|has_perm:"cemetery_app.add_burial" %}
                             <li{% if request.path == '/create/' %} class="active"{% endif %}><a href="{% url new_burial %}">Ввод данных</a></li>
                         {% endif %}
-                        {% if user|has_perm:"cemetery.add_serviceposition" %}
+                        {% if user|has_perm:"cemetery_app.add_serviceposition" %}
                             <li{% if request.path == '/print/cats/' %} class="active"{% endif %}><a href="{% url print_catafalques %}">Заявка на катафалки</a></li>
                         {% endif %}
                     </ul>

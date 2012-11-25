@@ -10,7 +10,7 @@ from django.forms.formsets import formset_factory, BaseFormSet
 from django.forms.models import model_to_dict, inlineformset_factory
 
 from common.forms import UnclearDateField
-from cemetery.models import Cemetery, Operation, Place, Burial, UserProfile, Service, ServicePosition, Comment
+from cemetery_app.models import Cemetery, Operation, Place, Burial, UserProfile, Service, ServicePosition, Comment
 from geo.models import Location, Country, Region, City, Street
 from organizations.models import Doverennost, Organization, Agent, BankAccount
 from persons.models import Person, DeathCertificate, PersonID, DocumentSource

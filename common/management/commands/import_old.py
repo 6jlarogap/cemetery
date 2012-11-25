@@ -4,7 +4,7 @@ import sys
 from django.contrib.auth.models import User, Group
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from cemetery.models import Operation, Cemetery, Burial, Place, Service, ServicePosition
+from cemetery_app.models import Operation, Cemetery, Burial, Place, Service, ServicePosition
 from django.db.models import Q
 from geo.models import Country, Region, City, Street, Location, cleanup_geo_name
 

@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.conf import settings
 from django.contrib.auth.models import User
 
-from cemetery.models import *
+from cemetery_app.models import *
 from geo.models import *
 from organizations.models import Organization, Agent, BankAccount
 from contrib.constants import UNKNOWN_NAME

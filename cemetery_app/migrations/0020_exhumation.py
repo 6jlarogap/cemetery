@@ -8,23 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'UserProfile.org_user'
-        db.add_column('cemetery_userprofile', 'org_user',
-                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='org_users', null=True, to=orm['organizations.Organization']),
-                      keep_default=False)
-
-        # Adding field 'UserProfile.org_registrator'
-        db.add_column('cemetery_userprofile', 'org_registrator',
-                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='org_registrators', null=True, to=orm['organizations.Organization']),
+        # Adding field 'Burial.exhumated_date'
+        db.add_column('cemetery_burial', 'exhumated_date',
+                      self.gf('django.db.models.fields.DateField')(null=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'UserProfile.org_user'
-        db.delete_column('cemetery_userprofile', 'org_user_id')
-
-        # Deleting field 'UserProfile.org_registrator'
-        db.delete_column('cemetery_userprofile', 'org_registrator_id')
+        # Deleting field 'Burial.exhumated_date'
+        db.delete_column('cemetery_burial', 'exhumated_date')
 
 
     models = {
@@ -57,7 +49,7 @@ class Migration(SchemaMigration):
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
-        'cemetery.burial': {
+        'cemetery_app.burial': {
             'Meta': {'object_name': 'Burial'},
             'account_number': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'acct_num_num': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True'}),
@@ -67,18 +59,21 @@ class Migration(SchemaMigration):
             'client_organization': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'ordr_customer'", 'null': 'True', 'to': "orm['organizations.Organization']"}),
             'client_person': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'ordr_customer'", 'null': 'True', 'to': "orm['persons.Person']"}),
             'creator': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True'}),
-            'date_fact': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'date_fact': ('django.db.models.fields.DateField', [], {'null': 'True'}),
             'date_plan': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'deleted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'doverennost': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['organizations.Doverennost']", 'null': 'True', 'blank': 'True'}),
+            'exhumated_date': ('django.db.models.fields.DateField', [], {'null': 'True'}),
+            'grave_id': ('django.db.models.fields.PositiveSmallIntegerField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'operation': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Operation']"}),
+            'operation': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Operation']"}),
             'payment_type': ('django.db.models.fields.CharField', [], {'default': "'nal'", 'max_length': '255'}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'buried'", 'to': "orm['persons.Person']"}),
-            'place': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Place']"}),
-            'print_info': ('django.db.models.fields.TextField', [], {'null': 'True'})
+            'place': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Place']"}),
+            'print_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'time_fact': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'})
         },
-        'cemetery.cemetery': {
+        'cemetery_app.cemetery': {
             'Meta': {'ordering': "['ordering', 'name']", 'object_name': 'Cemetery'},
             'creator': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'date_of_creation': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
@@ -86,18 +81,28 @@ class Migration(SchemaMigration):
             'location': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Location']", 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'ordering': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1', 'blank': 'True'}),
-            'organization': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'cemetery'", 'to': "orm['organizations.Organization']"})
+            'organization': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'cemetery'", 'to': "orm['organizations.Organization']"}),
+            'phones': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        'cemetery.operation': {
+        'cemetery_app.comment': {
+            'Meta': {'object_name': 'Comment'},
+            'added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'burial': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Burial']"}),
+            'comment': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+        },
+        'cemetery_app.operation': {
             'Meta': {'ordering': "['ordering', 'op_type']", 'object_name': 'Operation'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'op_type': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'ordering': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '1'})
         },
-        'cemetery.place': {
+        'cemetery_app.place': {
             'Meta': {'object_name': 'Place'},
             'area': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'cemetery': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Cemetery']"}),
+            'cemetery': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Cemetery']"}),
             'creator': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'date_of_creation': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'gps_x': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
@@ -106,9 +111,9 @@ class Migration(SchemaMigration):
             'responsible': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['persons.Person']", 'null': 'True', 'blank': 'True'}),
             'rooms': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1', 'blank': 'True'}),
             'row': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'seat': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+            'seat': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
         },
-        'cemetery.service': {
+        'cemetery_app.service': {
             'Meta': {'object_name': 'Service'},
             'default': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -117,21 +122,21 @@ class Migration(SchemaMigration):
             'ordering': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '1'}),
             'price': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '2'})
         },
-        'cemetery.serviceposition': {
+        'cemetery_app.serviceposition': {
             'Meta': {'object_name': 'ServicePosition'},
-            'burial': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Burial']"}),
+            'burial': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Burial']"}),
             'count': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '2'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'price': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '2'}),
-            'service': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Service']"})
+            'service': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Service']"})
         },
-        'cemetery.userprofile': {
+        'cemetery_app.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
             'catafalque_text': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
-            'default_cemetery': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Cemetery']", 'null': 'True', 'blank': 'True'}),
+            'default_cemetery': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Cemetery']", 'null': 'True', 'blank': 'True'}),
             'default_city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.City']", 'null': 'True', 'blank': 'True'}),
             'default_country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Country']", 'null': 'True', 'blank': 'True'}),
-            'default_operation': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Operation']", 'null': 'True', 'blank': 'True'}),
+            'default_operation': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Operation']", 'null': 'True', 'blank': 'True'}),
             'default_region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Region']", 'null': 'True', 'blank': 'True'}),
             'naryad_text': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
             'org_registrator': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'org_registrators'", 'null': 'True', 'to': "orm['organizations.Organization']"}),
@@ -150,7 +155,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'geo.city': {
-            'Meta': {'unique_together': "(('region', 'name'),)", 'object_name': 'City', 'db_table': "'common_geocity'"},
+            'Meta': {'ordering': "['name']", 'unique_together': "(('region', 'name'),)", 'object_name': 'City', 'db_table': "'common_geocity'"},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Region']"})
@@ -164,8 +169,8 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Location'},
             'block': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'building': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.City']", 'null': 'True', 'blank': 'True'}),
-            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Country']", 'null': 'True', 'blank': 'True'}),
+            'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.City']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
+            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Country']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'flat': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'gps_x': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'gps_y': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
@@ -173,17 +178,17 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'info': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'post_index': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Region']", 'null': 'True', 'blank': 'True'}),
-            'street': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Street']", 'null': 'True', 'blank': 'True'})
+            'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Region']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
+            'street': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Street']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'})
         },
         'geo.region': {
-            'Meta': {'unique_together': "(('country', 'name'),)", 'object_name': 'Region', 'db_table': "'common_georegion'"},
+            'Meta': {'ordering': "['name']", 'unique_together': "(('country', 'name'),)", 'object_name': 'Region', 'db_table': "'common_georegion'"},
             'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Country']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'})
         },
         'geo.street': {
-            'Meta': {'ordering': "['city', 'name']", 'unique_together': "(('city', 'name'),)", 'object_name': 'Street'},
+            'Meta': {'ordering': "['name']", 'unique_together': "(('city', 'name'),)", 'object_name': 'Street'},
             'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.City']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'})
@@ -195,23 +200,23 @@ class Migration(SchemaMigration):
             'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['persons.Person']"})
         },
         'organizations.doverennost': {
-            'Meta': {'object_name': 'Doverennost'},
+            'Meta': {'ordering': "['-issue_date']", 'object_name': 'Doverennost'},
             'agent': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'doverennosti'", 'to': "orm['organizations.Agent']"}),
             'expire_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'issue_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'number': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
+            'number': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'})
         },
         'organizations.organization': {
             'Meta': {'ordering': "['name']", 'object_name': 'Organization'},
             'ceo': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['persons.Person']", 'null': 'True', 'blank': 'True'}),
             'ceo_document': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'ceo_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'ceo_name_who': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'full_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'inn': ('django.db.models.fields.CharField', [], {'max_length': '12', 'blank': 'True'}),
             'kpp': ('django.db.models.fields.CharField', [], {'max_length': '9', 'blank': 'True'}),
+            'location': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Location']", 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '99'}),
             'ogrn': ('django.db.models.fields.CharField', [], {'max_length': '15', 'blank': 'True'}),
             'phones': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
@@ -225,9 +230,10 @@ class Migration(SchemaMigration):
             'death_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'middle_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'phones': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
+            'phones': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True'})
         }
     }
 

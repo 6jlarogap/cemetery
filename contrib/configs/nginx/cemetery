@@ -23,7 +23,13 @@ server {
         expires 30d;
     }
 
-    # статическое содержимое админки    
+    # статическое содержимое проекта
+    location /static/ {
+        alias /home/django/projects/cemetery/static/;
+        expires 30d;
+    }
+
+    # статическое содержимое админки
     location /admin_media/ {
         alias /home/django/projects/cemetery/django/contrib/admin/media/;
         expires 30d;

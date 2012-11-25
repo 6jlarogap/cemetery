@@ -8,14 +8,22 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Deleting field 'Burial.acct_book_n'
+        db.delete_column('cemetery_burial', 'account_book_n')
 
-        # Changing field 'Burial.date_fact'
-        db.alter_column('cemetery_burial', 'date_fact', self.gf('django.db.models.fields.DateField')(null=True))
+        # Adding field 'Burial.account_number'
+        db.add_column('cemetery_burial', 'account_number',
+                      self.gf('django.db.models.fields.CharField')(max_length=16, null=True),
+                      keep_default=False)
+
 
     def backwards(self, orm):
 
-        # Changing field 'Burial.date_fact'
-        db.alter_column('cemetery_burial', 'date_fact', self.gf('django.db.models.fields.DateTimeField')(null=True))
+        # User chose to not deal with backwards NULL issues for 'Burial.acct_book_n'
+        raise RuntimeError("Cannot reverse this migration. 'Burial.acct_book_n' and its values cannot be restored.")
+        # Deleting field 'Burial.account_number'
+        db.delete_column('cemetery_burial', 'account_number')
+
 
     models = {
         'auth.group': {
@@ -47,26 +55,26 @@ class Migration(SchemaMigration):
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
-        'cemetery.burial': {
+        'cemetery_app.burial': {
             'Meta': {'object_name': 'Burial'},
-            'account_number': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
+            'account_number': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True'}),
             'acct_num_num': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True'}),
             'acct_num_str1': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True'}),
             'acct_num_str2': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True'}),
             'agent': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'orders'", 'null': 'True', 'to': "orm['organizations.Agent']"}),
             'client_organization': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'ordr_customer'", 'null': 'True', 'to': "orm['organizations.Organization']"}),
             'client_person': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'ordr_customer'", 'null': 'True', 'to': "orm['persons.Person']"}),
-            'date_fact': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'deleted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'doverennost': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['organizations.Doverennost']", 'null': 'True', 'blank': 'True'}),
+            'date_fact': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'is_trash': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'doverennost': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['organizations.Doverennost']", 'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'operation': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Operation']"}),
+            'operation': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Operation']"}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'buried'", 'to': "orm['persons.Person']"}),
-            'place': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Place']"}),
+            'place': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Place']"}),
             'print_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'responsible': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['persons.Person']", 'null': 'True', 'blank': 'True'})
         },
-        'cemetery.cemetery': {
+        'cemetery_app.cemetery': {
             'Meta': {'ordering': "['ordering', 'name']", 'object_name': 'Cemetery'},
             'creator': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'date_of_creation': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
@@ -76,16 +84,16 @@ class Migration(SchemaMigration):
             'ordering': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1', 'blank': 'True'}),
             'organization': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'cemetery'", 'to': "orm['organizations.Organization']"})
         },
-        'cemetery.operation': {
+        'cemetery_app.operation': {
             'Meta': {'ordering': "['ordering', 'op_type']", 'object_name': 'Operation'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'op_type': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'ordering': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '1'})
         },
-        'cemetery.place': {
+        'cemetery_app.place': {
             'Meta': {'object_name': 'Place'},
             'area': ('django.db.models.fields.CharField', [], {'max_length': '9'}),
-            'cemetery': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Cemetery']"}),
+            'cemetery': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Cemetery']"}),
             'creator': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'date_of_creation': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'gps_x': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
@@ -95,13 +103,13 @@ class Migration(SchemaMigration):
             'row': ('django.db.models.fields.CharField', [], {'max_length': '9', 'null': 'True', 'blank': 'True'}),
             'seat': ('django.db.models.fields.CharField', [], {'max_length': '9'})
         },
-        'cemetery.userprofile': {
+        'cemetery_app.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
             'catafalque_text': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
-            'default_cemetery': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Cemetery']", 'null': 'True', 'blank': 'True'}),
+            'default_cemetery': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Cemetery']", 'null': 'True', 'blank': 'True'}),
             'default_city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.City']", 'null': 'True', 'blank': 'True'}),
             'default_country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Country']", 'null': 'True', 'blank': 'True'}),
-            'default_operation': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery.Operation']", 'null': 'True', 'blank': 'True'}),
+            'default_operation': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cemetery_app.Operation']", 'null': 'True', 'blank': 'True'}),
             'default_region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Region']", 'null': 'True', 'blank': 'True'}),
             'naryad_text': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
             'records_order_by': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
@@ -182,7 +190,7 @@ class Migration(SchemaMigration):
         },
         'persons.person': {
             'Meta': {'ordering': "['last_name', 'first_name', 'middle_name']", 'object_name': 'Person'},
-            'address': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Location']", 'null': 'True'}),
+            'address': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['geo.Location']"}),
             'birth_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'birth_date_no_day': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'birth_date_no_month': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
