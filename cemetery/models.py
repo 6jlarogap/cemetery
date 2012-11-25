@@ -190,10 +190,6 @@ class Burial(models.Model):
     def __unicode__(self):
         return u"%s рег. № %s: %s" % (self.operation, self.account_number, self.person)
 
-    def clean(self):
-        if self.account_number and self.place and self.place.seat and self.account_number < self.place.seat:
-            raise ValidationError(u'Рег. № меньше номера места')
-
     def agent_director(self):
         return self.client_organization and self.agent and self.agent.person == self.client_organization.ceo
 
