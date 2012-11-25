@@ -238,7 +238,7 @@ class Burial(models.Model):
                 p['service'] = isinstance(p['service'], basestring) and p['service'] or p['service'].name
             except KeyError:
                 pass
-        if data['print']['catafalque_time']:
+        if data['print']['catafalque_time'] and isinstance(data['print']['catafalque_time'], datetime.time):
             data['print']['catafalque_time'] = data['print']['catafalque_time'].strftime('%H:%M')
         self.print_info = simplejson.dumps(data)
 
