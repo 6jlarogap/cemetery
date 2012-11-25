@@ -471,7 +471,13 @@ class Command(BaseCommand):
                     username=old.username,
                     email=old.email,
                     password=old.password,
+                    first_name=old.first_name,
+                    last_name=old.last_name,
                 )
+            else:
+                u.first_name = old.first_name
+                u.last_name = old.last_name
+                u.save()
             for g in old.groups.all():
                 u.groups.add(Group.objects.get_or_create(name=g.name)[0])
         print 'Users:', User.objects.all().using('old').count()
