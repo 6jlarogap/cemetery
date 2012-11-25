@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os.path
+import sys
 from contrib.constants import *
 
 #DEBUG = True
@@ -8,6 +9,8 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ROOT_PATH = os.path.dirname(__file__)
+
+sys.path.insert(0, os.path.join(ROOT_PATH, 'lib'))
 
 ADMINS = (
     ('Soul', 'soul@youmemory.org'),

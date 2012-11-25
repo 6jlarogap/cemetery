@@ -27,7 +27,7 @@ class SearchForm(forms.Form):
     )
 
     fio = forms.CharField(required=False, max_length=100, label="ФИО")
-    no_last_name = forms.BooleanField(required=False, initial=False, label=u"С неизвестной фамилией")
+    no_last_name = forms.BooleanField(required=False, initial=False, label=u"Неизв.")
     birth_date_from = forms.DateField(required=False, label="Дата рождения с")
     birth_date_to = forms.DateField(required=False, label="по")
     death_date_from = forms.DateField(required=False, label="Дата смерти с")

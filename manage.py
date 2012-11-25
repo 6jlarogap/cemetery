@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 import os
+import sys
+
+ROOT_PATH = os.path.dirname(__file__)
+sys.path.insert(0, os.path.join(ROOT_PATH, 'lib'))
 
 activate_this = os.path.join(os.path.dirname(__file__), '.env', 'bin', 'activate_this.py')
 if os.path.exists(activate_this):
