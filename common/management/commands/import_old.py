@@ -438,6 +438,8 @@ class Command(BaseCommand):
                         new_person = Person.objects.get(**kwargs)
                     except Person.MultipleObjectsReturned:
                         new_person = Person.objects.filter(**kwargs)[0]
+                    except Person.DoesNotExist:
+                        new_person = Person.objects.create(**kwargs)
 
                 person = old.customer.person
                 if person.last_name.strip(' *') == '':
