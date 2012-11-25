@@ -240,6 +240,8 @@ class Burial(models.Model):
                 pass
         if data['print']['catafalque_time'] and isinstance(data['print']['catafalque_time'], datetime.time):
             data['print']['catafalque_time'] = data['print']['catafalque_time'].strftime('%H:%M')
+        if data['catafalque_hours'] and isinstance(data['catafalque_hours'], datetime.time):
+            data['catafalque_hours'] = data['catafalque_hours'].strftime('%H:%M')
         self.print_info = simplejson.dumps(data)
 
     @property
