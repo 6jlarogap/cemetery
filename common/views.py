@@ -282,10 +282,10 @@ def main_page(request):
                 u"%s" % (b0.customer.person.patronymic or '', ),
                 u"",
                 u"",
-                u"%s" % (b0.person.location and b0.person.location.street or '', ),
-                u"%s" % (b0.person.location and b0.person.location.house or '', ),
-                u"%s" % (b0.person.location and b0.person.location.block or '', ),
-                u"%s" % (b0.person.location and b0.person.location.flat or '', ),
+                u"%s" % (b0.customer.location and b0.customer.location.street or '', ),
+                u"%s" % (b0.customer.location and b0.customer.location.house or '', ),
+                u"%s" % (b0.customer.location and b0.customer.location.block or '', ),
+                u"%s" % (b0.customer.location and b0.customer.location.flat or '', ),
                 u"%s" % (comments or '', ),
             ]))
         result = HttpResponse(io.getvalue(), mimetype='text/csv')
