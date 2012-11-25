@@ -179,4 +179,16 @@
     </form>
     </div>
 
+    {% if request.POST %}
+        <h5>Ошибки</h5>
+        <h6>Услуги</h6>
+        {{ positions_fs.errors }}
+
+        <h6>Оплата</h6>
+        {{ payment_form.errors }}
+
+        <h6>Печать</h6>
+        {{ print_form.errors }}
+
+    {% endif %}
 {% endblock %}
