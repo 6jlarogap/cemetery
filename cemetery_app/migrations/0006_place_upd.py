@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
 
         # Changing field 'Place.area'
-        db.alter_column('cemetery_place', 'area', self.gf('django.db.models.fields.CharField')(max_length=9, null=True))
+        db.alter_column('cemetery_app_place', 'area', self.gf('django.db.models.fields.CharField')(max_length=9, null=True))
 
     def backwards(self, orm):
 
@@ -195,4 +195,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['cemetery']
+    complete_apps = ['cemetery_app']

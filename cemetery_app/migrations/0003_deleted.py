@@ -9,22 +9,22 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Deleting field 'Burial.is_trash'
-        db.delete_column('cemetery_burial', 'is_trash')
+        db.delete_column('cemetery_app_burial', 'is_trash')
 
         # Adding field 'Burial.deleted'
-        db.add_column('cemetery_burial', 'deleted',
+        db.add_column('cemetery_app_burial', 'deleted',
                       self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
 
 
     def backwards(self, orm):
         # Adding field 'Burial.is_trash'
-        db.add_column('cemetery_burial', 'is_trash',
+        db.add_column('cemetery_app_burial', 'is_trash',
                       self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
 
         # Deleting field 'Burial.deleted'
-        db.delete_column('cemetery_burial', 'deleted')
+        db.delete_column('cemetery_app_burial', 'deleted')
 
 
     models = {
@@ -204,4 +204,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['cemetery']
+    complete_apps = ['cemetery_app']

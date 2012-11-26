@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'ServicePosition'
-        db.create_table('cemetery_serviceposition', (
+        db.create_table('cemetery_app_serviceposition', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('burial', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cemetery_app.Burial'])),
             ('service', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cemetery_app.Service'])),
@@ -19,7 +19,7 @@ class Migration(SchemaMigration):
         db.send_create_signal('cemetery', ['ServicePosition'])
 
         # Adding model 'Service'
-        db.create_table('cemetery_service', (
+        db.create_table('cemetery_app_service', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('default', self.gf('django.db.models.fields.BooleanField')(default=False)),
@@ -27,23 +27,23 @@ class Migration(SchemaMigration):
             ('price', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=2)),
             ('ordering', self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=1)),
         ))
-        db.send_create_signal('cemetery', ['Service'])
+        db.send_create_signal('cemetery_app', ['Service'])
 
         # Adding field 'Burial.payment_type'
-        db.add_column('cemetery_burial', 'payment_type',
+        db.add_column('cemetery_app_burial', 'payment_type',
                       self.gf('django.db.models.fields.CharField')(default='nal', max_length=16),
                       keep_default=False)
 
 
     def backwards(self, orm):
         # Deleting model 'ServicePosition'
-        db.delete_table('cemetery_serviceposition')
+        db.delete_table('cemetery_app_serviceposition')
 
         # Deleting model 'Service'
-        db.delete_table('cemetery_service')
+        db.delete_table('cemetery_app_service')
 
         # Deleting field 'Burial.payment_type'
-        db.delete_column('cemetery_burial', 'payment_type')
+        db.delete_column('cemetery_app_burial', 'payment_type')
 
 
     models = {
@@ -242,4 +242,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['cemetery']
+    complete_apps = ['cemetery_app']

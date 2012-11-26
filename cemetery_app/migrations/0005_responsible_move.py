@@ -9,20 +9,20 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'Place.responsible'
-        db.add_column('cemetery_place', 'responsible',
+        db.add_column('cemetery_app_place', 'responsible',
                       self.gf('django.db.models.fields.related.ForeignKey')(to=orm['persons.Person'], null=True, blank=True),
                       keep_default=False)
 
         # Deleting field 'Burial.responsible'
-        db.delete_column('cemetery_burial', 'responsible_id')
+        db.delete_column('cemetery_app_burial', 'responsible_id')
 
 
     def backwards(self, orm):
         # Deleting field 'Place.responsible'
-        db.delete_column('cemetery_place', 'responsible_id')
+        db.delete_column('cemetery_app_place', 'responsible_id')
 
         # Adding field 'Burial.responsible'
-        db.add_column('cemetery_burial', 'responsible',
+        db.add_column('cemetery_app_burial', 'responsible',
                       self.gf('django.db.models.fields.related.ForeignKey')(to=orm['persons.Person'], null=True, blank=True),
                       keep_default=False)
 
@@ -204,4 +204,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['cemetery']
+    complete_apps = ['cemetery_app']

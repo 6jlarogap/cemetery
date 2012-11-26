@@ -9,14 +9,14 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'Burial.time_fact'
-        db.add_column('cemetery_burial', 'time_fact',
+        db.add_column('cemetery_app_burial', 'time_fact',
                       self.gf('django.db.models.fields.DateField')(null=True, blank=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
         # Deleting field 'Burial.time_fact'
-        db.delete_column('cemetery_burial', 'time_fact')
+        db.delete_column('cemetery_app_burial', 'time_fact')
 
 
     models = {

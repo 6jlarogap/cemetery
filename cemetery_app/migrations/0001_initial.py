@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'Cemetery'
-        db.create_table('cemetery_cemetery', (
+        db.create_table('cemetery_app_cemetery', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('organization', self.gf('django.db.models.fields.related.ForeignKey')(related_name='cemetery', to=orm['organizations.Organization'])),
             ('location', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['geo.Location'], null=True, blank=True)),
@@ -18,10 +18,10 @@ class Migration(SchemaMigration):
             ('date_of_creation', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('ordering', self.gf('django.db.models.fields.PositiveIntegerField')(default=1, blank=True)),
         ))
-        db.send_create_signal('cemetery', ['Cemetery'])
+        db.send_create_signal('cemetery_app', ['Cemetery'])
 
         # Adding model 'Place'
-        db.create_table('cemetery_place', (
+        db.create_table('cemetery_app_place', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('cemetery', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cemetery_app.Cemetery'])),
             ('area', self.gf('django.db.models.fields.CharField')(max_length=9)),
@@ -33,18 +33,18 @@ class Migration(SchemaMigration):
             ('creator', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('date_of_creation', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
-        db.send_create_signal('cemetery', ['Place'])
+        db.send_create_signal('cemetery_app', ['Place'])
 
         # Adding model 'Operation'
-        db.create_table('cemetery_operation', (
+        db.create_table('cemetery_app_operation', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('op_type', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('ordering', self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=1)),
         ))
-        db.send_create_signal('cemetery', ['Operation'])
+        db.send_create_signal('cemetery_app', ['Operation'])
 
         # Adding model 'Burial'
-        db.create_table('cemetery_burial', (
+        db.create_table('cemetery_app_burial', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('account_book_n', self.gf('django.db.models.fields.CharField')(max_length=16)),
             ('operation', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cemetery_app.Operation'])),
@@ -62,10 +62,10 @@ class Migration(SchemaMigration):
             ('print_info', self.gf('django.db.models.fields.TextField')(null=True)),
             ('is_trash', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
-        db.send_create_signal('cemetery', ['Burial'])
+        db.send_create_signal('cemetery_app', ['Burial'])
 
         # Adding model 'UserProfile'
-        db.create_table('cemetery_userprofile', (
+        db.create_table('cemetery_app_userprofile', (
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True, primary_key=True)),
             ('default_cemetery', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cemetery_app.Cemetery'], null=True, blank=True)),
             ('default_operation', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cemetery_app.Operation'], null=True, blank=True)),
@@ -77,24 +77,24 @@ class Migration(SchemaMigration):
             ('catafalque_text', self.gf('django.db.models.fields.TextField')(default='', blank=True)),
             ('naryad_text', self.gf('django.db.models.fields.TextField')(default='', blank=True)),
         ))
-        db.send_create_signal('cemetery', ['UserProfile'])
+        db.send_create_signal('cemetery_app', ['UserProfile'])
 
 
     def backwards(self, orm):
         # Deleting model 'Cemetery'
-        db.delete_table('cemetery_cemetery')
+        db.delete_table('cemetery_app_cemetery')
 
         # Deleting model 'Place'
-        db.delete_table('cemetery_place')
+        db.delete_table('cemetery_app_place')
 
         # Deleting model 'Operation'
-        db.delete_table('cemetery_operation')
+        db.delete_table('cemetery_app_operation')
 
         # Deleting model 'Burial'
-        db.delete_table('cemetery_burial')
+        db.delete_table('cemetery_app_burial')
 
         # Deleting model 'UserProfile'
-        db.delete_table('cemetery_userprofile')
+        db.delete_table('cemetery_app_userprofile')
 
 
     models = {
@@ -274,4 +274,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['cemetery']
+    complete_apps = ['cemetery_app']

@@ -9,14 +9,14 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'Burial.creator'
-        db.add_column('cemetery_burial', 'creator',
+        db.add_column('cemetery_app_burial', 'creator',
                       self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
         # Deleting field 'Burial.creator'
-        db.delete_column('cemetery_burial', 'creator_id')
+        db.delete_column('cemetery_app_burial', 'creator_id')
 
 
     models = {
@@ -216,4 +216,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['cemetery']
+    complete_apps = ['cemetery_app']

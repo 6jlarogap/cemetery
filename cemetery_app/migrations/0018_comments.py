@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'Comment'
-        db.create_table('cemetery_comment', (
+        db.create_table('cemetery_app_comment', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('burial', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cemetery_app.Burial'])),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
@@ -22,7 +22,7 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         # Deleting model 'Comment'
-        db.delete_table('cemetery_comment')
+        db.delete_table('cemetery_app_comment')
 
 
     models = {

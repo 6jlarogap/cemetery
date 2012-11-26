@@ -10,12 +10,12 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
 
         # Changing field 'Burial.date_fact'
-        db.alter_column('cemetery_burial', 'date_fact', self.gf('django.db.models.fields.DateField')(null=True))
+        db.alter_column('cemetery_app_burial', 'date_fact', self.gf('django.db.models.fields.DateField')(null=True))
 
     def backwards(self, orm):
 
         # Changing field 'Burial.date_fact'
-        db.alter_column('cemetery_burial', 'date_fact', self.gf('django.db.models.fields.DateTimeField')(null=True))
+        db.alter_column('cemetery_app_burial', 'date_fact', self.gf('django.db.models.fields.DateTimeField')(null=True))
 
     models = {
         'auth.group': {
@@ -194,4 +194,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['cemetery']
+    complete_apps = ['cemetery_app']

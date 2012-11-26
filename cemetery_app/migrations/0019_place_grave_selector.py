@@ -9,14 +9,14 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'Burial.grave_id'
-        db.add_column('cemetery_burial', 'grave_id',
+        db.add_column('cemetery_app_burial', 'grave_id',
                       self.gf('django.db.models.fields.PositiveSmallIntegerField')(null=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
         # Deleting field 'Burial.grave_id'
-        db.delete_column('cemetery_burial', 'grave_id')
+        db.delete_column('cemetery_app_burial', 'grave_id')
 
 
     models = {

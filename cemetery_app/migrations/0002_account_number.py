@@ -9,10 +9,10 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Deleting field 'Burial.acct_book_n'
-        db.delete_column('cemetery_burial', 'account_book_n')
+        db.delete_column('cemetery_app_burial', 'account_book_n')
 
         # Adding field 'Burial.account_number'
-        db.add_column('cemetery_burial', 'account_number',
+        db.add_column('cemetery_app_burial', 'account_number',
                       self.gf('django.db.models.fields.CharField')(max_length=16, null=True),
                       keep_default=False)
 
@@ -22,7 +22,7 @@ class Migration(SchemaMigration):
         # User chose to not deal with backwards NULL issues for 'Burial.acct_book_n'
         raise RuntimeError("Cannot reverse this migration. 'Burial.acct_book_n' and its values cannot be restored.")
         # Deleting field 'Burial.account_number'
-        db.delete_column('cemetery_burial', 'account_number')
+        db.delete_column('cemetery_app_burial', 'account_number')
 
 
     models = {
@@ -202,4 +202,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['cemetery']
+    complete_apps = ['cemetery_app']

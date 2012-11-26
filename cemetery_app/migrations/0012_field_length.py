@@ -10,72 +10,72 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
 
         # Changing field 'UserProfile.records_order_by'
-        db.alter_column('cemetery_userprofile', 'records_order_by', self.gf('django.db.models.fields.CharField')(max_length=255))
+        db.alter_column('cemetery_app_userprofile', 'records_order_by', self.gf('django.db.models.fields.CharField')(max_length=255))
 
         # Changing field 'Operation.op_type'
-        db.alter_column('cemetery_operation', 'op_type', self.gf('django.db.models.fields.CharField')(max_length=255))
+        db.alter_column('cemetery_app_operation', 'op_type', self.gf('django.db.models.fields.CharField')(max_length=255))
 
         # Changing field 'Place.area'
-        db.alter_column('cemetery_place', 'area', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
+        db.alter_column('cemetery_app_place', 'area', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
 
         # Changing field 'Place.seat'
-        db.alter_column('cemetery_place', 'seat', self.gf('django.db.models.fields.CharField')(max_length=255))
+        db.alter_column('cemetery_app_place', 'seat', self.gf('django.db.models.fields.CharField')(max_length=255))
 
         # Changing field 'Place.row'
-        db.alter_column('cemetery_place', 'row', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
+        db.alter_column('cemetery_app_place', 'row', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
 
         # Changing field 'Burial.payment_type'
-        db.alter_column('cemetery_burial', 'payment_type', self.gf('django.db.models.fields.CharField')(max_length=255))
+        db.alter_column('cemetery_app_burial', 'payment_type', self.gf('django.db.models.fields.CharField')(max_length=255))
 
         # Changing field 'Burial.acct_num_str2'
-        db.alter_column('cemetery_burial', 'acct_num_str2', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
+        db.alter_column('cemetery_app_burial', 'acct_num_str2', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
 
         # Changing field 'Burial.acct_num_str1'
-        db.alter_column('cemetery_burial', 'acct_num_str1', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
+        db.alter_column('cemetery_app_burial', 'acct_num_str1', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
 
         # Changing field 'Burial.account_number'
-        db.alter_column('cemetery_burial', 'account_number', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
+        db.alter_column('cemetery_app_burial', 'account_number', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
 
         # Changing field 'Cemetery.name'
-        db.alter_column('cemetery_cemetery', 'name', self.gf('django.db.models.fields.CharField')(max_length=255))
+        db.alter_column('cemetery_app_cemetery', 'name', self.gf('django.db.models.fields.CharField')(max_length=255))
 
         # Changing field 'Service.measure'
-        db.alter_column('cemetery_service', 'measure', self.gf('django.db.models.fields.CharField')(max_length=255))
+        db.alter_column('cemetery_app_service', 'measure', self.gf('django.db.models.fields.CharField')(max_length=255))
 
     def backwards(self, orm):
 
         # Changing field 'UserProfile.records_order_by'
-        db.alter_column('cemetery_userprofile', 'records_order_by', self.gf('django.db.models.fields.CharField')(max_length=50))
+        db.alter_column('cemetery_app_userprofile', 'records_order_by', self.gf('django.db.models.fields.CharField')(max_length=50))
 
         # Changing field 'Operation.op_type'
-        db.alter_column('cemetery_operation', 'op_type', self.gf('django.db.models.fields.CharField')(max_length=100))
+        db.alter_column('cemetery_app_operation', 'op_type', self.gf('django.db.models.fields.CharField')(max_length=100))
 
         # Changing field 'Place.area'
-        db.alter_column('cemetery_place', 'area', self.gf('django.db.models.fields.CharField')(max_length=9, null=True))
+        db.alter_column('cemetery_app_place', 'area', self.gf('django.db.models.fields.CharField')(max_length=9, null=True))
 
         # Changing field 'Place.seat'
-        db.alter_column('cemetery_place', 'seat', self.gf('django.db.models.fields.CharField')(max_length=9))
+        db.alter_column('cemetery_app_place', 'seat', self.gf('django.db.models.fields.CharField')(max_length=9))
 
         # Changing field 'Place.row'
-        db.alter_column('cemetery_place', 'row', self.gf('django.db.models.fields.CharField')(max_length=9, null=True))
+        db.alter_column('cemetery_app_place', 'row', self.gf('django.db.models.fields.CharField')(max_length=9, null=True))
 
         # Changing field 'Burial.payment_type'
-        db.alter_column('cemetery_burial', 'payment_type', self.gf('django.db.models.fields.CharField')(max_length=16))
+        db.alter_column('cemetery_app_burial', 'payment_type', self.gf('django.db.models.fields.CharField')(max_length=16))
 
         # Changing field 'Burial.acct_num_str2'
-        db.alter_column('cemetery_burial', 'acct_num_str2', self.gf('django.db.models.fields.CharField')(max_length=16, null=True))
+        db.alter_column('cemetery_app_burial', 'acct_num_str2', self.gf('django.db.models.fields.CharField')(max_length=16, null=True))
 
         # Changing field 'Burial.acct_num_str1'
-        db.alter_column('cemetery_burial', 'acct_num_str1', self.gf('django.db.models.fields.CharField')(max_length=16, null=True))
+        db.alter_column('cemetery_app_burial', 'acct_num_str1', self.gf('django.db.models.fields.CharField')(max_length=16, null=True))
 
         # Changing field 'Burial.account_number'
-        db.alter_column('cemetery_burial', 'account_number', self.gf('django.db.models.fields.CharField')(max_length=16, null=True))
+        db.alter_column('cemetery_app_burial', 'account_number', self.gf('django.db.models.fields.CharField')(max_length=16, null=True))
 
         # Changing field 'Cemetery.name'
-        db.alter_column('cemetery_cemetery', 'name', self.gf('django.db.models.fields.CharField')(max_length=99))
+        db.alter_column('cemetery_app_cemetery', 'name', self.gf('django.db.models.fields.CharField')(max_length=99))
 
         # Changing field 'Service.measure'
-        db.alter_column('cemetery_service', 'measure', self.gf('django.db.models.fields.CharField')(max_length=50))
+        db.alter_column('cemetery_app_service', 'measure', self.gf('django.db.models.fields.CharField')(max_length=50))
 
     models = {
         'auth.group': {
@@ -277,4 +277,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['cemetery']
+    complete_apps = ['cemetery_app']

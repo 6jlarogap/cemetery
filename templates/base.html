@@ -68,10 +68,10 @@
                                 <li><a href="{% url management_cemetery %}" target="_blank">Кладбища</a></li>
                             {% endif %}
                             {% if user|has_perm:"cemetery_app.add_operation"  %}
-                                <li><a href="{% url admin:cemetery_operation_changelist %}" target="_blank">Услуги</a></li>
+                                <li><a href="{% url admin:cemetery_app_operation_changelist %}" target="_blank">Услуги</a></li>
                             {% endif %}
                             {% if user|has_perm:"cemetery_app.add_service"  %}
-                                <li><a href="{% url admin:cemetery_service_changelist %}" target="_blank">Услуги для с/з</a></li>
+                                <li><a href="{% url admin:cemetery_app_service_changelist %}" target="_blank">Услуги для с/з</a></li>
                             {% endif %}
                             {% if user.is_superuser %}
                                 <li><a href="{% url admin:index %}" target="_blank">Прочие данные</a></li>
