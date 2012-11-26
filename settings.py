@@ -10,6 +10,8 @@ TEMPLATE_DEBUG = DEBUG
 
 ROOT_PATH = os.path.dirname(__file__)
 
+sys.path.insert(0, os.path.join(ROOT_PATH, '..'))
+sys.path.insert(0, os.path.join(ROOT_PATH, '.'))
 sys.path.insert(0, os.path.join(ROOT_PATH, 'lib'))
 
 ADMINS = (
@@ -108,7 +110,7 @@ INSTALLED_APPS = (
     'persons',
     'organizations',
     'geo',
-    'cemetery',
+    'cemetery_app',
     'utils',
 )
 
