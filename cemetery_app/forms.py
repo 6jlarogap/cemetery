@@ -135,7 +135,7 @@ class BurialForm(forms.ModelForm):
         if not account_number:
             try:
                 account_number = unicode(int(Burial.objects.all().order_by('-account_number')[0].account_number) + 1)
-            except IndexError:
+            except:
                 pass
 
         customer = self.cleaned_data.get('client_person')
