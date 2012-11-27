@@ -743,15 +743,15 @@
     </colgroup>
     <tr class="ro1">
         <td colspan="9" style="text-align:left;width:0.6984in; " class="ce1"><p>{{ org.name }}</p></td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     <tr class="ro2">
         <td colspan="9" style="text-align:left;width:0.6984in; " class="ce2"><p>Заявка на а/катафалки</p></td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     <tr class="ro3">
         <td colspan="9" style="text-align:left;width:0.6984in; " class="ce3"><p>на {{ date|ru_strftime:'"%d" %B %Y' }}г.</p></td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     <tr class="ro4">
         <td style="text-align:left;width:0.6984in; " class="ce4"> </td>
@@ -763,7 +763,6 @@
         <td style="text-align:left;width:1.002in; " class="ce24"> </td>
         <td style="text-align:left;width:1.002in; " class="ce24"> </td>
         <td style="text-align:left;width:1.002in; " class="ce32"> </td>
-        <td style="text-align:left;width:0.6984in; " class="ce33"> </td>
     </tr>
     <tr class="ro5">
         <td style="text-align:left;width:0.6984in; " class="ce5"><p>№ п/п</p></td>
@@ -775,7 +774,7 @@
         <td style="text-align:left;width:1.002in; " class="ce18"><p>ФИО приемщика заказов</p></td>
         <td style="text-align:left;width:1.002in; " class="ce18"><p>Примечание</p></td>
         <td style="text-align:left;width:1.002in; " class="ce18"><p>№ а/к</p></td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     {% for burial in burials %}
     {% if burial.get_print_info.print.catafalque_start %}
@@ -789,7 +788,7 @@
         <td style="text-align:left;width:1.002in; " class="ce25">{{ burial.editor_name|default:"" }} </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     {% endif %}
     {% endfor %}
@@ -803,7 +802,7 @@
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     <tr class="ro3">
         <td style="text-align:left;width:0.6984in; " class="ce6"> </td>
@@ -815,7 +814,7 @@
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     <tr class="ro3">
         <td style="text-align:left;width:0.6984in; " class="ce6"> </td>
@@ -827,7 +826,7 @@
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     <tr class="ro3">
         <td style="text-align:left;width:0.6984in; " class="ce6"> </td>
@@ -839,7 +838,7 @@
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     <tr class="ro3">
         <td style="text-align:left;width:0.6984in; " class="ce6"> </td>
@@ -851,7 +850,7 @@
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     <tr class="ro6">
         <td style="text-align:left;width:0.6984in; " class="ce6"> </td>
@@ -863,7 +862,7 @@
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
         <td style="text-align:left;width:1.002in; " class="ce25"> </td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     <tr class="ro7">
         <td colspan="6" style="text-align:left;width:0.6984in; " class="ce7"><p>Заявку
@@ -878,7 +877,7 @@
         <td style="text-align:left;width:1.0346in; " class="ce16"> </td>
         <td colspan="3" style="text-align:left;width:3.8209in; " class="ce23"><p>(подпись приемщика заказа)</p></td>
         <td colspan="3" style="text-align:left;width:1.002in; " class="ce27"><p>(расшифровка подписи)</p></td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     <tr class="ro3">
         <td style="text-align:left;width:0.6984in; " class="Default"> </td>
@@ -890,7 +889,7 @@
         <td style="text-align:left;width:1.002in; " class="ce17"> </td>
         <td style="text-align:left;width:1.002in; " class="ce17"> </td>
         <td style="text-align:left;width:1.002in; " class="ce17"> </td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
     <tr class="ro3">
         <td style="text-align:left;width:0.6984in; " class="Default"> </td>
@@ -902,7 +901,7 @@
         <td style="text-align:left;width:1.002in; " class="ce17"> </td>
         <td style="text-align:left;width:1.002in; " class="ce17"> </td>
         <td style="text-align:left;width:1.002in; " class="ce17"> </td>
-        <td style="text-align:left;width:0.6984in; " class="Default"> </td>
+
     </tr>
 </table>
 </body>
