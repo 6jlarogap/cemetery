@@ -447,7 +447,7 @@ def print_catafalques(request):
 
     if f.is_valid():
         d = f.cleaned_data['date']
-        burials = Burial.objects.filter(date_fact=d)
+        burials = Burial.objects.filter(date_fact=d).order_by('time_fact', 'place__cemetery__name')
         return render(request, 'reports/catafalque_request.html', {
             'burials': burials,
             'date': d,
