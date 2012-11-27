@@ -114,6 +114,8 @@ INSTALLED_APPS = (
     'utils',
 )
 
+INTERNAL_IPS = []
+
 LOGIN_URL = "/login/"
 LOGOUT_URL = "/logout/"
 LOGIN_REDIRECT_URL = "/"
