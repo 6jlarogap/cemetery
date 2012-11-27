@@ -368,8 +368,8 @@ class PersonForm(forms.ModelForm):
         return self.cleaned_data['birth_date']
 
     def clean_death_date(self):
-        if self.cleaned_data.get('death_date') and self.cleaned_data['death_date'] >= datetime.date.today():
-            raise forms.ValidationError(u"Дата должна быть раньше текущей")
+        if self.cleaned_data.get('death_date') and self.cleaned_data['death_date'] > datetime.date.today():
+            raise forms.ValidationError(u"Дата должна быть не позже текущей")
         return self.cleaned_data['death_date']
 
     def clean(self):
