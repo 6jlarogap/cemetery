@@ -134,7 +134,7 @@ class BurialForm(forms.ModelForm):
 
         if not account_number:
             try:
-                account_number = unicode(int(Burial.objects.all().order_by('-account_number')[0].account_number) + 1)
+                account_number = unicode(int(Burial.objects.filter(deleted=False).order_by('-account_number')[0].account_number) + 1)
             except:
                 pass
 
