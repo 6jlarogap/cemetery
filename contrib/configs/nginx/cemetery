@@ -31,7 +31,7 @@ server {
 
     # статическое содержимое админки
     location /admin_media/ {
-        alias /home/django/projects/cemetery/django/contrib/admin/media/;
+        alias /home/django/projects/cemetery/lib/django/contrib/admin/media/;
         expires 30d;
     }
 }
