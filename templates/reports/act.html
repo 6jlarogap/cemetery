@@ -1010,7 +1010,7 @@
     </TR>
     <TR>
         <TD STYLE="border-left: 1px solid #000000" COLSPAN=3 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Похороны состоятся </FONT></TD>
-        <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP colspan="6"><FONT COLOR="#000000" STYLE="font-size: 170%"> {{ burial.date_fact|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г. в {{ burial.time_fact|time:"H" }}ч {{ burial.date_fact|date:"i" }}мин.  на кладбище: {{ burial.place.cemetery }} <br/> <br/> <br/></FONT></TD>
+        <TD STYLE="border-top: 1px solid #000000" ALIGN=LEFT VALIGN=TOP colspan="6"><FONT COLOR="#000000" STYLE="font-size: 170%"> {{ burial.date_fact|ru_strftime:"&laquo;%d&raquo; %B %Y"|safe }}г. в {{ burial.time_fact|time:"H" }}ч {{ burial.time_fact|time:"i" }}мин.  на кладбище: {{ burial.place.cemetery }} <br/> <br/> <br/></FONT></TD>
     </TR>
     <TR>
         <TD STYLE="border-left: 1px solid #000000" COLSPAN=6 HEIGHT=20 ALIGN=LEFT VALIGN=TOP><FONT COLOR="#000000">Заказ принял ____________________________________________________________</FONT></TD>
