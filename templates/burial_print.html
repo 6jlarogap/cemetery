@@ -145,6 +145,8 @@
                     {{ print_form.catafalque_route }}{{ print_form.catafalque_route.errors }}
                 </td>
                 <td colspan="3">
+                    Захоронение: {{ burial.time_fact|time:"H:i" }}
+                    <br/><br/>
                     {{ print_form.catafalque_start.label_tag }}
                     {{ print_form.catafalque_start }}{{ print_form.catafalque_start.errors }}
                     <br/><br/>
