@@ -791,7 +791,8 @@ class CemeteryForm(forms.ModelForm):
     def save(self, location=None, *args, **kwargs):
         cemetery = super(CemeteryForm, self).save(*args, **kwargs)
         cemetery.location = location
-        cemetery.save()
+        if kwargs.get('commit'):
+            cemetery.save()
         return cemetery
 
 class CeoForm(forms.ModelForm):

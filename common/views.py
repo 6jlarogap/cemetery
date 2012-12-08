@@ -786,7 +786,9 @@ def management_cemetery(request):
     location_form = LocationForm(data=request.POST or None, instance=cemetery and cemetery.location)
     if request.method == "POST" and cemetery_form.is_valid() and location_form.is_valid():
         location = location_form.save()
-        cemetery = cemetery_form.save(location=location)
+        cemetery = cemetery_form.save(location=location, commit=False)
+        cemetery.creator = request.user
+        cemetery.save()
         return redirect(reverse('management_cemetery') + '?pk=%s' % cemetery.pk)
 
     cemeteries = Cemetery.objects.all()
