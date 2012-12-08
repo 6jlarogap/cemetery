@@ -367,7 +367,7 @@ def new_burial_responsible(request):
     Добавление ответственного
     """
     data = request.REQUEST.keys() and dict(request.REQUEST.copy()) or None
-    person_form = PersonForm(data=data)
+    person_form = PersonForm(data=data, need_name=True)
     responsible_customer = request.REQUEST.get('responsible_customer')
     loc_data = request.POST and request.POST.get('country_name') and request.POST.copy()
     location_form = LocationForm(person=person_form.instance, data=loc_data or None)

@@ -272,9 +272,10 @@ class PersonForm(forms.ModelForm):
             'phones': forms.TextInput(),
         }
 
-    def __init__(self, dead=None, *args, **kwargs):
+    def __init__(self, dead=None, need_name=False, *args, **kwargs):
         data = dict(kwargs.get('data') or {})
         instance_pk = data.get('instance')
+        self.need_name = need_name
         if instance_pk and instance_pk not in [None, '', 'NEW']:
             kwargs['instance'] = Person.objects.get(pk=instance_pk)
             kwargs['instance'].birth_date = kwargs['instance'].unclear_birth_date
@@ -378,6 +379,10 @@ class PersonForm(forms.ModelForm):
                 raise forms.ValidationError(u"Дата рождения позже даты смерти")
             if self.cleaned_data['birth_date'] < self.cleaned_data['death_date'] - datetime.timedelta(365*150):
                 raise forms.ValidationError(u"Дата рождения раньше 150 лет до даты смерти")
+
+        if self.need_name and self.cleaned_data['last_name'].replace('*', '').replace(' ', '') == '':
+            raise forms.ValidationError(u"Нужно указать ФИО")
+
         return self.cleaned_data
 
     def is_valid(self):
