@@ -18,7 +18,9 @@
             {% endif %}
         </dd>
         <dt>Усопший</dt>
-        <dd>{{ burial.person }} ({{ burial.person.unclear_birth_date }} &mdash; {{ burial.person.unclear_death_date }})</dd>
+        <dd>
+            {{ burial.person }}
+            ({{ burial.person.unclear_birth_date|date:"d.m.Y" }} &mdash; {{ burial.person.death_date|date:"d.m.Y" }})</dd>
 
         <dt>Планируемая дата</dt>
         <dd>{{ burial.date_plan }}</dd>
