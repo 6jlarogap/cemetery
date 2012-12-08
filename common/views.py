@@ -134,6 +134,9 @@ def main_page(request):
         if form.cleaned_data['unowned']:
             burials = burials.filter(unowned=True)
 
+        if form.cleaned_data['creator']:
+            burials = burials.filter(creator=form.cleaned_data['creator'])
+
         if form.cleaned_data['records_order_by']:
             burials = burials.order_by(form.cleaned_data['records_order_by'])
         if form.cleaned_data['per_page']:
@@ -187,6 +190,8 @@ def new_burial(request):
 
     if request.POST and burial_form.is_valid():
         b = burial_form.save()
+        if not b.creator:
+            b.creator = request.user
         b.editor = request.user
         b.save()
         messages.success(request, u'Успешно сохранено')

@@ -50,6 +50,7 @@ class SearchForm(forms.Form):
 
     records_order_by = forms.ChoiceField(required=False, choices=ORDER_BY_VALUES, label=u"Сортировка по")
     per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label=u"Записей на страницу")
+    creator = forms.ModelChoiceField(required=False, label=u"Автор", queryset=User.objects.filter(user_permissions__codename='add_burial').distinct())
 
 class PlaceForm(forms.ModelForm):
     class Meta:
