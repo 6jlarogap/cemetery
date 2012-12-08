@@ -121,6 +121,14 @@
                                 <a id="clean_exhumation" class="btn">очистить</a>
                             </p>
                         {% endif %}
+                        <br/>
+                        <p>
+                            {{ burial_form.unowned }}
+                        </p>
+                        <p class="narrow">
+                            {{ burial_form.unowned.label_tag }}
+                            {{ burial_form.unowned.errors }}
+                        </p>
                     </div><!--/.well -->
                     <div class="row-fluid">
                         <h2>Усопший*</h2>

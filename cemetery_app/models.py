@@ -161,6 +161,7 @@ class Burial(models.Model):
     place = models.ForeignKey(Place)
     grave_id = models.PositiveSmallIntegerField(editable=False, null=True)
     person = models.ForeignKey(Person, verbose_name=u"Похороненный*", related_name='buried')
+    unowned = models.BooleanField(u"Бесхозяйное", default=False)  # Удален.
 
     client_person = models.ForeignKey(Person, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)
     client_organization = models.ForeignKey(Organization, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)

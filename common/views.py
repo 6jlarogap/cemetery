@@ -131,6 +131,9 @@ def main_page(request):
         else:
             burials = burials.filter(deleted=False)
 
+        if form.cleaned_data['unowned']:
+            burials = burials.filter(unowned=True)
+
         if form.cleaned_data['records_order_by']:
             burials = burials.order_by(form.cleaned_data['records_order_by'])
         if form.cleaned_data['per_page']:
