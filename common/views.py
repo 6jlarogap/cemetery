@@ -469,7 +469,7 @@ def print_burial(request, pk):
     Страница печати документов захоронения.
     """
     if request.POST and request.POST.get('notification'):
-        return redirect('print_notification', pk)
+        return print_notification(request, pk)
 
     burial = get_object_or_404(Burial, pk=pk)
     positions = get_positions(burial)
@@ -503,8 +503,10 @@ def print_burial(request, pk):
 
     print_positions = []
 
-    if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
+    if print_form.is_valid():
         org = print_form.cleaned_data['org']
+
+    if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
         burial.set_print_info({
             'positions': [f.cleaned_data for f in positions_fs.forms if f.is_valid()],
             'print': print_form.cleaned_data,
@@ -559,10 +561,6 @@ def print_burial(request, pk):
         spaces = mark_safe('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
 
         if print_form.cleaned_data.get('receipt'):
-            try:
-                org = request.user.userprofile.org_registrator
-            except:
-                org = None
             return render(request, 'reports/spravka.html', {
                 'burial': burial,
                 'current_user': current_user or spaces,
@@ -571,10 +569,6 @@ def print_burial(request, pk):
             })
 
         if print_form.cleaned_data.get('dogovor'):
-            try:
-                org = request.user.userprofile.org_registrator
-            except:
-                org = None
             return render(request, 'reports/dogovor.html', {
                 'burial': burial,
                 'now': datetime.datetime.now(),
