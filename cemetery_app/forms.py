@@ -801,12 +801,26 @@ class CeoForm(forms.ModelForm):
         fields = ['last_name', 'first_name', 'middle_name']
 
 class OrganizationForm(forms.ModelForm):
+    allow_duplicate = forms.BooleanField(label=u'Добавить дубль', required=False, widget=forms.HiddenInput)
+
     class Meta:
         model = Organization
         exclude = ['location', 'ceo']
         widgets = {
             'phones': forms.TextInput(),
         }
+
+    def clean(self):
+        if self.cleaned_data.get('inn'):
+            orgs = Organization.objects.filter(inn=self.cleaned_data['inn'])
+            if self.instance and self.instance.pk:
+                orgs = orgs.exclude(pk=self.instance.pk)
+            if orgs.exists():
+                if not self.cleaned_data.get('allow_duplicate'):
+                    self.fields['allow_duplicate'].widget = forms.CheckboxInput()
+                    self.fields['allow_duplicate'].required = True
+                    raise forms.ValidationError(u"ИНН дублируется. Вы уверены?")
+        return self.cleaned_data
 
     def save(self, location=None, ceo=None, *args, **kwargs):
         org = super(OrganizationForm, self).save(*args, **kwargs)
