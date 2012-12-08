@@ -507,9 +507,11 @@ def print_burial(request, pk):
         org = print_form.cleaned_data['org']
 
     if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
+        cd = print_form.cleaned_data
+        cd['org'] = cd['org'] and cd['org'].pk or None
         burial.set_print_info({
             'positions': [f.cleaned_data for f in positions_fs.forms if f.is_valid()],
-            'print': print_form.cleaned_data,
+            'print': ,
         })
         burial.save()
 
