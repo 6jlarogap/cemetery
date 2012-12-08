@@ -104,10 +104,11 @@
         $(function() {
             $('#id_customer').closest('p').before('<br/>');
             $('#id_records_order_by').closest('p').before($('p.buttons'));
-            $('#id_deleted').closest('p').after('<br/>');
+            $('#id_unowned').closest('p').after('<br/>');
             $('input[type=reset]').click(function() {
                 top.location.href = '?';
             });
+            $('#id_customer, #id_responsible').css('width', '100px');
             $('#id_customer, #id_responsible, #id_fio').attr('autocomplete', 'off').typeahead({
                 items: 100,
                 source: function (typeahead, query) {
