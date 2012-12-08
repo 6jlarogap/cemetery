@@ -468,9 +468,6 @@ def print_burial(request, pk):
     """
     Страница печати документов захоронения.
     """
-    if request.POST and request.POST.get('notification'):
-        return print_notification(request, pk)
-
     burial = get_object_or_404(Burial, pk=pk)
     positions = get_positions(burial)
     initials = burial.get_print_info()
@@ -561,6 +558,12 @@ def print_burial(request, pk):
         current_user = u'%s' % request.user.userprofile.person
 
         spaces = mark_safe('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+
+        if request.POST and request.POST.get('notification'):
+            return render(request, 'reports/notification.html', {
+                'burial': burial,
+                'org': org,
+            })
 
         if print_form.cleaned_data.get('receipt'):
             return render(request, 'reports/spravka.html', {
