@@ -511,7 +511,7 @@ def print_burial(request, pk):
         cd['org'] = cd['org'] and cd['org'].pk or None
         burial.set_print_info({
             'positions': [f.cleaned_data for f in positions_fs.forms if f.is_valid()],
-            'print': ,
+            'print': cd,
         })
         burial.save()
 
