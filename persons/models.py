@@ -65,6 +65,9 @@ class Person(models.Model):
 
     unclear_birth_date = property(get_birth_date, set_birth_date)
 
+    def unclear_birth_date_str(self):
+        return self.unclear_birth_date.strftime('%d.%m.%Y')
+
     def full_human_name(self):
         return ' '.join((self.last_name, self.first_name, self.middle_name)).strip()
 

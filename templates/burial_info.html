@@ -20,7 +20,7 @@
         <dt>Усопший</dt>
         <dd>
             {{ burial.person }}
-            ({{ burial.person.unclear_birth_date|date:"d.m.Y" }} &mdash; {{ burial.person.death_date|date:"d.m.Y" }})</dd>
+            ({{ burial.person.unclear_birth_date_str }} &mdash; {{ burial.person.death_date|date:"d.m.Y" }})</dd>
 
         <dt>Планируемая дата</dt>
         <dd>{{ burial.date_plan }}</dd>
