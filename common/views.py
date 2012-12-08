@@ -434,6 +434,7 @@ def print_notification(request, pk):
         org = request.user.userprofile.org_registrator
     except:
         org = None
+    org = request.POST.get('org') or org
     return render(request, 'reports/notification.html', {
         'burial': burial,
         'org': org,
@@ -447,7 +448,7 @@ def print_catafalques(request):
         org = request.user.userprofile.org_user
     except:
         org = None
-
+    org = request.POST.get('org') or org
     if f.is_valid():
         d = f.cleaned_data['date']
         burials = Burial.objects.filter(date_fact=d).order_by('time_fact', 'place__cemetery__name')
@@ -486,20 +487,24 @@ def print_burial(request, pk):
             if not any(filter(lambda i: is_same(i, p), initials['positions'])):
                 initials['positions'].append(p)
 
-    payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
-    positions_fs = OrderPositionsFormset(initial=initials.get('positions') or positions, data=request.POST or None)
-    print_form = PrintOptionsForm(data=request.POST or None, initial=initials['print'], burial=burial)
-
     try:
         org = request.user.userprofile.org_user
     except:
         org = None
+
+    initials['print'] = initials['print'] or {}
+    initials['print'].update({'org': org})
+
+    payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
+    positions_fs = OrderPositionsFormset(initial=initials.get('positions') or positions, data=request.POST or None)
+    print_form = PrintOptionsForm(data=request.POST or None, initial=initials['print'], burial=burial)
 
     time_check_failed = False
 
     print_positions = []
 
     if request.POST and positions_fs.is_valid() and payment_form.is_valid() and print_form.is_valid():
+        org = print_form.cleaned_data['org']
         burial.set_print_info({
             'positions': [f.cleaned_data for f in positions_fs.forms if f.is_valid()],
             'print': print_form.cleaned_data,

@@ -717,6 +717,8 @@ class PrintOptionsForm(forms.Form):
 
     add_info = forms.CharField(label=u"доп. инфо", required=False, widget=forms.Textarea)
 
+    org = forms.ModelChoiceField(label=u"организация", )
+
     def __init__(self, *args, **kwargs):
         self.burial = kwargs.pop('burial')
         super(PrintOptionsForm, self).__init__(*args, **kwargs)
