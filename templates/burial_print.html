@@ -157,13 +157,9 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="3">
+                <td colspan="6">
                     {{ print_form.print_now }}{{ print_form.print_now.errors }}
                     {{ print_form.print_now.label_tag }}
-                </td>
-                <td colspan="3">
-                    {{ print_form.org.label_tag }}
-                    {{ print_form.org }}{{ print_form.org.errors }}
                 </td>
             </tr>
         </table>
@@ -171,6 +167,10 @@
         <div {% if not user|has_perm:"cemetery_app.add_serviceposition" %}style="display: none;"{% endif %}>
             {{ print_form.add_info.label_tag }}
             {{ print_form.add_info }}{{ print_form.add_info.errors }}
+        </div>
+        <div>
+            {{ print_form.org.label_tag }}
+            {{ print_form.org }}{{ print_form.org.errors }}
         </div>
         {% if user|has_perm:"cemetery_app.add_serviceposition" %}
             <input type="submit" value="Распечатать документы" />
