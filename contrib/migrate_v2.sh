@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Code
-cp -R -f ../../cemetery /home/django/projects/cemetery
+cp -r -f ../../cemetery /home/django/projects/
 
 # DB
 createdb -U postgres cemetery2
