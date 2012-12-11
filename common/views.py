@@ -500,7 +500,7 @@ def print_burial(request, pk):
     initials['print'] = initials['print'] or {}
     initials['print'].update({'org': org})
 
-    if request.user.has_perm('cemetery_app.add_burial'):
+    if request.user.has_perm('cemetery_app.add_burial') and not request.user.is_superuser:
         try:
             org = request.user.userprofile.org_registrator
         except:
