@@ -48,7 +48,7 @@ class SearchForm(forms.Form):
     no_exhumated = forms.BooleanField(required=False, initial=False, label=u"Убрать эксгум.")
     deleted = forms.BooleanField(required=False, initial=False, label=u"Корзина")
     unowned = forms.BooleanField(required=False, initial=False, label=u"Бесхоз.")
-    no_responsible = forms.BooleanField(required=False, initial=False, label=u"Бес отв.")
+    no_responsible = forms.BooleanField(required=False, initial=False, label=u"Без отв.")
 
     records_order_by = forms.ChoiceField(required=False, choices=ORDER_BY_VALUES, label=u"Сортировка по")
     per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label=u"Записей на страницу")
