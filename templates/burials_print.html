@@ -45,7 +45,10 @@
             <td>{{ b.time_fact|date:"H:i" }}</td>
             <td>{{ b.place.area }}</td>
 	        <td>{{ b.place.row }}</td>
-	        <td>{{ b.place.seat }}</td>
+	        <td>
+                {{ b.place.seat }}
+                {% if b.place.unowned %}б/х{% endif %}
+            </td>
 	        <td>{{ b.place.cemetery.name }}</td>
 	        <td>{{ b.place.rooms_occupied|default:1 }}/{{ b.place.rooms_free }}</td>
             <td>{{ b.person.address|default:"неизвестен" }}</td>

@@ -48,6 +48,7 @@ class SearchForm(forms.Form):
     no_exhumated = forms.BooleanField(required=False, initial=False, label=u"Убрать эксгум.")
     deleted = forms.BooleanField(required=False, initial=False, label=u"Корзина")
     unowned = forms.BooleanField(required=False, initial=False, label=u"Бесхоз.")
+    no_responsible = forms.BooleanField(required=False, initial=False, label=u"Бес отв.")
 
     records_order_by = forms.ChoiceField(required=False, choices=ORDER_BY_VALUES, label=u"Сортировка по")
     per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label=u"Записей на страницу")
@@ -56,7 +57,7 @@ class SearchForm(forms.Form):
 class PlaceForm(forms.ModelForm):
     class Meta:
         model = Place
-        exclude = ['rooms', ]
+        exclude = ['rooms', 'unowned']
 
     def clean_seat(self):
         a = self.cleaned_data['seat']
@@ -856,7 +857,7 @@ class CommentForm(forms.ModelForm):
 class PlaceRoomsForm(forms.ModelForm):
     class Meta:
         model = Place
-        fields = ['rooms', ]
+        fields = ['rooms', 'unowned']
 
     def save(self, *args, **kwargs):
         place = super(PlaceRoomsForm, self).save(*args, **kwargs)

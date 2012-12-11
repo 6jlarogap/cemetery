@@ -39,6 +39,10 @@
                 <a class="btn btn-danger" href="?delete_responsible=1">открепить</a>
             </dd>
         {% endif %}
+        {% if place.unowned %}
+            <dt>Бесхозяйное</dt>
+            <dd></dd>
+        {% endif %}
     </dl>
 
     <h2 class="buttons">

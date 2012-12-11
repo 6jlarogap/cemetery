@@ -49,7 +49,10 @@
                         <td>{{ b.date_fact|date:"d.m.Y" }}</td>
                         <td>{{ b.place.area }}</td>
                         <td>{{ b.place.row }}</td>
-                        <td>{{ b.place.seat }}</td>
+                        <td>
+                            {{ b.place.seat }}
+                            {% if b.place.unowned %}б/х{% endif %}
+                        </td>
                         <td>{{ b.place.cemetery.name }}</td>
                         <td>
                             {{ b.operation.op_type }}
@@ -104,7 +107,7 @@
         $(function() {
             $('#id_customer').closest('p').before('<br/>');
             $('#id_records_order_by').closest('p').before($('p.buttons'));
-            $('#id_unowned').closest('p').after('<br/>');
+            $('p.buttons').before('<br/>');
             $('input[type=reset]').click(function() {
                 top.location.href = '?';
             });

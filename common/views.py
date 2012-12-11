@@ -132,7 +132,10 @@ def main_page(request):
             burials = burials.filter(deleted=False)
 
         if form.cleaned_data['unowned']:
-            burials = burials.filter(unowned=True)
+            burials = burials.filter(place__unowned=True)
+
+        if form.cleaned_data['no_responsible']:
+            burials = burials.filter(place__responsible__isnull=True)
 
         if form.cleaned_data['creator']:
             burials = burials.filter(creator=form.cleaned_data['creator'])

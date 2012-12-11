@@ -51,6 +51,7 @@ class Place(models.Model):
 
     responsible = models.ForeignKey(Person, blank=True, null=True) # Ответственный за захоронением
     rooms = models.PositiveIntegerField(u"Мест в ограде", default=1, blank=True)
+    unowned = models.BooleanField(u"Бесхозяйное", default=False)  # Удален.
 
     creator = models.ForeignKey(User, verbose_name=u"Создатель записи", editable=False)  # Создатель записи.
     date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True)  # Дата создания записи.
@@ -161,7 +162,6 @@ class Burial(models.Model):
     place = models.ForeignKey(Place)
     grave_id = models.PositiveSmallIntegerField(editable=False, null=True)
     person = models.ForeignKey(Person, verbose_name=u"Похороненный*", related_name='buried')
-    unowned = models.BooleanField(u"Бесхозяйное", default=False)  # Удален.
 
     client_person = models.ForeignKey(Person, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)
     client_organization = models.ForeignKey(Organization, blank=True, null=True, related_name='ordr_customer')                # Заказчик (физ- или юрлицо)
