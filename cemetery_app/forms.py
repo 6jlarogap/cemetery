@@ -816,15 +816,14 @@ class OrganizationForm(forms.ModelForm):
         }
 
     def clean(self):
-        if self.cleaned_data.get('inn'):
-            orgs = Organization.objects.filter(inn=self.cleaned_data['inn'])
-            if self.instance and self.instance.pk:
-                orgs = orgs.exclude(pk=self.instance.pk)
-            if orgs.exists():
-                if not self.cleaned_data.get('allow_duplicate'):
-                    self.fields['allow_duplicate'].widget = forms.CheckboxInput()
-                    self.fields['allow_duplicate'].required = True
-                    raise forms.ValidationError(u"ИНН дублируется. Вы уверены?")
+        orgs = Organization.objects.filter(inn=self.cleaned_data['inn'])
+        if self.instance and self.instance.pk:
+            orgs = orgs.exclude(pk=self.instance.pk)
+        if orgs.exists():
+            if not self.cleaned_data.get('allow_duplicate'):
+                self.fields['allow_duplicate'].widget = forms.CheckboxInput()
+                self.fields['allow_duplicate'].required = True
+                raise forms.ValidationError(u"ИНН дублируется. Вы уверены?")
         return self.cleaned_data
 
     def save(self, location=None, ceo=None, *args, **kwargs):
