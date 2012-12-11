@@ -19,7 +19,12 @@ from utils.models import PER_PAGE_VALUES, ORDER_BY_VALUES
 
 class UserChoiceForm(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return obj.get_full_name()
+        if obj.get_full_name():
+            return obj.get_full_name()
+        try:
+            return u'%s' % obj.person or obj.username
+        except:
+            return obj.username
 
 CREATORS_QS = User.objects.filter(Q(is_superuser=True) | Q(user_permissions__codename='add_burial')).distinct()
 
