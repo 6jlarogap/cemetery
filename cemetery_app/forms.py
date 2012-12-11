@@ -26,7 +26,7 @@ class UserChoiceForm(forms.ModelChoiceField):
         except:
             return obj.username
 
-CREATORS_QS = User.objects.filter(Q(is_superuser=True) | Q(user_permissions__codename='add_burial')).distinct()
+CREATORS_QS = User.objects.filter(Q(is_superuser=True) | Q(user_permissions__codename='add_burial') | Q(groups__permissions__codename='add_burial')).distinct()
 
 class SearchForm(forms.Form):
     """
