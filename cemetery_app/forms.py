@@ -17,6 +17,12 @@ from organizations.models import Doverennost, Organization, Agent, BankAccount
 from persons.models import Person, DeathCertificate, PersonID, DocumentSource
 from utils.models import PER_PAGE_VALUES, ORDER_BY_VALUES
 
+class UserChoiceForm(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.get_full_name()
+
+CREATORS_QS = User.objects.filter(Q(is_superuser=True) | Q(user_permissions__codename='add_burial')).distinct()
+
 class SearchForm(forms.Form):
     """
     Форма поиска на главной странице.
@@ -52,7 +58,7 @@ class SearchForm(forms.Form):
 
     records_order_by = forms.ChoiceField(required=False, choices=ORDER_BY_VALUES, label=u"Сортировка по")
     per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label=u"Записей на страницу")
-    creator = forms.ModelChoiceField(required=False, label=u"Автор", queryset=User.objects.filter(Q(is_superuser=True) | Q(user_permissions__codename='add_burial')).distinct())
+    creator = UserChoiceForm(required=False, label=u"Автор", queryset=CREATORS_QS)
 
 class PlaceForm(forms.ModelForm):
     class Meta:

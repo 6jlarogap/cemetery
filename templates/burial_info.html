@@ -46,6 +46,10 @@
                 <dd>{{ burial.exhumated_date|date:'d.m.Y' }}{% if b.grave_id %}, было место {{ b.grave_id }}{% endif %}</dd>
             {% endif %}
         {% endif %}
+        <dt>Создано</dt>
+        <dd>{{ burial.added }} {{ burial.creator }}</dd>
+        <dt>Изменено</dt>
+        <dd>{{ burial.editor }}</dd>
     </dl>
 
     <p>
