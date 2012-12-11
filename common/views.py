@@ -500,6 +500,13 @@ def print_burial(request, pk):
     initials['print'] = initials['print'] or {}
     initials['print'].update({'org': org})
 
+    if request.user.has_perm('cemetery_app.add_burial'):
+        try:
+            org = request.user.userprofile.org_registrator
+        except:
+            org = None
+        initials['print'].update({'org': org})
+
     payment_form = OrderPaymentForm(instance=burial, data=request.POST or None)
     positions_fs = OrderPositionsFormset(initial=initials.get('positions') or positions, data=request.POST or None)
     print_form = PrintOptionsForm(data=request.POST or None, initial=initials['print'], burial=burial)
