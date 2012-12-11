@@ -63,7 +63,8 @@ function setup_address_autocompletes() {
             var $country = $(this)[0].$element.parents('form').find('input[name$=country_name]');
             if (!$country.val()) {
                 $country.val(val.country);
-            }
+            };
+            this.$element.val(val.real_value);
         }
     });
     $('input.autocomplete[name$=city_name]').attr('autocomplete', 'off').typeahead({
@@ -90,6 +91,7 @@ function setup_address_autocompletes() {
             if (!$country.val()) {
                 $country.val(val.country);
             }
+            this.$element.val(val.real_value);
         }
     });
     $('input.autocomplete[name$=street_name]').attr('autocomplete', 'off').typeahead({

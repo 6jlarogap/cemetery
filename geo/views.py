@@ -13,7 +13,7 @@ def autocomplete_regions(request):
     regions = Region.objects.filter(name__istartswith=query)
     if country:
         regions = regions.filter(country__name__iexact=country)
-    return HttpResponse(simplejson.dumps([{'value': r.name, 'country': r.country.name} for r in regions]), mimetype='text/javascript')
+    return HttpResponse(simplejson.dumps([{'value': r.name + '/' + r.country.name, 'real_value': r.name, 'country': r.country.name} for r in regions]), mimetype='text/javascript')
 
 def autocomplete_cities(request):
     query = request.GET['query']
@@ -24,7 +24,7 @@ def autocomplete_cities(request):
         cities = cities.filter(region__country__name__iexact=country)
     if region:
         cities = cities.filter(region__name__iexact=region)
-    return HttpResponse(simplejson.dumps([{'value': c.name, 'region': c.region.name, 'country': c.region.country.name} for c in cities]), mimetype='text/javascript')
+    return HttpResponse(simplejson.dumps([{'value': c.name + '/' + c.region.name + '/' + c.region.country.name, 'real_value': c.name, 'region': c.region.name, 'country': c.region.country.name} for c in cities]), mimetype='text/javascript')
 
 def autocomplete_streets(request):
     query = request.GET['query']
