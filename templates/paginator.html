@@ -3,6 +3,9 @@
         {% if page_obj.has_previous %}
             <li><a href="?{{ GET_PARAMS }}&page={{ page_obj.previous_page_number }}">предыдущая</a></li>
         {% endif %}
+        {% if page_obj.number > 10 %}
+            <li>&hellip;</li>
+        {% endif %}
         {% for p in paginator.page_range %}
             {% if p >= page_obj.number|add:-10 and p <= page_obj.number|add:10 %}
                 <li{% if p == page_obj.number %} class="active"{% endif %}>
@@ -10,11 +13,14 @@
                 </li>
             {% endif %}
         {% endfor %}
+        {% if page_obj.number < paginator.page_range|length|add:-10 %}
+            <li>&hellip;</li>
+        {% endif %}
         {% if page_obj.has_next %}
             <li><a href="?{{ GET_PARAMS }}&page={{ page_obj.next_page_number }}">следующая</a></li>
         {% endif %}
         <li>
-            <select id="paginator_select">
+            Или выберите: <select id="paginator_select" style="width: 75px;">
                 {% for p in paginator.page_range %}
                     <option value="?{{ GET_PARAMS }}&page={{ p }}"{% if p == page_obj.number %} selected="1"{% endif %}>{{ p }}</option>
                 {% endfor %}
