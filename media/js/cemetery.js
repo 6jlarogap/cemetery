@@ -145,7 +145,7 @@ function setup_address_autocompletes() {
 $(function() {
     updateControls();
 
-    $('#paginator_select').change(function() {
+    $('#paginator_select').live('change', function() {
         top.location.href = $(this).val();
     })
 
