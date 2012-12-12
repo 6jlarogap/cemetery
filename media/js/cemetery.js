@@ -145,6 +145,10 @@ function setup_address_autocompletes() {
 $(function() {
     updateControls();
 
+    $('#paginator_select').change(function() {
+        top.location.href = $(this).val();
+    })
+
     $('input.autocomplete[name$=city_name]').live('change', function() {
         $(this).closest('.well').find('input.autocomplete[name$=street_name]').val('');
     });
