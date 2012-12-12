@@ -52,6 +52,7 @@
                         <td>
                             {{ b.place.seat }}
                             {% if b.place.unowned %}б/х{% endif %}
+                            {% if b.place.responsible %}отв{% endif %}
                         </td>
                         <td>{{ b.place.cemetery.name }}</td>
                         <td>
