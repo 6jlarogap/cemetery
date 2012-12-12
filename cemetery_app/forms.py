@@ -837,7 +837,7 @@ class OrganizationForm(forms.ModelForm):
             if not self.cleaned_data.get('allow_duplicate'):
                 self.fields['allow_duplicate'].widget = forms.CheckboxInput()
                 self.fields['allow_duplicate'].required = True
-                raise forms.ValidationError(u"ИНН дублируется. Вы уверены?")
+                raise forms.ValidationError(u"<span class=\"alert alert-error\">ИНН дублируется. Вы уверены?</a>")
         return self.cleaned_data
 
     def save(self, location=None, ceo=None, *args, **kwargs):
