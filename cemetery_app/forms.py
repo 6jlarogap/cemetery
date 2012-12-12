@@ -894,7 +894,10 @@ class BasePlaceBurialsFormset(BaseFormSet):
         for i in range(place.rooms):
             places_initial.append({})
         for b in self.filled_burials:
-            places_initial[b.grave_id].setdefault('burials', []).append(b)
+            try:
+                places_initial[b.grave_id].setdefault('burials', []).append(b)
+            except IndexError:
+                pass
 
         limit = datetime.date.today() - datetime.timedelta(365*20)
         if self.free_burials:
