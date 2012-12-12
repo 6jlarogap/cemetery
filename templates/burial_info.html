@@ -47,9 +47,9 @@
             {% endif %}
         {% endif %}
         <dt>Создано</dt>
-        <dd>{{ burial.added }} {{ burial.creator.person_set.all.0|default:burial.creator }}</dd>
+        <dd>{{ burial.added }} {{ burial.creator.person_set.all.0|default:burial.creator|default:"" }}</dd>
         <dt>Изменено</dt>
-        <dd>{{ burial.editor.person_set.all.0|default:burial.editor }}</dd>
+        <dd>{{ burial.editor.person_set.all.0|default:burial.editor|default:"" }}</dd>
     </dl>
 
     <p>
