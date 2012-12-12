@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.forms import formsets
 from django.forms.formsets import formset_factory, BaseFormSet
 from django.forms.models import model_to_dict, inlineformset_factory
+from django.utils.safestring import mark_safe
 
 from common.forms import UnclearDateField
 from cemetery_app.models import Cemetery, Operation, Place, Burial, UserProfile, Service, ServicePosition, Comment
