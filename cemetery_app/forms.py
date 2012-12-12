@@ -260,6 +260,8 @@ class BurialForm(forms.ModelForm):
     def save(self, commit=True):
         burial = super(BurialForm, self).save(commit=False)
         if burial.place and self.cleaned_data.get('responsible'):
+            if burial.place.unowned:
+                burial.place.unowned = False
             burial.place.responsible = self.cleaned_data['responsible']
             burial.place.save()
         if commit:
