@@ -35,8 +35,8 @@
                 {{ place.responsible }}
                 {% if place.responsible.phones and user|has_perm:"cemetery_app.add_burial" %}
                     (тел. {{ place.responsible.phones }})
+                    <a class="btn btn-danger" href="?delete_responsible=1">открепить</a>
                 {% endif %}
-                <a class="btn btn-danger" href="?delete_responsible=1">открепить</a>
             </dd>
         {% endif %}
         {% if place.unowned %}
@@ -51,7 +51,9 @@
 
     <h3>Захоронения:</h3>
     <form action="" method="POST">
-        {{ rf.as_p }}
+        {% if user|has_perm:"cemetery_app.add_burial" %}
+            {{ rf.as_p }}
+        {% endif %}
         <p>Свободно для захоронения: {{ place.rooms_free }} мест{{ place.rooms_free|choose_plural:"о,а," }}</p>
         {{ pbf.management_form }}
         {{ pbf.non_form_errors }}

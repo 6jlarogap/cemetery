@@ -706,20 +706,20 @@ def view_place(request, pk):
     pbf = PlaceBurialsFormset(data=request.POST or None, place=place)
     rf = PlaceRoomsForm(data=request.POST or None, instance=place)
 
-    if request.GET.get('delete_responsible'):
+    if request.GET.get('delete_responsible') and request.user.has_perm('cemetery_app.add_burial'):
         place.responsible = None
         place.save()
         return redirect('.')
 
-    if request.GET.get('unlink'):
+    if request.GET.get('unlink') and request.user.has_perm('cemetery_app.add_burial'):
         Burial.objects.filter(place=place, pk=request.GET.get('unlink')).update(grave_id=None)
         return redirect('.')
 
-    if request.POST and rf.changed_data and rf.is_valid():
+    if request.POST and rf.changed_data and rf.is_valid() and request.user.has_perm('cemetery_app.add_burial'):
         rf.save()
         return redirect('.')
 
-    if request.POST:
+    if request.POST and request.user.has_perm('cemetery_app.add_burial'):
         if pbf.is_valid():
             pbf.save()
         else:
