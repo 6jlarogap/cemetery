@@ -906,7 +906,7 @@ class BasePlaceBurialsFormset(BaseFormSet):
             try:
                 places_initial[b.grave_id].setdefault('burials', []).append(b)
             except IndexError:
-                pass
+                places_initial[0].setdefault('burials', []).append(b)
 
         limit = datetime.date.today() - datetime.timedelta(365*20)
         if self.free_burials:
