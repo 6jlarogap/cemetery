@@ -875,6 +875,12 @@ class PlaceRoomsForm(forms.ModelForm):
         model = Place
         fields = ['rooms', 'unowned']
 
+    def __init__(self, *args, **kwargs):
+        super(PlaceRoomsForm, self).__init__(*args, **kwargs)
+        if self.instance and self.instance.responsible:
+            self.instance.unowned = False
+            self.fields['unowned'].widget.attrs.update(disabled='true')
+
     def save(self, *args, **kwargs):
         place = super(PlaceRoomsForm, self).save(*args, **kwargs)
         Burial.objects.filter(place=place, grave_id__gte=place.rooms).update(grave_id=None)
