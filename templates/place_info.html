@@ -35,6 +35,8 @@
                 {{ place.responsible }}
                 {% if place.responsible.phones and user|has_perm:"cemetery_app.add_burial" %}
                     (тел. {{ place.responsible.phones }})
+                {% endif %}
+                {% if user|has_perm:"cemetery_app.add_burial" %}
                     <a class="btn btn-danger" href="?delete_responsible=1">открепить</a>
                 {% endif %}
             </dd>
