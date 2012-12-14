@@ -884,6 +884,9 @@ class PlaceRoomsForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         place = super(PlaceRoomsForm, self).save(*args, **kwargs)
         Burial.objects.filter(place=place, grave_id__gte=place.rooms).update(grave_id=None)
+        if place.responsible and place.unowned:
+            place.unowned = False
+            place.save()
         return place
 
 class PlaceBurialForm(forms.Form):
