@@ -780,8 +780,8 @@ def management_user(request):
         except Person.DoesNotExist:
             if user.last_name:
                 try:
-                    instance = Person.objects.get(first_name=user.first_name, last_name=user.last_name)
-                except Person.DoesNotExist:
+                    instance = Person.objects.filter(first_name=user.first_name, last_name=user.last_name)[0]
+                except IndexError:
                     pass
             if not instance:
                 instance = Person.objects.create(first_name=user.first_name, last_name=user.last_name, user=user)
