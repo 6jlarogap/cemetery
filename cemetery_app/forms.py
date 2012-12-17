@@ -766,9 +766,9 @@ class UserForm(forms.ModelForm):
             self.fields['password1'].required = True
 
     def clean_username(self):
-        users = Person.objects.filter(user__username=self.cleaned_data['username'])
+        users = User.objects.filter(username=self.cleaned_data['username'])
         if self.instance and self.instance.pk:
-            users = users.exclude(pk=self.instance.pk)
+            users = users.exclude(person_set__pk=self.instance.pk)
         if users.exists():
             raise forms.ValidationError(u'Имя пользователя уже занято')
         return self.cleaned_data['username']
