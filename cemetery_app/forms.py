@@ -768,7 +768,7 @@ class UserForm(forms.ModelForm):
     def clean_username(self):
         users = User.objects.filter(username=self.cleaned_data['username'])
         if self.instance and self.instance.pk:
-            users = users.exclude(person_set__pk=self.instance.pk)
+            users = users.exclude(person__pk=self.instance.pk)
         if users.exists():
             raise forms.ValidationError(u'Имя пользователя уже занято')
         return self.cleaned_data['username']
