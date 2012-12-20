@@ -781,6 +781,7 @@ def management_user(request):
             if user.last_name:
                 try:
                     instance = Person.objects.filter(first_name=user.first_name, last_name=user.last_name)[0]
+                    instance.user = user
                 except IndexError:
                     pass
             if not instance:
