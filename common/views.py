@@ -849,6 +849,7 @@ def management_org(request):
         agents_formset = AgentsFormset(data=request.POST or None, instance=org, prefix='agents')
         accounts_formset.save()
         agents_formset.save()
+        messages.success(request, u'Успешно сохранено')
         return redirect(reverse('management_org') + '?pk=%s' % org.pk)
 
     orgs = Organization.objects.all()
