@@ -1,13 +1,13 @@
-## -*- coding: utf-8 -*-
-#
-#from django.contrib import admin
-#from django.contrib.admin.models import LogEntry
-#from django import forms
-#from django.core.urlresolvers import reverse
-#from django.http import HttpResponseRedirect
-#
-#from common.models import *
-#
+# -*- coding: utf-8 -*-
+
+from django.contrib import admin
+from django.contrib.admin.models import LogEntry
+from django import forms
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+
+from organizations.models import *
+
 #class StreetForm(forms.ModelForm):
 #    combine_with = forms.ModelChoiceField(
 #        queryset=Street.objects.all(), label=u"Слить с улицей", help_text=u"Текущая улица будет удалена", required=False)
@@ -65,15 +65,16 @@
 #    model = Agent
 #    exclude = ['creator', 'birth_date', 'death_date', 'location', ]
 #
-##class OrganizationPhoneInline(admin.StackedInline):
-##    model = Phone
 #
-#class OrganizationAdmin(admin.ModelAdmin):
-#    raw_id_fields = ['location', 'creator', ]
-#    exclude = ['birth_date', 'death_date', ]
+#class OrganizationPhoneInline(admin.StackedInline):
+#    model = Phone
 #
+
+class OrganizationAdmin(admin.ModelAdmin):
+    raw_id_fields = ['location', 'ceo', ]
+
 #    inlines = [OrganizationAgentInline, ]
-#
+
 #class PlaceAdmin(admin.ModelAdmin):
 #    raw_id_fields = ['cemetery', 'creator', ]
 #
@@ -139,7 +140,7 @@
 #            return u'%s' % o
 #    object_link.allow_tags = True
 #
-#admin.site.register(Organization, OrganizationAdmin)
+admin.site.register(Organization, OrganizationAdmin)
 #admin.site.register(Place, PlaceAdmin)
 #admin.site.register(Cemetery, CemeteryAdmin)
 #admin.site.register(Location, LocationAdmin)

@@ -13,12 +13,14 @@
 
         <h3>Агенты</h3>
         {{ agents_formset.management_form }}
+        {{ agents_formset.errors }}
         {% for f in agents_formset.forms %}
             <div class="well">{{ f.as_p }}</div>
         {% endfor %}
 
         <h3>Счета</h3>
         {{ accounts_formset.management_form }}
+        {{ accounts_formset.errors }}
         {% for f in accounts_formset.forms %}
             <div class="well">{{ f.as_p }}</div>
         {% endfor %}
