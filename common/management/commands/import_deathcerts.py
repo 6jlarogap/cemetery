@@ -16,25 +16,29 @@ class Command(BaseCommand):
     def import_deathcerts(self):
         for old in old_models.DeathCertificate.objects.all().using('old').select_related():
             try:
-                DeathCertificate.objects.get(
+                DeathCertificate.objects.filter(
                     person__last_name=old.soul.person.last_name,
                     person__first_name=old.soul.person.first_name,
                     person__middle_name=old.soul.person.patronymic,
+                )[0]
+                print old.soul.person, 'found'
+            except IndexError:
+                persons = Person.objects.filter(
+                    last_name=old.soul.person.last_name,
+                    first_name=old.soul.person.first_name,
+                    middle_name=old.soul.person.patronymic,
+                    birth_date=old.soul.person.birth_date,
+                    birth_date_no_month=old.soul.person.birth_date_no_month,
+                    birth_date_no_day=old.soul.person.birth_date_no_day,
+                    death_date=old.soul.person.death_date,
                 )
-            except DeathCertificate.DoesNotExist:
-                DeathCertificate.objects.create(
-                    person = Person.objects.filter(
-                        last_name=old.soul.person.last_name,
-                        first_name=old.soul.person.first_name,
-                        middle_name=old.soul.person.patronymic,
-                        birth_date=old.soul.person.birth_date,
-                        birth_date_no_month=old.soul.person.birth_date_no_month,
-                        birth_date_no_day=old.soul.person.birth_date_no_day,
-                        death_date=old.soul.person.death_date,
-                    )[0],
-                    s_number = old.s_number,
-                    series = old.series,
-                    release_date = old.release_date,
-                    zags = ZAGS.objects.get(name=old.zags.name)
-                )
+                for p in persons:
+                    DeathCertificate.objects.create(
+                        person = p,
+                        s_number = old.s_number,
+                        series = old.series,
+                        release_date = old.release_date,
+                        zags = ZAGS.objects.get(name=old.zags.name)
+                    )
+                print old.soul.person, 'created'
         print 'ZAGS:', old_models.DeathCertificate.objects.all().using('old').count()
