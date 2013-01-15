@@ -14,6 +14,10 @@ class Command(BaseCommand):
         self.import_deathcerts()
 
     def import_deathcerts(self):
+        for old in old_models.ZAGS.objects.all().using('old'):
+            ZAGS.objects.get_or_create(name=old.name)
+        print 'ZAGS:', old_models.ZAGS.objects.all().using('old').count()
+
         for old in old_models.DeathCertificate.objects.all().using('old').select_related():
             try:
                 DeathCertificate.objects.filter(
