@@ -266,6 +266,9 @@ def main_page(request):
         for b in burials:
             b0 = Burial.objects.get(pk=b.pk)
             comments = u'\n'.join([oc.comment for oc in b0.ordercomments_set.all()])
+            phones = u'\n'.join([phone.f_number for phone in b0.customer.phone_set.all()])
+            files = u'\n'.join([file_.ofile.name for file_ in b0.orderfiles_set.all()])
+            file_comments = u'\t'.join([file_.comment for file_ in b0.orderfiles_set.all()])
             writer.writerow(map(lambda u: u.encode(settings.CSV_ENCODING), [
                 u"",
                 u"%s" % (b0.account_book_n, ),
@@ -287,6 +290,12 @@ def main_page(request):
                 u"%s" % (b0.customer.location and b0.customer.location.block or '', ),
                 u"%s" % (b0.customer.location and b0.customer.location.flat or '', ),
                 u"%s" % (comments or '', ),
+                # в дополнение к "старому" формату экспорта
+                u"%s" % (b0.customer.location and b0.customer.location.street and b0.customer.location.street.city and b0.customer.location.street.city.country or '', ),
+                u"%s" % (b0.customer.location and b0.customer.location.street and b0.customer.location.street.city and b0.customer.location.street.city.region or '', ),
+                u"%s" % (phones or '', ),
+                u"%s" % (files or '', ),
+                u"%s" % (file_comments or '', ),
             ]))
         result = HttpResponse(io.getvalue(), mimetype='text/csv')
         result['Content-Disposition'] = 'attachment; filename="export.csv"'
@@ -1344,6 +1353,8 @@ def import_csv(request):
             bad_nr = 0
             s_time = datetime.datetime.now()
             r = csv.reader(cd["csv_file"], "4mysql")
+            n_items = 20                                # Было в строке импорта раньше
+            n_itemps_plus = 5                           # Добавилось
             for l in r:
                 db.reset_queries()
                 if l:
@@ -1354,7 +1365,14 @@ def import_csv(request):
                         bur_date, area, row, seat,
                         cust_ln, cust_fn, cust_ptrc, cust_initials,
                         city, street, house, block, flat,
-                        comment) = l
+                        comment) = l[0 : n_items]
+                        
+                        (country, region, phone,
+                         files, file_comments) = ["" for i in range(n_itemps_plus)]
+                        if len(l) > n_items:
+                           (country, region, phone,
+                            files, file_comments) = l[n_items : n_items + n_itemps_plus]
+                            
                         # ID записи в таблице MySQL.
                         try:
                             str_id = int(str_id)
@@ -1480,15 +1498,43 @@ def import_csv(request):
                         location = Location()
                         if street:
                             # Присутствуют город и улица - будем создавать Location.
-                            cities = GeoCity.objects.filter(name__exact=city)
-                            if cities:
-                                cust_city = cities[0]
+                            country = country.decode(settings.CSV_ENCODING).strip().capitalize()
+                            if country and not region:
+                               region = u"НЕИЗВЕСТЕН"
+                            region = region.decode(settings.CSV_ENCODING).strip().capitalize()
+                            if region and not country:
+                               country = u"НЕИЗВЕСТЕН"
+                            if country:
+                                # "новый" формат, есть область и страна
+                                countries = GeoCountry.objects.filter(name__exact=country)
+                                if countries:
+                                    cust_country = countries[0]
+                                else:
+                                    cust_country = GeoCountry(name=country)
+                                    cust_country.save()
+                                regions = GeoRegion.objects.filter(country=cust_country, name__exact=region)
+                                if regions:
+                                    cust_region = regions[0]
+                                else:
+                                    cust_region = GeoRegion(country=cust_country, name=region)
+                                    cust_region.save()
+                                cities = GeoCity.objects.filter(country=cust_country, region=cust_region, name__exact=city)
+                                if cities:
+                                    cust_city = cities[0]
+                                else:
+                                    cust_city = GeoCity(country=cust_country, region=cust_region, name=city)
+                                    cust_city.save()
                             else:
-                                cust_city = GeoCity()
-                                cust_city.country = GeoCountry.objects.get(name__exact="НЕИЗВЕСТЕН")
-                                cust_city.region = GeoRegion.objects.get(name__exact="НЕИЗВЕСТЕН")
-                                cust_city.name = city
-                                cust_city.save()
+                                # "старый" формат, без страны, области
+                                cities = GeoCity.objects.filter(name__exact=city)
+                                if cities:
+                                    cust_city = cities[0]
+                                else:
+                                    cust_city = GeoCity()
+                                    cust_city.country = GeoCountry.objects.get(name__exact="НЕИЗВЕСТЕН")
+                                    cust_city.region = GeoRegion.objects.get(name__exact="НЕИЗВЕСТЕН")
+                                    cust_city.name = city
+                                    cust_city.save()
                             try:
                                 cust_street = Street.objects.get(city=cust_city, name__exact=street)
                             except ObjectDoesNotExist:
@@ -1504,6 +1550,13 @@ def import_csv(request):
                         location.save()
                         customer.location = location
                         customer.save()
+
+                        phones = phone.split("\n")
+                        for phone in phones:
+                            phone = phone.decode(settings.CSV_ENCODING).strip()
+                            if phone:
+                                cust_phone = Phone(soul=customer.soul_ptr, f_number=phone)
+                                cust_phone.save()
 
                         # Место.
                         cemetery = cd["cemetery"]
@@ -1555,6 +1608,21 @@ def import_csv(request):
                         burial.save()
                         if comment != u"":
                             burial.add_comment(comment, creator)
+                            
+                        files = files.split("\n")
+                        file_comments = file_comments.split("\t")
+                        if len(file_comments) > len(files):
+                            file_comments = file_comments[0:len(files)]
+                        for i in range(len(files)):
+                            file_ = files[i].decode(settings.CSV_ENCODING).strip()
+                            file_comment = file_comments[i].decode(settings.CSV_ENCODING).strip()
+                            if file_:
+                                cust_file = OrderFiles(creator=creator)
+                                cust_file.order = burial.order_ptr
+                                cust_file.ofile.name = file_
+                                cust_file.comment = file_comment
+                                cust_file.save()
+
                     except Exception, err_descr:
                         # Откатываем транзакцию.
                         transaction.rollback()

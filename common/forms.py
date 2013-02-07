@@ -77,7 +77,7 @@ class SearchForm(forms.Form):
     Форма поиска на главной странице.
     """
     fio = forms.CharField(required=False, max_length=100, label="ФИО")
-    cemetery = forms.ModelChoiceField(required=False, queryset=Cemetery.objects.all(),
+    cemetery = forms.ModelChoiceField(required=False, queryset=Cemetery.objects.order_by("name"),
                                       empty_label="Все", label="Кладбища")
     burial_date_from = forms.DateField(required=False, label="Дата захоронения с", widget=CalendarWidget)
     burial_date_to = forms.DateField(required=False, label="Дата захоронения по", widget=CalendarWidget)
