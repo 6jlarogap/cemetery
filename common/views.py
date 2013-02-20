@@ -296,6 +296,9 @@ def main_page(request):
                 u"%s" % (phones or '', ),
                 u"%s" % (files or '', ),
                 u"%s" % (file_comments or '', ),
+                u"%s" % (b0.customer.location and b0.customer.location.post_index or '', ),
+                u"%s" % (b0.customer.location and b0.customer.location.building or '', ),
+                u"%s" % (b0.operation or '', ),
             ]))
         result = HttpResponse(io.getvalue(), mimetype='text/csv')
         result['Content-Disposition'] = 'attachment; filename="export.csv"'
@@ -1354,7 +1357,7 @@ def import_csv(request):
             s_time = datetime.datetime.now()
             r = csv.reader(cd["csv_file"], "4mysql")
             n_items = 20                                # Было в строке импорта раньше
-            n_itemps_plus = 5                           # Добавилось
+            n_itemps_plus = 8                           # Добавилось
             for l in r:
                 db.reset_queries()
                 if l:
@@ -1368,10 +1371,14 @@ def import_csv(request):
                         comment) = l[0 : n_items]
                         
                         (country, region, phone,
-                         files, file_comments) = ["" for i in range(n_itemps_plus)]
+                         files, file_comments,
+                         post_index, building,
+                         op_type) = ["" for i in range(n_itemps_plus)]
                         if len(l) > n_items:
                            (country, region, phone,
-                            files, file_comments) = l[n_items : n_items + n_itemps_plus]
+                            files, file_comments,
+                            post_index, building,
+                            op_type) = l[n_items : n_items + n_itemps_plus]
                             
                         # ID записи в таблице MySQL.
                         try:
@@ -1462,9 +1469,16 @@ def import_csv(request):
                             house = house.decode(settings.CSV_ENCODING).strip().lower()
                         if block == "N":
                             block = u""
+                        else:
+                            block = block.decode(settings.CSV_ENCODING).strip().lower()
                         if flat == "N":
                             flat = u""
+                        else:
+                            flat = flat.decode(settings.CSV_ENCODING).strip().lower()
 
+                        post_index = post_index.decode(settings.CSV_ENCODING).strip().lower()
+                        building = building.decode(settings.CSV_ENCODING).strip().lower()
+                        
                         # Захороненный.
                         deadman = Person(creator=creator)
                         deadman.last_name = ln
@@ -1541,10 +1555,14 @@ def import_csv(request):
                                 cust_street = Street(city=cust_city, name=street)
                                 cust_street.save()
                             location.street = cust_street
+                            if post_index:
+                                location.post_index = post_index
                             if house:
                                 location.house = house
                                 if block:
                                     location.block = block
+                                if building:
+                                    location.building = building
                                 if flat:
                                     location.flat = flat
                         location.save()
@@ -1585,25 +1603,42 @@ def import_csv(request):
 #                        try:
 #                            test_date = datetime.datetime.date(bur_date).strftime("%d.%m.%Y")
                         burial.product = place.product_ptr
+                        
                         operation = Operation.objects.get(uuid=settings.OPER_1) # Захоронение
+                        if op_type:
+                            op_type = op_type.decode(settings.CSV_ENCODING).strip().lower()
+                            if op_type == u"захоронение":
+                                pass
+                            elif op_type == u"урна":
+                                operation = Operation.objects.get(uuid=settings.OPER_5)
+                            elif op_type == u"захоронение детское":
+                                operation = Operation.objects.get(uuid=settings.OPER_6)
+                            elif op_type.startswith(u"захоронение в существ"):
+                                operation = Operation.objects.get(uuid=settings.OPER_3)
+                            elif op_type == u"почетное захоронение":
+                                operation = Operation.objects.get(uuid=settings.OPER_2)
+                            elif op_type.startswith(u"подзахоронен"):
+                                operation = Operation.objects.get(uuid=settings.OPER_4)
+                            
                         if comment == "N":
                             comment = u""
                         else:
                             comment = comment.decode(settings.CSV_ENCODING).strip()
                             comment = re.sub(r'ё', r'е', comment)
                             comment = re.sub(r'Ё', r'Е', comment)
-                            if u"захоронение детское" in comment.lower():
-                                operation = Operation.objects.get(uuid=settings.OPER_6)
-                            elif u"захоронение в существ" in comment.lower():
-                                operation = Operation.objects.get(uuid=settings.OPER_3)
-                            elif u"почетное захоронение" in comment.lower():
-                                operation = Operation.objects.get(uuid=settings.OPER_2)
-                            elif u"подзахоронение" in comment.lower():
-                                operation = Operation.objects.get(uuid=settings.OPER_4)
-                            elif u"захоронение" in comment.lower():
-                                operation = Operation.objects.get(uuid=settings.OPER_1)
-                            elif u"урна" in comment.lower():
-                                operation = Operation.objects.get(uuid=settings.OPER_5)
+                            if not op_type:
+                                if u"захоронение детское" in comment.lower():
+                                    operation = Operation.objects.get(uuid=settings.OPER_6)
+                                elif u"захоронение в существ" in comment.lower():
+                                    operation = Operation.objects.get(uuid=settings.OPER_3)
+                                elif u"почетное захоронение" in comment.lower():
+                                    operation = Operation.objects.get(uuid=settings.OPER_2)
+                                elif u"подзахоронение" in comment.lower():
+                                    operation = Operation.objects.get(uuid=settings.OPER_4)
+                                elif u"захоронение" in comment.lower():
+                                    operation = Operation.objects.get(uuid=settings.OPER_1)
+                                elif u"урна" in comment.lower():
+                                    operation = Operation.objects.get(uuid=settings.OPER_5)
                         burial.operation = operation
                         burial.save()
                         if comment != u"":
