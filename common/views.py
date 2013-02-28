@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+import codecs
+import csv
 import datetime
 import urllib
+import cStringIO
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -886,3 +889,164 @@ def new_dover(request):
             'label': u'%s' % dover,
         }), mimetype='application/json')
     return HttpResponse(form.as_p(), mimetype='text/html')
+
+class UTF8Recoder:
+    def __init__(self, f, encoding):
+        self.reader = codecs.getreader(encoding)(f)
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        return self.reader.next().encode("utf-8")
+
+class UnicodeReader:
+    def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
+        f = UTF8Recoder(f, encoding)
+        self.reader = csv.reader(f, dialect=dialect, **kwds)
+
+    def next(self):
+        row = self.reader.next()
+        return [unicode(s, "utf-8") for s in row]
+
+    def __iter__(self):
+        return self
+
+class UnicodeWriter:
+    def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
+        # Redirect output to a queue
+        self.queue = cStringIO.StringIO()
+        self.writer = csv.writer(self.queue, dialect=dialect, **kwds)
+        self.stream = f
+        self.encoder = codecs.getincrementalencoder(encoding)()
+
+    def writerow(self, row):
+        self.writer.writerow([s.encode("utf-8") for s in row])
+        # Fetch UTF-8 output from the queue ...
+        data = self.queue.getvalue()
+        data = data.decode("utf-8")
+        # ... and reencode it into the target encoding
+        data = self.encoder.encode(data)
+        # write to the target stream
+        self.stream.write(data)
+        # empty queue
+        self.queue.truncate(0)
+
+    def writerows(self, rows):
+        for row in rows:
+            self.writerow(row)
+
+@login_required
+def export_orgs(request):
+    io = cStringIO.StringIO()
+    spamwriter = UnicodeWriter(io)
+    spamwriter.writerow([u'ИНН', u'Название', u'Полное название', u'Директор', u'Страна', u'Регион', u'Город',
+                         u'Улица', u'Дом', u'Корпус', u'Строение', u'Офис/квартира', u'Доп.инфо'])
+    for o in Organization.objects.all():
+        spamwriter.writerow([
+            unicode(o.inn), unicode(o.name), unicode(o.full_name), unicode(o.ceo), unicode(o.location and o.location.country),
+            unicode(o.location and o.location.region), unicode(o.location and o.location.city), unicode(o.location and o.location.street),
+            unicode(o.location and o.location.house), unicode(o.location and o.location.block), unicode(o.location and o.location.building),
+            unicode(o.location and o.location.flat), unicode(o.location and o.location.info),
+        ])
+    response = HttpResponse(io.getvalue(), mimetype='application/csv')
+    response['Content-Disposition'] = 'attachment; filename="organizations.csv"'
+    return response
+
+@login_required
+def export_users(request):
+    io = cStringIO.StringIO()
+    spamwriter = UnicodeWriter(io)
+    spamwriter.writerow([u'EMail', u'Username', u'Фамилия', u'Имя', u'Отчество', u'Дата рождения', u'Телефоны',
+                         u'Страна', u'Регион', u'Город', u'Улица', u'Дом', u'Корпус', u'Строение', u'Офис/квартира',
+                         u'Доп.инфо'])
+    for u in User.objects.all():
+        try:
+            p = u.person_set.get()
+        except Person.DoesNotExist:
+            p = Person()
+        spamwriter.writerow([
+            unicode(u.email), unicode(u.username), unicode(p.last_name), unicode(p.first_name),
+            unicode(p.middle_name), unicode(p.get_birth_date()), unicode(p.phones), unicode(p.address and p.address.country),
+            unicode(p.address and p.address.region), unicode(p.address and p.address.city),
+            unicode(p.address and p.address.street), unicode(p.address and p.address.house),
+            unicode(p.address and p.address.block), unicode(p.address and p.address.building),
+            unicode(p.address and p.address.flat), unicode(p.address and p.address.info),
+        ])
+    response = HttpResponse(io.getvalue(), mimetype='application/csv')
+    response['Content-Disposition'] = 'attachment; filename="users.csv"'
+    return response
+
+@login_required
+def export_burials(request):
+    io = cStringIO.StringIO()
+    spamwriter = UnicodeWriter(io)
+    spamwriter.writerow([u'Номер', u'Операция', u'План дата', u'Факт дата', u'Факт время', u'Эксгум дата',
+                         u'Кладбище', u'Участок', u'Ряд', u'Место', u'Число мест', u'Бесхозяйное', 
+                         u'Фамилия Ответственного ', u'Имя Ответственного ', u'Отчество Ответственного ', 
+                         u'Дата рождения Ответственного ', u'Телефоны Ответственного ', u'Страна Ответственного ', 
+                         u'Регион Ответственного ', u'Город Ответственного ', u'Улица Ответственного ', 
+                         u'Дом Ответственного ', u'Корпус Ответственного ', u'Строение Ответственного ', 
+                         u'Офис/квартира Ответственного', u'Доп.инфо Ответственного', u'Номер могилы',
+                         u'Фамилия Усопшего ', u'Имя Усопшего ', u'Отчество Усопшего ',
+                         u'Дата рождения Усопшего ', u'Дата смерти Усопшего ', u'Страна Усопшего ',
+                         u'Регион Усопшего ', u'Город Усопшего ', u'Улица Усопшего ',
+                         u'Дом Усопшего ', u'Корпус Усопшего ', u'Строение Усопшего ',
+                         u'Офис/квартира Усопшего', u'Доп.инфо Усопшего',
+                         u'Фамилия Заказчика', u'Имя Заказчика', u'Отчество Заказчика',
+                         u'Дата рождения Заказчика', u'Телефоны Заказчика', u'Страна Заказчика',
+                         u'Регион Заказчика', u'Город Заказчика', u'Улица Заказчика',
+                         u'Дом Заказчика', u'Корпус Заказчика', u'Строение Заказчика',
+                         u'Офис/квартира Заказчика', u'Доп.инфо Заказчика',
+                         u'ИНН Заказчика-ЮЛ', u'Полное название Заказчика-ЮЛ',
+                         u'Фамилия Агента', u'Имя Агента', u'Отчество Агента',
+                         u'Номер Доверенности', u'Дата Доверенности', u'Окончание Доверенности',
+                         u'Данные Заказа', u'Платеж',
+                         ])
+    for b in Burial.objects.all():
+        r = b.place.responsible
+        d = b.person
+        cp = b.client_person
+        co = b.client_organization
+        spamwriter.writerow([
+            unicode(b.account_number), unicode(b.operation), unicode(b.date_plan), unicode(b.date_fact), 
+            unicode(b.time_fact), unicode(b.exhumated_date), unicode(b.place.cemetery), unicode(b.place.area),
+            unicode(b.place.row), unicode(b.place.seat), unicode(b.place.rooms), unicode(b.place.unowned),
+
+            unicode(r and r.last_name), unicode(r and r.first_name), unicode(r and r.middle_name), unicode(r and r.get_birth_date()),
+            unicode(r and r.phones), unicode(r and r.address and r.address.country),
+            unicode(r and r.address and r.address.region), unicode(r and r.address and r.address.city),
+            unicode(r and r.address and r.address.street), unicode(r and r.address and r.address.house),
+            unicode(r and r.address and r.address.block), unicode(r and r.address and r.address.building),
+            unicode(r and r.address and r.address.flat), unicode(r and r.address and r.address.info),
+
+            unicode(b.grave_id),
+
+            unicode(d.last_name), unicode(d.first_name), unicode(d.middle_name), unicode(d.get_birth_date()),
+            unicode(d.death_date), unicode(d.address and d.address.country),
+            unicode(d.address and d.address.region), unicode(d.address and d.address.city),
+            unicode(d.address and d.address.street), unicode(d.address and d.address.house),
+            unicode(d.address and d.address.block), unicode(d.address and d.address.building),
+            unicode(d.address and d.address.flat), unicode(d.address and d.address.info),
+
+            unicode(cp and cp.last_name), unicode(cp and cp.first_name), unicode(cp and cp.middle_name), unicode(cp and cp.get_birth_date()),
+            unicode(cp and cp.phones), unicode(cp and cp.address and cp.address.country),
+            unicode(cp and cp.address and cp.address.region), unicode(cp and cp.address and cp.address.city),
+            unicode(cp and cp.address and cp.address.street), unicode(cp and cp.address and cp.address.house),
+            unicode(cp and cp.address and cp.address.block), unicode(cp and cp.address and cp.address.building),
+            unicode(cp and cp.address and cp.address.flat), unicode(cp and cp.address and cp.address.info),
+
+            unicode(co and co.inn), unicode(co and co.full_name),
+
+            unicode(b.agent and b.agent.person.last_name), unicode(b.agent and b.agent.person.first_name),
+            unicode(b.agent and b.agent.person.middle_name),
+
+            unicode(b.doverennost and b.doverennost.number), unicode(b.doverennost and b.doverennost.issue_date),
+            unicode(b.doverennost and b.doverennost.expire_date),
+
+            unicode(b.print_info), unicode(b.payment_type),
+
+            ])
+    response = HttpResponse(io.getvalue(), mimetype='application/csv')
+    response['Content-Disposition'] = 'attachment; filename="burials.csv"'
+    return response

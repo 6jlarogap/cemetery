@@ -44,6 +44,10 @@ urlpatterns += patterns('common.views',
     url(r'^logout/$', 'ulogout', name='ulogout'),
 
     url(r'^geo/', include('geo.urls')),
+
+    url(r'^export/orgs/', 'export_orgs'),
+    url(r'^export/users/', 'export_users'),
+    url(r'^export/burials/', 'export_burials'),
 )
 urlpatterns += patterns('',
     (r'^sentry/', include('sentry.web.urls')),
