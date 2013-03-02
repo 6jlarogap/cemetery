@@ -1001,19 +1001,23 @@ def export_burials(request):
                          u'ИНН Заказчика-ЮЛ', u'Полное название Заказчика-ЮЛ',
                          u'Фамилия Агента', u'Имя Агента', u'Отчество Агента',
                          u'Номер Доверенности', u'Дата Доверенности', u'Окончание Доверенности',
-                         u'Данные Заказа', u'Платеж',
-                         ])
+                         u'Данные Заказа', u'Платеж', u'Комментарий',
+                     ])
     for b in Burial.objects.all():
         r = b.place.responsible
+        rbd = r and r.get_birth_date() and r.get_birth_date().strftime('%d.%m.%Y')
+
         d = b.person
+        dbd = d and d.get_birth_date() and d.get_birth_date().strftime('%d.%m.%Y')
         cp = b.client_person
+        cpbd = cp and cp.get_birth_date() and cp.get_birth_date().strftime('%d.%m.%Y')
         co = b.client_organization
         spamwriter.writerow([
             unicode(b.account_number), unicode(b.operation), unicode(b.date_plan), unicode(b.date_fact), 
             unicode(b.time_fact), unicode(b.exhumated_date), unicode(b.place.cemetery), unicode(b.place.area),
             unicode(b.place.row), unicode(b.place.seat), unicode(b.place.rooms), unicode(b.place.unowned),
 
-            unicode(r and r.last_name), unicode(r and r.first_name), unicode(r and r.middle_name), unicode(r and r.get_birth_date()),
+            unicode(r and r.last_name), unicode(r and r.first_name), unicode(r and r.middle_name), unicode(rbd),
             unicode(r and r.phones), unicode(r and r.address and r.address.country),
             unicode(r and r.address and r.address.region), unicode(r and r.address and r.address.city),
             unicode(r and r.address and r.address.street), unicode(r and r.address and r.address.house),
@@ -1022,14 +1026,14 @@ def export_burials(request):
 
             unicode(b.grave_id),
 
-            unicode(d.last_name), unicode(d.first_name), unicode(d.middle_name), unicode(d.get_birth_date()),
-            unicode(d.death_date), unicode(d.address and d.address.country),
+            unicode(d.last_name), unicode(d.first_name), unicode(d.middle_name),
+            unicode(dbd), unicode(d.death_date), unicode(d.address and d.address.country),
             unicode(d.address and d.address.region), unicode(d.address and d.address.city),
             unicode(d.address and d.address.street), unicode(d.address and d.address.house),
             unicode(d.address and d.address.block), unicode(d.address and d.address.building),
             unicode(d.address and d.address.flat), unicode(d.address and d.address.info),
 
-            unicode(cp and cp.last_name), unicode(cp and cp.first_name), unicode(cp and cp.middle_name), unicode(cp and cp.get_birth_date()),
+            unicode(cp and cp.last_name), unicode(cp and cp.first_name), unicode(cp and cp.middle_name), unicode(cpbd),
             unicode(cp and cp.phones), unicode(cp and cp.address and cp.address.country),
             unicode(cp and cp.address and cp.address.region), unicode(cp and cp.address and cp.address.city),
             unicode(cp and cp.address and cp.address.street), unicode(cp and cp.address and cp.address.house),
@@ -1044,9 +1048,9 @@ def export_burials(request):
             unicode(b.doverennost and b.doverennost.number), unicode(b.doverennost and b.doverennost.issue_date),
             unicode(b.doverennost and b.doverennost.expire_date),
 
-            unicode(b.print_info), unicode(b.payment_type),
+            unicode('{}'), unicode(b.payment_type), u'Создано: %s %s' % (b.creator, b.added),
 
-            ])
+        ])
     response = HttpResponse(io.getvalue(), mimetype='application/csv')
     response['Content-Disposition'] = 'attachment; filename="burials.csv"'
     return response
