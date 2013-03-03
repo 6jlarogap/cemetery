@@ -50,6 +50,7 @@ urlpatterns += patterns('common.views',
     url(r'^export/burials/', 'export_burials'),
     url(r'^export/services/', 'export_services'),
     url(r'^export/orders/', 'export_orders'),
+    url(r'^export/banks/', 'export_banks'),
 )
 urlpatterns += patterns('',
     (r'^sentry/', include('sentry.web.urls')),

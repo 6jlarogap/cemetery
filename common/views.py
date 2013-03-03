@@ -27,7 +27,8 @@ from cemetery_app.forms import SearchForm, PlaceForm, BurialForm, PersonForm, Lo
 from cemetery_app.forms import UserProfileForm, DoverennostForm, CustomerIDForm, CustomerForm, CommentForm
 from cemetery_app.forms import AddAgentForm, CatafalquesPrintForm
 from persons.models import DeathCertificate, PersonID, DocumentSource
-from organizations.models import Organization, Agent
+from organizations.models import Organization, Agent, BankAccount
+
 
 def ulogin(request):
     """
@@ -1082,3 +1083,18 @@ def export_orders(request):
     response['Content-Disposition'] = 'attachment; filename="orders.csv"'
     return response
 
+
+
+@login_required
+def export_banks(request):
+    io = cStringIO.StringIO()
+    spamwriter = UnicodeWriter(io)
+    spamwriter.writerow([u'ИНН', u'Организация', u'РС', u'КС', u'БИК', u'Банк', u'ЛС'])
+    for o in BankAccount.objects.all():
+        spamwriter.writerow([
+            unicode(o.organization.inn), unicode(o.organization.full_name), unicode(o.rs), unicode(o.ks),
+            unicode(o.bik), unicode(o.bankname), unicode(o.ls)
+        ])
+    response = HttpResponse(io.getvalue(), mimetype='application/csv')
+    response['Content-Disposition'] = 'attachment; filename="banks.csv"'
+    return response
