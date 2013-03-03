@@ -1000,8 +1000,7 @@ def export_burials(request):
                          u'Офис/квартира Заказчика', u'Доп.инфо Заказчика',
                          u'ИНН Заказчика-ЮЛ', u'Полное название Заказчика-ЮЛ',
                          u'Фамилия Агента', u'Имя Агента', u'Отчество Агента',
-                         u'Номер Доверенности', u'Дата Доверенности', u'Окончание Доверенности',
-                         u'Данные Заказа', u'Платеж', u'Комментарий',
+                         u'Номер Доверенности', u'Дата Доверенности', u'Окончание Доверенности', u'Комментарий',
                      ])
     for b in Burial.objects.all():
         r = b.place.responsible
@@ -1048,9 +1047,38 @@ def export_burials(request):
             unicode(b.doverennost and b.doverennost.number), unicode(b.doverennost and b.doverennost.issue_date),
             unicode(b.doverennost and b.doverennost.expire_date),
 
-            unicode('{}'), unicode(b.payment_type), u'Создано: %s %s' % (b.creator, b.added),
+            u'Создано: %s %s' % (b.creator, b.added),
 
         ])
     response = HttpResponse(io.getvalue(), mimetype='application/csv')
     response['Content-Disposition'] = 'attachment; filename="burials.csv"'
     return response
+
+@login_required
+def export_services(request):
+    io = cStringIO.StringIO()
+    spamwriter = UnicodeWriter(io)
+    spamwriter.writerow([u'Название', u'Умолч.', u'Ед. изм.', u'Цена', u'Сортировка'])
+    for o in Service.objects.all():
+        spamwriter.writerow([
+            unicode(o.name), unicode(o.default), unicode(o.measure), unicode(o.price), unicode(o.ordering),
+        ])
+    response = HttpResponse(io.getvalue(), mimetype='application/csv')
+    response['Content-Disposition'] = 'attachment; filename="services.csv"'
+    return response
+
+@login_required
+def export_orders(request):
+    io = cStringIO.StringIO()
+    spamwriter = UnicodeWriter(io)
+    spamwriter.writerow([u'Номер', u'Фамилия Усопшего', u'Имя Усопшего', u'Отчество Усопшего', u'Данные'])
+    for o in Burial.objects.filter(print_info__isnull=False):
+        if o.print_info:
+            spamwriter.writerow([
+                unicode(o.account_number), unicode(o.person.last_name), unicode(o.person.first_name),
+                unicode(o.person.middle_name), unicode(o.print_info), unicode(o.payment_type)
+            ])
+    response = HttpResponse(io.getvalue(), mimetype='application/csv')
+    response['Content-Disposition'] = 'attachment; filename="orders.csv"'
+    return response
+
