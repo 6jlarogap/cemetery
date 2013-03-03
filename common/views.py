@@ -1083,8 +1083,6 @@ def export_orders(request):
     response['Content-Disposition'] = 'attachment; filename="orders.csv"'
     return response
 
-
-
 @login_required
 def export_banks(request):
     io = cStringIO.StringIO()
@@ -1097,4 +1095,32 @@ def export_banks(request):
         ])
     response = HttpResponse(io.getvalue(), mimetype='application/csv')
     response['Content-Disposition'] = 'attachment; filename="banks.csv"'
+    return response
+
+@login_required
+def export_persondocs(request):
+    io = cStringIO.StringIO()
+    spamwriter = UnicodeWriter(io)
+    spamwriter.writerow([u'Ф', u'И', u'О', u'Тип', u'Серия', u'Номер', u'Кем выдан', u'Когда выдан'])
+    for o in PersonID.objects.all():
+        spamwriter.writerow([
+            unicode(o.person.last_name), unicode(o.person.first_name), unicode(o.person.middle_name), unicode(o.id_type),
+            unicode(o.series), unicode(o.number), unicode(o.source.name), unicode(o.date)
+        ])
+    response = HttpResponse(io.getvalue(), mimetype='application/csv')
+    response['Content-Disposition'] = 'attachment; filename="persondocs.csv"'
+    return response
+
+@login_required
+def export_dcs(request):
+    io = cStringIO.StringIO()
+    spamwriter = UnicodeWriter(io)
+    spamwriter.writerow([u'Ф', u'И', u'О', u'Серия', u'Номер', u'Когда выдан', u'ЗАГС'])
+    for o in DeathCertificate.objects.all():
+        spamwriter.writerow([
+            unicode(o.person.last_name), unicode(o.person.first_name), unicode(o.person.middle_name), unicode(o.s_number),
+            unicode(o.series), unicode(o.release_date), unicode(o.zags.name)
+        ])
+    response = HttpResponse(io.getvalue(), mimetype='application/csv')
+    response['Content-Disposition'] = 'attachment; filename="dcs.csv"'
     return response

@@ -51,6 +51,8 @@ urlpatterns += patterns('common.views',
     url(r'^export/services/', 'export_services'),
     url(r'^export/orders/', 'export_orders'),
     url(r'^export/banks/', 'export_banks'),
+    url(r'^export/persondocs/', 'export_persondocs'),
+    url(r'^export/dcs/', 'export_dcs'),
 )
 urlpatterns += patterns('',
     (r'^sentry/', include('sentry.web.urls')),
