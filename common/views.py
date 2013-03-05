@@ -999,11 +999,11 @@ def export_burials(request):
                          u'Регион Заказчика', u'Город Заказчика', u'Улица Заказчика',
                          u'Дом Заказчика', u'Корпус Заказчика', u'Строение Заказчика',
                          u'Офис/квартира Заказчика', u'Доп.инфо Заказчика',
-                         u'ИНН Заказчика-ЮЛ', u'Полное название Заказчика-ЮЛ',
+                         u'ИНН Заказчика-ЮЛ', u'Полное название Заказчика-ЮЛ', u'Директор - Агент',
                          u'Фамилия Агента', u'Имя Агента', u'Отчество Агента',
                          u'Номер Доверенности', u'Дата Доверенности', u'Окончание Доверенности', u'Комментарий',
                      ])
-    for b in Burial.objects.all():
+    for b in Burial.objects.filter(deleted=False):
         r = b.place.responsible
         rbd = r and r.get_birth_date() and r.get_birth_date().strftime('%d.%m.%Y')
 
@@ -1040,7 +1040,7 @@ def export_burials(request):
             unicode(cp and cp.address and cp.address.block), unicode(cp and cp.address and cp.address.building),
             unicode(cp and cp.address and cp.address.flat), unicode(cp and cp.address and cp.address.info),
 
-            unicode(co and co.inn), unicode(co and co.full_name),
+            unicode(co and co.inn), unicode(co and co.full_name), unicode(co and co.ceo == b.agent),
 
             unicode(b.agent and b.agent.person.last_name), unicode(b.agent and b.agent.person.first_name),
             unicode(b.agent and b.agent.person.middle_name),
