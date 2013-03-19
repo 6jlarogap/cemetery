@@ -163,7 +163,7 @@ class JournalForm(forms.Form):
     comment = forms.CharField(required=False,
                               widget=forms.Textarea(attrs={'rows': 4,
                                                            'cols': 90,
-                                                           'tabindex': "22"}),
+                                                           'tabindex': "23"}),
                               label="Комментарий")
     file1 = forms.FileField(required=False, label="Файл")
     file1_comment = forms.CharField(required=False, max_length=96, widget=forms.Textarea(attrs={'rows': 1, 'cols': 64}),

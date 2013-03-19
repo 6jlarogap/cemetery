@@ -337,6 +337,7 @@ def journal(request):
     if request.method == "POST":
         form = JournalForm(request.POST, request.FILES)
         phoneset = PhoneFormSet(request.POST, request.FILES)
+        phoneset.forms[0].fields['f_number'].widget.attrs["tabindex"] = "22"
         if form.is_valid():
             cd = form.cleaned_data
             # Try to get Place.
@@ -457,6 +458,7 @@ def journal(request):
             return redirect("/journal/")
     else:
         phoneset = PhoneFormSet(queryset=Phone.objects.none())
+        phoneset.forms[0].fields['f_number'].widget.attrs["tabindex"] = "22"
         if request.user.userprofile.default_cemetery:
             cem = request.user.userprofile.default_cemetery
         else:
@@ -487,6 +489,7 @@ def edit_burial(request, uuid):
         phones.filter(f_number='').delete()
         phones.filter(f_number__isnull=True).delete()
         phoneset = PhoneFormSet(request.POST, request.FILES, queryset=phones)
+        phoneset.forms[0].fields['f_number'].widget.attrs["tabindex"] = "22"
         form = EditBurialForm(request.POST, request.FILES)
         if form.is_valid():
             for pf in phoneset.forms:
@@ -593,6 +596,7 @@ def edit_burial(request, uuid):
 #        phones = Phone.objects.filter(soul=burial.customer.person.soul_ptr)
 #        phoneset = OrderFormSet(ins)
         phoneset = PhoneFormSet(queryset=Phone.objects.filter(soul=burial.customer.person.soul_ptr))
+        phoneset.forms[0].fields['f_number'].widget.attrs["tabindex"] = "22"
         b_date = datetime.datetime.date(burial.date_fact)
         initial_data = {
             "account_book_n": burial.account_book_n,
