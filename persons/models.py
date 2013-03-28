@@ -50,9 +50,9 @@ class Person(models.Model):
             return None
         birth_date = UnclearDate(self.birth_date.year, self.birth_date.month, self.birth_date.day)
         if self.birth_date_no_day:
-            birth_date.day = None
+            birth_date.no_day = True
         if self.birth_date_no_month:
-            birth_date.month = None
+            birth_date.no_month = True
         return birth_date
 
     def set_birth_date(self, ubd):
