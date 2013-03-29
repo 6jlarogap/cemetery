@@ -197,10 +197,19 @@ def main_page(request):
                 burials = burials.exclude(operation=cd["operation"])
             else:
                 burials = burials.filter(operation=cd["operation"])
+        # Eugene Suprun:
+        # something is wrong with:
+        # burials.filter(date_fact__gte=cd["burial_date_from"]).
+        #         filter(date_fact__lte=cd["burial_date_from"])
+        # when searching a burial for a single date
+        # (not empty date_from and empty date_to)
+        # Fixed by the exact search:
+        #
         if cd["burial_date_from"]:
-            burials = burials.filter(date_fact__gte=cd["burial_date_from"])
-            if not cd["burial_date_to"]:
-                burials = burials.filter(date_fact__lte=cd["burial_date_from"])
+            if cd["burial_date_to"]:
+                burials = burials.filter(date_fact__gte=cd["burial_date_from"])
+            else:
+                burials = burials.filter(date_fact__exact=cd["burial_date_from"])
         if cd["burial_date_to"]:
             burials = burials.filter(date_fact__lte=cd["burial_date_to"])
 #        if cd["death_certificate"]:
