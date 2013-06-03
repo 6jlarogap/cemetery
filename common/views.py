@@ -1073,11 +1073,16 @@ def export_orders(request):
     io = cStringIO.StringIO()
     spamwriter = UnicodeWriter(io)
     spamwriter.writerow([u'Номер', u'Фамилия Усопшего', u'Имя Усопшего', u'Отчество Усопшего', u'Данные'])
-    for o in Burial.objects.filter(print_info__isnull=False):
+    for o in Burial.objects.all(): # filter(print_info__isnull=False):
         if o.print_info:
             spamwriter.writerow([
                 unicode(o.account_number), unicode(o.person.last_name), unicode(o.person.first_name),
                 unicode(o.person.middle_name), unicode(o.print_info), unicode(o.payment_type)
+            ])
+        else:
+            spamwriter.writerow([
+                unicode(o.account_number), unicode(o.person.last_name), unicode(o.person.first_name),
+                unicode(o.person.middle_name), '', unicode(o.payment_type)
             ])
     response = HttpResponse(io.getvalue(), mimetype='application/csv')
     response['Content-Disposition'] = 'attachment; filename="orders.csv"'
