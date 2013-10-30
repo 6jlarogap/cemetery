@@ -1,0 +1,16 @@
+# -*- coding: utf-8 -*-
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # Another database name
+        'NAME': 'cemetery0',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    }
+}
+
+# This is for apache-wcgi config
+ROOT_URLCONF = 'urls'
