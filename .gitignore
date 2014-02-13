@@ -4,3 +4,4 @@ tmp\.*
 *.swp
 .tmp*
 contrib/packages/i386/samba/
+settings_local.py
