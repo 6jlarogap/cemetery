@@ -847,6 +847,10 @@ class UserProfileForm(forms.Form):
     hoperation = forms.CharField(required=False, widget=forms.HiddenInput)
     records_per_page = forms.ChoiceField(required=False, choices=PER_PAGE_VALUES, label="Записей на странице")
     records_order_by = forms.ChoiceField(required=False, choices=ORDER_BY_VALUES, label="Сортировка по")
+    password1 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
+                                label="Пароль")
+    password2 = forms.CharField(required=False, max_length=18, widget=forms.PasswordInput(render_value=False),
+                                label="Пароль (еще раз)")
     def clean(self):
         cd = self.cleaned_data
         cemetery = cd.get("cemetery", None)
@@ -859,6 +863,8 @@ class UserProfileForm(forms.Form):
                                                            p_type=settings.PLACE_PRODUCTTYPE_ID)
             except:
                 raise forms.ValidationError("Выбранная операция не существует для выбранного кладбища.")
+        if cd.get("password1", "") != cd.get("password2", ""):
+            raise forms.ValidationError("Пароли не совпадают.")
         return cd
 
 
