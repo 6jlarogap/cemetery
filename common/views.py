@@ -773,6 +773,9 @@ def profile(request):
 #                            city.save()
 #                        up.default_city = city
             up.save()
+            if cd.get("password1"):
+                request.user.set_password(cd["password1"])
+                request.user.save()
             return redirect("/profile/")
     else:
         if hasattr(request.user, "userprofile"):
