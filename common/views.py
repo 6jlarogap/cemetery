@@ -271,14 +271,15 @@ def main_page(request):
 
     if request.GET.get('export_csv'):
         io = StringIO()
-        writer = csv.writer(io, "4mysql")
+        csv_export_dialect = csv.get_dialect("4mysql")
+        writer = csv.writer(io, csv_export_dialect)
         for b in burials:
             b0 = Burial.objects.get(pk=b.pk)
             comments = u'\n'.join([oc.comment for oc in b0.ordercomments_set.all()])
             phones = u'\n'.join([phone.f_number for phone in b0.customer.phone_set.all()])
             files = u'\n'.join([file_.ofile.name for file_ in b0.orderfiles_set.all()])
             file_comments = u'\t'.join([file_.comment for file_ in b0.orderfiles_set.all()])
-            writer.writerow(map(lambda u: u.encode(settings.CSV_ENCODING), [
+            row = [
                 u"",
                 u"%s" % (b0.account_book_n, ),
                 u"%s" % (b0.person.last_name or '', ),
@@ -308,7 +309,26 @@ def main_page(request):
                 u"%s" % (b0.customer.location and b0.customer.location.post_index or '', ),
                 u"%s" % (b0.customer.location and b0.customer.location.building or '', ),
                 u"%s" % (b0.operation or '', ),
-            ]))
+            ]
+
+            # Из документации по Python 2, https://docs.python.org/2/library/csv.html :
+            # Dialect.escapechar
+            #   A one-character string used by the writer to escape the delimiter
+            #   if quoting is set to QUOTE_NONE and the quotechar if doublequote is False.
+            #   On reading, the escapechar removes any special meaning from the following character.
+            #   It defaults to None, which disables escaping.
+            # Т.е. escapechar экранирует (1) разделитель между полями, (2) кавычку.
+            # Сам себя escapechar, согласно документации, при записи экранировать не обязан.
+            # А вот при чтении '123\45' преобразуется в 12345, т.е. теряется символ,
+            # но самое страшное, '"поле1\","поле2"' (escapechar '\' завершает поле1)
+            # становится 'поле1",поле2', т.е. теряется поле
+            # Python 3 ведет себя аналогично.
+
+            if csv_export_dialect.escapechar:
+                for i in range(len(row)):
+                    row[i] = row[i].replace(csv_export_dialect.escapechar, csv_export_dialect.escapechar * 2)
+
+            writer.writerow(map(lambda u: u.encode(settings.CSV_ENCODING), row))
         result = HttpResponse(io.getvalue(), mimetype='text/csv')
         result['Content-Disposition'] = 'attachment; filename="export.csv"'
         return result
