@@ -286,7 +286,8 @@ class JournalForm(forms.Form):
 class EditBurialForm(forms.Form):
     account_book_n = forms.CharField(max_length=16, label="Номер в книге учета*",
                                      widget=forms.TextInput(attrs={"tabindex": "1"}))
-    burial_date = forms.DateField(label="Дата захоронения*", widget=CalendarWidget(attrs={"tabindex": "2"}))
+    burial_date = forms.DateField(label="Дата захоронения*",
+                                  widget=(forms.TextInput if settings.SITE_READONLY else CalendarWidget(attrs={"tabindex": "2"})))
     last_name = forms.CharField(max_length=128, label="Фамилия*", widget=forms.TextInput(attrs={"tabindex": "3"}),
             help_text="Допускаются только буквы, цифры и символ '-'")
     first_name = forms.CharField(required=False, max_length=30, label="Имя",

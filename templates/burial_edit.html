@@ -145,6 +145,18 @@ $(function(){
        }
 
     });
+    {% if global_context_SITE_READONLY %}
+        var form = document.forms[0];
+        [].slice.call( form.elements ).forEach(function(item){
+            switch (item.type) {
+                case 'select-one':
+                case 'checkbox':
+                    item.disabled = 'true';
+                default:
+                    item.readOnly = 'true';
+            }
+        });
+    {% endif %}
 })
 </script>
 {%  endblock %}
@@ -310,39 +322,49 @@ $(function(){
     <h3>Комментарии:</h3>
         {% for c in burial.ordercomments_set.all %}
         <!--            <b>{{ forloop.counter }}</b> {{ c.comment }} <a href="/admin/common/ordercomments/{{ c.uuid }}/" target="_blank">редактировать</a><br />-->
-            <b>{{ forloop.counter }}</b> {{ c.comment }} <a href="/ordercomment/{{ c.uuid }}/" target="_self">редактировать</a><br />
+            <b>{{ forloop.counter }}</b> {{ c.comment }}{% if not global_context_SITE_READONLY%}<a href="/ordercomment/{{ c.uuid }}/" target="_self">редактировать</a>{% endif %}<br />
             <small><b>{{ c.creator }}</b>, {{ c.date_of_creation }}</small><br /><br />
         {%  endfor %}
         <br />
-        <small>Добавить новый:</small>
-        <br />
-        {{ form.comment.errors }}{{ form.comment }}
+        {% if not global_context_SITE_READONLY %}
+            <small>Добавить новый:</small>
+            <br />
+            {{ form.comment.errors }}{{ form.comment }}
+        {% endif %}
     <h3>Файлы:</h3>
         {% for f in burial.orderfiles_set.all %}
             <b>{{ forloop.counter }} &nbsp; {{ f.ofile.name }}</b>
 {#            <img src="{{ f.ofile.thumbnail.url }}">#}
             <a href="/media/{{ f.ofile }}">открыть</a>
-            <a href="/orderfile/delete/{{ burial.uuid }}/{{ f.uuid }}/">удалить</a>
+            {% if not global_context_SITE_READONLY %}
+                <a href="/orderfile/delete/{{ burial.uuid }}/{{ f.uuid }}/">удалить</a>
+            {% endif %}
             <br />
             <small>Комментарий к файлу:</small> <i>{{ f.comment }}</i>
             <br />
-            <a href="/orderfilecomment/{{ f.uuid }}/" target="_self">редактировать комментарий</a>
-            <br />
+            {% if not global_context_SITE_READONLY %}
+                <a href="/orderfilecomment/{{ f.uuid }}/" target="_self">редактировать комментарий</a>
+                <br />
+            {% endif %}
             <small><i>{{ f.creator }}</i>, {{ f.date_of_creation }}</small><br /><br />
         {%  endfor %}
-        <small>Добавить новый (до 5 Mb):</small>
-        <br />
-        {{ form.file1.errors }}{{ form.file1 }}<br />
-        {{ form.file1_comment.errors }}{{ form.file1_comment }}
-        <br />
+        {% if not global_context_SITE_READONLY %}
+            <small>Добавить новый (до 5 Mb):</small>
+            <br />
+            {{ form.file1.errors }}{{ form.file1 }}<br />
+            {{ form.file1_comment.errors }}{{ form.file1_comment }}
+            <br />
+        {% endif %}
         <br />
         {% if user|in_group:"edit_bur_in_adm" %}
             {{ form.in_trash.label_tag }}{{ form.in_trash }}
         {% endif %}
         <br />
-        <br />
-        <input type="submit" value="Сохранить"  tabindex="24">
-        <button type="button" onclick="top.location.href='{{ request.path }}';" tabindex="25">Отмена</button>
+        {% if not global_context_SITE_READONLY %}
+            <br />
+            <input type="submit" value="Сохранить"  tabindex="24">
+            <button type="button" onclick="top.location.href='{{ request.path }}';" tabindex="25">Отмена</button>
+        {% endif %}
     </form>
     </div>
     <br />

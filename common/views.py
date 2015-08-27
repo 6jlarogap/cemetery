@@ -684,6 +684,8 @@ def order_filecomment_edit(request, uuid):
     """
     Страница редактирования комментария к файлу.
     """
+    if settings.SITE_READONLY:
+        raise Http404
     try:
         f = OrderFiles.objects.get(uuid=uuid)
     except ObjectDoesNotExist:
@@ -713,6 +715,8 @@ def order_comment_edit(request, uuid):
     """
     Страница редактирования комментария к захоронению.
     """
+    if settings.SITE_READONLY:
+        raise Http404
     if request.method == "POST":
         form = OrderCommentForm(request.POST)
         if form.is_valid():
@@ -1729,6 +1733,8 @@ def delete_orderfile(request, ouuid, fuuid):
     """
     Удаление файла ордера.
     """
+    if settings.SITE_READONLY:
+        raise Http404
     try:
         f = OrderFiles.objects.get(order__uuid=ouuid, uuid=fuuid)
     except ObjectDoesNotExist:

@@ -137,7 +137,26 @@ CSV_ENCODING = "utf8"
 PAGINATION_USER_PER_PAGE_MAX = 50
 PAGINATION_PER_PAGE = 5
 
+# default
+#
+TEMPLATE_CONTEXT_PROCESSORS = [
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.contrib.messages.context_processors.messages',
+]
+
+# Запред ввода/корректировки данных
+#
+SITE_READONLY = False
+
 try:
     from settings_local import *
 except ImportError:
     pass
+
+if SITE_READONLY:
+    TEMPLATE_CONTEXT_PROCESSORS.append(
+        'common.context_processors.context_processor',
+    )

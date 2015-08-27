@@ -167,7 +167,7 @@
             <small><a title="файл прикреплен">f</a></small>
             {% endif %}
             {% if user|in_group:"edit_burial" %}
-                <a title="редактировать" target="_blank" href='/burial/{{ b.uuid }}/'><img src="/media/edit.png"></a>
+                <a title="{% if global_context_SITE_READONLY %}просмотр{% else %}редактировать{% endif %}" target="_blank" href='/burial/{{ b.uuid }}/'><img src="/media/edit.png"></a>
             {% endif %}
             <a title="к могиле" href='/?cemetery={{ b.product.place.cemetery.uuid }}&area={{ b.product.place.area }}&row={{ b.product.place.row }}&seat={{ b.product.place.seat }}'><img width="16" src="/media/tree.png"></a>
         </td>
