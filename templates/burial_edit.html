@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load adminmedia %}
 {% load my_filters %}
-{% block title %}Редактирование захоронения{% endblock %}
+{% block title %}{% if global_context_SITE_READONLY %}Просмотр захоронения{% else %}Редактирование захоронения{% endif %}{% endblock %}
 {% block scripts %}
 {{ form.media }}
 <link rel="stylesheet" href="/media/css/ui-lightness/jquery-ui-1.8.6.custom.css" type="text/css" />
