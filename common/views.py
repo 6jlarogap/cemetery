@@ -18,7 +18,7 @@ from django.forms.models import modelformset_factory
 from models import Soul, Person, PersonRole, UserProfile, Burial, Burial1, Organization, OrderComments
 from models import Cemetery, GeoCountry, GeoRegion, GeoCity, Street, Location, Operation
 from models import OrderFiles, Phone, Place, ProductType, SoulProducttypeOperation, Role
-from models import Env
+from models import Env, ProductComments
 from django import db
 
 from simplepagination import paginate
@@ -35,6 +35,8 @@ from cStringIO import StringIO
 
 csv.register_dialect("4mysqlout", escapechar="\\", quoting=csv.QUOTE_NONE)
 csv.register_dialect("4mysql", escapechar="\\", quoting=csv.QUOTE_ALL, doublequote=False)
+
+DT_TEMPLATE = '%Y-%m-%dT%H:%M:%S.%f'
 
 def is_in_group(group_name):
     """
@@ -273,9 +275,17 @@ def main_page(request):
         io = StringIO()
         csv_export_dialect = csv.get_dialect("4mysql")
         writer = csv.writer(io, csv_export_dialect)
+        # Это почистит предыдущий order_by
+        burials = burials.order_by('date_fact')
         for b in burials:
             b0 = Burial.objects.get(pk=b.pk)
-            comments = u'\n'.join([oc.comment for oc in b0.ordercomments_set.all()])
+            comments = u'\t'.join([
+                u"%s~%s" % (
+                    oc.date_of_creation.strftime(DT_TEMPLATE),
+                    re.sub(r'\t', ' ', oc.comment),
+                    ) \
+                for oc in b0.ordercomments_set.all()
+            ])
             phones = u'\n'.join([phone.f_number for phone in b0.customer.phone_set.all()])
             files = u'\n'.join([file_.ofile.name for file_ in b0.orderfiles_set.all()])
             file_comments = u'\t'.join([file_.comment for file_ in b0.orderfiles_set.all()])
@@ -1681,8 +1691,17 @@ def import_csv(request):
                                     operation = Operation.objects.get(uuid=settings.OPER_5)
                         burial.operation = operation
                         burial.save()
-                        if comment != u"":
-                            burial.add_comment(comment, creator)
+                        if comment:
+                            for c in comment.split('\t'):
+                                try:
+                                    i_sep = c.index(u'~')
+                                    date_of_comment = datetime.datetime.strptime(c[:i_sep], DT_TEMPLATE)
+                                    comment = burial.add_comment(c[i_sep+1:], creator)
+                                    OrderComments.objects.filter(pk=comment.pk).update(
+                                        date_of_creation=date_of_comment,
+                                    )
+                                except ValueError:
+                                    burial.add_comment(c, creator)
                             
                         files = files.split("\n")
                         file_comments = file_comments.split("\t")

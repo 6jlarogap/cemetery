@@ -478,6 +478,7 @@ class Order(models.Model):
         comment = OrderComments(order=self, comment=txt,
                                   creator=creator)
         comment.save()
+        return comment
 #        if self.all_comments:
 #            self.all_comments = "%s\n%s" % (self.all_comments, txt)
 #        else:
